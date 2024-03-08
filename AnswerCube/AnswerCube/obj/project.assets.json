@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ilyas\\kdg\\AnswerCube\\AnswerCube\\AnswerCube.csproj",
+      "projectUniqueName": "C:\\IP1\\AnswerCube\\AnswerCube\\AnswerCube.csproj",
       "projectName": "AnswerCube",
-      "projectPath": "C:\\Users\\ilyas\\kdg\\AnswerCube\\AnswerCube\\AnswerCube.csproj",
+      "projectPath": "C:\\IP1\\AnswerCube\\AnswerCube\\AnswerCube.csproj",
       "packagesPath": "C:\\Users\\ilyas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ilyas\\kdg\\AnswerCube\\AnswerCube\\obj\\",
+      "outputPath": "C:\\IP1\\AnswerCube\\AnswerCube\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ilyas\\AppData\\Roaming\\NuGet\\NuGet.Config"
