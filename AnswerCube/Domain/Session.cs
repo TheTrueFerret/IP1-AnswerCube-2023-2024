@@ -1,17 +1,18 @@
-namespace Domain;
+using Domain;
+
+namespace AnswerCube.BL.Domain;
 
 public class Session
 {
-    private Installation installation { get; set; }
-    private List<Answer> answers { get; set; }
-    private DateTime startTime { get; set; }
-    private DateTime endTime { get; set; }
-    
+    private readonly Installation _installation;
+    private readonly List<Answer> _answers;
+    private DateTime StartTime { get; set; }
+    private DateTime EndTime { get; set; }
     public Session(Installation installation, List<Answer> answers, DateTime startTime, DateTime endTime)
     {
-        this.installation = installation;
-        this.answers = answers;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        _installation = installation;
+        _answers = answers;
+        StartTime = startTime;
+        EndTime = endTime;
     }
 }

@@ -10,4 +10,4 @@ public class CircularFlow : IFlow
         Name = name;
         SlideList = slideList;
     }
-}
+}   
