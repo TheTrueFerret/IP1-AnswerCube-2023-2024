@@ -1,3 +1,5 @@
+using Domain;
+
 namespace AnswerCube.DAL.EF;
 
 public class Repository : IRepository
@@ -8,6 +10,10 @@ public class Repository : IRepository
     {
         _context = context;
     }
-    
-    
+
+
+    public List<Open_Question> GetOpenSlides()
+    {
+        return _context.OpenQuestions.ToList();
+    }
 }

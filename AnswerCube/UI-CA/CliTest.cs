@@ -5,7 +5,7 @@ namespace AnswerCube.UI.CA;
 
 public class CliTest
 {
-    private Manager _manager;
+    private IManager _manager;
     
     public CliTest(Manager manager)
     {
@@ -14,14 +14,12 @@ public class CliTest
 
     public void TestData()
     {
-        
+        ShowOpenSlides();
     }
     
-    public void ShowData()
+    public void ShowOpenSlides()
     {
-        
-     WriteLine();
-        
+        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Name));
     }
 
 }

@@ -2,14 +2,14 @@ namespace Domain;
 
 public class Organization
 {
-    private string name { get; set; }
-    private string email { get; set; }
-    private List<Project> projects { get; set; }
-
+    private string Name { get; set; }
+    private string Email { get; set; }
+    private List<Project> Projects { get; set; }
+    
     public Organization(string name, string email, List<Project> projects)
     {
-        this.name = name;
-        this.email = email;
-        this.projects = projects;
+        Name = name;
+        Email = email;
+        Projects = projects;
     }
 }

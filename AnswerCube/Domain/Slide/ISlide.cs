@@ -2,5 +2,6 @@ namespace Domain;
 
 public interface ISlide
 {
-    public String name { get; }
+    public int Id { get; set; }
+    public String Name { get; set; }
 }

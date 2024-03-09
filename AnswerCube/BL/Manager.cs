@@ -1,4 +1,5 @@
 ﻿using AnswerCube.DAL;
+using Domain;
 
 namespace AnswerCube.BL;
 
@@ -10,6 +11,10 @@ public class Manager : IManager
     {
         _repository = repository;
     }
-    
-    
+
+
+    public List<Open_Question> GetOpenSlides()
+    {
+        return _repository.GetOpenSlides();
+    }
 }

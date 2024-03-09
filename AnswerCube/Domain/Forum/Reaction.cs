@@ -2,15 +2,15 @@ namespace Domain;
 
 public class Reaction
 {
-    private EndUser endUser { get; set; }
-    private String reaction { get; set; }
+    private EndUser EndUser { get; set; }
+    private String Text { get; set; }
     private int Likes { get; set; }
     private int Dislikes { get; set; }
     
-    public Reaction(EndUser endUser, String reaction, int Likes, int Dislikes)
+    public Reaction(EndUser endUser, String Text, int Likes, int Dislikes)
     {
-        this.endUser = endUser;
-        this.reaction = reaction;
+        EndUser = endUser;
+        this.Text = Text;
         this.Likes = Likes;
         this.Dislikes = Dislikes;
     }

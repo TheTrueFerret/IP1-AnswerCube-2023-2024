@@ -6,8 +6,15 @@ using AnswerCube.UI.CA;
 using Microsoft.EntityFrameworkCore;
 
 var builder = new DbContextOptionsBuilder();
-builder.UseNpgsql("Data Source=../../GameAppDataBase.db");
-var AnswerCubeContext = new AnswerCubeDbContext(builder.Options);
-var repository = new Repository(AnswerCubeContext);
+//TODO: add connection string
+//var configuration = new ConfigurationBuilder()
+//    .SetBasePath(Directory.GetCurrentDirectory())
+//    .AddJsonFile("appsettings.json")
+//    .Build();
+//builder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+var answerCubeContext = new AnswerCubeDbContext(builder.Options);
+var repository = new Repository(answerCubeContext);
 var manager = new Manager(repository);
 var test = new CliTest(manager);
+
+test.TestData();

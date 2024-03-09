@@ -13,19 +13,20 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<List_Question> ListQuestions { get; set; }
     public DbSet<Open_Question> OpenQuestions { get; set; }
     public DbSet<Requesting_Data> RequestingData { get; set; }
-    
+    public DbSet<Range_Question> RangeQuestions { get; set; }
+
     //TODO: add dbsets if needed
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
-        AnswerCubeInitializer.Initialize(this);
+        AnswerCubeInitializer.Initialize(this, true);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Data Source=../../GameAppDataBase.db");
+            optionsBuilder.UseNpgsql("Data Source=../../../AnswerCubeDB.db");
         }
 
         optionsBuilder.LogTo(message => Debug.WriteLine(message), LogLevel.Information);

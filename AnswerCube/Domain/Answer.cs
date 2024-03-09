@@ -2,12 +2,12 @@ namespace Domain;
 
 public class Answer
 {
-    private String answer { get; set; }
-    private ISlide slide { get; set; }
+    private String AnswerText { get; set; }
+    private int SlideId { get; set; }
     
-    public Answer(String answer, ISlide slide)
+    public Answer(String answer, int slideId)
     {
-        this.answer = answer;
-        this.slide = slide;
+        AnswerText = answer;
+        SlideId = slideId;
     }
 }

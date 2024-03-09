@@ -2,12 +2,7 @@ namespace Domain;
 
 public class Info : ISlide
 {
-    public string name { get; }
-    private string info { get; set; }
-    
-    public Info(string name, string info)
-    {
-        this.name = name;
-        this.info = info;
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Text { get; set; }
 }
