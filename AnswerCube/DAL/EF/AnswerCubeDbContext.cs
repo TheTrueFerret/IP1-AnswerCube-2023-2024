@@ -7,8 +7,13 @@ namespace AnswerCube.DAL.EF;
 
 public class AnswerCubeDbContext : DbContext
 {
-    public DbSet<Project> Projects { get; set; }
-    public DbSet<Organization> Organizations { get; set; }
+    //public DbSet<Project> Projects { get; set; }
+    //public DbSet<Organization> Organizations { get; set; }
+    public DbSet<Info> InfoSlide { get; set; }
+    public DbSet<List_Question> ListQuestions { get; set; }
+    public DbSet<Open_Question> OpenQuestions { get; set; }
+    public DbSet<Requesting_Data> RequestingData { get; set; }
+    
     //TODO: add dbsets if needed
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)

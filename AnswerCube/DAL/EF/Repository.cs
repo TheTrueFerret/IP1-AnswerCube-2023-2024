@@ -1,6 +1,6 @@
 namespace AnswerCube.DAL.EF;
 
-public class Repository
+public class Repository : IRepository
 {
     private AnswerCubeDbContext _context;
 
