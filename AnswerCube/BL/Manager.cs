@@ -17,4 +17,19 @@ public class Manager : IManager
     {
         return _repository.GetOpenSlides();
     }
+
+    public List<List_Question> getListSlides()
+    {
+        return _repository.getListSlides();
+    }
+
+    public List<List_Question> GetSingleChoiceSlides()
+    {
+        return _repository.GetSingleChoiceSlides();
+    }
+    
+    public List<List_Question> GetMultipleChoiceSlides()
+    {
+        return _repository.GetMultipleChoiceSlides();
+    }
 }

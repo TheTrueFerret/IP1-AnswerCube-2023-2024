@@ -16,4 +16,19 @@ public class Repository : IRepository
     {
         return _context.OpenQuestions.ToList();
     }
+    
+    public List<List_Question> getListSlides()
+    {
+        return _context.ListQuestions.ToList();
+    }
+
+    public List<List_Question> GetSingleChoiceSlides()
+    {
+        return _context.ListQuestions.Where(q => !q.IsMultipleChoice).ToList();
+    }
+    
+    public List<List_Question> GetMultipleChoiceSlides()
+    {
+        return _context.ListQuestions.Where(q => q.IsMultipleChoice).ToList();
+    }
 }

@@ -6,7 +6,7 @@ namespace AnswerCube.UI.CA;
 public class CliTest
 {
     private IManager _manager;
-    
+
     public CliTest(Manager manager)
     {
         _manager = manager;
@@ -14,12 +14,36 @@ public class CliTest
 
     public void TestData()
     {
+        WriteLine("\nShow Open Slides");
         ShowOpenSlides();
-    }
-    
-    public void ShowOpenSlides()
-    {
-        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Name));
+
+        WriteLine("\nShow List Slides");
+        ShowListSlides();
+
+        WriteLine("\nShow Single Choice Slides");
+        ShowSingleChoiceSlides();
+
+        WriteLine("\nShow Multiple Choice Slides");
+        ShowMultipleChoiceSlides();
     }
 
+    public void ShowOpenSlides()
+    {
+        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+    }
+
+    public void ShowListSlides()
+    {
+        _manager.getListSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+    }
+
+    public void ShowSingleChoiceSlides()
+    {
+        _manager.GetSingleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+    }
+
+    public void ShowMultipleChoiceSlides()
+    {
+        _manager.GetMultipleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+    }
 }

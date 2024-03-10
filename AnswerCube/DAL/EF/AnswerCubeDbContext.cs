@@ -13,7 +13,6 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<List_Question> ListQuestions { get; set; }
     public DbSet<Open_Question> OpenQuestions { get; set; }
     public DbSet<Requesting_Data> RequestingData { get; set; }
-    public DbSet<Range_Question> RangeQuestions { get; set; }
 
     //TODO: add dbsets if needed
 
@@ -26,7 +25,7 @@ public class AnswerCubeDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Data Source=../../../AnswerCubeDB.db");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
         }
 
         optionsBuilder.LogTo(message => Debug.WriteLine(message), LogLevel.Information);
