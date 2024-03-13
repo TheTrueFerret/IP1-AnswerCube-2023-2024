@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AnswerCube.BL.Domain.Slide;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

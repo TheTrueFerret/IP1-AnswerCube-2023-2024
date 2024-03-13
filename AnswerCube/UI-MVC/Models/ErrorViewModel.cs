@@ -1,4 +1,4 @@
-namespace UI_MVC.Models;
+namespace AnswerCube.UI.MVC.Models;
 
 public class ErrorViewModel
 {

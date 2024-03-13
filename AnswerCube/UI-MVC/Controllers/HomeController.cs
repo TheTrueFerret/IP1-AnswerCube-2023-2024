@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
+using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
-using UI_MVC.Models;
- 
-namespace UI_MVC.Controllers;
+
+namespace AnswerCube.UI.MVC.Controllers;
 
 public class HomeController : Controller
 {

@@ -1,4 +1,5 @@
-﻿using AnswerCube.DAL;
+﻿using AnswerCube.BL.Domain.Slide;
+using AnswerCube.DAL;
 using Domain;
 
 namespace AnswerCube.BL;
@@ -31,5 +32,10 @@ public class Manager : IManager
     public List<List_Question> GetMultipleChoiceSlides()
     {
         return _repository.GetMultipleChoiceSlides();
+    }
+
+    public List<Info> GetInfoSlides()
+    {
+        return _repository.GetInfoSlides();
     }
 }

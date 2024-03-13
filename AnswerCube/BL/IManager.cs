@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using AnswerCube.BL.Domain.Slide;
+using Domain;
 
 namespace AnswerCube.BL;
 
@@ -11,4 +12,6 @@ public interface IManager
     List<List_Question> GetSingleChoiceSlides();
     
     List<List_Question> GetMultipleChoiceSlides();
+    
+    List<Info> GetInfoSlides();
 }

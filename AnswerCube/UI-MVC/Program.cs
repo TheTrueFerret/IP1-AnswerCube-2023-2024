@@ -1,7 +1,26 @@
+using AnswerCube.BL;
+using AnswerCube.DAL;
+using AnswerCube.DAL.EF;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
+    {
+        optionsBuilder.UseNpgsql(
+            "Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
+    }
+);
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IManager, Manager>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+});
 
 var app = builder.Build();
 

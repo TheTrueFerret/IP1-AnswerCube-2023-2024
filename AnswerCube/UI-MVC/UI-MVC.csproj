@@ -8,4 +8,20 @@
         <AssemblyName>AnswerCube.UI.MVC</AssemblyName>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\Api\" />
+      <Folder Include="Pages\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Slide\Index.cshtml" />
+      <AdditionalFiles Include="Views\Slide\InfoSlide.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BL\BL.csproj" />
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
 </Project>
