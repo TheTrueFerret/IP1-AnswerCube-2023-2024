@@ -3,6 +3,7 @@ using AnswerCube.BL;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.UI.MVC.Controllers.DTO_s;
 using AnswerCube.UI.MVC.Models;
+using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
@@ -10,10 +11,12 @@ namespace AnswerCube.UI.MVC.Controllers;
 public class SlideController : Controller
 {
     private readonly IManager _manager;
+    private readonly ILogger<SlideController> _logger;
 
-    public SlideController(IManager manager)
+    public SlideController(IManager manager, ILogger<SlideController> logger)
     {
         _manager = manager;
+        _logger = logger;
     }
 
     public IActionResult InfoSlide()

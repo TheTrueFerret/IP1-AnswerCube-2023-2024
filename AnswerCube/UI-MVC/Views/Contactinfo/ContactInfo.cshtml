@@ -1,0 +1,31 @@
+@model AnswerCube.UI.MVC.Controllers.DTO_s.ContactInfoDto
+
+@{
+    ViewBag.Title = "Contact Info";
+    Layout = "_Layout";
+}
+
+<h2>Contact Info</h2>
+
+<form method="post" asp-action="PostContactInfo">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" asp-for="Name" id="name" name="Name" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" asp-for="Email" id="email" name="Email" class="form-control" required/>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div>
+    <p>Scan de QR code voor je contactinfo achter te laten.</p>
+    <div id="qrCode"></div>
+    <div id="qrCodeData" data-url="https://localhost:7272/Slide/ContactInfo"></div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+    <script type="text/javascript" src="~/js/qr/qr.js"></script>
+}
