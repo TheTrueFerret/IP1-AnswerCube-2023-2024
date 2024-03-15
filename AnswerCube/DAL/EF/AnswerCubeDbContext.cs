@@ -3,6 +3,7 @@ using AnswerCube.BL.Domain.Slide;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace AnswerCube.DAL.EF;
 
@@ -26,11 +27,29 @@ public class AnswerCubeDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
+            //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
+            optionsBuilder.UseNpgsql(NewPostgreSqlTCPConnectionString().ToString());
         }
-
         optionsBuilder.LogTo(message => Debug.WriteLine(message), LogLevel.Information);
     }
+    
+    public static NpgsqlConnectionStringBuilder NewPostgreSqlTCPConnectionString()
+    {
+        var connectionString = new NpgsqlConnectionStringBuilder()
+        {
+            Host = Environment.GetEnvironmentVariable("INSTANCE_HOST"),     // e.g. '127.0.0.1'
+            Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user'
+            Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
+            Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
+
+            // The Cloud SQL proxy provides encryption between the proxy and instance.
+            SslMode = SslMode.Disable,
+        };
+        connectionString.Pooling = true;
+        // Specify additional properties here.
+        return connectionString;
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

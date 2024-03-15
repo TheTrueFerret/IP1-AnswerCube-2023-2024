@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
     {
-        optionsBuilder.UseNpgsql(
-            "Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
+        //optionsBuilder.UseNpgsql("Host=34.79.59.216;Port=5432;Database=DataBase IP1 Testssssss;Username=postgres;Password=Student_1234;");
+        //optionsBuilder.UseNpgsql("Host=34.79.59.216;Username=postgres;Password=Student_1234;Database=DataBase IP1 Testssssss;");
+        optionsBuilder.UseNpgsql( AnswerCube.DAL.EF.AnswerCubeDbContext.NewPostgreSqlTCPConnectionString().ToString());
     }
 );
 builder.Services.AddScoped<IRepository, Repository>();
