@@ -49,4 +49,5 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<AnswerCubeDbContext>();
     AnswerCubeInitializer.Initialize(context, true);
 }
+
 app.Run();
