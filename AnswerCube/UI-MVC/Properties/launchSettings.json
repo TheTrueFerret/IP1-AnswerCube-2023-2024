@@ -14,7 +14,11 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5104",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "INSTANCE_HOST": "localhost",
+        "DB_USER": "postgres",
+        "DB_PASS": "Student_1234",
+        "DB_NAME": "DataBase IP1 Testssssss"
       }
     },
     "https": {
