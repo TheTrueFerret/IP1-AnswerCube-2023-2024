@@ -1,13 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain;
 
 public class Answer
 {
-    private String AnswerText { get; set; }
-    private int SlideId { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public string AnswerText { get; set; }
+    public Slide Slide { get; set; }
     
-    public Answer(String answer, int slideId)
-    {
-        AnswerText = answer;
-        SlideId = slideId;
-    }
 }

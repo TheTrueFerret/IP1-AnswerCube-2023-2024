@@ -1,34 +1,32 @@
-using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain;
 using Domain;
 
 namespace AnswerCube.DAL.EF;
 
 public static class AnswerCubeInitializer
 {
-    private static bool _hasRunDuringAppExcecution = false;
+    private static bool hasBeenInitialized = false;
 
-    public static void Initialize(AnswerCubeDbContext context, bool dropCreateDatabase = false)
+    public static void Initialize(AnswerCubeDbContext context, bool dropDatabase = true)
     {
-        if (!_hasRunDuringAppExcecution)
+        if (!hasBeenInitialized)
         {
-            if (dropCreateDatabase)
-            {
+            if (dropDatabase)
                 context.Database.EnsureDeleted();
-            }
 
-            bool created = context.Database.EnsureCreated();
-            Seed(context);
+            if (context.Database.EnsureCreated())
+                Seed(context);
         }
 
-        _hasRunDuringAppExcecution = true;
+        hasBeenInitialized = true;
     }
 
     private static void Seed(AnswerCubeDbContext context)
     {
         //SingleChoice
-        List_Question singleChoice1 = new List_Question
+        ListQuestion singleChoice1 = new ListQuestion
         {
-            Question =
+            Text =
                 "Als jij de begroting van je stad of gemeente zou opmaken, waar zou je dan in de komende jaren vooral op inzetten?",
             IsMultipleChoice = false,
             AnswerList = new List<string>
@@ -37,17 +35,17 @@ public static class AnswerCubeInitializer
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             }
         };
-        List_Question singleChoice2 = new List_Question
+        ListQuestion singleChoice2 = new ListQuestion
         {
-            Question =
+            Text =
                 "Er moet meer geïnvesteerd worden in overdekte fietsstallingen aan de bushaltes in onze gemeente.",
             IsMultipleChoice = false,
             AnswerList = new List<string> { "Eens", "Oneens" }
         };
 
-        List_Question singleChoice3 = new List_Question
+        ListQuestion singleChoice3 = new ListQuestion
         {
-            Question = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
+            Text = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
             IsMultipleChoice = false,
             AnswerList = new List<string>
             {
@@ -56,16 +54,16 @@ public static class AnswerCubeInitializer
             }
         };
 
-        List_Question singleChoice4 = new List_Question
+        ListQuestion singleChoice4 = new ListQuestion
         {
-            Question = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
+            Text = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
             IsMultipleChoice = false,
             AnswerList = new List<string> { "Akkoord", "Niet akkoord" }
         };
 
-        List_Question singleChoice5 = new List_Question
+        ListQuestion singleChoice5 = new ListQuestion
         {
-            Question =
+            Text =
                 "Om ons allemaal veilig en vlot te verplaatsen, moet er in jouw stad of gemeente vooral meer aandacht gaan naar",
             IsMultipleChoice = false,
             AnswerList = new List<string>
@@ -75,9 +73,9 @@ public static class AnswerCubeInitializer
             }
         };
 
-        List_Question singleChoice6 = new List_Question
+        ListQuestion singleChoice6 = new ListQuestion
         {
-            Question =
+            Text =
                 "Wat vind jij van het idee om alle leerlingen van de scholen in onze stad een gratis fiets aan te bieden?",
             IsMultipleChoice = false,
             AnswerList = new List<string> { "Goed idee", "Slecht idee" }
@@ -87,9 +85,9 @@ public static class AnswerCubeInitializer
         context.ListQuestions.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
             singleChoice6);
 
-        List_Question multipleChoice1 = new List_Question
+        ListQuestion multipleChoice1 = new ListQuestion
         {
-            Question = "Wat zou jou helpen om een keuze te maken tussen de verschillende partijen?",
+            Text = "Wat zou jou helpen om een keuze te maken tussen de verschillende partijen?",
             IsMultipleChoice = true,
             AnswerList = new List<string>
             {
@@ -101,16 +99,16 @@ public static class AnswerCubeInitializer
             }
         };
 
-        List_Question multipleChoice2 = new List_Question
+        ListQuestion multipleChoice2 = new ListQuestion
         {
-            Question = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
+            Text = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
             IsMultipleChoice = true,
             AnswerList = new List<string> { "Tennis", "Hockey", "Padel", "Voetbal", "Fitness" }
         };
 
-        List_Question multipleChoice3 = new List_Question
+        ListQuestion multipleChoice3 = new ListQuestion
         {
-            Question =
+            Text =
                 "Aan welke van deze activiteiten zou jij meedoen, om mee te wegen op het beleid van jouw stad of gemeente?",
             IsMultipleChoice = true,
             AnswerList = new List<string>
@@ -123,9 +121,9 @@ public static class AnswerCubeInitializer
             }
         };
 
-        List_Question multipleChoice4 = new List_Question
+        ListQuestion multipleChoice4 = new ListQuestion
         {
-            Question = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
+            Text = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
             IsMultipleChoice = true,
             AnswerList = new List<string>
             {
@@ -137,9 +135,9 @@ public static class AnswerCubeInitializer
             }
         };
 
-        List_Question multipleChoice5 = new List_Question
+        ListQuestion multipleChoice5 = new ListQuestion
         {
-            Question = "Wat zou jou (meer) zin geven om te gaan stemmen?",
+            Text = "Wat zou jou (meer) zin geven om te gaan stemmen?",
             IsMultipleChoice = true,
             AnswerList = new List<string>
             {
@@ -156,37 +154,37 @@ public static class AnswerCubeInitializer
         context.ListQuestions.AddRange(multipleChoice1, multipleChoice2, multipleChoice3, multipleChoice4,
             multipleChoice5);
 
-        List_Question rangeQuestion1 = new List_Question
+        ListQuestion rangeQuestion1 = new ListQuestion
         {
-            Question = "Ben jij van plan om te gaan stemmen bij de aankomende lokale verkiezingen?",
+            Text = "Ben jij van plan om te gaan stemmen bij de aankomende lokale verkiezingen?",
             AnswerList = new List<string>
                 { "Zeker niet", "Eerder niet", "Ik weet het nog niet", "Eerder wel", "Zeker wel" },
         };
 
-        List_Question rangeQuestion2 = new List_Question
+        ListQuestion rangeQuestion2 = new ListQuestion
         {
-            Question = "Voel jij je betrokken bij het beleid dat wordt uitgestippeld door je gemeente of stad?",
+            Text = "Voel jij je betrokken bij het beleid dat wordt uitgestippeld door je gemeente of stad?",
             AnswerList = new List<string> { "Ik voel me weinig tot niet betrokken", "Ik voel me (zeer) betrokken" },
         };
 
-        List_Question rangeQuestion3 = new List_Question
+        ListQuestion rangeQuestion3 = new ListQuestion
         {
-            Question = "In hoeverre ben jij tevreden met het vrijetijdsaanbod in jouw stad of gemeente?",
+            Text = "In hoeverre ben jij tevreden met het vrijetijdsaanbod in jouw stad of gemeente?",
             AnswerList = new List<string>
                 { "Zeer ontevreden", "Ontevreden", "Niet tevreden en niet ontevreden", "Tevreden", "Zeer tevreden" },
         };
 
-        List_Question rangeQuestion4 = new List_Question
+        ListQuestion rangeQuestion4 = new ListQuestion
         {
-            Question =
+            Text =
                 "In welke mate ben jij het eens met de volgende stelling: “Mijn stad of gemeente doet voldoende om betaalbare huisvesting mogelijk te maken voor iedereen.”",
             AnswerList = new List<string>
                 { "Helemaal oneens", "Oneens", "Noch eens, noch oneens", "Eens", "Helemaal eens" },
         };
 
-        List_Question rangeQuestion5 = new List_Question
+        ListQuestion rangeQuestion5 = new ListQuestion
         {
-            Question =
+            Text =
                 "In welke mate kun jij je vinden in het voorstel om de straatlichten in onze gemeente te doven tussen 23u en 5u?",
             AnswerList = new List<string> { "Ik sta hier volledig achter", "Ik sta hier helemaal niet achter" },
         };
@@ -195,15 +193,15 @@ public static class AnswerCubeInitializer
         context.ListQuestions.AddRange(rangeQuestion1, rangeQuestion2, rangeQuestion3, rangeQuestion4, rangeQuestion5);
 
         // Open Questions
-        Open_Question openQuestion1 = new Open_Question
+        OpenQuestion openQuestion1 = new OpenQuestion
         {
-            Question = "Je bent schepen van onderwijs voor een dag: waar zet je dan vooral op in?",
+            Text = "Je bent schepen van onderwijs voor een dag: waar zet je dan vooral op in?",
             Answer = "none"
         };
 
-        Open_Question openQuestion2 = new Open_Question
+        OpenQuestion openQuestion2 = new OpenQuestion
         {
-            Question =
+            Text =
                 "Als je één ding mag wensen voor het nieuwe stadspark, wat zou jouw droomstadspark dan zeker bevatten?",
             Answer = "none"
         };
@@ -234,6 +232,57 @@ public static class AnswerCubeInitializer
         };
         context.InfoSlide.AddRange(info1, info2, info3);
 
+        
+        SlideList slideList1 = new SlideList
+        { 
+            Title = "testlist1", 
+            SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum")
+        };
+         
+        slideList1.Slides = new LinkedList<Slide>();
+        slideList1.Slides.AddFirst(multipleChoice1);
+        slideList1.Slides.AddLast(multipleChoice2);
+        slideList1.Slides.AddLast(multipleChoice3);
+        slideList1.Slides.AddLast(openQuestion2);
+        slideList1.Slides.AddLast(singleChoice1);
+        context.SlideLists.Add(slideList1);
+        
+        
+        SlideList slideList2 = new SlideList
+        { 
+            Title = "testlist2", 
+            SubTheme = new SubTheme("een park", "ipsum lorum")
+        };
+        slideList1.Slides = new LinkedList<Slide>();
+        slideList1.Slides.AddFirst(rangeQuestion1);
+        slideList1.Slides.AddFirst(rangeQuestion2);
+        slideList1.Slides.AddFirst(rangeQuestion3);
+        slideList1.Slides.AddFirst(multipleChoice4);
+        slideList1.Slides.AddFirst(multipleChoice5);
+        context.SlideLists.Add(slideList2);
+        
+        
+        LinearFlow linearFlow = new LinearFlow
+        {
+            Name = "linear"
+        };
+        linearFlow.SlideList = new List<SlideList>();
+        linearFlow.SlideList.Add(slideList1);
+        linearFlow.SlideList.Add(slideList2);
+        
+        
+        CircularFlow circularFlow = new CircularFlow
+        {
+            Name = "circular"
+        };
+        circularFlow.SlideList = new List<SlideList>();
+        circularFlow.SlideList.Add(slideList1);
+        circularFlow.SlideList.Add(slideList2);
+        
+        
+        context.LinearFlows.Add(linearFlow);
+        context.CircularFlows.Add(circularFlow);
+        
         context.SaveChanges();
         context.ChangeTracker.Clear();
     }

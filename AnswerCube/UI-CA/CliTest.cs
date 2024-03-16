@@ -29,21 +29,21 @@ public class CliTest
 
     public void ShowOpenSlides()
     {
-        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowListSlides()
     {
-        _manager.getListSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+        _manager.GetListSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowSingleChoiceSlides()
     {
-        _manager.GetSingleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+        _manager.GetSingleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowMultipleChoiceSlides()
     {
-        _manager.GetMultipleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Question));
+        _manager.GetMultipleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 }

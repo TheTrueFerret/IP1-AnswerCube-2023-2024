@@ -9,6 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Slides\" />
+      <Folder Include="wwwroot\js\flow\" />
       <Folder Include="Controllers\Api\" />
     </ItemGroup>
 
@@ -18,12 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BL\BL.csproj" />
       <ProjectReference Include="..\DAL\DAL.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\BL\BL.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
       <PackageReference Include="Google.Apis.Gmail.v1" Version="1.67.0.3287" />
     </ItemGroup>
 
