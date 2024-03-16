@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Slide;
 using Domain;
 
 namespace AnswerCube.DAL.EF;
@@ -208,29 +209,6 @@ public static class AnswerCubeInitializer
 
         // Add the Open questions to the context
         context.OpenQuestions.AddRange(openQuestion1, openQuestion2);
-        
-        // Info slides
-        Info info1 = new Info
-        {
-            Question = "Wat is een gemeenteraad?",
-            Text = 
-                "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar."
-        };
-        
-        Info info2 = new Info
-        {
-            Question = "Wat is een schepen?",
-            Text =
-                "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad."
-        };
-        
-        Info info3 = new Info
-        {
-            Question = "Wat is een burgemeester?",
-            Text =
-                "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad."
-        };
-        context.InfoSlide.AddRange(info1, info2, info3);
 
         
         SlideList slideList1 = new SlideList
@@ -239,7 +217,7 @@ public static class AnswerCubeInitializer
             SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum")
         };
          
-        slideList1.Slides = new LinkedList<Slide>();
+        slideList1.Slides = new LinkedList<AbstractSlide>();
         slideList1.Slides.AddFirst(multipleChoice1);
         slideList1.Slides.AddLast(multipleChoice2);
         slideList1.Slides.AddLast(multipleChoice3);
@@ -253,7 +231,7 @@ public static class AnswerCubeInitializer
             Title = "testlist2", 
             SubTheme = new SubTheme("een park", "ipsum lorum")
         };
-        slideList1.Slides = new LinkedList<Slide>();
+        slideList1.Slides = new LinkedList<AbstractSlide>();
         slideList1.Slides.AddFirst(rangeQuestion1);
         slideList1.Slides.AddFirst(rangeQuestion2);
         slideList1.Slides.AddFirst(rangeQuestion3);

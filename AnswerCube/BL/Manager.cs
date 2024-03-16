@@ -1,4 +1,5 @@
 ﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Slide;
 using AnswerCube.DAL;
 using Domain;
 

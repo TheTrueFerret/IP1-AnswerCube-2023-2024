@@ -3,7 +3,7 @@ using AnswerCube.BL.Domain;
 
 namespace Domain;
 
-public abstract class Slide
+public abstract class AbstractSlide
 {
     [Key]
     public int Id { get; set; }

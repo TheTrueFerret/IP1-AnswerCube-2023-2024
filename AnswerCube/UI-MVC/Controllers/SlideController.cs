@@ -36,4 +36,9 @@ public class SlideController : Controller
     {
         return View();
     }
+
+    public IActionResult MultipleChoice()
+    {
+        return View();
+    }
 }

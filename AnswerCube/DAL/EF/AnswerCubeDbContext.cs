@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Slide;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -65,7 +66,7 @@ public class AnswerCubeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         // relation between Slide and SlideList
-        modelBuilder.Entity<Slide>()
+        modelBuilder.Entity<AbstractSlide>()
             .HasOne(s => s.SlideList)
             .WithMany(sl => sl.Slides);
         
@@ -96,12 +97,12 @@ public class AnswerCubeDbContext : DbContext
 
         // relation between Answer and Slide
         modelBuilder.Entity<Answer>()
-            .HasOne(a => a.Slide)
+            .HasOne(a => a.AbstractSlide)
             .WithMany(s => s.Answers);
         
-        modelBuilder.Entity<Slide>()
+        modelBuilder.Entity<AbstractSlide>()
             .HasMany(s => s.Answers)
-            .WithOne(A => A.Slide);
+            .WithOne(A => A.AbstractSlide);
 
 
 

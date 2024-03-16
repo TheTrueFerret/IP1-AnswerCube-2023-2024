@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using AnswerCube.UI.MVC.Controllers;
+using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using UI_MVC.Models;
 
