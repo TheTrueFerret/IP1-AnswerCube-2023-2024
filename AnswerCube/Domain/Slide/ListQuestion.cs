@@ -1,9 +1,9 @@
+using AnswerCube.BL.Domain;
+
 namespace Domain;
 
-public class List_Question : ISlide
-{
-    public int Id { get; set;}
-    public string Question { get; set;}
+public class ListQuestion : Slide
+{ 
     public Boolean IsMultipleChoice { get; set; }
     public List<String> AnswerList { get; set; }
 }

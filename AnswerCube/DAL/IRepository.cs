@@ -1,15 +1,22 @@
-using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain;
 using Domain;
 
 namespace AnswerCube.DAL;
 
 public interface IRepository
 {
-    List<Open_Question> GetOpenSlides();
+    List<OpenQuestion> GetOpenSlides();
     
-    List<List_Question> getListSlides();
-    List<List_Question> GetSingleChoiceSlides();
+    List<ListQuestion> GetListSlides();
+
+    List<ListQuestion> GetSingleChoiceSlides();
     
+    List<ListQuestion> GetMultipleChoiceSlides();
+    
+    SlideList ReadSlideList(int id);
+
     List<List_Question> GetMultipleChoiceSlides();
+
     List<Info> GetInfoSlides();
+    
 }

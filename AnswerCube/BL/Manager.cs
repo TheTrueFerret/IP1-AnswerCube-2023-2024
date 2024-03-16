@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain.Slide;
+﻿using AnswerCube.BL.Domain;
 using AnswerCube.DAL;
 using Domain;
 
@@ -14,24 +14,29 @@ public class Manager : IManager
     }
 
 
-    public List<Open_Question> GetOpenSlides()
+    public List<OpenQuestion> GetOpenSlides()
     {
         return _repository.GetOpenSlides();
     }
 
-    public List<List_Question> getListSlides()
+    public List<ListQuestion> GetListSlides()
     {
-        return _repository.getListSlides();
+        return _repository.GetListSlides();
     }
 
-    public List<List_Question> GetSingleChoiceSlides()
+    public List<ListQuestion> GetSingleChoiceSlides()
     {
         return _repository.GetSingleChoiceSlides();
     }
     
-    public List<List_Question> GetMultipleChoiceSlides()
+    public List<ListQuestion> GetMultipleChoiceSlides()
     {
         return _repository.GetMultipleChoiceSlides();
+    }
+
+    public SlideList GetSlideListById(int id)
+    {
+        return _repository.ReadSlideList(id);
     }
 
     public List<Info> GetInfoSlides()

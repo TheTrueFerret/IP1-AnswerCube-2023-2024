@@ -1,16 +1,19 @@
 ﻿using AnswerCube.BL.Domain.Slide;
+>>>>>>> AnswerCube/BL/IManager.cs
 using Domain;
 
 namespace AnswerCube.BL;
 
 public interface IManager
 {
-    List<Open_Question> GetOpenSlides();
+    List<OpenQuestion> GetOpenSlides();
     
-    List<List_Question> getListSlides();
+    List<ListQuestion> GetListSlides();
     
-    List<List_Question> GetSingleChoiceSlides();
+    List<ListQuestion> GetSingleChoiceSlides();
     
+    SlideList GetSlideListById(int id);
+
     List<List_Question> GetMultipleChoiceSlides();
     
     List<Info> GetInfoSlides();

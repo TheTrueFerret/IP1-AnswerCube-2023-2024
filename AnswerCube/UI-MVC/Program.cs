@@ -14,6 +14,17 @@ builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IManager, Manager>();
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder => 
+    {
+        optionsBuilder.UseNpgsql(
+            "Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
+    });
+
+
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IManager, Manager>();
+ 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

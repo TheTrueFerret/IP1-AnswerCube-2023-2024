@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,10 +11,18 @@ public class AnswerCubeDbContext : DbContext
 {
     //public DbSet<Project> Projects { get; set; }
     //public DbSet<Organization> Organizations { get; set; }
+    public DbSet<LinearFlow> LinearFlows { get; set; }
+    public DbSet<CircularFlow> CircularFlows { get; set; }
+    public DbSet<SlideList> SlideLists { get; set; }
+    public DbSet<SubTheme> SubThemes { get; set; }
+    
     public DbSet<Info> InfoSlide { get; set; }
-    public DbSet<List_Question> ListQuestions { get; set; }
-    public DbSet<Open_Question> OpenQuestions { get; set; }
-    public DbSet<Requesting_Data> RequestingData { get; set; }
+    public DbSet<ListQuestion> ListQuestions { get; set; }
+    public DbSet<OpenQuestion> OpenQuestions { get; set; }
+    public DbSet<RequestingInfo> RequestingInfo { get; set; }
+    public DbSet<Answer> Answers { get; set; } 
+    
+
 
     //TODO: add dbsets if needed
 
@@ -30,6 +38,7 @@ public class AnswerCubeDbContext : DbContext
             //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
             optionsBuilder.UseNpgsql(NewPostgreSqlTCPConnectionString().ToString());
         }
+        
         optionsBuilder.LogTo(message => Debug.WriteLine(message), LogLevel.Information);
     }
     
@@ -53,6 +62,49 @@ public class AnswerCubeDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
+        // relation between Slide and SlideList
+        modelBuilder.Entity<Slide>()
+            .HasOne(s => s.SlideList)
+            .WithMany(sl => sl.Slides);
+        
+        modelBuilder.Entity<SlideList>()
+            .HasMany(sl => sl.Slides)
+            .WithOne(s => s.SlideList);
+
+
+        // relation between Flow and SlideList
+        modelBuilder.Entity<Flow>()
+            .HasMany(f => f.SlideList)
+            .WithOne(sl => sl.Flow);
+        
+        modelBuilder.Entity<SlideList>()
+            .HasOne(sl => sl.Flow)
+            .WithMany(f => f.SlideList);
+        
+        
+        // relation between Subtheme and SlideList
+        modelBuilder.Entity<SubTheme>()
+            .HasMany(st => st.SlideList)
+            .WithOne(sl => sl.SubTheme);
+        
+        modelBuilder.Entity<SlideList>()
+            .HasOne(sl => sl.SubTheme)
+            .WithMany(st => st.SlideList);
+
+
+        // relation between Answer and Slide
+        modelBuilder.Entity<Answer>()
+            .HasOne(a => a.Slide)
+            .WithMany(s => s.Answers);
+        
+        modelBuilder.Entity<Slide>()
+            .HasMany(s => s.Answers)
+            .WithOne(A => A.Slide);
+
+
+
         //TODO: add modelbuilder (relations, required, etc.)
     }
 }
