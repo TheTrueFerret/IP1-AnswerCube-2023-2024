@@ -72,7 +72,6 @@
 
     <ItemGroup>
       <Folder Include="Slides\" />
-      <Folder Include="wwwroot\js\flow\" />
       <Folder Include="Controllers\Api\" />
     </ItemGroup>
 
