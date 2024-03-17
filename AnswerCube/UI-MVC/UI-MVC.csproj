@@ -71,11 +71,6 @@
     </Target>
 
     <ItemGroup>
-      <Folder Include="Slides\" />
-      <Folder Include="Controllers\Api\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <AdditionalFiles Include="Views\Slide\Index.cshtml" />
       <AdditionalFiles Include="Views\Slide\InfoSlide.cshtml" />
     </ItemGroup>

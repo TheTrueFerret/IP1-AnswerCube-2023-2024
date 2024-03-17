@@ -4,10 +4,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: {
-        site: './src/js/site.ts', 
-        validation: './src/js/validation.ts', 
-        index: './src/js/index.ts',
-        slide: './src/js/slide/slide.ts',
+        site: './src/ts/site.ts', 
+        index: './src/ts/index.ts',
+        multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
     },
     output: {
         filename: '[name].entry.js',

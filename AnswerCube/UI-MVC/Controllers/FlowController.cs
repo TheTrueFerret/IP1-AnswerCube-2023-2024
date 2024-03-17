@@ -8,11 +8,9 @@ namespace UI_MVC.Controllers;
 
 public class FlowController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public FlowController(ILogger<HomeController> logger)
+    public IActionResult CircularFlow()
     {
-        _logger = logger;
+        return View();
     }
     
     public IActionResult LinearFlow()
@@ -20,10 +18,6 @@ public class FlowController : Controller
         return View();
     }
     
-    public IActionResult CircularFlow()
-    {
-        return View();
-    }
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

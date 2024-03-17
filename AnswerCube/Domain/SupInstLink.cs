@@ -2,12 +2,7 @@ namespace AnswerCube.BL.Domain;
 
 public class SupInstLink
 {
-    private Installation _installation { get; set; }
-    private String Notes { get; set; }
-
-    public SupInstLink(Installation installation, string notes)
-    {
-        _installation = installation;
-        Notes = notes;
-    }
+    public int Id { get; set; }
+    public Installation? Installation { get; set; }
+    public string Notes { get; set; }
 }

@@ -15,8 +15,10 @@ public class SlidesController : ControllerBase
     public SlidesController(IManager manager)
     {
         _manager = manager;
-    } 
-
+    }
+    
+    
+    
     [HttpGet]
     public ActionResult<SlideDto> NextSlide()
     {

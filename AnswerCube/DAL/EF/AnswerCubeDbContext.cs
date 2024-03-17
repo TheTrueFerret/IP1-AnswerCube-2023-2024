@@ -21,7 +21,8 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<ListQuestion> ListQuestions { get; set; }
     public DbSet<OpenQuestion> OpenQuestions { get; set; }
     public DbSet<RequestingInfo> RequestingInfo { get; set; }
-    public DbSet<Answer> Answers { get; set; } 
+    public DbSet<Answer> Answers { get; set; }
+    public DbSet<Installation> Installations { get; set; }
     
     //TODO: add dbsets if needed
     
@@ -101,10 +102,18 @@ public class AnswerCubeDbContext : DbContext
         
         modelBuilder.Entity<AbstractSlide>()
             .HasMany(s => s.Answers)
-            .WithOne(A => A.AbstractSlide);
-
-
-
+            .WithOne(a => a.AbstractSlide);
+        
+        
+        // relation between Installation and Flow
+        modelBuilder.Entity<Installation>()
+            .HasOne(i => i.Flow)
+            .WithMany(f => f.ActiveInstallations);
+        
+        modelBuilder.Entity<Flow>()
+            .HasMany(s => s.ActiveInstallations)
+            .WithOne(i => i.Flow);
+        
         //TODO: add modelbuilder (relations, required, etc.)
     }
 }

@@ -1,6 +1,5 @@
 
-
-function getSlide() {
+function getMultipleChoice() {
     fetch("http://localhost:5104/api/Slides",
         {
             method: "GET",
@@ -21,5 +20,4 @@ function getSlide() {
         })
 }
 
-
-getSlide()
+getMultipleChoice()
