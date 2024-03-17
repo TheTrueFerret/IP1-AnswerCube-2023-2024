@@ -2,6 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section Scripts
+{
+    <script src="~/dist/index.entry.js" defer></script>
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <a class="btn btn-primary" type="button" asp-area="" asp-controller="Slide" asp-action="InfoSlide"> Go To InfoSlides</a>
