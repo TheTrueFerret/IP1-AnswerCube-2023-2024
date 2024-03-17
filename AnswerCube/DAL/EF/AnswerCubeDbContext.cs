@@ -23,15 +23,14 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<RequestingInfo> RequestingInfo { get; set; }
     public DbSet<Answer> Answers { get; set; } 
     
-
-
     //TODO: add dbsets if needed
-
+    
+    
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
         AnswerCubeInitializer.Initialize(this, true);
     }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
