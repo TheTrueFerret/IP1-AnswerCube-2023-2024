@@ -34,14 +34,19 @@ public class Manager : IManager
     {
         return _repository.GetMultipleChoiceSlides();
     }
+    
+    public List<Info> GetInfoSlides()
+    {
+        return _repository.GetInfoSlides();
+    }
 
     public SlideList GetSlideListById(int id)
     {
         return _repository.ReadSlideList(id);
     }
 
-    public List<Info> GetInfoSlides()
+    public List<SlideList> GetSlideLists()
     {
-        return _repository.GetInfoSlides();
+        return _repository.ReadSlideLists();
     }
 }

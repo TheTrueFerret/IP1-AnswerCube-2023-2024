@@ -14,8 +14,12 @@ public interface IRepository
     
     List<ListQuestion> GetMultipleChoiceSlides();
     
-    SlideList ReadSlideList(int id);
-
     List<Info> GetInfoSlides();
+    
+    SlideList ReadSlideList(int id);
+    
+    List<SlideList> ReadSlideLists();
+
+    
     
 }

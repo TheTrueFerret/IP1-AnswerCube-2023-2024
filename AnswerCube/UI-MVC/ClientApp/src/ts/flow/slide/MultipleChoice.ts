@@ -1,4 +1,5 @@
 
+// deze zijn misschien niet nodig (ge moogt er wel zelf 1 maken <3 jarno)
 function getMultipleChoice() {
     fetch("http://localhost:5104/api/Slides",
         {
@@ -20,4 +21,3 @@ function getMultipleChoice() {
         })
 }
 
-getMultipleChoice()

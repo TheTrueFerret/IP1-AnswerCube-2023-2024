@@ -11,10 +11,13 @@ public interface IManager
     List<ListQuestion> GetListSlides();
     
     List<ListQuestion> GetSingleChoiceSlides();
-    
-    SlideList GetSlideListById(int id);
 
     List<ListQuestion> GetMultipleChoiceSlides();
     
     List<Info> GetInfoSlides();
+    
+    SlideList GetSlideListById(int id);
+    
+    List<SlideList> GetSlideLists();
+
 }

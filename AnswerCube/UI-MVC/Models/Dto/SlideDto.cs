@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using AnswerCube.BL.Domain.Slide;
+using Domain;
 
 namespace UI_MVC.Models.Dto;
 
@@ -9,11 +10,34 @@ public class SlideDto
     public Boolean? IsMultipleChoice { get; set; }
     public List<String>? AnswerList { get; set; }
 
-    public SlideDto(ListQuestion listQuestion)
+    public SlideDto(ListQuestion slide)
     {
-        Id = listQuestion.Id;
-        Text = listQuestion.Text;
-        IsMultipleChoice = listQuestion.IsMultipleChoice;
-        AnswerList = listQuestion.AnswerList;
+        Id = slide.Id;
+        Text = slide.Text;
+        
+    }
+    
+    public SlideDto(OpenQuestion slide)
+    {
+        Id = slide.Id;
+        Text = slide.Text;
+    }
+    
+    public SlideDto(Info slide)
+    {
+        Id = slide.Id;
+        Text = slide.Text;
+    }
+    
+    public SlideDto(RequestingInfo slide)
+    {
+        Id = slide.Id;
+        Text = slide.Text;
+    }
+    
+    public SlideDto(AbstractSlide slide)
+    {
+        Id = slide.Id;
+        Text = slide.Text;
     }
 }

@@ -1,5 +1,5 @@
 
-
+// deze zijn misschien niet nodig (ge moogt er wel zelf 1 maken <3 jarno)
 function getMultipleChoice() {
     fetch("http://localhost:5104/api/Slides",
         {
@@ -20,7 +20,4 @@ function getMultipleChoice() {
             document.getElementById("slide").innerHTML += `<h1>${slide.id}</h1><h2>${slide.text}</h2>`;
         })
 }
-
-getMultipleChoice()
-
 

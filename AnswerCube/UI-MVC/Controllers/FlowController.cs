@@ -9,6 +9,20 @@ namespace UI_MVC.Controllers;
 
 public class FlowController : Controller
 {
+    // Dictionary to map conditions to partial page names
+    public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
+    {
+        { "Start", "Slide/StartSlide" },
+        { "MultipleChoice", "Slide/MultipleChoice" },
+        { "SingleChoice", "Slide/SingleChoice" },
+        { "OpenQuestion", "Slide/OpenQuestion" },
+        { "InfoSlide", "Slide/InfoSlide" },
+        // Add more conditions and partial page names as needed
+    };
+    // Property to hold the current condition
+    public string CurrentCondition { get; set; } = "Start";
+    
+    
     public IActionResult CircularFlow()
     {
         // Ensure CurrentCondition is properly set
@@ -29,23 +43,11 @@ public class FlowController : Controller
         return View(this); // Pass the controller instance to the view
     }
     
-    // Dictionary to map conditions to partial page names
-    public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
-    {
-        { "Start", "Slide/StartSlide" },
-        { "MultipleChoice", "Slide/MultipleChoice" },
-        { "SingleChoice", "Slide/SingleChoice" },
-        { "OpenQuestion", "Slide/OpenQuestion" },
-        { "InfoSlide", "Slide/InfoSlide" },
-        // Add more conditions and partial page names as needed
-    };
-    
-    // Property to hold the current condition
-    public string CurrentCondition { get; set; } = "Start";
-
-    public void OnGet()
+    [HttpGet]
+    public void SetCurrentCondition()
     {
         // Perform any necessary initialization or data retrieval
+        // TODO getting the data
     }
     
     [HttpPost]

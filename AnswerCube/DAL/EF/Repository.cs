@@ -33,14 +33,21 @@ public class Repository : IRepository
     {
         return _context.ListQuestions.Where(q => q.IsMultipleChoice).ToList();
     }
+    
+    public List<Info> GetInfoSlides()
+    {
+        return _context.InfoSlide.ToList();
+    }
 
     public SlideList ReadSlideList(int id)
     {
         return _context.SlideLists.Find(id);
     }
-
-    public List<Info> GetInfoSlides()
+    
+    public List<SlideList> ReadSlideLists()
     {
-        return _context.InfoSlide.ToList();
+        return _context.SlideLists.ToList();
     }
+
+    
 }

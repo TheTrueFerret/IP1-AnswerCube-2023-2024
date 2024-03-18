@@ -12,19 +12,33 @@ public class InstallationController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
-
+    private int slideCount = 0;
+    private int slideListId;
+    
     public InstallationController(ILogger<HomeController> logger, IManager manager)
     {
         _logger = logger;
         _manager = manager;
     }
     
+    //this file gets all of the date on the active flow on this installation
+    
+    [HttpGet]
+    public ActionResult<SlideListDto> initialiseSlideList()
+    {
+        slideCount = 0;
+        List<SlideList> allSlides = _manager.GetSlideLists();
+        SlideListDto slideListDto = new SlideListDto(allSlides[1]);
+        slideListId = slideListDto.Id;
+        return slideListDto;
+    }
+    
     [HttpGet]
     public ActionResult<SlideDto> NextSlide()
     {
-        List<ListQuestion> allSlides = _manager.GetListSlides();
-        Random rand = new Random();
-        SlideDto slideDto = new SlideDto(allSlides[rand.Next(allSlides.Count)]);
+        SlideList slideList = _manager.GetSlideListById(slideListId);
+        SlideDto slideDto = new SlideDto(slideList.Slides.ElementAt(slideCount));
+        slideCount++;
         return slideDto;
     }
     

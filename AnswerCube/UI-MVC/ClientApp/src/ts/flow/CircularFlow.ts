@@ -40,3 +40,4 @@ function updateCondition(newCondition) {
         alert("Something went wrong: " + err);
     })
 }
+
