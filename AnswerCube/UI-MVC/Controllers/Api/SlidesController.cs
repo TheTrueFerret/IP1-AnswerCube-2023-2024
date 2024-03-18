@@ -19,18 +19,6 @@ public class SlidesController : ControllerBase
     
     
     
-    [HttpGet]
-    public ActionResult<SlideDto> NextSlide()
-    {
-        List<ListQuestion> allSlides = _manager.GetMultipleChoiceSlides();
-        Random rand = new Random();
-        SlideDto slideDto = new SlideDto(allSlides[rand.Next(allSlides.Count)]);
-        return slideDto;
-    }
     
-    public ActionResult<SlideListDto> NextSlideList()
-    {
-        SlideListDto slideList = new SlideListDto(_manager.GetSlideListById(1));
-        return slideList;
-    }
+    
 }

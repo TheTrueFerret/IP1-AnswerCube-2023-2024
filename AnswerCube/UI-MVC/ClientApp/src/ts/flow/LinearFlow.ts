@@ -1,7 +1,5 @@
 
-
-
-function getLinearFlow() {
+function getSlideList() {
     fetch("http://localhost:5104/api/Slides",
         {
             method: "GET",
@@ -16,13 +14,31 @@ function getLinearFlow() {
                 document.getElementById("page").innerHTML = "<em>Problem!!!</em>";
             }
         })
-        .then(slide => {
-            console.log(slide);
-            document.getElementById("page").innerHTML += `<h1>${slide.id}</h1><h2>${slide.text}</h2>`;
+        .then(slideList => {
+            console.log(slideList);
+            updateCondition(slideList[1])
         })
 }
 
-
-getLinearFlow()
+function updateCondition(newCondition) {
+    fetch("http://localhost:5104/api/Slides", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(newCondition)
+    }).then(res => {
+        if(res.ok) {
+            if(res.status === 201) {
+                return res.json();
+            }
+        } else {
+            alert("No 2xx code returned")
+        }
+    }).catch(err => {
+        alert("Something went wrong: " + err);
+    })
+}
 
 

@@ -71,11 +71,6 @@
     </Target>
 
     <ItemGroup>
-      <AdditionalFiles Include="Views\Slide\Index.cshtml" />
-      <AdditionalFiles Include="Views\Slide\InfoSlide.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\DAL\DAL.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
       <ProjectReference Include="..\BL\BL.csproj" />
@@ -84,6 +79,26 @@
     <ItemGroup>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
       <PackageReference Include="Google.Apis.Gmail.v1" Version="1.67.0.3287" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Slide\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Slide\InfoSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Slide\MultipleChoice.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\Slide\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\Slide\InfoSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\Slide\MultipleChoice.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Slide\OpenQuestion.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Slide\StartSlide.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Slide\InfoSlide.cshtml" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Flow\Slide\MultipleChoice.cshtml" />
     </ItemGroup>
 
 </Project>

@@ -1,15 +1,15 @@
 @{
     ViewBag.Title = "FlowLinear";
-    Layout = "_Layout";
 }
 
+@model UI_MVC.Controllers.FlowController
 @section Scripts
 {
-    <script src="~/dist/slide.entry.js" defer></script>
+    <script src="~/dist/linearflow.entry.js" defer></script>
 }
 
 <div id="page">
-    
+    @await Html.PartialAsync(Model.PartialPages[Model.CurrentCondition])
 </div>
 
 

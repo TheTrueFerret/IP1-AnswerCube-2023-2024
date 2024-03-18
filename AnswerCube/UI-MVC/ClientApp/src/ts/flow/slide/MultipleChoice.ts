@@ -11,12 +11,12 @@ function getMultipleChoice() {
             if (response.status === 200) {
                 return response.json();
             } else {
-                document.getElementById("page").innerHTML = "<em>Problem!!!</em>";
+                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
             }
         })
         .then(slide => {
             console.log(slide);
-            document.getElementById("page").innerHTML += `<h1>${slide.id}</h1><h2>${slide.text}</h2>`;
+            document.getElementById("slide").innerHTML += `<h1>${slide.id}</h1><h2>${slide.text}</h2>`;
         })
 }
 
