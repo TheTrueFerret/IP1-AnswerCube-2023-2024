@@ -18,7 +18,8 @@
         "INSTANCE_HOST": "localhost",
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
-        "DB_NAME": "DataBase IP1 Testssssss"
+        "DB_NAME": "DataBase IP1 Testssssss",
+        "APP_URL": "http://localhost:5104"
       }
     },
     "https": {
@@ -31,8 +32,8 @@
         "INSTANCE_HOST": "localhost",
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
-        "DB_NAME": "DataBase IP1 Testssssss"
-
+        "DB_NAME": "DataBase IP1 Testssssss",
+        "APP_URL": "https://localhost:7272"
       }
     },
     "IIS Express": {
