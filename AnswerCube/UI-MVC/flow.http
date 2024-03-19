@@ -1,2 +1,23 @@
-GET http://localhost:5104/api/Installations/GetSlide
+GET http://localhost:5104/api/Installations
 Accept: application/json
+
+
+###
+POST http://localhost:5104/Flow/SetCurrentSlide
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 11,
+  "typeSlide": 1,
+  "text": "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
+  "isMultipleChoice": null,
+  "answerList": [
+    "Tennis",
+    "Hockey",
+    "Padel",
+    "Voetbal",
+    "Fitness"
+  ]
+}
+

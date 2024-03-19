@@ -1,7 +1,7 @@
 
 
 function nextSlide() {
-    fetch("http://localhost:5104/api/Installations/GetSlide",
+    fetch("http://localhost:5104/api/Installations",
         {
             method: "GET",
             headers: {
@@ -12,11 +12,11 @@ function nextSlide() {
             if (response.status === 200) {
                 return response.json();
             } else {
-                document.getElementById("slide").innerHTML = "<em>!!!</em>";
+                document.getElementById("slide").innerHTML = "<em>problem!!!</em>";
             }
         }).then(slide => {
             console.log(slide)
-            //UpdateFlowPage(slide)
+            UpdateFlowPage(slide)
         })
         .catch(error => {
             console.error(error);
@@ -28,6 +28,7 @@ function UpdateFlowPage(slide) {
     fetch("http://localhost:5104/Flow/SetCurrentSlide", {
         method: "POST",
         headers: {
+            "Accept": "application/json",
             "Content-Type": "application/json"
         },
         body: JSON.stringify(slide)

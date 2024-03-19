@@ -11,6 +11,11 @@ public class SlideDto
     public Boolean? IsMultipleChoice { get; set; }
     public List<String>? AnswerList { get; set; }
     
+    public SlideDto()
+    {
+        
+    }
+    
     public SlideDto(AbstractSlide slide)
     {
         Id = slide.Id;

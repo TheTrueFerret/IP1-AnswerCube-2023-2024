@@ -7,6 +7,7 @@ using AnswerCube.UI.MVC.Models;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using UI_MVC.Models;
+using UI_MVC.Models.Dto;
 
 namespace UI_MVC.Controllers;
 
@@ -60,15 +61,17 @@ public class FlowController : Controller
     }
     
     [HttpPost]
-    public void SetCurrentSlide([FromBody] AbstractSlide slide)
+    public IActionResult SetCurrentSlide([FromBody] AbstractSlide slide)
     {
-        UpdateCondition(slide.TypeSlide);
+        if (slide == null)
+        {
+            return BadRequest("Invalid slide object");
+        }
+        CurrentCondition = slide.TypeSlide;
+        return Ok();
     }
     
-    public void UpdateCondition(TypeSlide newCondition)
-    {
-        CurrentCondition = newCondition; // Update the condition
-    }
+    
     
     
     // Method to load slide list data from the database
