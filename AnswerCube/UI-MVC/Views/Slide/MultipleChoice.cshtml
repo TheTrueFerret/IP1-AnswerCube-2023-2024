@@ -1,0 +1,45 @@
+@{
+    ViewBag.Title = "MultipleChoice";
+}
+@using Domain
+@model List<Domain.ListQuestion>
+
+@section Scripts
+{
+    <script src="~/dist/multiplechoice.entry.js" defer></script>
+}
+
+<h2>All Multiple questions</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Text</th>
+        <th>Answers</th>
+        <th>IsMultipleChoice</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="MultipleQuestionTableBody">
+        @foreach (ListQuestion listQuestion in Model)
+        {
+            <tr>
+                <td>@listQuestion.Text</td>
+                <td>
+                    <ul>
+                        @foreach (var answer in listQuestion.AnswerList)
+                        {
+                            <li>@answer</li>
+                        }
+                    </ul>
+                </td>
+                <td>@listQuestion.IsMultipleChoice</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="slide">
+    <a class="btn btn-primary" type="button" asp-area="" asp-controller="Flow" asp-action="" id="nextButton">Next Slide</a>
+</div>
+

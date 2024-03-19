@@ -49,5 +49,8 @@ public class Repository : IRepository
         return _context.SlideLists.ToList();
     }
 
-    
+    public List<CircularFlow> ReadCirculaireFlows()
+    {
+        return _context.CircularFlow.ToList();
+    }
 }

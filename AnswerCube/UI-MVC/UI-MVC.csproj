@@ -90,15 +90,22 @@
       <_ContentIncludedByDefault Remove="Views\Shared\Slide\MultipleChoice.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\OpenQuestion.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\StartSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Flow\Slide\InfoSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Flow\Slide\MultipleChoice.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Flow\Slide\OpenQuestion.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Flow\Slide\SingleChoice.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Flow\Slide\StartSlide.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Views\Slide\InfoSlide.cshtml" />
     </ItemGroup>
 
-
     <ItemGroup>
-      <AdditionalFiles Include="Views\Flow\Slide\MultipleChoice.cshtml" />
+      <AdditionalFiles Include="Views\Slide\InfoSlide.cshtml" />
+      <AdditionalFiles Include="Views\Slide\OpenQuestion.cshtml" />
+      <AdditionalFiles Include="Views\Slide\SingleChoice.cshtml" />
+      <AdditionalFiles Include="Views\Slide\StartSlide.cshtml" />
     </ItemGroup>
 
 </Project>

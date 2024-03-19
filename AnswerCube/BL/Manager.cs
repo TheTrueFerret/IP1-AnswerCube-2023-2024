@@ -49,4 +49,9 @@ public class Manager : IManager
     {
         return _repository.ReadSlideLists();
     }
+
+    public List<CircularFlow> GetCirculaireFlow()
+    {
+        return _repository.ReadCirculaireFlows();
+    }
 }

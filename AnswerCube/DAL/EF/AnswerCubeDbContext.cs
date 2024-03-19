@@ -13,7 +13,7 @@ public class AnswerCubeDbContext : DbContext
     //public DbSet<Project> Projects { get; set; }
     //public DbSet<Organization> Organizations { get; set; }
     public DbSet<LinearFlow> LinearFlows { get; set; }
-    public DbSet<CircularFlow> CircularFlows { get; set; }
+    public DbSet<CircularFlow> CircularFlow { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
     

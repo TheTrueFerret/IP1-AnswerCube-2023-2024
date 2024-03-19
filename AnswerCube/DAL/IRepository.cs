@@ -20,6 +20,7 @@ public interface IRepository
     
     List<SlideList> ReadSlideLists();
 
-    
-    
+    List<CircularFlow> ReadCirculaireFlows();
+
+
 }

@@ -1,3 +1,8 @@
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!*********************************************!*\
+  !*** ./src/ts/flow/slide/MultipleChoice.ts ***!
+  \*********************************************/
 const tableBody = document.getElementById('MultipleQuestionTableBodyTableBody')
 const nextButton = document.getElementById('nextButton')
 
@@ -58,3 +63,6 @@ async function retrieveAstronauts() {
 getMultipleChoice()
 nextButton.addEventListener('click', getMultipleChoice)
 */
+/******/ })()
+;
+//# sourceMappingURL=multiplechoice.entry.js.map

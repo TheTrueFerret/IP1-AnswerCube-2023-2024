@@ -231,12 +231,12 @@ public static class AnswerCubeInitializer
             Title = "testlist2", 
             SubTheme = new SubTheme("een park", "ipsum lorum")
         };
-        slideList1.Slides = new LinkedList<AbstractSlide>();
-        slideList1.Slides.AddFirst(rangeQuestion1);
-        slideList1.Slides.AddFirst(rangeQuestion2);
-        slideList1.Slides.AddFirst(rangeQuestion3);
-        slideList1.Slides.AddFirst(multipleChoice4);
-        slideList1.Slides.AddFirst(multipleChoice5);
+        slideList2.Slides = new LinkedList<AbstractSlide>();
+        slideList2.Slides.AddFirst(rangeQuestion1);
+        slideList2.Slides.AddFirst(rangeQuestion2);
+        slideList2.Slides.AddFirst(rangeQuestion3);
+        slideList2.Slides.AddFirst(multipleChoice4);
+        slideList2.Slides.AddFirst(multipleChoice5);
         context.SlideLists.Add(slideList2);
         
         
@@ -259,7 +259,7 @@ public static class AnswerCubeInitializer
         
         
         context.LinearFlows.Add(linearFlow);
-        context.CircularFlows.Add(circularFlow);
+        context.CircularFlow.Add(circularFlow);
         
         context.SaveChanges();
         context.ChangeTracker.Clear();

@@ -19,5 +19,6 @@ public interface IManager
     SlideList GetSlideListById(int id);
     
     List<SlideList> GetSlideLists();
+    List<CircularFlow> GetCirculaireFlow();
 
 }

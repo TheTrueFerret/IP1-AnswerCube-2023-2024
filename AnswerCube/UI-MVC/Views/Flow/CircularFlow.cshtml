@@ -1,16 +1,31 @@
 @{
     ViewBag.Title = "CircularFlow";
 }
+@model List<Domain.CircularFlow>
 
-@model UI_MVC.Controllers.FlowController
+
+
+<h2>Circular flow</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>SlideList</th>
+    </tr>
+    </thead>
+    <tbody id="CircularFlowTableBody">
+    
+    </tbody>
+</table>
+
+<button class="btn btn-primary" type="button" id="refreshButton">Refresh</button>
+
+
 @section Scripts
 {
     <script src="~/dist/circularflow.entry.js" defer></script>
 }
-
-<div id="page">
-    @await Html.PartialAsync(Model.PartialPages[Model.CurrentCondition])
-</div>
 
 
 

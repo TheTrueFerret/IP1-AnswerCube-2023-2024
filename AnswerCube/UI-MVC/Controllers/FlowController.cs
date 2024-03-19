@@ -2,6 +2,7 @@ using System.Diagnostics;
 using AnswerCube.BL;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using UI_MVC.Models;
 
@@ -9,6 +10,13 @@ namespace UI_MVC.Controllers;
 
 public class FlowController : Controller
 {
+    private readonly IManager _manager;
+
+    public FlowController(IManager manager)
+    {
+        _manager = manager;
+    }
+    
     // Dictionary to map conditions to partial page names
     public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
     {
@@ -30,7 +38,10 @@ public class FlowController : Controller
         {
             CurrentCondition = "Start"; // Set a default condition if necessary
         }
-        return View(this); // Pass the controller instance to the view
+
+        List<CircularFlow> cFlow = _manager.GetCirculaireFlow();
+        
+        return View(cFlow); // Pass the controller instance to the view
     }
     
     public IActionResult LinearFlow()

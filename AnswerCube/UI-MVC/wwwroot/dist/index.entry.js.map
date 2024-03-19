@@ -1,0 +1,1 @@
+{"version":3,"file":"index.entry.js","mappings":";;;;;AAAA;AACA;AACA;AACA;AACA","sources":["webpack://AnswerCube/./src/ts/index.ts"],"sourcesContent":["\r\n\r\nconsole.log('The \\'index\\' bundle has been loaded!');\r\n\r\n\r\n"],"names":[],"sourceRoot":""}

@@ -11,7 +11,7 @@ function getSlideList() {
             if (response.status === 200) {
                 return response.json();
             } else {
-                document.getElementById("page").innerHTML = "<em>Problem!!!</em>";
+                document.getElementById("CircularFlowTableBody").innerHTML = "<em>Problem!!!</em>";
             }
         })
         .then(slideList => {
