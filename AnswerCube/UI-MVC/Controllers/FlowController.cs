@@ -61,12 +61,12 @@ public class FlowController : Controller
     }
     
     [HttpPost]
-    public IActionResult SetCurrentSlide([FromBody] AbstractSlide slide)
+    public IActionResult SetCurrentSlide([FromBody] SlideDto slide)
     {
-        if (slide == null)
-        {
-            return BadRequest("Invalid slide object");
-        }
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        
         CurrentCondition = slide.TypeSlide;
         return Ok();
     }
