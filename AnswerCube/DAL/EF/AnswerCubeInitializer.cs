@@ -27,9 +27,8 @@ public static class AnswerCubeInitializer
         //SingleChoice
         ListQuestion singleChoice1 = new ListQuestion
         {
-            Text =
-                "Als jij de begroting van je stad of gemeente zou opmaken, waar zou je dan in de komende jaren vooral op inzetten?",
-            IsMultipleChoice = false,
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "Als jij de begroting van je stad of gemeente zou opmaken, waar zou je dan in de komende jaren vooral op inzetten?",
             AnswerList = new List<string>
             {
                 "Natuur en ecologie", "Vrije tijd, sport, cultuur", "Huisvesting", "Onderwijs en kinderopvang",
@@ -38,16 +37,15 @@ public static class AnswerCubeInitializer
         };
         ListQuestion singleChoice2 = new ListQuestion
         {
-            Text =
-                "Er moet meer geïnvesteerd worden in overdekte fietsstallingen aan de bushaltes in onze gemeente.",
-            IsMultipleChoice = false,
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "Er moet meer geïnvesteerd worden in overdekte fietsstallingen aan de bushaltes in onze gemeente.",
             AnswerList = new List<string> { "Eens", "Oneens" }
         };
 
         ListQuestion singleChoice3 = new ListQuestion
         {
+            TypeSlide = TypeSlide.SingleChoice,
             Text = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
-            IsMultipleChoice = false,
             AnswerList = new List<string>
             {
                 "Sportinfrastructuur", "Speeltuin voor kinderen", "Zitbanken en picknickplaatsen",
@@ -57,16 +55,15 @@ public static class AnswerCubeInitializer
 
         ListQuestion singleChoice4 = new ListQuestion
         {
+            TypeSlide = TypeSlide.SingleChoice,
             Text = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
-            IsMultipleChoice = false,
             AnswerList = new List<string> { "Akkoord", "Niet akkoord" }
         };
 
         ListQuestion singleChoice5 = new ListQuestion
         {
-            Text =
-                "Om ons allemaal veilig en vlot te verplaatsen, moet er in jouw stad of gemeente vooral meer aandacht gaan naar",
-            IsMultipleChoice = false,
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "Om ons allemaal veilig en vlot te verplaatsen, moet er in jouw stad of gemeente vooral meer aandacht gaan naar",
             AnswerList = new List<string>
             {
                 "Verplaatsingen met de fiets", "Verplaatsingen met de auto/moto", "Verplaatsingen te voet",
@@ -76,9 +73,8 @@ public static class AnswerCubeInitializer
 
         ListQuestion singleChoice6 = new ListQuestion
         {
-            Text =
-                "Wat vind jij van het idee om alle leerlingen van de scholen in onze stad een gratis fiets aan te bieden?",
-            IsMultipleChoice = false,
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "Wat vind jij van het idee om alle leerlingen van de scholen in onze stad een gratis fiets aan te bieden?",
             AnswerList = new List<string> { "Goed idee", "Slecht idee" }
         };
 
@@ -88,8 +84,8 @@ public static class AnswerCubeInitializer
 
         ListQuestion multipleChoice1 = new ListQuestion
         {
+            TypeSlide = TypeSlide.MultipleChoice,
             Text = "Wat zou jou helpen om een keuze te maken tussen de verschillende partijen?",
-            IsMultipleChoice = true,
             AnswerList = new List<string>
             {
                 "Meer lessen op school rond de partijprogramma’s",
@@ -102,16 +98,15 @@ public static class AnswerCubeInitializer
 
         ListQuestion multipleChoice2 = new ListQuestion
         {
+            TypeSlide = TypeSlide.MultipleChoice,
             Text = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
-            IsMultipleChoice = true,
             AnswerList = new List<string> { "Tennis", "Hockey", "Padel", "Voetbal", "Fitness" }
         };
 
         ListQuestion multipleChoice3 = new ListQuestion
         {
-            Text =
-                "Aan welke van deze activiteiten zou jij meedoen, om mee te wegen op het beleid van jouw stad of gemeente?",
-            IsMultipleChoice = true,
+            TypeSlide = TypeSlide.MultipleChoice,
+            Text = "Aan welke van deze activiteiten zou jij meedoen, om mee te wegen op het beleid van jouw stad of gemeente?",
             AnswerList = new List<string>
             {
                 "Deelnemen aan gespreksavonden met schepenen en burgemeester",
@@ -124,8 +119,8 @@ public static class AnswerCubeInitializer
 
         ListQuestion multipleChoice4 = new ListQuestion
         {
+            TypeSlide = TypeSlide.MultipleChoice,
             Text = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
-            IsMultipleChoice = true,
             AnswerList = new List<string>
             {
                 "Ik heb geen interesse",
@@ -138,8 +133,8 @@ public static class AnswerCubeInitializer
 
         ListQuestion multipleChoice5 = new ListQuestion
         {
+            TypeSlide = TypeSlide.MultipleChoice,
             Text = "Wat zou jou (meer) zin geven om te gaan stemmen?",
-            IsMultipleChoice = true,
             AnswerList = new List<string>
             {
                 "Kunnen gaan stemmen op een toffere locatie",
@@ -157,6 +152,7 @@ public static class AnswerCubeInitializer
 
         ListQuestion rangeQuestion1 = new ListQuestion
         {
+            TypeSlide = TypeSlide.SingleChoice,
             Text = "Ben jij van plan om te gaan stemmen bij de aankomende lokale verkiezingen?",
             AnswerList = new List<string>
                 { "Zeker niet", "Eerder niet", "Ik weet het nog niet", "Eerder wel", "Zeker wel" },
@@ -164,12 +160,14 @@ public static class AnswerCubeInitializer
 
         ListQuestion rangeQuestion2 = new ListQuestion
         {
+            TypeSlide = TypeSlide.SingleChoice,
             Text = "Voel jij je betrokken bij het beleid dat wordt uitgestippeld door je gemeente of stad?",
             AnswerList = new List<string> { "Ik voel me weinig tot niet betrokken", "Ik voel me (zeer) betrokken" },
         };
 
         ListQuestion rangeQuestion3 = new ListQuestion
         {
+            TypeSlide = TypeSlide.SingleChoice,
             Text = "In hoeverre ben jij tevreden met het vrijetijdsaanbod in jouw stad of gemeente?",
             AnswerList = new List<string>
                 { "Zeer ontevreden", "Ontevreden", "Niet tevreden en niet ontevreden", "Tevreden", "Zeer tevreden" },
@@ -177,16 +175,16 @@ public static class AnswerCubeInitializer
 
         ListQuestion rangeQuestion4 = new ListQuestion
         {
-            Text =
-                "In welke mate ben jij het eens met de volgende stelling: “Mijn stad of gemeente doet voldoende om betaalbare huisvesting mogelijk te maken voor iedereen.”",
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "In welke mate ben jij het eens met de volgende stelling: “Mijn stad of gemeente doet voldoende om betaalbare huisvesting mogelijk te maken voor iedereen.”",
             AnswerList = new List<string>
                 { "Helemaal oneens", "Oneens", "Noch eens, noch oneens", "Eens", "Helemaal eens" },
         };
 
         ListQuestion rangeQuestion5 = new ListQuestion
         {
-            Text =
-                "In welke mate kun jij je vinden in het voorstel om de straatlichten in onze gemeente te doven tussen 23u en 5u?",
+            TypeSlide = TypeSlide.SingleChoice,
+            Text = "In welke mate kun jij je vinden in het voorstel om de straatlichten in onze gemeente te doven tussen 23u en 5u?",
             AnswerList = new List<string> { "Ik sta hier volledig achter", "Ik sta hier helemaal niet achter" },
         };
 
@@ -196,14 +194,15 @@ public static class AnswerCubeInitializer
         // Open Questions
         OpenQuestion openQuestion1 = new OpenQuestion
         {
+            TypeSlide = TypeSlide.OpenQuestion,
             Text = "Je bent schepen van onderwijs voor een dag: waar zet je dan vooral op in?",
             Answer = "none"
         };
 
         OpenQuestion openQuestion2 = new OpenQuestion
         {
-            Text =
-                "Als je één ding mag wensen voor het nieuwe stadspark, wat zou jouw droomstadspark dan zeker bevatten?",
+            TypeSlide = TypeSlide.OpenQuestion,
+            Text = "Als je één ding mag wensen voor het nieuwe stadspark, wat zou jouw droomstadspark dan zeker bevatten?",
             Answer = "none"
         };
 
@@ -231,12 +230,12 @@ public static class AnswerCubeInitializer
             Title = "testlist2", 
             SubTheme = new SubTheme("een park", "ipsum lorum")
         };
-        slideList1.Slides = new LinkedList<AbstractSlide>();
-        slideList1.Slides.AddFirst(rangeQuestion1);
-        slideList1.Slides.AddFirst(rangeQuestion2);
-        slideList1.Slides.AddFirst(rangeQuestion3);
-        slideList1.Slides.AddFirst(multipleChoice4);
-        slideList1.Slides.AddFirst(multipleChoice5);
+        slideList2.Slides = new LinkedList<AbstractSlide>();
+        slideList2.Slides.AddFirst(rangeQuestion1);
+        slideList2.Slides.AddFirst(rangeQuestion2);
+        slideList2.Slides.AddFirst(rangeQuestion3);
+        slideList2.Slides.AddFirst(multipleChoice4);
+        slideList2.Slides.AddFirst(multipleChoice5);
         context.SlideLists.Add(slideList2);
         
         

@@ -26,12 +26,12 @@ public class Repository : IRepository
 
     public List<ListQuestion> GetSingleChoiceSlides()
     {
-        return _context.ListQuestions.Where(q => !q.IsMultipleChoice).ToList();
+        return _context.ListQuestions.Where(q => q.TypeSlide == TypeSlide.SingleChoice).ToList();
     }
     
     public List<ListQuestion> GetMultipleChoiceSlides()
     {
-        return _context.ListQuestions.Where(q => q.IsMultipleChoice).ToList();
+        return _context.ListQuestions.Where(q => q.TypeSlide == TypeSlide.MultipleChoice).ToList();
     }
     
     public List<Info> GetInfoSlides()

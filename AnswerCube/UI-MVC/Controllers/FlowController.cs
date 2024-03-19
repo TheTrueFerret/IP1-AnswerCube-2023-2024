@@ -1,7 +1,10 @@
 using System.Diagnostics;
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Slide;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using UI_MVC.Models;
 
@@ -9,54 +12,71 @@ namespace UI_MVC.Controllers;
 
 public class FlowController : Controller
 {
+    private readonly ILogger<HomeController> _logger;
+    private readonly IManager _manager;
+    
     // Dictionary to map conditions to partial page names
-    public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
+    public Dictionary<TypeSlide, string> PartialPages { get; } = new Dictionary<TypeSlide, string>
     {
-        { "Start", "Slide/StartSlide" },
-        { "MultipleChoice", "Slide/MultipleChoice" },
-        { "SingleChoice", "Slide/SingleChoice" },
-        { "OpenQuestion", "Slide/OpenQuestion" },
-        { "InfoSlide", "Slide/InfoSlide" },
+        { TypeSlide.Start, "Slide/StartSlide" },
+        { TypeSlide.MultipleChoice, "Slide/MultipleChoice" },
+        { TypeSlide.SingleChoice, "Slide/SingleChoice" },
+        { TypeSlide.OpenQuestion, "Slide/OpenQuestion" },
+        { TypeSlide.Info, "Slide/InfoSlide" },
         // Add more conditions and partial page names as needed
     };
+
     // Property to hold the current condition
-    public string CurrentCondition { get; set; } = "Start";
+    public TypeSlide CurrentCondition { get; set; } = TypeSlide.Start;
     
+    // List of slides in order
+    private List<SlideList> slideList;
+    private int currentSlideIndex = 0;
+    
+    public FlowController(ILogger<HomeController> logger, IManager manager)
+    {
+        _logger = logger;
+        _manager = manager;
+    }
     
     public IActionResult CircularFlow()
     {
-        // Ensure CurrentCondition is properly set
         if (!PartialPages.ContainsKey(CurrentCondition))
         {
-            CurrentCondition = "Start"; // Set a default condition if necessary
+            CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
         }
-        return View(this); // Pass the controller instance to the view
+        //LoadSlideList();
+        return View(this);
     }
     
     public IActionResult LinearFlow()
     {
-        // Ensure CurrentCondition is properly set
         if (!PartialPages.ContainsKey(CurrentCondition))
         {
-            CurrentCondition = "Start"; // Set a default condition if necessary
+            CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
         }
-        return View(this); // Pass the controller instance to the view
-    }
-    
-    [HttpGet]
-    public void SetCurrentCondition()
-    {
-        // Perform any necessary initialization or data retrieval
-        // TODO getting the data
+        //LoadSlideList();
+        return View(this);
     }
     
     [HttpPost]
-    public IActionResult OnPostUpdateCondition(string newCondition)
+    public void SetCurrentSlide([FromBody] AbstractSlide slide)
     {
-        CurrentCondition = newCondition; // Update the condition
-        return new JsonResult(new { success = true, currentCondition = CurrentCondition });
+        UpdateCondition(slide.TypeSlide);
     }
     
+    public void UpdateCondition(TypeSlide newCondition)
+    {
+        CurrentCondition = newCondition; // Update the condition
+    }
+    
+    
+    // Method to load slide list data from the database
+    private void LoadSlideList()
+    {
+        SlideList slideList = new SlideList();
+        slideList = _manager.GetSlideListById(1);
+    }
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

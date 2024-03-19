@@ -1,25 +1,7 @@
 
 
-function initialise() {
-    fetch("http://localhost:5104/api/Installation/initialiseSlideList",
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                nextSlide()
-                return response.json();
-            } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
-            }
-        })
-}
-
 function nextSlide() {
-    fetch("http://localhost:5104/api/Installation/nextSlide",
+    fetch("http://localhost:5104/api/Installations/GetSlide",
         {
             method: "GET",
             headers: {
@@ -30,9 +12,36 @@ function nextSlide() {
             if (response.status === 200) {
                 return response.json();
             } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
+                document.getElementById("slide").innerHTML = "<em>!!!</em>";
             }
+        }).then(slide => {
+            console.log(slide)
+            //UpdateFlowPage(slide)
         })
+        .catch(error => {
+            console.error(error);
+            document.getElementById("slide").innerHTML = "<em>Problem loading the slide</em>";
+        });
 }
 
-const btn = document.getElementById("nextSlide").addEventListener('click', initialise);
+function UpdateFlowPage(slide) {
+    fetch("http://localhost:5104/Flow/SetCurrentSlide", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(slide)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("Current slide updated successfully");
+            } else {
+                throw new Error("Failed to update current slide");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating current slide:", error);
+        });
+}
+
+const btn = document.getElementById("nextSlide").addEventListener('click', nextSlide);

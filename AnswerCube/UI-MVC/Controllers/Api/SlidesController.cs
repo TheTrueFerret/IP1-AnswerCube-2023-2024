@@ -20,7 +20,7 @@ public class SlidesController : ControllerBase
     
     // generate content in the slides
     // and posts
-    
+    // deze krijgen allemaal een ID!!!!
     
     
     

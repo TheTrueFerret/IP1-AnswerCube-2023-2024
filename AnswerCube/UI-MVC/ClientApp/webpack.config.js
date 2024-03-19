@@ -6,6 +6,8 @@ module.exports = {
     entry: {
         site: './src/ts/site.ts', 
         index: './src/ts/index.ts',
+        flow: './src/ts/flow/Flow.ts',
+        startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
         qr : './src/ts/qr/qr.ts',
     },

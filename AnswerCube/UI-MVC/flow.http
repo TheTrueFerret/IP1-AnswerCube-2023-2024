@@ -1,0 +1,2 @@
+GET http://localhost:5104/api/Installations/GetSlide
+Accept: application/json

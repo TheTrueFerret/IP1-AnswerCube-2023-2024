@@ -12,7 +12,7 @@ function getMultipleChoice() {
             if (response.status === 200) {
                 return response.json();
             } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
+                document.getElementById("slide").innerHTML = "<em>PENIS!!!</em>";
             }
         })
         .then(slide => {
