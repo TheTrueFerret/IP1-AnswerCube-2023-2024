@@ -33,6 +33,51 @@
         <Content Remove="$(MpaRoot)**"/>
         <None Remove="$(MpaRoot)**"/>
         <None Include="$(MpaRoot)**" Exclude="$(MpaRoot)node_modules\**"/>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\.gitignore">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\bower.json">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\index-svg.html">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\index.html">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\index.svg">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\jquery.min.js">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\LICENSE">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\qrcode.js">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\qrcode.min.js">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+          <DependentUpon>qrcode.js</DependentUpon>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\qrcode.min.js">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\README.md">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
     
     <Target Name="NpmInstall" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(MpaRoot)node_modules') ">
@@ -90,6 +135,7 @@
       <_ContentIncludedByDefault Remove="Views\Shared\Slide\MultipleChoice.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\OpenQuestion.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\StartSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="ClientApp\lib\davidshimjs-qrcodejs-04f46c6\bower.json" />
     </ItemGroup>
 
     <ItemGroup>

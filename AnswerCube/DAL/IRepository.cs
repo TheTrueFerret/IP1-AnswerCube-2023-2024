@@ -17,5 +17,7 @@ public interface IRepository
     SlideList ReadSlideList(int id);
 
     List<Info> GetInfoSlides();
-    
+
+    LinearFlow GetLinearFlow();
+    AbstractSlide GetSlideFromFlow(int flowId, int number);
 }

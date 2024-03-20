@@ -17,7 +17,7 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
     
-    public DbSet<Info> InfoSlide { get; set; }
+    public DbSet<Info> InfoSlides { get; set; }
     public DbSet<ListQuestion> ListQuestions { get; set; }
     public DbSet<OpenQuestion> OpenQuestions { get; set; }
     public DbSet<RequestingInfo> RequestingInfo { get; set; }

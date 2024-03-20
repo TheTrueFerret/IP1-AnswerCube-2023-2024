@@ -17,4 +17,6 @@ public interface IManager
     List<ListQuestion> GetMultipleChoiceSlides();
     
     List<Info> GetInfoSlides();
+    LinearFlow GetLinearFlow();
+    AbstractSlide GetSlideFromFlow(int flowId, int number);
 }

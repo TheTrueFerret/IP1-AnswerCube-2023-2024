@@ -32,7 +32,6 @@
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
         "DB_NAME": "DataBase IP1 Testssssss"
-
       }
     },
     "IIS Express": {

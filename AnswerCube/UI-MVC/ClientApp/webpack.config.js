@@ -7,6 +7,8 @@ module.exports = {
         site: './src/ts/site.ts', 
         index: './src/ts/index.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
+        qr : './src/ts/qr/qr.ts',
+        LinearFlow: './src/ts/flow/LinearFlow.ts',
     },
     output: {
         filename: '[name].entry.js',

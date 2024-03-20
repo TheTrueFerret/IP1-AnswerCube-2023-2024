@@ -210,57 +210,80 @@ public static class AnswerCubeInitializer
         // Add the Open questions to the context
         context.OpenQuestions.AddRange(openQuestion1, openQuestion2);
 
-        
+
         SlideList slideList1 = new SlideList
-        { 
-            Title = "testlist1", 
-            SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum")
+        {
+            Title = "testlist1",
+            SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
+            Slides = new LinkedList<AbstractSlide>()
         };
-         
-        slideList1.Slides = new LinkedList<AbstractSlide>();
+        slideList1.Slides.AddFirst(singleChoice1);
+        slideList1.Slides.AddFirst(openQuestion2);
+        slideList1.Slides.AddFirst(multipleChoice3);
+        slideList1.Slides.AddFirst(multipleChoice2);
         slideList1.Slides.AddFirst(multipleChoice1);
-        slideList1.Slides.AddLast(multipleChoice2);
-        slideList1.Slides.AddLast(multipleChoice3);
-        slideList1.Slides.AddLast(openQuestion2);
-        slideList1.Slides.AddLast(singleChoice1);
+                
         context.SlideLists.Add(slideList1);
-        
-        
-        SlideList slideList2 = new SlideList
-        { 
-            Title = "testlist2", 
-            SubTheme = new SubTheme("een park", "ipsum lorum")
-        };
-        slideList1.Slides = new LinkedList<AbstractSlide>();
-        slideList1.Slides.AddFirst(rangeQuestion1);
-        slideList1.Slides.AddFirst(rangeQuestion2);
-        slideList1.Slides.AddFirst(rangeQuestion3);
-        slideList1.Slides.AddFirst(multipleChoice4);
-        slideList1.Slides.AddFirst(multipleChoice5);
-        context.SlideLists.Add(slideList2);
-        
-        
+
         LinearFlow linearFlow = new LinearFlow
         {
             Name = "linear"
         };
         linearFlow.SlideList = new List<SlideList>();
         linearFlow.SlideList.Add(slideList1);
-        linearFlow.SlideList.Add(slideList2);
-        
-        
+        context.LinearFlows.Add(linearFlow);
+
+        context.SaveChanges();
+
+        SlideList slideList2 = new SlideList
+        {
+            Title = "testlist2",
+            SubTheme = new SubTheme("een park", "ipsum lorum")
+        };
+        slideList2.Slides = new LinkedList<AbstractSlide>();
+        slideList2.Slides.AddFirst(rangeQuestion1);
+        slideList2.Slides.AddFirst(rangeQuestion2);
+        slideList2.Slides.AddFirst(rangeQuestion3);
+        slideList2.Slides.AddFirst(multipleChoice4);
+        slideList2.Slides.AddFirst(multipleChoice5);
+        context.SlideLists.Add(slideList2);
+
+
         CircularFlow circularFlow = new CircularFlow
         {
             Name = "circular"
         };
         circularFlow.SlideList = new List<SlideList>();
-        circularFlow.SlideList.Add(slideList1);
         circularFlow.SlideList.Add(slideList2);
-        
-        
-        context.LinearFlows.Add(linearFlow);
+
         context.CircularFlows.Add(circularFlow);
-        
+        context.SaveChanges();
+
+        // Info slides
+        Info info1 = new Info
+        {
+            Question = "Wat is een gemeenteraad?",
+            Text =
+                "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar."
+        };
+
+        Info info2 = new Info
+        {
+            Question = "Wat is een schepen?",
+            Text =
+                "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad."
+        };
+
+        Info info3 = new Info
+        {
+            Question = "Wat is een burgemeester?",
+            Text =
+                "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad."
+        };
+
+        context.InfoSlides.AddRange(info1, info2, info3);
+
+
         context.SaveChanges();
         context.ChangeTracker.Clear();
     }
