@@ -46,7 +46,6 @@ public class FlowController : Controller
         {
             CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
         }
-        //LoadSlideList();
         return View(this);
     }
     
@@ -56,8 +55,12 @@ public class FlowController : Controller
         {
             CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
         }
-        //LoadSlideList();
         return View(this);
+    }
+    
+    private string GetPartialViewName(TypeSlide condition)
+    {
+        return PartialPages.ContainsKey(condition) ? PartialPages[condition] : "Slide/StartSlide"; // Provide a default partial view if necessary
     }
     
     [HttpPost]
@@ -71,12 +74,9 @@ public class FlowController : Controller
         if (slideDto == null) 
             return NotFound("Game or GameStore not found");
         
-        
         CurrentCondition = slideDto.TypeSlide;
-        return Ok();
+        return Ok(GetPartialViewName(CurrentCondition));
     }
-    
-    
     
     
     // Method to load slide list data from the database

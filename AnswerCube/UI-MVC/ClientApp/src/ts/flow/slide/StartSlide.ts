@@ -36,12 +36,37 @@ function UpdateFlowPage(slide) {
         .then(response => {
             if (response.ok) {
                 console.log("Current slide updated successfully");
+                fetchPartialView()
             } else {
                 throw new Error("Failed to update current slide");
             }
         })
         .catch(error => {
             console.error("Error updating current slide:", error);
+        });
+}
+
+
+function fetchPartialView() {
+    fetch("http://localhost:5104/Flow/CircularFlow/", { // Update the URL accordingly
+        method: "GET",
+        headers: {
+            "Accept": "text/html" // Expect HTML response
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error("Failed to fetch partial view");
+            }
+        })
+        .then(html => {
+            // Update the DOM with the fetched partial view
+            document.getElementById("page").innerHTML = html;
+        })
+        .catch(error => {
+            console.error("Error fetching partial view:", error);
         });
 }
 
