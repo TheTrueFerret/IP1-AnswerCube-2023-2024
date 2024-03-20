@@ -2,13 +2,7 @@
     ViewBag.Title = "OpenQuestion";
 }
 
-@section Scripts
-{
-    <script src="~/dist/openquestion.entry.js" defer></script>
-}
-
-<div id="slide">
+<div id="slide" data-script="@Url.Content("~/dist/openquestion.entry.js")">
     <h1>OpenQuestion</h1>
     
-    <a class="btn btn-primary" type="button">Next Slide</a>
 </div>

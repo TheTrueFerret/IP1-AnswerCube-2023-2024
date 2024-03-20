@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - UI_MVC</title>
     <script src="~/dist/site.entry.js" defer></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/dist/loadscript.entry.js" defer></script>
+    @RenderSection("Scripts", required: false)
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
 <body>

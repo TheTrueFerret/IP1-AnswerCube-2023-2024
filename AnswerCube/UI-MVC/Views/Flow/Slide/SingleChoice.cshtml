@@ -2,13 +2,8 @@
     ViewBag.Title = "MultipleChoice";
 }
 
-@section Scripts
-{
-    <script src="~/dist/singlechoice.entry.js" defer></script>
-}
 
-<div id="slide">
+<div id="slide" data-script="@Url.Content("~/dist/singlechoice.entry.js")">
     <h1>SingleChoice</h1>
     
-    <a class="btn btn-primary" type="button">Next Slide</a>
 </div>

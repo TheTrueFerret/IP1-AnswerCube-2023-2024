@@ -31,4 +31,7 @@ public class InstallationsController : Controller
         SlideDto slideDto = new SlideDto(_manager.GetMultipleChoiceSlides()[1]);
         return slideDto;
     }
+    
+    
+    
 }

@@ -80,8 +80,7 @@ public class FlowController : Controller
         {
             CurrentCondition = slideDto.TypeSlide;
             string partialViewName = GetPartialViewName(CurrentCondition);
-            string partialViewHtml = RenderPartialViewToString(this, partialViewName);
-            return Json(new { slideHtml = partialViewHtml });
+            return PartialView(partialViewName); // Return the partial view
         }
         else
         {
