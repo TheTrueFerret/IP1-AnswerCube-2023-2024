@@ -35,8 +35,8 @@ function UpdateFlowPage(slide) {
     })
         .then(response => {
             if (response.ok) {
+                return response.text();
                 console.log("Current slide updated successfully");
-                fetchPartialView()
             } else {
                 throw new Error("Failed to update current slide");
             }
@@ -46,28 +46,5 @@ function UpdateFlowPage(slide) {
         });
 }
 
-
-function fetchPartialView() {
-    fetch("http://localhost:5104/Flow/CircularFlow/", { // Update the URL accordingly
-        method: "GET",
-        headers: {
-            "Accept": "text/html" // Expect HTML response
-        }
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error("Failed to fetch partial view");
-            }
-        })
-        .then(html => {
-            // Update the DOM with the fetched partial view
-            document.getElementById("page").innerHTML = html;
-        })
-        .catch(error => {
-            console.error("Error fetching partial view:", error);
-        });
-}
 
 const btn = document.getElementById("nextSlide").addEventListener('click', nextSlide);

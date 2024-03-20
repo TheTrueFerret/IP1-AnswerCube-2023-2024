@@ -69,13 +69,19 @@ public class FlowController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        //AbstractSlide slide = _manager.GetSlideListById(slideDto.Id);
-        
         if (slideDto == null) 
             return NotFound("Game or GameStore not found");
         
-        CurrentCondition = slideDto.TypeSlide;
-        return Ok(GetPartialViewName(CurrentCondition));
+        // Check if the received slide type exists in PartialPages
+        if (PartialPages.ContainsKey(slideDto.TypeSlide))
+        {
+            CurrentCondition = slideDto.TypeSlide;
+            return PartialView(GetPartialViewName(CurrentCondition)); // Return partial view instead of just the name
+        }
+        else
+        {
+            return NotFound("Slide not found");
+        }
     }
     
     
