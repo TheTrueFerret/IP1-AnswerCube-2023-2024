@@ -41,6 +41,9 @@ function UpdateFlowPage(slide) {
                 throw new Error("Failed to update current slide");
             }
         })
+        .then(data => {
+            document.getElementById("page").innerHTML = data.slideHtml;
+        })// Update the page content with new slide HTML
         .catch(error => {
             console.error("Error updating current slide:", error);
         });

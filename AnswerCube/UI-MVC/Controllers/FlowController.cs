@@ -6,6 +6,9 @@ using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using UI_MVC.Models;
 using UI_MVC.Models.Dto;
 
@@ -65,22 +68,39 @@ public class FlowController : Controller
     
     [HttpPost]
     public IActionResult SetCurrentSlide([FromBody] SlideDto slideDto)
-    {
+    { 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        if (slideDto == null) 
+        if (slideDto == null)
             return NotFound("Game or GameStore not found");
         
         // Check if the received slide type exists in PartialPages
         if (PartialPages.ContainsKey(slideDto.TypeSlide))
         {
             CurrentCondition = slideDto.TypeSlide;
-            return PartialView(GetPartialViewName(CurrentCondition)); // Return partial view instead of just the name
+            string partialViewName = GetPartialViewName(CurrentCondition);
+            string partialViewHtml = RenderPartialViewToString(this, partialViewName);
+            return Json(new { slideHtml = partialViewHtml });
         }
         else
         {
             return NotFound("Slide not found");
+        }
+    }
+    
+    
+    // Helper method to render partial view to string
+    public string RenderPartialViewToString(Controller controller, string viewName, object model = null)
+    {
+        controller.ViewData.Model = model;
+        using (var sw = new StringWriter())
+        {
+            var engine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+            var viewResult = engine.FindView(controller.ControllerContext, viewName, false);
+            var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw, new HtmlHelperOptions());
+            viewResult.View.RenderAsync(viewContext);
+            return sw.ToString();
         }
     }
     
