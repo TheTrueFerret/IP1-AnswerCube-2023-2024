@@ -16,6 +16,8 @@ public interface IRepository
     
     List<Info> GetInfoSlides();
     
+    //AbstractSlide ReadSlideById(int id);
+    
     SlideList ReadSlideList(int id);
     
     List<SlideList> ReadSlideLists();

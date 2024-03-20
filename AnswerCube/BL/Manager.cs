@@ -39,6 +39,11 @@ public class Manager : IManager
     {
         return _repository.GetInfoSlides();
     }
+    
+    // public AbstractSlide GetSlideByIdAndSlideType(int id, TypeSlide typeSlide)
+    // {
+    //     return _repository.ReadSlideById(id, typeSlide);
+    // }
 
     public SlideList GetSlideListById(int id)
     {

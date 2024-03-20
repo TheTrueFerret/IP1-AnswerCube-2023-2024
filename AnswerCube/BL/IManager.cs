@@ -15,6 +15,8 @@ public interface IManager
     List<ListQuestion> GetMultipleChoiceSlides();
     
     List<Info> GetInfoSlides();
+
+    //AbstractSlide GetSlideById(int id);
     
     SlideList GetSlideListById(int id);
     

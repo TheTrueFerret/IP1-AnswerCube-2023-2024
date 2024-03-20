@@ -61,13 +61,18 @@ public class FlowController : Controller
     }
     
     [HttpPost]
-    public IActionResult SetCurrentSlide([FromBody] SlideDto slide)
+    public IActionResult SetCurrentSlide([FromBody] SlideDto slideDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
+        //AbstractSlide slide = _manager.GetSlideListById(slideDto.Id);
         
-        CurrentCondition = slide.TypeSlide;
+        if (slideDto == null) 
+            return NotFound("Game or GameStore not found");
+        
+        
+        CurrentCondition = slideDto.TypeSlide;
         return Ok();
     }
     
