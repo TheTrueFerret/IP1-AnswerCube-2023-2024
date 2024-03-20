@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const slide = document.getElementById("slide");
     let maxSlide = 7
     let currentSlide = 1
+    let timer = setInterval(nextSlide, 15000);
     addListeners()
     //getMaxSlides()
     nextSlide()
@@ -59,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentSlide >= maxSlide) {
             currentSlide = 1
             console.log("OUT OF SLIDES")
+            clearInterval(timer)
         }
         fetch(`https://localhost:7272/api/flow/getSlideFromList/${currentSlide}`,
             {
@@ -106,6 +108,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function nextSlide() {
         getSlide()
         currentSlide++;
+        updateProgressBar();
+    }
+
+    function updateProgressBar() {
+        let totalQuestions = maxSlide; // total number of questions
+        let answeredQuestions = currentSlide; // number of answered questions
+
+        let progress = (answeredQuestions / totalQuestions) * 100;
+
+        let progressBar = document.getElementById("progressBar");
+        progressBar.style.width = progress + "%";
+        progressBar.style.backgroundColor = "limegreen"; // Add this line
     }
 
     function getMaxSlides() {

@@ -3,11 +3,16 @@
 }
 
 @section Scripts{
-        <script src="~/dist/LinearFlow.entry.js"></script>
+    <script src="~/dist/LinearFlow.entry.js"></script>
+    <link rel="stylesheet" href="~/dist/site.css">
 }
+
 <div class="card">
     <div id="slide" class="card-body">
         Test
     </div>
-    <button id="next" class="btn-primary">Next</button>
+    <button id="next" class="btn-primary btn">Next</button>
+    <div id="progressBarContainer" class="card-body">
+        <div id="progressBar" ></div>
+    </div>
 </div>
