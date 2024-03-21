@@ -18,4 +18,5 @@ public interface IRepository
     LinearFlow GetLinearFlow();
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList getSlideList();
+    Boolean AddAnswer(List<string> answers,int id);
 }

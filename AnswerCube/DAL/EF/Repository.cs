@@ -58,7 +58,7 @@ public class Repository : IRepository
     {
         SlideList slideList = getSlideList();
         List<Slide> slides = slideList.Slides.ToList();
-        
+
         return slides[number - 1];
     }
 
@@ -67,5 +67,25 @@ public class Repository : IRepository
         return _context.SlideLists
             .Include(sl => sl.Slides) // This will load the Slides of each SlideList
             .First();
+    }
+
+    public Boolean AddAnswer(List<string> answers, int id)
+    {
+        Slide slide = _context.Slides.Where(s => s.Id == id).First();
+
+        Answer uploadAnswer = new Answer(answers, slide);
+        if (answers == null)
+        {
+            return false;
+        }
+        else
+        {
+            _context.Answers.Add(uploadAnswer);
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        return default;
     }
 }

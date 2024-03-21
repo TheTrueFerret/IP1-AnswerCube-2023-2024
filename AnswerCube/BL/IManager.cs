@@ -20,4 +20,5 @@ public interface IManager
     LinearFlow GetLinearFlow();
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
+    Boolean AddAnswer(List<string> answers,int id);
 }

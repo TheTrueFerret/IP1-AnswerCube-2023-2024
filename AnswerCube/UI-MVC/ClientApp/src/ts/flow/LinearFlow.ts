@@ -43,12 +43,14 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const nextBtn = document.getElementById("next");
     const slide = document.getElementById("slide");
+    let input = HTMLElement;
     let maxSlide = await getMaxSlides()
     let currentSlide = 1;
     //let timer = setInterval(nextSlide, 15000);
     addListeners()
     console.log(maxSlide)
-    nextSlide()
+    getSlide()
+    updateProgressBar();
 
     function addListeners() {
         if (nextBtn) {
@@ -101,16 +103,16 @@ document.addEventListener("DOMContentLoaded", async function () {
                         slide.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
                     }
                     break;
-                case "info":
-                    console.log("Single choice slide");
-                    slide.innerHTML = `<h3> ${data.text} </h3> `;
-                    break;
                 case "rangequestion":
                     console.log("Range Question slide");
                     slide.innerHTML = `<h3> ${data.text} </h3> `;
                     for (const answers of data.answerList.$values) {
                         slide.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
                     }
+                    break;
+                case "info":
+                    console.log("Single choice slide");
+                    slide.innerHTML = `<h3> ${data.text} </h3> `;
                     break;
                 default:
                     console.log("problem loading data");
@@ -121,9 +123,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     function nextSlide() {
+        currentSlide++;
         getSlide()
         updateProgressBar();
-        currentSlide++;
+        PostAnswer();
     }
 
     function updateProgressBar() {
@@ -155,5 +158,55 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         })
         return numberOfSlides;
+    }
+
+    function PostAnswer() {
+        let answer = getSelectedAnswers();
+        let slideId = currentSlide-1;
+
+        let requestBody = {
+            Id: slideId,
+            Answer: answer
+        };
+        console.log(requestBody);
+        fetch(`https://localhost:7272/api/flow/PostAnswer`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        }).then(res => {
+            console.log(res)
+            if (res.ok) {
+                if (res.status === 201) {
+                    return res.json();
+                }
+            }
+        }).catch(err => {
+            console.log("Something went wrong: " + err);
+        })
+        console.log(answer);
+    }
+
+    function getSelectedAnswers() {
+        const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
+        let selectedAnswers = [];
+        if (checkboxes && checkboxes.length > 0) {
+            checkboxes.forEach((checkbox) => {
+                    // @ts-ignore
+                    selectedAnswers.push(checkbox.value);
+                }
+            );
+        }
+
+        //Get the value of the text input
+        const textInput = document.querySelector('input[type="text"]#input');
+        // @ts-ignore
+        if (textInput && textInput.value) {
+            // @ts-ignore
+            selectedAnswers.push(textInput.value);
+        }
+        return selectedAnswers;
     }
 });

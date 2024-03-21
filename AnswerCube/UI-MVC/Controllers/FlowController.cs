@@ -5,6 +5,7 @@ using AnswerCube.BL.Domain.Slide;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Controllers.DTO_s;
 using AnswerCube.UI.MVC.Models;
+using AnswerCube.UI.MVC.Models.Dto;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using UI_MVC.Models;
@@ -150,6 +151,24 @@ public class FlowController : Controller
         }
 
         return new JsonResult(new { slideList.Slides.Count });
+    }
+
+    [Route("api/flow/PostAnswer")]
+    [HttpPost]
+    public IActionResult PostAnswer([FromBody] AnswerModel answer)
+    {
+        _logger.LogInformation(answer.Answer + "-" +  answer.Id);
+        int slideId = _manager.GetSlideList().Slides.ToList()[answer.Id].Id;
+        List<string> answerText = answer.Answer;
+        
+        if (_manager.AddAnswer(answerText,slideId))
+        {
+            return new JsonResult(new OkResult());
+        }
+        else
+        {
+            return new JsonResult(new BadRequestResult());
+        }
     }
 
 

@@ -59,4 +59,9 @@ public class Manager : IManager
     {
         return _repository.getSlideList();
     }
+
+    public Boolean AddAnswer(List<string> answers,int id)
+    {
+        return _repository.AddAnswer(answers,id);
+    }
 }
