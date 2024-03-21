@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="~/dist/site.css">
 }
 
-<div class="card card-height">
+<div class="card card-custom">
     <div id="slide" class="card-body">
+        <!-- Content goes here -->
     </div>
-    <div class="row-cols-5  ">
-            <button id="next" class="btn-primary btn col-6">Next</button>
-            <button id="skip" class="btn-primary btn col-4">skip</button>
+    <div class="modal-footer">
+        <button id="next" class="btn btn-primary">Next</button>
+        <button id="skip" class="btn btn-secondary">Skip</button>
     </div>
     <div id="progressBarContainer" class="card-body">
-        <div id="progressBar"></div>
+        <div id="progressBar" class="progress"></div>
     </div>
 </div>

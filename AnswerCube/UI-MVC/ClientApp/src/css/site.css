@@ -35,8 +35,8 @@ html {
     margin: 0;
 }
 
-.card-height {
-    height: 560px;
+.card-hoogte {
+    height: 70vh;
 }
 
 html {
@@ -46,4 +46,33 @@ html {
 
 body {
     margin-bottom: 60px;
+}
+
+.card-custom {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: auto; 
+    height: 800px; /* Fixed height */
+    overflow: hidden; /* Hide overflow content */
+}
+
+.card-custom .card-body {
+    padding: 20px;
+    height: calc(100% - 100px); /* Fixed height minus the height of footer and progress bar */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px; /* Fixed height for footer */
+}
+
+.progress {
+    height: 8px;
+    background-color: #007bff;
+    width: 0; /* Set dynamically using JavaScript */
+    transition: width 0.3s ease-in-out;
 }
