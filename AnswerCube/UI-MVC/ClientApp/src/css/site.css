@@ -22,8 +22,8 @@ html {
     align-items: center;
     border-radius: 20px;
     align-self: center;
-    padding: 0; 
-    margin: 8px; 
+    padding: 0;
+    margin: 8px;
 }
 
 #progressBar {
@@ -31,8 +31,8 @@ html {
     min-height: 30px;
     background-color: limegreen;
     border-radius: 20px;
-    padding: 0; 
-    margin: 0; 
+    padding: 0;
+    margin: 0;
 }
 
 html {
