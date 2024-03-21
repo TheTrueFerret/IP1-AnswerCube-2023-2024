@@ -24,16 +24,15 @@ public class FlowController : Controller
         _logger = logger;
     }
 
-    public IActionResult CircularFlow()
-    {
-        // Ensure CurrentCondition is properly set
-        if (!PartialPages.ContainsKey(CurrentCondition))
-        {
-            CurrentCondition = "Start"; // Set a default condition if necessary
-        }
-
-        return View(this); // Pass the controller instance to the view
-    }
+    //public IActionResult CircularFlow()
+    //{
+    //    // Ensure CurrentCondition is properly set
+    //    if (!PartialPages.ContainsKey(CurrentCondition))
+    //    {
+    //        CurrentCondition = "Start"; // Set a default condition if necessary
+    //    }
+    //    return View(this); // Pass the controller instance to the view
+    //}
 
     // public IActionResult LinearFlow()
     // {
@@ -47,30 +46,30 @@ public class FlowController : Controller
     // }
 
     // Dictionary to map conditions to partial page names
-    public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
-    {
-        { "Start", "Slide/StartSlide" },
-        { "MultipleChoice", "Slide/MultipleChoice" },
-        { "SingleChoice", "Slide/SingleChoice" },
-        { "OpenQuestion", "Slide/OpenQuestion" },
-        { "InfoSlide", "Slide/InfoSlide" },
-        // Add more conditions and partial page names as needed
-    };
+    //public Dictionary<string, string> PartialPages { get; } = new Dictionary<string, string>
+    //{
+    //    { "Start", "Slide/StartSlide" },
+    //    { "MultipleChoice", "Slide/MultipleChoice" },
+    //    { "SingleChoice", "Slide/SingleChoice" },
+    //    { "OpenQuestion", "Slide/OpenQuestion" },
+    //    { "InfoSlide", "Slide/InfoSlide" },
+    //    // Add more conditions and partial page names as needed
+    //};
 
     // Property to hold the current condition
-    public string CurrentCondition { get; set; } = "Start";
+    //public string CurrentCondition { get; set; } = "Start";
 
-    public void OnGet()
-    {
-        // Perform any necessary initialization or data retrieval
-    }
+    //public void OnGet()
+    //{
+    //    // Perform any necessary initialization or data retrieval
+    //}
 
-    [HttpPost]
-    public IActionResult OnPostUpdateCondition(string newCondition)
-    {
-        CurrentCondition = newCondition; // Update the condition
-        return new JsonResult(new { success = true, currentCondition = CurrentCondition });
-    }
+    //[HttpPost]
+    //public IActionResult OnPostUpdateCondition(string newCondition)
+    //{
+    //    CurrentCondition = newCondition; // Update the condition
+    //    return new JsonResult(new { success = true, currentCondition = CurrentCondition });
+    //}
 
     public IActionResult InfoSlide()
     {
