@@ -23,8 +23,6 @@ var callback = function(mutationsList, observer) {
 // Create an observer instance linked to the callback function
 var observer = new MutationObserver(callback);
 
-
-
 function loadScriptsForCurrentPage() {
     var views = document.querySelectorAll("[data-script]");
     views.forEach(function(view) {

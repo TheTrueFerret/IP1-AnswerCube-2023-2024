@@ -39,10 +39,10 @@ public class Repository : IRepository
         return _context.InfoSlide.ToList();
     }
 
-    // AbstractSlide ReadSlideById(int id)
-    // {
-    //     return _context.Slides.Find(id);
-    // }
+    public AbstractSlide ReadSlideById(int id)
+    {
+        throw new NotImplementedException();
+    }
 
     public SlideList ReadSlideList(int id)
     {

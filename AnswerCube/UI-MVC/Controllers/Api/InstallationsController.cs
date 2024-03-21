@@ -17,19 +17,29 @@ public class InstallationsController : Controller
     private readonly ILogger<InstallationsController> _logger;
     private readonly IManager _manager;
     
+    
     public InstallationsController(ILogger<InstallationsController> logger, IManager manager)
     {
         _logger = logger;
         _manager = manager;
     }
-    
-    
+
+    public void InitializeInstallation()
+    {
+        
+    }
+
+
     //this file gets all of the date on the active flow on this installation
     [HttpGet]
-    public ActionResult<SlideDto> GetSlide()
+    public ActionResult<SlideDto> NextSlide()
     {
-        SlideDto slideDto = new SlideDto(_manager.GetMultipleChoiceSlides()[1]);
-        return slideDto;
+        //SlideListDto slideList = new SlideListDto(_manager.GetSlideListById(0));
+        //List<AbstractSlide> slideDtoList = slideList.Slides.ToList();
+        //SlideDto slideDto = slideDtoList[1];
+        
+        
+        return null;
     }
     
     

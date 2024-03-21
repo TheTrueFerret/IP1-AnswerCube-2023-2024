@@ -68,7 +68,7 @@ public class FlowController : Controller
     
     [HttpPost]
     public IActionResult SetCurrentSlide([FromBody] SlideDto slideDto)
-    { 
+    {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
@@ -104,11 +104,11 @@ public class FlowController : Controller
     }
     
     
-    // Method to load slide list data from the database
-    private void LoadSlideList()
+    // method to get the active slide id
+    [HttpGet]
+    public int getActiveSlideId()
     {
-        SlideList slideList = new SlideList();
-        slideList = _manager.GetSlideListById(1);
+        return 1;
     }
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
