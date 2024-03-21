@@ -42,19 +42,24 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
     const nextBtn = document.getElementById("next");
+    const skipBtn = document.getElementById("skip");
     const slide = document.getElementById("slide");
     let input = HTMLElement;
     let maxSlide = await getMaxSlides()
     let currentSlide = 1;
-    //let timer = setInterval(nextSlide, 15000);
     addListeners()
     console.log(maxSlide)
     getSlide()
     updateProgressBar();
 
     function addListeners() {
+        console.log(nextBtn)
+        console.log(skipBtn)
         if (nextBtn) {
             nextBtn.addEventListener("click", nextSlide);
+        }
+        if (skipBtn) {
+            skipBtn.addEventListener("click", nextSlide);
         }
     }
 
@@ -162,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function PostAnswer() {
         let answer = getSelectedAnswers();
-        let slideId = currentSlide-1;
+        let slideId = currentSlide - 1;
 
         let requestBody = {
             Id: slideId,
