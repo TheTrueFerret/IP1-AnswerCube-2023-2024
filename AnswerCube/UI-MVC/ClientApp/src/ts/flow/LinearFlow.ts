@@ -1,5 +1,5 @@
 //function getSlideList() {
-//    fetch("http://localhost:5104/api/Slides",
+//    fetch(appUrl + "/api/Slides",
 //        {
 //            method: "GET",
 //            headers: {
@@ -20,7 +20,7 @@
 //}
 //
 //function updateCondition(newCondition) {
-//    fetch("http://localhost:5104/api/Slides", {
+//    fetch(appUrl + "/api/Slides", {
 //        method: "POST",
 //        headers: {
 //            'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.log("OUT OF SLIDES")
             //clearInterval(timer)
         }
-        fetch(`https://localhost:7272/api/flow/getSlideFromList/${currentSlide}`,
+        fetch(appUrl + `/api/flow/getSlideFromList/${currentSlide}`,
             {
                 method: "GET",
                 headers: {
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function getMaxSlides() {
         let numberOfSlides = 0;
-        await fetch(`https://localhost:7272/api/flow/getMaxNumberOfSlides`, {
+        await fetch(appUrl + `/api/flow/getMaxNumberOfSlides`, {
             method: "GET",
             headers: {
                 "Accept": "application/json"
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             Answer: answer
         };
         console.log(requestBody);
-        fetch(`https://localhost:7272/api/flow/PostAnswer`, {
+        fetch(appUrl + `/api/flow/PostAnswer`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

@@ -6,6 +6,9 @@
     <title>@ViewData["Title"] - UI_MVC</title>
     <script src="~/dist/site.entry.js" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
+        <script>
+            var appUrl = "@Environment.GetEnvironmentVariable("APP_URL")";
+        </script>
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
 <body>
