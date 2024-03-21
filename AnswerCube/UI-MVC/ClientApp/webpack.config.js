@@ -9,6 +9,7 @@ module.exports = {
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
         qr : './src/ts/qr/qr.ts',
         LinearFlow: './src/ts/flow/LinearFlow.ts',
+        CircularFlow: './src/ts/flow/CircularFlow.ts'
     },
     output: {
         filename: '[name].entry.js',

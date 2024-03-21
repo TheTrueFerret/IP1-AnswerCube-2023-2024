@@ -1,17 +1,17 @@
 @{
-    ViewBag.Title = "CircularFlow";
+    ViewBag.Title = "FlowLinear";
 }
 
-@model UI_MVC.Controllers.FlowController
-@section Scripts
-{
-    <script src="~/dist/circularflow.entry.js" defer></script>
+@section Scripts{
+    <script src="~/dist/CircularFlow.entry.js"></script>
+    <link rel="stylesheet" href="~/dist/site.css">
 }
 
-<div id="page">
-    @await Html.PartialAsync(Model.PartialPages[Model.CurrentCondition])
+<div class="card">
+    <div id="slide" class="card-body">
+    </div>
+    <button id="next" class="btn-primary btn">Next</button>
+    <div id="progressBarContainer" class="card-body">
+        <div id="progressBar"></div>
+    </div>
 </div>
-
-
-
-
