@@ -40,15 +40,14 @@
 //    })
 //}
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const nextBtn = document.getElementById("next");
     const slide = document.getElementById("slide");
-    let maxSlide = 0;
-    let currentSlide = 1
+    let maxSlide = await getMaxSlides()
+    let currentSlide = 1;
     //let timer = setInterval(nextSlide, 15000);
     addListeners()
-    updateProgressBar()
-    getMaxSlides()
+    console.log(maxSlide)
     nextSlide()
 
     function addListeners() {
@@ -123,36 +122,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function nextSlide() {
         getSlide()
-        currentSlide++;
         updateProgressBar();
+        currentSlide++;
     }
 
     function updateProgressBar() {
         let totalQuestions = maxSlide; // total number of questions
         let answeredQuestions = currentSlide; // number of answered questions
-    
+
         let progress = (answeredQuestions / totalQuestions) * 100;
-    
+        console.log(progress)
+
         let progressBar = document.getElementById("progressBar");
         progressBar.style.width = progress + "%";
         progressBar.style.backgroundColor = "limegreen"; // Add this line
     }
 
-    function getMaxSlides() {
-        fetch(`https://localhost:7272/api/flow/getMaxNumberOfSlides`, {
+    async function getMaxSlides() {
+        let numberOfSlides = 0;
+        await fetch(`https://localhost:7272/api/flow/getMaxNumberOfSlides`, {
             method: "GET",
             headers: {
                 "Accept": "application/json"
             }
+        }).then(async response => {
+            if (response.status === 200) {
+
+                numberOfSlides = await response.json().then(data => {
+                    console.log(data)
+                    return data.count;
+                });
+            }
         })
-            .then(async response => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    ;
-                }
-            }).then(data => {
-            maxSlide = data.count;
-        })
+        return numberOfSlides;
     }
 });
