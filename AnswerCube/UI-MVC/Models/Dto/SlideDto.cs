@@ -4,9 +4,9 @@ namespace UI_MVC.Models.Dto;
 
 public class SlideDto
 {
-    public AbstractSlide Slide { get; set; }
+    public Slide Slide { get; set; }
 
-    public SlideDto(AbstractSlide slide)
+    public SlideDto(Slide slide)
     {
         Slide = slide;
     }

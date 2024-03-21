@@ -22,7 +22,7 @@ public class InstallationController : Controller
     [HttpGet]
     public ActionResult<SlideDto> NextSlide()
     {
-        List<ListQuestion> allSlides = _manager.GetListSlides();
+        List<Slide> allSlides = _manager.GetListSlides();
         Random rand = new Random();
         SlideDto slideDto = new SlideDto(allSlides[rand.Next(allSlides.Count)]);
         return slideDto;

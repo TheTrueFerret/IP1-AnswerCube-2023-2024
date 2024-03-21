@@ -2,7 +2,7 @@ using AnswerCube.BL.Domain;
 
 namespace Domain;
 
-public class OpenQuestion : AbstractSlide
+public class OpenQuestion 
 {
-    public string Answer { get; set; }
+    
 }

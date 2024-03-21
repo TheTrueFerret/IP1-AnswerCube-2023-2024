@@ -15,12 +15,8 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<LinearFlow> LinearFlows { get; set; }
     public DbSet<CircularFlow> CircularFlows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
+    public DbSet<Slide> Slides { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
-    
-    public DbSet<Info> InfoSlides { get; set; }
-    public DbSet<ListQuestion> ListQuestions { get; set; }
-    public DbSet<OpenQuestion> OpenQuestions { get; set; }
-    public DbSet<RequestingInfo> RequestingInfo { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
     
@@ -29,7 +25,7 @@ public class AnswerCubeDbContext : DbContext
     
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
-        AnswerCubeInitializer.Initialize(this, false);
+        AnswerCubeInitializer.Initialize(this, true);
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -66,7 +62,7 @@ public class AnswerCubeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         // relation between Slide and SlideList
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasOne(s => s.SlideList)
             .WithMany(sl => sl.Slides);
         
@@ -97,12 +93,12 @@ public class AnswerCubeDbContext : DbContext
 
         // relation between Answer and Slide
         modelBuilder.Entity<Answer>()
-            .HasOne(a => a.AbstractSlide)
+            .HasOne(a => a.slide)
             .WithMany(s => s.Answers);
         
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasMany(s => s.Answers)
-            .WithOne(a => a.AbstractSlide);
+            .WithOne(a => a.slide);
         
         
         // relation between Installation and Flow

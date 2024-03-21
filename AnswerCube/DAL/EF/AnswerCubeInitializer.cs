@@ -25,29 +25,29 @@ public static class AnswerCubeInitializer
     private static void Seed(AnswerCubeDbContext context)
     {
         //SingleChoice
-        ListQuestion singleChoice1 = new ListQuestion
+        Slide singleChoice1 = new Slide
         {
             Text =
                 "Als jij de begroting van je stad of gemeente zou opmaken, waar zou je dan in de komende jaren vooral op inzetten?",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string>
             {
                 "Natuur en ecologie", "Vrije tijd, sport, cultuur", "Huisvesting", "Onderwijs en kinderopvang",
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             }
         };
-        ListQuestion singleChoice2 = new ListQuestion
+        Slide singleChoice2 = new Slide
         {
             Text =
                 "Er moet meer geïnvesteerd worden in overdekte fietsstallingen aan de bushaltes in onze gemeente.",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string> { "Eens", "Oneens" }
         };
 
-        ListQuestion singleChoice3 = new ListQuestion
+        Slide singleChoice3 = new Slide
         {
             Text = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string>
             {
                 "Sportinfrastructuur", "Speeltuin voor kinderen", "Zitbanken en picknickplaatsen",
@@ -55,18 +55,18 @@ public static class AnswerCubeInitializer
             }
         };
 
-        ListQuestion singleChoice4 = new ListQuestion
+        Slide singleChoice4 = new Slide
         {
             Text = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string> { "Akkoord", "Niet akkoord" }
         };
 
-        ListQuestion singleChoice5 = new ListQuestion
+        Slide singleChoice5 = new Slide
         {
             Text =
                 "Om ons allemaal veilig en vlot te verplaatsen, moet er in jouw stad of gemeente vooral meer aandacht gaan naar",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string>
             {
                 "Verplaatsingen met de fiets", "Verplaatsingen met de auto/moto", "Verplaatsingen te voet",
@@ -74,22 +74,22 @@ public static class AnswerCubeInitializer
             }
         };
 
-        ListQuestion singleChoice6 = new ListQuestion
+        Slide singleChoice6 = new Slide
         {
             Text =
                 "Wat vind jij van het idee om alle leerlingen van de scholen in onze stad een gratis fiets aan te bieden?",
-            IsMultipleChoice = false,
+            SlideType = SlideType.SingleChoice,
             AnswerList = new List<string> { "Goed idee", "Slecht idee" }
         };
 
         // Add the SingleChoice questions to the context
-        context.ListQuestions.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
+        context.Slides.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
             singleChoice6);
 
-        ListQuestion multipleChoice1 = new ListQuestion
+        Slide multipleChoice1 = new Slide
         {
             Text = "Wat zou jou helpen om een keuze te maken tussen de verschillende partijen?",
-            IsMultipleChoice = true,
+            SlideType = SlideType.MultipleChoice,
             AnswerList = new List<string>
             {
                 "Meer lessen op school rond de partijprogramma’s",
@@ -100,18 +100,18 @@ public static class AnswerCubeInitializer
             }
         };
 
-        ListQuestion multipleChoice2 = new ListQuestion
+        Slide multipleChoice2 = new Slide
         {
             Text = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
-            IsMultipleChoice = true,
+            SlideType = SlideType.MultipleChoice,
             AnswerList = new List<string> { "Tennis", "Hockey", "Padel", "Voetbal", "Fitness" }
         };
 
-        ListQuestion multipleChoice3 = new ListQuestion
+        Slide multipleChoice3 = new Slide
         {
             Text =
                 "Aan welke van deze activiteiten zou jij meedoen, om mee te wegen op het beleid van jouw stad of gemeente?",
-            IsMultipleChoice = true,
+            SlideType = SlideType.MultipleChoice,
             AnswerList = new List<string>
             {
                 "Deelnemen aan gespreksavonden met schepenen en burgemeester",
@@ -122,10 +122,10 @@ public static class AnswerCubeInitializer
             }
         };
 
-        ListQuestion multipleChoice4 = new ListQuestion
+        Slide multipleChoice4 = new Slide
         {
             Text = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
-            IsMultipleChoice = true,
+            SlideType = SlideType.MultipleChoice,
             AnswerList = new List<string>
             {
                 "Ik heb geen interesse",
@@ -136,10 +136,10 @@ public static class AnswerCubeInitializer
             }
         };
 
-        ListQuestion multipleChoice5 = new ListQuestion
+        Slide multipleChoice5 = new Slide
         {
             Text = "Wat zou jou (meer) zin geven om te gaan stemmen?",
-            IsMultipleChoice = true,
+            SlideType = SlideType.MultipleChoice,
             AnswerList = new List<string>
             {
                 "Kunnen gaan stemmen op een toffere locatie",
@@ -152,76 +152,111 @@ public static class AnswerCubeInitializer
 
 
         //Add the questions to the context
-        context.ListQuestions.AddRange(multipleChoice1, multipleChoice2, multipleChoice3, multipleChoice4,
+        context.Slides.AddRange(multipleChoice1, multipleChoice2, multipleChoice3, multipleChoice4,
             multipleChoice5);
 
-        ListQuestion rangeQuestion1 = new ListQuestion
+        Slide rangeQuestion1 = new Slide
         {
+            SlideType = SlideType.RangeQuestion,
             Text = "Ben jij van plan om te gaan stemmen bij de aankomende lokale verkiezingen?",
             AnswerList = new List<string>
                 { "Zeker niet", "Eerder niet", "Ik weet het nog niet", "Eerder wel", "Zeker wel" },
         };
 
-        ListQuestion rangeQuestion2 = new ListQuestion
+        Slide rangeQuestion2 = new Slide
         {
+            SlideType = SlideType.RangeQuestion,
             Text = "Voel jij je betrokken bij het beleid dat wordt uitgestippeld door je gemeente of stad?",
             AnswerList = new List<string> { "Ik voel me weinig tot niet betrokken", "Ik voel me (zeer) betrokken" },
         };
 
-        ListQuestion rangeQuestion3 = new ListQuestion
+        Slide rangeQuestion3 = new Slide
         {
+            SlideType = SlideType.RangeQuestion,
             Text = "In hoeverre ben jij tevreden met het vrijetijdsaanbod in jouw stad of gemeente?",
             AnswerList = new List<string>
                 { "Zeer ontevreden", "Ontevreden", "Niet tevreden en niet ontevreden", "Tevreden", "Zeer tevreden" },
         };
 
-        ListQuestion rangeQuestion4 = new ListQuestion
+        Slide rangeQuestion4 = new Slide
         {
+            SlideType = SlideType.RangeQuestion,
             Text =
                 "In welke mate ben jij het eens met de volgende stelling: “Mijn stad of gemeente doet voldoende om betaalbare huisvesting mogelijk te maken voor iedereen.”",
             AnswerList = new List<string>
                 { "Helemaal oneens", "Oneens", "Noch eens, noch oneens", "Eens", "Helemaal eens" },
         };
 
-        ListQuestion rangeQuestion5 = new ListQuestion
+        Slide rangeQuestion5 = new Slide
         {
+            SlideType = SlideType.RangeQuestion,
             Text =
                 "In welke mate kun jij je vinden in het voorstel om de straatlichten in onze gemeente te doven tussen 23u en 5u?",
             AnswerList = new List<string> { "Ik sta hier volledig achter", "Ik sta hier helemaal niet achter" },
         };
 
         // Add the Range questions to the context
-        context.ListQuestions.AddRange(rangeQuestion1, rangeQuestion2, rangeQuestion3, rangeQuestion4, rangeQuestion5);
+        context.Slides.AddRange(rangeQuestion1, rangeQuestion2, rangeQuestion3, rangeQuestion4, rangeQuestion5);
 
         // Open Questions
-        OpenQuestion openQuestion1 = new OpenQuestion
+        Slide openQuestion1 = new Slide
         {
+            SlideType = SlideType.OpenQuestion,
             Text = "Je bent schepen van onderwijs voor een dag: waar zet je dan vooral op in?",
-            Answer = "none"
+            
         };
 
-        OpenQuestion openQuestion2 = new OpenQuestion
+        Slide openQuestion2 = new Slide
         {
+            SlideType = SlideType.OpenQuestion,
             Text =
-                "Als je één ding mag wensen voor het nieuwe stadspark, wat zou jouw droomstadspark dan zeker bevatten?",
-            Answer = "none"
+                "Als je één ding mag wensen voor het nieuwe stadspark, wat zou jouw droomstadspark dan zeker bevatten?"
         };
 
         // Add the Open questions to the context
-        context.OpenQuestions.AddRange(openQuestion1, openQuestion2);
+        context.Slides.AddRange(openQuestion1, openQuestion2);
+        
+        // Info slides
+        Slide info1 = new Slide
+        {
+            Info = "Wat is een gemeenteraad?",
+            Text =
+                "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar."
+        };
+
+        Slide info2 = new Slide
+        {
+            Info = "Wat is een schepen?",
+            Text =
+                "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad."
+        };
+
+        Slide info3 = new Slide
+        {
+            Info = "Wat is een burgemeester?",
+            Text =
+                "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad."
+        };
+
+        context.Slides.AddRange(info1, info2, info3);
 
 
         SlideList slideList1 = new SlideList
         {
             Title = "testlist1",
             SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
-            Slides = new LinkedList<AbstractSlide>()
+            Slides = new LinkedList<Slide>()
         };
         slideList1.Slides.AddFirst(singleChoice1);
+        slideList1.Slides.AddFirst(singleChoice2);
+        slideList1.Slides.AddFirst(singleChoice3);
         slideList1.Slides.AddFirst(openQuestion2);
         slideList1.Slides.AddFirst(multipleChoice3);
         slideList1.Slides.AddFirst(multipleChoice2);
         slideList1.Slides.AddFirst(multipleChoice1);
+        slideList1.Slides.AddFirst(rangeQuestion4);
+        slideList1.Slides.AddFirst(rangeQuestion5);
+        slideList1.Slides.AddFirst(info1);
                 
         context.SlideLists.Add(slideList1);
 
@@ -240,7 +275,10 @@ public static class AnswerCubeInitializer
             Title = "testlist2",
             SubTheme = new SubTheme("een park", "ipsum lorum")
         };
-        slideList2.Slides = new LinkedList<AbstractSlide>();
+        slideList2.Slides = new LinkedList<Slide>();
+        slideList2.Slides.AddFirst(openQuestion1);
+        slideList2.Slides.AddFirst(singleChoice4);
+        slideList2.Slides.AddFirst(singleChoice5);
         slideList2.Slides.AddFirst(rangeQuestion1);
         slideList2.Slides.AddFirst(rangeQuestion2);
         slideList2.Slides.AddFirst(rangeQuestion3);
@@ -258,30 +296,6 @@ public static class AnswerCubeInitializer
 
         context.CircularFlows.Add(circularFlow);
         context.SaveChanges();
-
-        // Info slides
-        Info info1 = new Info
-        {
-            Question = "Wat is een gemeenteraad?",
-            Text =
-                "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar."
-        };
-
-        Info info2 = new Info
-        {
-            Question = "Wat is een schepen?",
-            Text =
-                "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad."
-        };
-
-        Info info3 = new Info
-        {
-            Question = "Wat is een burgemeester?",
-            Text =
-                "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad."
-        };
-
-        context.InfoSlides.AddRange(info1, info2, info3);
 
 
         context.SaveChanges();

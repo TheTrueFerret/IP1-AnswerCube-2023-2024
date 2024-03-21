@@ -6,17 +6,18 @@ namespace AnswerCube.BL;
 
 public interface IManager
 {
-    List<OpenQuestion> GetOpenSlides();
+    List<Slide> GetOpenSlides();
     
-    List<ListQuestion> GetListSlides();
+    List<Slide> GetListSlides();
     
-    List<ListQuestion> GetSingleChoiceSlides();
+    List<Slide> GetSingleChoiceSlides();
     
     SlideList GetSlideListById(int id);
 
-    List<ListQuestion> GetMultipleChoiceSlides();
+    List<Slide> GetMultipleChoiceSlides();
     
-    List<Info> GetInfoSlides();
+    List<Slide> GetInfoSlides();
     LinearFlow GetLinearFlow();
-    AbstractSlide GetSlideFromFlow(int flowId, int number);
+    Slide GetSlideFromFlow(int flowId, int number);
+    SlideList GetSlideList();
 }

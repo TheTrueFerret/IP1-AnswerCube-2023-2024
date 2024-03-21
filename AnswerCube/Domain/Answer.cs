@@ -7,6 +7,6 @@ public class Answer
     [Key]
     public int Id { get; set; }
     public string AnswerText { get; set; }
-    public AbstractSlide AbstractSlide { get; set; }
+    public Slide slide { get; set; }
     
 }

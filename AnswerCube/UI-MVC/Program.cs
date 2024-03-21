@@ -22,6 +22,8 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     
     //This is needed to prevent the error: Self referencing loop detected for property 'Flow' with type 'Domain.Flow'. Path 'SlideList[0]'.
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    //This is needed to get the Enum values into a JSON string
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 builder.Services.AddLogging(logging =>

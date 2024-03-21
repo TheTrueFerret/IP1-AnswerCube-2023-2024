@@ -15,22 +15,22 @@ public class Manager : IManager
     }
 
 
-    public List<OpenQuestion> GetOpenSlides()
+    public List<Slide> GetOpenSlides()
     {
         return _repository.GetOpenSlides();
     }
 
-    public List<ListQuestion> GetListSlides()
+    public List<Slide> GetListSlides()
     {
         return _repository.GetListSlides();
     }
 
-    public List<ListQuestion> GetSingleChoiceSlides()
+    public List<Slide> GetSingleChoiceSlides()
     {
         return _repository.GetSingleChoiceSlides();
     }
     
-    public List<ListQuestion> GetMultipleChoiceSlides()
+    public List<Slide> GetMultipleChoiceSlides()
     {
         return _repository.GetMultipleChoiceSlides();
     }
@@ -40,7 +40,7 @@ public class Manager : IManager
         return _repository.ReadSlideList(id);
     }
 
-    public List<Info> GetInfoSlides()
+    public List<Slide> GetInfoSlides()
     {
         return _repository.GetInfoSlides();
     }
@@ -50,8 +50,13 @@ public class Manager : IManager
         return _repository.GetLinearFlow();
     }
 
-    public AbstractSlide GetSlideFromFlow(int flowId, int number)
+    public Slide GetSlideFromFlow(int flowId, int number)
     {
         return _repository.GetSlideFromFlow(flowId, number);
+    }
+
+    public SlideList GetSlideList()
+    {
+        return _repository.getSlideList();
     }
 }

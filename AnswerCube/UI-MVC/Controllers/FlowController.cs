@@ -104,60 +104,52 @@ public class FlowController : Controller
 
     [Route("api/flow/getSlideList")]
     [HttpGet]
-    public IActionResult getSlideList()
+    public IActionResult GetSlideList()
     {
-        LinearFlow lineareFlow = _manager.GetLinearFlow();
-        List<AbstractSlide> slides = new List<AbstractSlide>();
-        if (lineareFlow.SlideList == null || lineareFlow.SlideList.Count == 0)
+        SlideList slideList = _manager.GetSlideList();
+        if (slideList.Slides == null || slideList.Slides.Count == 0)
         {
             _logger.LogInformation("HET IS HELEMAAL LEEG!!!!!!!");
             return new JsonResult(new { succes = false });
         }
         else
         {
-            foreach (var slide in lineareFlow.SlideList)
+            foreach (var slide in slideList.Slides)
             {
-                foreach (var nogMeerSlides in slide.Slides)
-                {
-                    _logger.LogInformation(nogMeerSlides.GetType().ToString().ToLower());
-                }
+                _logger.LogInformation(slide.GetType().ToString().ToLower());
             }
-
-            slides = lineareFlow.SlideList.First().Slides.ToList();
         }
 
-        return new JsonResult(new { success = true, slideList = slides });
+        return new JsonResult(new { slideList });
     }
 
     [Route("api/flow/getSlideFromList/{number:int}")]
     [HttpGet]
     public IActionResult getSlideFromList(int number)
     {
-        AbstractSlide slide = _manager.GetSlideFromFlow(1, number);
+        Slide slide = _manager.GetSlideFromFlow(1, number);
         if (slide == null)
         {
             _logger.LogInformation("HET IS HELEMAAL LEEG!!!!!!!");
             return new JsonResult(new { succes = false });
         }
-        else
-        {
-        }
 
         return new JsonResult(slide);
     }
+
 
     [Route("api/flow/getMaxNumberOfSlides")]
     [HttpGet]
     public IActionResult getMaxNumberOfSlides()
     {
-        LinearFlow lineareFlow = _manager.GetLinearFlow();
-        if (lineareFlow == null)
+        SlideList slideList = _manager.GetSlideList();
+        if (slideList == null)
         {
-            _logger.LogInformation("HET IS HELEMAAL LEEG!!!!!!!");
+            _logger.LogInformation("slideList is leeg!");
             return new JsonResult(new { succes = false });
         }
 
-        return new JsonResult(new { lineareFlow.SlideList.First().Slides.Count });
+        return new JsonResult(new { slideList.Slides.Count });
     }
 
 

@@ -43,24 +43,25 @@
 document.addEventListener("DOMContentLoaded", function () {
     const nextBtn = document.getElementById("next");
     const slide = document.getElementById("slide");
-    let maxSlide = 7
+    let maxSlide = 0;
     let currentSlide = 1
-    let timer = setInterval(nextSlide, 15000);
+    //let timer = setInterval(nextSlide, 15000);
     addListeners()
-    //getMaxSlides()
+    updateProgressBar()
+    getMaxSlides()
     nextSlide()
-    
+
     function addListeners() {
         if (nextBtn) {
             nextBtn.addEventListener("click", nextSlide);
         }
     }
-    
+
     function getSlide() {
-        if (currentSlide >= maxSlide) {
+        if (currentSlide > maxSlide) {
             currentSlide = 1
             console.log("OUT OF SLIDES")
-            clearInterval(timer)
+            //clearInterval(timer)
         }
         fetch(`https://localhost:7272/api/flow/getSlideFromList/${currentSlide}`,
             {
@@ -77,31 +78,46 @@ document.addEventListener("DOMContentLoaded", function () {
                     slide.innerHTML = `<em>OUT OF SLIDES!!! + ${currentSlide} </em>`;
                 }
             }).then(data => {
-            console.log(data)
-            let slideText = data.text;
-            slide.innerHTML = `<h3> ${slideText} </h3> `;
-            if (data.question !== null && data.question !== undefined){
-                console.log("info slide");
-                slide.innerHTML = `<h4> ${data.question} </h4> <br> <h3> ${slideText} </h3>`;
-                return
-            }
-            if (data.isMultipleChoice !== null && data.isMultipleChoice !== undefined ) {
-                if (data.isMultipleChoice === true) {
+            console.log(data);
+            switch (data.slideType?.toLowerCase()) {
+                case null:
+                    slide.innerHTML = `<em>No slides found!</em>`;
+                    break;
+                case "openquestion":
+                    console.log("open question slide");
+                    slide.innerHTML = `<h4> ${data.text} </h4>`;
+                    slide.innerHTML += `<input type="text" id="input" value="" placeholder="Answer the question.">`;
+                    break;
+                case "multiplechoice":
                     console.log("multiple choice slide");
-                    slide.innerHTML = `<h3> ${slideText} </h3> `;
+                    slide.innerHTML = `<h3> ${data.text} </h3> `;
                     for (const answers of data.answerList.$values) {
                         slide.innerHTML += `<input type="checkbox" id="input" value="${answers}" name="answer">${answers}<br>`;
                     }
-                    return;
-                } else{
+                    break;
+                case "singlechoice":
                     console.log("Single choice slide");
+                    slide.innerHTML = `<h3> ${data.text} </h3> `;
                     for (const answers of data.answerList.$values) {
                         slide.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
                     }
-                    return;
-                }
+                    break;
+                case "info":
+                    console.log("Single choice slide");
+                    slide.innerHTML = `<h3> ${data.text} </h3> `;
+                    break;
+                case "rangequestion":
+                    console.log("Range Question slide");
+                    slide.innerHTML = `<h3> ${data.text} </h3> `;
+                    for (const answers of data.answerList.$values) {
+                        slide.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
+                    }
+                    break;
+                default:
+                    console.log("problem loading data");
+                    slide.innerHTML = `<h4>Problem with loading the data</h4>`;
+                    break;
             }
-            slide.innerHTML += `<input type="text" id="input" value="" placeholder="Answer the question.">`;
         })
     }
 
@@ -114,9 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateProgressBar() {
         let totalQuestions = maxSlide; // total number of questions
         let answeredQuestions = currentSlide; // number of answered questions
-
+    
         let progress = (answeredQuestions / totalQuestions) * 100;
-
+    
         let progressBar = document.getElementById("progressBar");
         progressBar.style.width = progress + "%";
         progressBar.style.backgroundColor = "limegreen"; // Add this line
@@ -139,5 +155,4 @@ document.addEventListener("DOMContentLoaded", function () {
             maxSlide = data.count;
         })
     }
-
 });
