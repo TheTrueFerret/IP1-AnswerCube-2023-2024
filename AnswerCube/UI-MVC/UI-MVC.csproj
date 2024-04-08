@@ -101,4 +101,9 @@
       <AdditionalFiles Include="Views\Flow\Slide\MultipleChoice.cshtml" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="wwwroot\dist\" />
+    </ItemGroup>
+
 </Project>

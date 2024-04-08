@@ -1,14 +1,9 @@
-@{
-    ViewBag.Title = "CircularFlow";
-}
 
 @model UI_MVC.Controllers.FlowController
+
 
 
 <div id="page" data-script="@Url.Content("~/dist/flow.entry.js")">
     @await Html.PartialAsync(Model.PartialPages[Model.CurrentCondition])
 </div>
-
-<a id="nextSlide" class="btn btn-primary" type="button" >Next Slide</a>
-
 

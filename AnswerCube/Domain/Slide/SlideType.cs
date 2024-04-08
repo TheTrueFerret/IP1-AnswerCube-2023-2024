@@ -1,9 +1,10 @@
 namespace AnswerCube.BL.Domain.Slide;
 
-public enum TypeSlide
+public enum SlideType
 {
     Start = 0,
     MultipleChoice,
+    RangeQuestion,
     SingleChoice,
     OpenQuestion,
     Info,

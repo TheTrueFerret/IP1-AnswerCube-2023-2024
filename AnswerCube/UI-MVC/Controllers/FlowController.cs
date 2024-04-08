@@ -20,18 +20,18 @@ public class FlowController : Controller
     private readonly IManager _manager;
     
     // Dictionary to map conditions to partial page names
-    public Dictionary<TypeSlide, string> PartialPages { get; } = new Dictionary<TypeSlide, string>
+    public Dictionary<SlideType, string> PartialPages { get; } = new Dictionary<SlideType, string>
     {
-        { TypeSlide.Start, "Slide/StartSlide" },
-        { TypeSlide.MultipleChoice, "Slide/MultipleChoice" },
-        { TypeSlide.SingleChoice, "Slide/SingleChoice" },
-        { TypeSlide.OpenQuestion, "Slide/OpenQuestion" },
-        { TypeSlide.Info, "Slide/InfoSlide" },
+        { SlideType.Start, "Slide/StartSlide" },
+        { SlideType.MultipleChoice, "Slide/MultipleChoice" },
+        { SlideType.SingleChoice, "Slide/SingleChoice" },
+        { SlideType.OpenQuestion, "Slide/OpenQuestion" },
+        { SlideType.Info, "Slide/InfoSlide" },
         // Add more conditions and partial page names as needed
     };
 
     // Property to hold the current condition
-    public TypeSlide CurrentCondition { get; set; } = TypeSlide.Start;
+    public SlideType CurrentCondition { get; set; } = SlideType.Start;
     
     // List of slides in order
     private List<SlideList> slideList;
@@ -47,7 +47,7 @@ public class FlowController : Controller
     {
         if (!PartialPages.ContainsKey(CurrentCondition))
         {
-            CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
+            CurrentCondition = SlideType.Start; // Set a default condition if necessary
         }
         return View(this);
     }
@@ -56,12 +56,12 @@ public class FlowController : Controller
     {
         if (!PartialPages.ContainsKey(CurrentCondition))
         {
-            CurrentCondition = TypeSlide.Start; // Set a default condition if necessary
+            CurrentCondition = SlideType.Start; // Set a default condition if necessary
         }
         return View(this);
     }
     
-    private string GetPartialViewName(TypeSlide condition)
+    private string GetPartialViewName(SlideType condition)
     {
         return PartialPages.ContainsKey(condition) ? PartialPages[condition] : "Slide/StartSlide"; // Provide a default partial view if necessary
     }
@@ -76,9 +76,9 @@ public class FlowController : Controller
             return NotFound("Game or GameStore not found");
         
         // Check if the received slide type exists in PartialPages
-        if (PartialPages.ContainsKey(slideDto.TypeSlide))
+        if (PartialPages.ContainsKey(slideDto.SlideType))
         {
-            CurrentCondition = slideDto.TypeSlide;
+            CurrentCondition = slideDto.SlideType;
             string partialViewName = GetPartialViewName(CurrentCondition);
             return PartialView(partialViewName); // Return the partial view
         }

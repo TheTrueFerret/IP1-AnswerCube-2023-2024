@@ -6,22 +6,19 @@ namespace AnswerCube.DAL;
 
 public interface IRepository
 {
-    List<OpenQuestion> GetOpenSlides();
-    
-    List<ListQuestion> GetListSlides();
+    List<Slide> GetOpenSlides();
 
-    List<ListQuestion> GetSingleChoiceSlides();
-    
-    List<ListQuestion> GetMultipleChoiceSlides();
-    
-    List<Info> GetInfoSlides();
-    
-    AbstractSlide ReadSlideById(int id);
-    
+    List<Slide> GetListSlides();
+
+    List<Slide> GetSingleChoiceSlides();
+
+    List<Slide> GetMultipleChoiceSlides();
+    List<Slide> GetInfoSlides();
     SlideList ReadSlideList(int id);
-    
-    List<SlideList> ReadSlideLists();
-
+    LinearFlow GetLinearFlow();
+    Slide GetSlideFromFlow(int flowId, int number);
+    SlideList getSlideList();
+    Boolean AddAnswer(List<string> answers,int id);
     
     
 }

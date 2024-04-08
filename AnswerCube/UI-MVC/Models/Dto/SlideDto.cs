@@ -6,37 +6,18 @@ namespace UI_MVC.Models.Dto;
 public class SlideDto
 {
     public int Id { get; set; }
-    public TypeSlide TypeSlide { get; set; }
+    public SlideType SlideType { get; set; }
     public string? Text { get; set;}
     public Boolean? IsMultipleChoice { get; set; }
     public List<String>? AnswerList { get; set; }
     
-    public SlideDto()
-    {
-        
-    }
     
-    public SlideDto(AbstractSlide slide)
+    public SlideDto(Slide slide)
     {
         Id = slide.Id;
-        TypeSlide = slide.TypeSlide;
+        SlideType = slide.SlideType;
         Text = slide.Text;
     }
     
-    public SlideDto(ListQuestion listQuestion)
-    {
-        Id = listQuestion.Id;
-        TypeSlide = listQuestion.TypeSlide;
-        Text = listQuestion.Text;
-        AnswerList = listQuestion.AnswerList;
-    }
-    
-    
-    public SlideDto(OpenQuestion OpenQuestion)
-    {
-        Id = OpenQuestion.Id;
-        TypeSlide = OpenQuestion.TypeSlide;
-        Text = OpenQuestion.Text;
-    }
     
 }

@@ -10,21 +10,14 @@ namespace AnswerCube.DAL.EF;
 
 public class AnswerCubeDbContext : DbContext
 {
-    //public DbSet<Project> Projects { get; set; }
-    //public DbSet<Organization> Organizations { get; set; }
     public DbSet<LinearFlow> LinearFlows { get; set; }
     public DbSet<CircularFlow> CircularFlows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
+    public DbSet<Slide> Slides { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
-    
-    public DbSet<Info> InfoSlide { get; set; }
-    public DbSet<ListQuestion> ListQuestions { get; set; }
-    public DbSet<OpenQuestion> OpenQuestions { get; set; }
-    public DbSet<RequestingInfo> RequestingInfo { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
     
-    //TODO: add dbsets if needed
     
     
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
@@ -66,7 +59,7 @@ public class AnswerCubeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         // relation between Slide and SlideList
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasOne(s => s.SlideList)
             .WithMany(sl => sl.Slides);
         
@@ -97,12 +90,12 @@ public class AnswerCubeDbContext : DbContext
 
         // relation between Answer and Slide
         modelBuilder.Entity<Answer>()
-            .HasOne(a => a.AbstractSlide)
+            .HasOne(a => a.Slide)
             .WithMany(s => s.Answers);
         
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasMany(s => s.Answers)
-            .WithOne(a => a.AbstractSlide);
+            .WithOne(a => a.Slide);
         
         
         // relation between Installation and Flow

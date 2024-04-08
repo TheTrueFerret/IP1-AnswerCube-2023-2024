@@ -6,7 +6,18 @@ public class Answer
 {
     [Key]
     public int Id { get; set; }
-    public string AnswerText { get; set; }
-    public AbstractSlide AbstractSlide { get; set; }
+    public List<string> AnswerText { get; set; }
+    public Slide? Slide { get; set; }
+
     
+    public Answer(List<string> answerText, Slide slide)
+    {
+        AnswerText = answerText;
+        this.Slide = slide;
+    }
+
+    public Answer(List<string> answerText)
+    {
+        AnswerText = answerText;
+    }
 }
