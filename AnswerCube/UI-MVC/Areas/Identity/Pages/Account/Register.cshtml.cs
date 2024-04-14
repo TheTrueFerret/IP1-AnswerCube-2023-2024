@@ -98,6 +98,15 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            
+            //Adds the first and last name fields to the registration form
+            [Required]
+            [StringLength(25,ErrorMessage = "First Name must be less than 25 characters")]
+            [Display(Name = "Firstname")]
+            public string FirstName { get; set; }
+            [Required]
+            [StringLength(50,ErrorMessage = "First Name must be less than 50 characters")]
+            public string LastName { get; set; }
         }
 
 

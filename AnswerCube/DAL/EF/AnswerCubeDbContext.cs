@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace AnswerCube.DAL.EF;
 
-public class AnswerCubeDbContext : DbContext
+public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 {
     //public DbSet<Project> Projects { get; set; }
     //public DbSet<Organization> Organizations { get; set; }
@@ -23,6 +25,7 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<RequestingInfo> RequestingInfo { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
+    public DbSet<AnswerCubeUser> AnswerCubeUsers { get; set; }
     
     //TODO: add dbsets if needed
     

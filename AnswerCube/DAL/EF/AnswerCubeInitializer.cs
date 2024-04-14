@@ -1,6 +1,8 @@
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace AnswerCube.DAL.EF;
 
@@ -24,6 +26,23 @@ public static class AnswerCubeInitializer
 
     private static void Seed(AnswerCubeDbContext context)
     {
+        //Add SuperUser
+        var hasher = new PasswordHasher<AnswerCubeUser>();
+        var superUser = new AnswerCubeUser()
+        {
+            Id = "superUser2",
+            FirstName = "Yannick",
+            LastName = "Vandenbulcke",
+            UserName = "vandenbulckeyannick@gmail.com",
+            NormalizedUserName = "VANDENBULCKEYANNICK@GMAIL.COM",
+            Email = "vandenbulckeyannick@gmail.com",
+            NormalizedEmail = "VANDENBULCKEYANNICK@GMAIL.COM",
+            EmailConfirmed = true
+        };
+        superUser.PasswordHash = hasher.HashPassword(superUser, "test");
+        
+        context.AnswerCubeUsers.AddRange(superUser);
+        
         //SingleChoice
         ListQuestion singleChoice1 = new ListQuestion
         {
