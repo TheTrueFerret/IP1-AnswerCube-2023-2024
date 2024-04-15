@@ -7,7 +7,7 @@ module.exports = {
         site: './src/ts/site.ts', 
         index: './src/ts/index.ts',
         loadscript: './src/ts/LoadScript.ts',
-        flow: './src/ts/flow/Flow.ts',
+        circularflow: './src/ts/flow/CircularFlow.ts',
         startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
         qr : './src/ts/qr/qr.ts',

@@ -15,24 +15,24 @@ public class SlideController : Controller
     [HttpGet]
     public IActionResult MultipleChoice()
     {
-        return View("/Views/Flow/Slide/MultipleChoice.cshtml");
+        return View("/Views/Slides/MultipleChoice.cshtml");
     }
     
     [HttpGet]
     public IActionResult OpenQuestion()
     {
-        return View("/Views/Flow/Slide/OpenQuestion.cshtml");
+        return View("/Views/Slides/OpenQuestion.cshtml");
     }
     
     [HttpGet]
     public IActionResult SingleChoice()
     {
-        return View("/Views/Flow/Slide/SingleChoice.cshtml");
+        return View("/Views/Slides/SingleChoice.cshtml");
     }
     
     [HttpGet]
     public IActionResult InfoSlide()
     {
-        return View("/Views/Flow/Slide/InfoSlide.cshtml");
+        return View("/Views/Slides/InfoSlide.cshtml");
     }
 }

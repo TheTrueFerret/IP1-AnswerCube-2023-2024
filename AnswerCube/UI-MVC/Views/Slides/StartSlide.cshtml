@@ -2,13 +2,10 @@
     ViewBag.Title = "StartSlide";
 }
 
-<div id="slide">
+<div id="slide" data-script="@Url.Content("~/dist/startslide.entry.js")">
     <h1>Welcome to the Flow</h1>
-    
     
     <a id="nextSlide" class="btn btn-primary" type="button">Start Flow</a>
 </div>
 
-<script>
-loadScriptsForCurrentPage()
-</script>
+

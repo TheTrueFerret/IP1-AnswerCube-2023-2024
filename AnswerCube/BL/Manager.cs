@@ -35,12 +35,7 @@ public class Manager : IManager
     {
         return _repository.GetMultipleChoiceSlides();
     }
-
-    public SlideList GetSlideListById(int id)
-    {
-        return _repository.ReadSlideList(id);
-    }
-
+    
     public List<Slide> GetInfoSlides()
     {
         return _repository.GetInfoSlides();
@@ -60,9 +55,19 @@ public class Manager : IManager
     {
         return _repository.getSlideList();
     }
-
+    
+    public SlideList GetSlideListById(int id)
+    {
+        return _repository.ReadSlideListById(id);
+    }
+    
     public Boolean AddAnswer(List<string> answers,int id)
     {
         return _repository.AddAnswer(answers,id);
+    }
+
+    public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
+    {
+        return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
 }

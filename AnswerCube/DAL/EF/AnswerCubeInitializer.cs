@@ -222,44 +222,53 @@ public static class AnswerCubeInitializer
             // Info slides
             Slide info1 = new Slide
             {
-                Info = "Wat is een gemeenteraad?",
-                Text =
-                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar."
+                Text = "Wat is een gemeenteraad?\n" +
+                       "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
+                SlideType = SlideType.Info
             };
 
             Slide info2 = new Slide
             {
-                Info = "Wat is een schepen?",
-                Text =
-                    "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad."
+                Text = "Wat is een schepen?\n " +
+                       "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad.",
+                SlideType = SlideType.Info 
             };
 
             Slide info3 = new Slide
             {
-                Info = "Wat is een burgemeester?",
-                Text =
-                    "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad."
+                Text = "Wat is een burgemeester?\n" +
+                       "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad.",
+                SlideType = SlideType.Info
             };
 
             context.Slides.AddRange(info1, info2, info3);
 
 
+            Slide startSlide1 = new Slide()
+            {
+                Text = "Welkom bij het thema ...",
+                SlideType = SlideType.StartSlide
+            };
+            context.Slides.Add(startSlide1);
+            
+
             SlideList slideList1 = new SlideList
             {
                 Title = "testlist1",
                 SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
-                Slides = new LinkedList<Slide>()
+                Slides = new List<Slide>()
             };
-            slideList1.Slides.AddFirst(singleChoice1);
-            slideList1.Slides.AddFirst(singleChoice2);
-            slideList1.Slides.AddFirst(singleChoice3);
-            slideList1.Slides.AddFirst(openQuestion2);
-            slideList1.Slides.AddFirst(multipleChoice3);
-            slideList1.Slides.AddFirst(multipleChoice2);
-            slideList1.Slides.AddFirst(multipleChoice1);
-            slideList1.Slides.AddFirst(rangeQuestion4);
-            slideList1.Slides.AddFirst(rangeQuestion5);
-            slideList1.Slides.AddFirst(info1);
+            slideList1.Slides.Add(startSlide1);
+            slideList1.Slides.Add(singleChoice1);
+            slideList1.Slides.Add(singleChoice2);
+            slideList1.Slides.Add(singleChoice3);
+            slideList1.Slides.Add(openQuestion2);
+            slideList1.Slides.Add(multipleChoice3);
+            slideList1.Slides.Add(multipleChoice2);
+            slideList1.Slides.Add(multipleChoice1);
+            slideList1.Slides.Add(rangeQuestion4);
+            slideList1.Slides.Add(rangeQuestion5);
+            slideList1.Slides.Add(info1);
 
             context.SlideLists.Add(slideList1);
 
@@ -278,15 +287,15 @@ public static class AnswerCubeInitializer
                 Title = "testlist2",
                 SubTheme = new SubTheme("een park", "ipsum lorum")
             };
-            slideList2.Slides = new LinkedList<Slide>();
-            slideList2.Slides.AddFirst(openQuestion1);
-            slideList2.Slides.AddFirst(singleChoice4);
-            slideList2.Slides.AddFirst(singleChoice5);
-            slideList2.Slides.AddFirst(rangeQuestion1);
-            slideList2.Slides.AddFirst(rangeQuestion2);
-            slideList2.Slides.AddFirst(rangeQuestion3);
-            slideList2.Slides.AddFirst(multipleChoice4);
-            slideList2.Slides.AddFirst(multipleChoice5);
+            slideList2.Slides = new List<Slide>();
+            slideList2.Slides.Add(openQuestion1);
+            slideList2.Slides.Add(singleChoice4);
+            slideList2.Slides.Add(singleChoice5);
+            slideList2.Slides.Add(rangeQuestion1);
+            slideList2.Slides.Add(rangeQuestion2);
+            slideList2.Slides.Add(rangeQuestion3);
+            slideList2.Slides.Add(multipleChoice4);
+            slideList2.Slides.Add(multipleChoice5);
             context.SlideLists.Add(slideList2);
 
 

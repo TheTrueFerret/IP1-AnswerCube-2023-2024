@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using AnswerCube.BL.Domain;
 using Domain;
@@ -11,6 +12,6 @@ public class SlideList
     public string Title { get; set; }
     public Flow? Flow { get; set; }
     public SubTheme? SubTheme { get; set; }
-    public LinkedList<global::Domain.Slide>? Slides { get; set; }
+    public List<Slide>? Slides { get; set; }
     
 }

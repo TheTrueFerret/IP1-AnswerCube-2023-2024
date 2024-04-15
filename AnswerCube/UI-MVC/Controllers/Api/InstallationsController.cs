@@ -29,17 +29,6 @@ public class InstallationsController : Controller
         
     }
 
+    
 
-    //this file gets all of the date on the active flow on this installation
-    [HttpGet]
-    public ActionResult NextSlide()
-    {
-        List<Slide> allSlides = _manager.GetListOfSlides();
-        SlideDto slideDto = new SlideDto(allSlides[1]);
-        Console.WriteLine(slideDto);
-        return new JsonResult(slideDto);;
-    }
-    
-    
-    
 }

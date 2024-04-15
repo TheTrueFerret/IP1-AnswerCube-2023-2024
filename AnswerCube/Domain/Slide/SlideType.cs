@@ -2,7 +2,7 @@ namespace AnswerCube.BL.Domain.Slide;
 
 public enum SlideType
 {
-    Start = 0,
+    StartSlide = 0,
     MultipleChoice,
     RangeQuestion,
     SingleChoice,

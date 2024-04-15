@@ -40,10 +40,10 @@ public class AnswerCubeDbContext : DbContext
     {
         var connectionString = new NpgsqlConnectionStringBuilder()
         {
-            Host = Environment.GetEnvironmentVariable("INSTANCE_HOST"),     // e.g. '127.0.0.1'
-            Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user'
-            Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
-            Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
+            Host = Environment.GetEnvironmentVariable("localhost"),     // e.g. '127.0.0.1'
+            Username = Environment.GetEnvironmentVariable("postgres"), // e.g. 'my-db-user'
+            Password = Environment.GetEnvironmentVariable("Student_1234"), // e.g. 'my-db-password'
+            Database = Environment.GetEnvironmentVariable("DataBase IP1 Testssssss"), // e.g. 'my-database'
 
             // The Cloud SQL proxy provides encryption between the proxy and instance.
             SslMode = SslMode.Disable,
@@ -62,7 +62,7 @@ public class AnswerCubeDbContext : DbContext
         modelBuilder.Entity<Slide>()
             .HasOne(s => s.SlideList)
             .WithMany(sl => sl.Slides);
-        
+
         modelBuilder.Entity<SlideList>()
             .HasMany(sl => sl.Slides)
             .WithOne(s => s.SlideList);

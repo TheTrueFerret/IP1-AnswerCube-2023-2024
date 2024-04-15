@@ -14,11 +14,12 @@ public interface IRepository
 
     List<Slide> GetMultipleChoiceSlides();
     List<Slide> GetInfoSlides();
-    SlideList ReadSlideList(int id);
+    
     LinearFlow GetLinearFlow();
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList getSlideList();
+    SlideList ReadSlideListById(int id);
     Boolean AddAnswer(List<string> answers,int id);
-    
+    Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     
 }

@@ -98,12 +98,15 @@
 
 
     <ItemGroup>
-      <AdditionalFiles Include="Views\Flow\Slide\MultipleChoice.cshtml" />
+      <Folder Include="wwwroot\dist\" />
     </ItemGroup>
 
 
     <ItemGroup>
-      <Folder Include="wwwroot\dist\" />
+      <AdditionalFiles Include="Views\Slides\InfoSlide.cshtml" />
+      <AdditionalFiles Include="Views\Slides\OpenQuestion.cshtml" />
+      <AdditionalFiles Include="Views\Slides\SingleChoice.cshtml" />
+      <AdditionalFiles Include="Views\Slides\StartSlide.cshtml" />
     </ItemGroup>
 
 </Project>

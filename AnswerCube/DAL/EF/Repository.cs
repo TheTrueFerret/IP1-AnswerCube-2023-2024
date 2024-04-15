@@ -36,11 +36,6 @@ public class Repository : IRepository
         return _context.Slides.Where(s => s.SlideType == SlideType.MultipleChoice).ToList();
     }
 
-    public SlideList ReadSlideList(int id)
-    {
-        return _context.SlideLists.Find(id);
-    }
-
     public List<Slide> GetInfoSlides()
     {
         return _context.Slides.Where(s => s.SlideType == SlideType.Info).ToList();
@@ -68,6 +63,21 @@ public class Repository : IRepository
             .Include(sl => sl.Slides) // This will load the Slides of each SlideList
             .First();
     }
+    
+    public SlideList ReadSlideListById(int id)
+    {
+        SlideList slideList = _context.SlideLists
+            .Where(sl => sl.Id == id)
+            .Include(sl => sl.Slides).First();
+        
+        if (slideList == null)
+        {
+            // Handle the case where no SlideList with the given ID was found
+            throw new Exception("SlideList not found with the provided ID");
+        }
+
+        return slideList;
+    }
 
     public Boolean AddAnswer(List<string> answers, int id)
     {
@@ -87,6 +97,14 @@ public class Repository : IRepository
         }
 
         return default;
+    }
+
+    public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
+    {
+        SlideList slideList = getSlideList();
+        List<Slide> slides = slideList.Slides.ToList();
+        
+        return slides[index];
     }
 
     
