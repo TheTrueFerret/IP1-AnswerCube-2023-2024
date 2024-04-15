@@ -14,7 +14,7 @@ using UI_MVC.Models.Dto;
 
 namespace UI_MVC.Controllers;
 
-public class CircularFlowController : Controller
+public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
@@ -28,9 +28,33 @@ public class CircularFlowController : Controller
         _flowModel = flowModel;
     }
     
-    public IActionResult CircularFlow()
+    public IActionResult StartSlide()
     {
         return View(_flowModel);
+    }
+    
+        [HttpGet]
+    public IActionResult MultipleChoice()
+    {
+        return View("/Views/Slides/MultipleChoice.cshtml");
+    }
+    
+    [HttpGet]
+    public IActionResult OpenQuestion()
+    {
+        return View("/Views/Slides/OpenQuestion.cshtml");
+    }
+    
+    [HttpGet]
+    public IActionResult SingleChoice()
+    {
+        return View("/Views/Slides/SingleChoice.cshtml");
+    }
+    
+    [HttpGet]
+    public IActionResult InfoSlide()
+    {
+        return View("/Views/Slides/InfoSlide.cshtml");
     }
     
     [HttpPost]
@@ -45,33 +69,11 @@ public class CircularFlowController : Controller
     public IActionResult NextSlide(int currentSlideIndex, int slideListId)
     {
         Slide slide = _manager.GetSlideFromSlideListByIndex(currentSlideIndex, slideListId);
-        PartialViewResult result = SetCurrentSlide(slide);
-        return result;
+        string actionName = slide.SlideType.ToString();
+        string url = Url.Action(actionName);
+        return Json(new { url });
     }
     
-    private string GetPartialViewName(SlideType condition)
-    {
-        return _flowModel.PartialPages.ContainsKey(condition) ? _flowModel.PartialPages[condition] : "Slide/StartSlide"; // Provide a default partial view if necessary
-    }
-    
-    public PartialViewResult SetCurrentSlide(Slide slide)
-    {
-        _logger.LogInformation(slide.SlideType + "-" +  slide.Id);
-        
-        // Check if the received slide type exists in PartialPages
-        if (_flowModel.PartialPages.ContainsKey(slide.SlideType))
-        {
-            _flowModel.CurrentCondition = slide.SlideType;
-            string partialViewName = GetPartialViewName(_flowModel.CurrentCondition);
-
-            return PartialView(partialViewName); // Return the partial view
-        }
-        else
-        {
-            return null;
-        }
-    }
-
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

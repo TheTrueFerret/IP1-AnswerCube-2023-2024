@@ -60,6 +60,11 @@ public class Manager : IManager
     {
         return _repository.ReadSlideListById(id);
     }
+
+    public Slide GetSlideById(int id)
+    {
+        return _repository.ReadSlideById(id);
+    }
     
     public Boolean AddAnswer(List<string> answers,int id)
     {

@@ -1,12 +1,10 @@
-
-
-
-
+import {ActiveSlideList, currentSlideIndex} from "../CircularFlow";
 
 const slide = document.getElementById("slide");
 
-function LoadSlideData() {
-    fetch("http://localhost:5104/LinearFlow/GetSlideData/",
+async function GetSingleChoiceSlide() {
+    const currentSlide = ActiveSlideList[currentSlideIndex]; // Haal de huidige dia op basis van de huidige index
+    fetch(`http://localhost:5104/api/SingleChoices/${currentSlide}`,
         {
             method: "GET",
             headers: {
@@ -15,23 +13,32 @@ function LoadSlideData() {
         })
         .then(response => {
             if (response.status === 200) {
+                if (slide) {
+                    slide.innerHTML = `<em>IT WORKS!!!! + ${currentSlide} </em>`;
+                } else {
+                    console.error("Slide element not found!");
+                }
                 return response.json();
             } else {
-                slide.innerHTML = "<em>problem!!!</em>";
+                if (slide) {
+                    slide.innerHTML = `<em>OUT OF SLIDES!!! + ${currentSlide} </em>`;
+                } else {
+                    console.error("Slide element not found!");
+                }
             }
-        }).then(slideData => {
-        console.log("Single choice slide");
-        slide.innerHTML = `<h3> ${slideData.text} </h3> `;
-        for (const answers of slideData.answerList.$values) {
-            slide.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
-        }
-    })
-        .catch(error => {
-            console.error(error);
-            slide.innerHTML = "<em>Problem loading the slide</em>";
-        });
+        })
+        .then(data => {
+            console.log(data);
+            const slideElement = document.getElementById("slide");
+            if (slideElement) {
+                slideElement.innerHTML = `<h3>${data.text}</h3>`;
+                for (const answer of data.answerList) {
+                    slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
+                }
+            }
+        })
 }
 
-LoadSlideData()
+GetSingleChoiceSlide()
 
 

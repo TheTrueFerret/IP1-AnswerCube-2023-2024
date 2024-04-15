@@ -1,9 +1,14 @@
 @{
     ViewBag.Title = "InfoSlide";
+    Layout = ViewData["Layout"] as string;
 }
 
+@section Scripts
+{
+    <script src="~/dist/infoslide.entry.js" defer></script>
+}
 
-<div id="slide" data-script="@Url.Content("~/dist/infoslide.entry.js")">
+<div id="slide">
     <h1>InfoSlide</h1>
     
     <a id="nextSlide" class="btn btn-primary" type="button">Next Slide</a>

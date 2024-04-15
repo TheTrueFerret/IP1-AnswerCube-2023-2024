@@ -49,6 +49,11 @@ public class Repository : IRepository
             .First();
     }
 
+    public Slide ReadSlideById(int id)
+    {
+        return _context.Slides.SingleOrDefault(s => s.Id == id);
+    }
+
     public Slide GetSlideFromFlow(int flowId, int number)
     {
         SlideList slideList = getSlideList();

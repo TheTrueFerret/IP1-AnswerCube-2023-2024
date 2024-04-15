@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-public class LinearFlowController : Controller
+public class LinearFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;

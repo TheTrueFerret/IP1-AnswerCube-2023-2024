@@ -16,6 +16,6 @@ public interface IManager
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
     Boolean AddAnswer(List<string> answers,int id);
-
+    Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
 }

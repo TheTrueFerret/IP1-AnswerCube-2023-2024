@@ -9,7 +9,7 @@ public class FlowModel
     // Dictionary to map conditions to partial page names
     public Dictionary<SlideType, string> PartialPages { get; } = new Dictionary<SlideType, string>
     {
-        { SlideType.StartSlide, "../Slides/StartSlide.cshtml" },
+        { SlideType.StartSlide, "../CircularFlow/StartSlide.cshtml" },
         { SlideType.MultipleChoice, "../Slides/MultipleChoice" },
         { SlideType.SingleChoice, "../Slides/SingleChoice" },
         { SlideType.OpenQuestion, "../Slides/OpenQuestion" },

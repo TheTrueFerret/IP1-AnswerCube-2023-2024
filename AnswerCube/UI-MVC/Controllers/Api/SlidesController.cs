@@ -19,6 +19,14 @@ public class SlidesController : ControllerBase
     }
     
     
+    [Route("GetSlideData/{id}")]
+    [HttpGet]
+    public IActionResult GetSlideData(int id)
+    {
+        Slide singleChoiceSlide = _manager.GetSlideById(id);
+        return new JsonResult(singleChoiceSlide);
+    }
+    
     // generate content in the slides
     // and posts
     // deze krijgen allemaal een ID!!!!

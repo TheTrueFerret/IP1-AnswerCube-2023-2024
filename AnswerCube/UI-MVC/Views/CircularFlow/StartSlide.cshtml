@@ -1,11 +1,12 @@
-@{
-    ViewBag.Title = "StartSlide";
+
+
+@section Scripts
+{
+    <script src="~/dist/startslide.entry.js" defer></script>
 }
 
-<div id="slide" data-script="@Url.Content("~/dist/startslide.entry.js")">
+<div id="slide">
     <h1>Welcome to the Flow</h1>
     
     <a id="nextSlide" class="btn btn-primary" type="button">Start Flow</a>
 </div>
-
-

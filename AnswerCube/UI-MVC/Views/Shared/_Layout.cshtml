@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - UI_MVC</title>
     <script src="~/dist/site.entry.js" defer></script>
-    <script src="~/dist/loadscript.entry.js" defer></script>
     @RenderSection("Scripts", required: false)
     <link rel="stylesheet" href="~/dist/site.css">
 </head>
@@ -39,7 +38,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Slide" asp-action="InfoSlide">=InfoSlide=</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="StartSlide">CircularFlow</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="LinearFlow" asp-action="LinearFlow">LinearFlow</a>

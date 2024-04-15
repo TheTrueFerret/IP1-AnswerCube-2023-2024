@@ -12,7 +12,7 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class InstallationsController : Controller
+public class InstallationsController : BaseController
 {
     private readonly ILogger<InstallationsController> _logger;
     private readonly IManager _manager;

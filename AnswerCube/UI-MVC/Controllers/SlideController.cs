@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-public class SlideController : Controller
+public class SlideController : BaseController
 {
     private readonly IManager _manager;
 
