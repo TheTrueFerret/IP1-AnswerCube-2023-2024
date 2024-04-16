@@ -23,7 +23,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:5104/CircularFlow/NextSlide
+POST http://localhost:5104/CircularFlow/NextSlide/
 Accept: application/json
 Content-Type: application/json
 

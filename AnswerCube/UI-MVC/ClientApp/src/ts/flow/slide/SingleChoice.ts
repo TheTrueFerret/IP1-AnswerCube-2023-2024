@@ -6,34 +6,28 @@ function getNextSlide() {
         headers: {
             "Accept": "application/json"
         }
-    })
-        .then((response: Response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                if (slideElement) {
-                    slideElement.innerHTML = "<em>problem!!!</em>";
-                }
-            }
-        })
-        .then((slide: any) => {
-            console.log(slide);
-            const slideElement = document.getElementById("slide");
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
             if (slideElement) {
-                slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
-                for (const answer of slide.answerList) {
-                    slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
-                }
+                slideElement.innerHTML = "<em>problem!!!</em>";
             }
-
-        })
-        .catch((error: any) => {
-            console.error(error);
-            if (slideElement) {
-                slideElement.innerHTML = "<em>Problem loading the slide</em>";
+        }
+    }).then((slide: any) => {
+        console.log(slide);
+        const slideElement = document.getElementById("slide");
+        if (slideElement) {
+            slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+            for (const answer of slide.answerList) {
+                slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
             }
-        });
+        }
+    }).catch((error: any) => {
+        console.error(error);
+        if (slideElement) {
+            slideElement.innerHTML = "<em>Problem loading the slide</em>";
+        }
+    });
 }
-
 getNextSlide()
-

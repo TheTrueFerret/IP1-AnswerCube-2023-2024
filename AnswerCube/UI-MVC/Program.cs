@@ -18,7 +18,6 @@ builder.Services.AddScoped<FlowModel>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpContextAccessor();
 
 // Add Sessions to make sure Models Persist between Controller Requests
 builder.Services.AddDistributedMemoryCache();
