@@ -2,24 +2,22 @@ using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
+using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("AnswerCubeDbContextConnection") ??
-                       throw new InvalidOperationException(
-                           "Connection string 'AnswerCubeDbContextConnection' not found.");
-builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
+var services = builder.Services;
+services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
     {
-        optionsBuilder.UseNpgsql(
-            "Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;Username=postgres;Password=Student_1234;");
+        //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;Username=postgres;Password=Student_1234;");
         //optionsBuilder.UseNpgsql("Host=34.79.59.216;Username=postgres;Password=Student_1234;Database=DataBase IP1 Testssssss;");
-        //optionsBuilder.UseNpgsql(AnswerCube.DAL.EF.AnswerCubeDbContext.NewPostgreSqlTCPConnectionString().ToString());
+        optionsBuilder.UseNpgsql(AnswerCubeDbContext.NewPostgreSqlTCPConnectionString().ToString());
     }
 );
 
-builder.Services.Configure<IdentityOptions>(options =>
+services.Configure<IdentityOptions>(options =>
 {
     // Password settings
     options.Password.RequireDigit = true;
@@ -37,16 +35,26 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
-builder.Services.AddDefaultIdentity<AnswerCubeUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AnswerCubeDbContext>().AddDefaultTokenProviders().AddDefaultUI();
-builder.Services.AddScoped<IRepository, Repository>();
-builder.Services.AddScoped<IManager, Manager>();
+services.AddDefaultIdentity<AnswerCubeUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AnswerCubeDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
+services.AddScoped<IRepository, Repository>();
+services.AddScoped<IManager, Manager>();
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+services.AddControllersWithViews();
+services.AddRazorPages().AddRazorRuntimeCompilation();
+services.AddTransient<IEmailSender, MailService>();
 
-builder.Services.AddLogging(logging =>
+services.AddAuthentication().AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+    googleOptions.ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+});
+
+services.AddLogging(logging =>
 {
     logging.AddConsole();
     logging.AddDebug();

@@ -1,69 +1,65 @@
+using System.Net;
 using System.Net.Mail;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Gmail.v1;
-using Google.Apis.Gmail.v1.Data;
-using Google.Apis.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AnswerCube.UI.MVC.Services;
 
-public class MailService
+public class MailService : IEmailSender
 {
-    private static readonly string ServiceAccountPath = "./ServiceAccount.json";
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<MailService> _logger;
 
-    public void SendEmail(string to, string subject, string body, String companyMail, String companyName)
+    public MailService(IConfiguration configuration, ILogger<MailService> logger)
     {
-        try
-        {
-            var from = companyMail;
-            var serviceAccountCredential = GoogleCredential.FromFile(ServiceAccountPath)
-                .CreateScoped(GmailService.Scope.GmailSend)
-                .UnderlyingCredential as ServiceAccountCredential;
-
-            var initializer = new BaseClientService.Initializer
-            {
-                HttpClientInitializer = serviceAccountCredential,
-                ApplicationName = companyName,
-            };
-
-            var service = new GmailService(initializer);
-
-            var msg = new MailMessage
-            {
-                Subject = subject,
-                Body = body,
-                From = new MailAddress(from)
-            };
-            msg.To.Add(new MailAddress(to));
-            msg.ReplyToList.Add(msg.From);
-            var msgStr = new StringWriter();
-            msgStr.WriteLine("Beste,");
-            msgStr.WriteLine();
-            msgStr.WriteLine(body);
-            msgStr.WriteLine();
-            msgStr.WriteLine("Met vriendelijke groeten,");
-            msgStr.WriteLine(companyName);
-
-
-            msg.Body = msgStr.ToString();
-
-            var result = service.Users.Messages.Send(new Message
-            {
-                Raw = Base64UrlEncode(msgStr.ToString())
-            }, "me").Execute();
-            Console.WriteLine("Message ID: " + result.Id);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred while sending the email: " + ex.Message);
-        }
+        _configuration = configuration;
+        _logger = logger;
     }
 
-    private static string Base64UrlEncode(string input)
+    public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        var inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
-        return Convert.ToBase64String(inputBytes)
-            .Replace('+', '-')
-            .Replace('/', '_')
-            .Replace("=", "");
+        _logger.LogInformation(Environment.GetEnvironmentVariable("Smtpfrom"));
+        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpServer"));
+        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpPort"));
+        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpUsername"));
+        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpPassword"));
+        return Execute("answercubeintegratie@gmail.com", email, subject, htmlMessage);
+    }
+
+    public Task SendEmailToCompany(string companyMail, string subject, string htmlMessage)
+    {
+        //TODO: Implement SendEmailToCompany
+        throw new NotImplementedException();
+    }
+
+    private Task Execute(string fromEmail, string toEmail, string subject, string htmlMessage)
+    {
+        _logger.LogInformation("OAuth authentication started...");
+        // OAuth2 authentication
+        var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+            new ClientSecrets
+            {
+                ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID"),
+                ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")
+            },
+            new[] { "https://mail.google.com/" }, // Scope for accessing Gmail
+            Environment.GetEnvironmentVariable("SMTPUSERNAME"), // User identifier (can be any string)
+            CancellationToken.None
+        ).Result;
+        
+        _logger.LogInformation("OAuth authentication completed...");
+        _logger.LogInformation(credential.ToString());
+
+        var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+        {
+            Credentials = new NetworkCredential("", credential.Token.AccessToken),
+            EnableSsl = true
+        };
+        var mailMessage = new MailMessage(fromEmail, toEmail, subject, htmlMessage)
+        {
+            IsBodyHtml = true
+        };
+        smtpClient.Send(mailMessage);
+        return Task.CompletedTask;
     }
 }

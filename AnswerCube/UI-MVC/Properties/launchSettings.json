@@ -19,7 +19,14 @@
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
         "DB_NAME": "DataBase IP1 Testssssss",
-        "APP_URL": "http://localhost:5104"
+        "APP_URL": "http://localhost:5104",
+        "GOOGLE_CLIENT_ID": "800729734126-5gjvbpj4ermmo43d3h03soiakndrcrkq.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_SECRET": "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",
+        "SMTPSERVER": "smtp.gmail.com",
+        "SMTPPORT": "587",
+        "SMTPUSERNAME": "answercubeintegratie@gmail.com",
+        "SMTPPASSWORD": "Student_1234",
+        "SMTPFROM": "answercubeintegratie@gmail.com"
       }
     },
     "https": {
@@ -33,7 +40,14 @@
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
         "DB_NAME": "DataBase IP1 Testssssss",
-        "APP_URL": "https://localhost:7272"
+        "APP_URL": "https://localhost:7272",
+        "GOOGLE_CLIENT_ID": "800729734126-5gjvbpj4ermmo43d3h03soiakndrcrkq.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_SECRET": "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",
+        "SMTPSERVER": "smtp.gmail.com",
+        "SMTPPORT": "587",
+        "SMTPUSERNAME": "answercubeintegratie@gmail.com",
+        "SMTPPASSWORD": "Student_1234",
+        "SMTPFROM": "answercubeintegratie@gmail.com"
       }
     },
     "IIS Express": {
@@ -45,7 +59,6 @@
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
         "DB_NAME": "DataBase IP1 Testssssss"
-
       }
     }
   }

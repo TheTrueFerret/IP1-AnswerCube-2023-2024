@@ -26,11 +26,11 @@ public static class AnswerCubeInitializer
 
     private static void Seed(AnswerCubeDbContext context)
     {
-        //Add SuperUser
+        //Add Users
         var hasher = new PasswordHasher<AnswerCubeUser>();
-        var superUser = new AnswerCubeUser()
+        var yannick = new AnswerCubeUser()
         {
-            Id = "superUser2",
+            Id = "superUser1",
             FirstName = "Yannick",
             LastName = "Vandenbulcke",
             UserName = "vandenbulckeyannick@gmail.com",
@@ -39,10 +39,62 @@ public static class AnswerCubeInitializer
             NormalizedEmail = "VANDENBULCKEYANNICK@GMAIL.COM",
             EmailConfirmed = true
         };
-        superUser.PasswordHash = hasher.HashPassword(superUser, "test");
-        
-        context.AnswerCubeUsers.AddRange(superUser);
-        
+        yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
+
+        var jarno = new AnswerCubeUser()
+        {
+            Id = "superUser2",
+            FirstName = "jarno",
+            LastName = "Fret",
+            UserName = "jarno",
+            NormalizedUserName = "JARNO",
+            Email = "jarno.fret@student.kdg.be",
+            NormalizedEmail = "JARNO.FRET@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        jarno.PasswordHash = hasher.HashPassword(jarno, "Student_1234");
+
+        var alexander = new AnswerCubeUser()
+        {
+            Id = "superUser3",
+            FirstName = "Alexander",
+            LastName = "Van Puyenbroeck",
+            UserName = "Alexander",
+            NormalizedUserName = "ALEXANDER",
+            Email = "alexander.vanpuyenbroeck@student.kdg.be",
+            NormalizedEmail = "ALEXANDER.VANPUYENBROECK@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        var nemo = new AnswerCubeUser()
+        {
+            Id = "superUser4",
+            FirstName = "Nemo",
+            LastName = "Van Den Eynde",
+            UserName = "Nemo",
+            NormalizedUserName = "NEMO",
+            Email = "nemo.vandeneynde@student.kdg.be",
+            NormalizedEmail = "NEMO.VANDENEYNDE@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        var ilyasse = new AnswerCubeUser()
+        {
+            Id = "superUser5",
+            FirstName = "Ilyasse",
+            LastName = "jmida",
+            UserName = "Ilyasse",
+            NormalizedUserName = "ILYASSE",
+            Email = "ilyasse.jmida@student.kdg.be",
+            NormalizedEmail = "ILYASSE.JMIDA@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        context.AnswerCubeUsers.AddRange(alexander, yannick, jarno, nemo, ilyasse);
+
         //SingleChoice
         ListQuestion singleChoice1 = new ListQuestion
         {
@@ -229,13 +281,13 @@ public static class AnswerCubeInitializer
         // Add the Open questions to the context
         context.OpenQuestions.AddRange(openQuestion1, openQuestion2);
 
-        
+
         SlideList slideList1 = new SlideList
-        { 
-            Title = "testlist1", 
+        {
+            Title = "testlist1",
             SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum")
         };
-         
+
         slideList1.Slides = new LinkedList<AbstractSlide>();
         slideList1.Slides.AddFirst(multipleChoice1);
         slideList1.Slides.AddLast(multipleChoice2);
@@ -243,11 +295,11 @@ public static class AnswerCubeInitializer
         slideList1.Slides.AddLast(openQuestion2);
         slideList1.Slides.AddLast(singleChoice1);
         context.SlideLists.Add(slideList1);
-        
-        
+
+
         SlideList slideList2 = new SlideList
-        { 
-            Title = "testlist2", 
+        {
+            Title = "testlist2",
             SubTheme = new SubTheme("een park", "ipsum lorum")
         };
         slideList2.Slides = new LinkedList<AbstractSlide>();
@@ -257,8 +309,8 @@ public static class AnswerCubeInitializer
         slideList2.Slides.AddFirst(multipleChoice4);
         slideList2.Slides.AddFirst(multipleChoice5);
         context.SlideLists.Add(slideList2);
-        
-        
+
+
         LinearFlow linearFlow = new LinearFlow
         {
             Name = "linear"
@@ -266,8 +318,8 @@ public static class AnswerCubeInitializer
         linearFlow.SlideList = new List<SlideList>();
         linearFlow.SlideList.Add(slideList1);
         linearFlow.SlideList.Add(slideList2);
-        
-        
+
+
         CircularFlow circularFlow = new CircularFlow
         {
             Name = "circular"
@@ -275,11 +327,11 @@ public static class AnswerCubeInitializer
         circularFlow.SlideList = new List<SlideList>();
         circularFlow.SlideList.Add(slideList1);
         circularFlow.SlideList.Add(slideList2);
-        
-        
+
+
         context.LinearFlows.Add(linearFlow);
         context.CircularFlow.Add(circularFlow);
-        
+
         context.SaveChanges();
         context.ChangeTracker.Clear();
     }

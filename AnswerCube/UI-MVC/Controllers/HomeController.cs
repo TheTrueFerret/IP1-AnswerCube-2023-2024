@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using AnswerCube.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
+
 
 public class HomeController : Controller
 {
