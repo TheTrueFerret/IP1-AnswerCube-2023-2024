@@ -23,8 +23,8 @@ public class SlidesController : ControllerBase
     [HttpGet]
     public IActionResult GetSlideData(int id)
     {
-        Slide singleChoiceSlide = _manager.GetSlideById(id);
-        return new JsonResult(singleChoiceSlide);
+        Slide slide = _manager.GetSlideById(id);
+        return new JsonResult(slide);
     }
     
     // generate content in the slides

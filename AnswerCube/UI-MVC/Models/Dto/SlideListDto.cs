@@ -10,6 +10,8 @@ public class SlideListDto
     public SubTheme SubTheme { get; set; }
     public ICollection<Slide> Slides { get; set; }
 
+    public SlideListDto(){}
+    
     public SlideListDto(SlideList slideList)
     {
         Id = slideList.Id;

@@ -1,17 +1,10 @@
-
-
-@model FlowModel
-
-<div id="page" data-script="@Url.Content("~/dist/flow.entry.js")">
-    @await Html.PartialAsync(Model.PartialPages[Model.CurrentCondition])
-</div>
-
-
-@if (ViewBag.ScriptUrl != null)
+@section Scripts
 {
-    <script src="@Url.Content(ViewBag.ScriptUrl)"></script>
+    <script src="~/dist/startslide.entry.js" defer></script>
 }
 
-
-
-
+<div id="slide">
+    <h1>Welcome to the Linear Flow</h1>
+    
+    <a id="nextSlide" class="btn btn-primary" type="button">Start Flow</a>
+</div>

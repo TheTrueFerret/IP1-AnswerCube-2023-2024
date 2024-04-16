@@ -28,7 +28,7 @@ public class CircularFlowController : BaseController
         _flowModel = flowModel;
     }
     
-    public IActionResult StartSlide()
+    public IActionResult CircularFlow()
     {
         return View(_flowModel);
     }
@@ -57,18 +57,35 @@ public class CircularFlowController : BaseController
         return View("/Views/Slides/InfoSlide.cshtml");
     }
     
-    [HttpPost]
-    public IActionResult InitializeFlow(int slideListId)
+    [HttpGet]
+    public IActionResult InitializeFlow()
     {
         SlideList slideList = _manager.GetSlideList();
+        /*SlideListDto slideListDto = new SlideListDto()
+        {
+            Id = slideList.Id,
+            Title = slideList.Title,
+            SubTheme = slideList.SubTheme,
+            Slides = slideList.Slides,
+        };*/
+
+        _flowModel.ActiveSlideList = slideList;
+        
         return new JsonResult(slideList);
+    }
+    
+    [HttpGet]
+    public IActionResult GetNextSlide()
+    {
+        Slide slide = _manager.GetSlideById(1);
+        return new JsonResult(slide);
     }
     
     //this file gets all of the date on the active flow on this installation
     [HttpPost]
-    public IActionResult NextSlide(int currentSlideIndex, int slideListId)
+    public IActionResult UpdatePage(int currentSlideIndex, SlideList slideList)
     {
-        Slide slide = _manager.GetSlideFromSlideListByIndex(currentSlideIndex, slideListId);
+        Slide slide = _manager.GetSlideFromSlideListByIndex(currentSlideIndex, slideList.Id);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
