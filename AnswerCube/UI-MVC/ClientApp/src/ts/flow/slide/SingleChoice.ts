@@ -1,18 +1,39 @@
-import {currentSlide} from "../CircularFlow";
 
-const slideElement = document.getElementById("slide");
-
-let currentCurrentSlide: any = currentSlide;
-async function LoadSingleChoiceSlide() {
-    console.log(currentCurrentSlide);
-    if (slideElement) {
-        slideElement.innerHTML = `<h3>${currentCurrentSlide.Text}</h3>`;
-        for (const answer of currentCurrentSlide.AnswerList) {
-            slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
+function getNextSlide() {
+    const slideElement: HTMLElement | null = document.getElementById("slide");
+    fetch("http://localhost:5104/CircularFlow/GetNextSlide/", {
+        method: "GET",
+        headers: {
+            "Accept": "application/json"
         }
-    }
+    })
+        .then((response: Response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                if (slideElement) {
+                    slideElement.innerHTML = "<em>problem!!!</em>";
+                }
+            }
+        })
+        .then((slide: any) => {
+            console.log(slide);
+            const slideElement = document.getElementById("slide");
+            if (slideElement) {
+                slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+                for (const answer of slide.answerList) {
+                    slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
+                }
+            }
+
+        })
+        .catch((error: any) => {
+            console.error(error);
+            if (slideElement) {
+                slideElement.innerHTML = "<em>Problem loading the slide</em>";
+            }
+        });
 }
 
-LoadSingleChoiceSlide()
-
+getNextSlide()
 

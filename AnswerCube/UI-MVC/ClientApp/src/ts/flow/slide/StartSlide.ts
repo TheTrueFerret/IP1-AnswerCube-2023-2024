@@ -1,8 +1,6 @@
-import {currentSlide} from "../CircularFlow";
-const slideElement = document.getElementById("slide");
-
 
 function InitializeFlow() {
+    const slideElement = document.getElementById("slide");
     fetch("http://localhost:5104/CircularFlow/InitializeFLow/", {
         method: "GET",
         headers: {
@@ -12,7 +10,6 @@ function InitializeFlow() {
         .then((response: Response) => {
             if (response.status === 200) {
                 return response.json();
-                console.log(currentSlide)
             } else {
                 if (slideElement) {
                     slideElement.innerHTML = "<em>problem!!!</em>";

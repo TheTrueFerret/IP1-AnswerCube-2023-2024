@@ -82,11 +82,11 @@ public class CircularFlowController : BaseController
     }
     
     //this file gets all of the date on the active flow on this installation
-    [HttpPost]
-    public IActionResult UpdatePage(int currentSlideIndex, SlideList slideList)
+    [HttpGet]
+    public IActionResult UpdatePage()
     {
-        Slide slide = _manager.GetSlideFromSlideListByIndex(currentSlideIndex, slideList.Id);
-        string actionName = slide.SlideType.ToString();
+        Slide slideDto = _manager.GetSlideById(1);
+        string actionName = slideDto.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
     }
