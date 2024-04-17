@@ -224,21 +224,21 @@ public static class AnswerCubeInitializer
             {
                 Text = "Wat is een gemeenteraad?\n" +
                        "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
-                SlideType = SlideType.Info
+                SlideType = SlideType.InfoSlide
             };
 
             Slide info2 = new Slide
             {
                 Text = "Wat is een schepen?\n " +
                        "Een schepen is een lid van het college van burgemeester en schepenen. De schepen is een uitvoerend orgaan van de gemeente. De schepen is bevoegd voor een bepaalde tak van het gemeentelijk beleid. De schepen wordt verkozen door de gemeenteraad.",
-                SlideType = SlideType.Info 
+                SlideType = SlideType.InfoSlide 
             };
 
             Slide info3 = new Slide
             {
                 Text = "Wat is een burgemeester?\n" +
                        "De burgemeester is het hoofd van de gemeente. De burgemeester is de voorzitter van de gemeenteraad en het college van burgemeester en schepenen. De burgemeester is bevoegd voor de openbare orde en veiligheid. De burgemeester wordt verkozen door de gemeenteraad.",
-                SlideType = SlideType.Info
+                SlideType = SlideType.InfoSlide
             };
 
             context.Slides.AddRange(info1, info2, info3);

@@ -25,4 +25,5 @@ public interface IRepository
     
     Boolean StartInstallation(int id, SlideList slideList);
     int[] UpdateInstallation(int id);
+    int[] GetIndexAndSlideListFromInstallations(int id);
 }

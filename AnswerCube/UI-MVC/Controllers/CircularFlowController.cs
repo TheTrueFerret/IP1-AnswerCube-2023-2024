@@ -30,10 +30,10 @@ public class CircularFlowController : BaseController
     
     public IActionResult CircularFlow()
     {
-        return View(_flowModel);
+        return View();
     }
     
-        [HttpGet]
+    [HttpGet]
     public IActionResult MultipleChoice()
     {
         return View("/Views/Slides/MultipleChoice.cshtml");
@@ -55,6 +55,12 @@ public class CircularFlowController : BaseController
     public IActionResult InfoSlide()
     {
         return View("/Views/Slides/InfoSlide.cshtml");
+    }
+    
+    [HttpGet]
+    public IActionResult RangeQuestion()
+    {
+        return View("/Views/Slides/RangeQuestion.cshtml");
     }
     
     [HttpGet]
@@ -92,7 +98,8 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult UpdatePage()
     {
-        Slide slide = _manager.GetSlideById(1);
+        int[] idArray = _manager.GetIndexAndSlideListFromInstallations(1);
+        Slide slide = _manager.GetSlideFromSlideListByIndex(idArray[0], idArray[1]);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });

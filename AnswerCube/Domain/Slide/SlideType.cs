@@ -7,6 +7,6 @@ public enum SlideType
     RangeQuestion,
     SingleChoice,
     OpenQuestion,
-    Info,
+    InfoSlide,
     RequestingInfo,
 }

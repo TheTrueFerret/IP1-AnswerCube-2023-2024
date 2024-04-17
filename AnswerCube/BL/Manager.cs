@@ -86,4 +86,9 @@ public class Manager : IManager
         return _repository.UpdateInstallation(id);
     }
 
+    public int[] GetIndexAndSlideListFromInstallations(int id)
+    {
+        return _repository.GetIndexAndSlideListFromInstallations(id);
+    }
+
 }

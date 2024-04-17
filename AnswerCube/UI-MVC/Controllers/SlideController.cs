@@ -35,4 +35,10 @@ public class SlideController : BaseController
     {
         return View("/Views/Slides/InfoSlide.cshtml");
     }
+    
+    [HttpGet]
+    public IActionResult RangeQuestion()
+    {
+        return View("/Views/Slides/RangeQuestion.cshtml");
+    }
 }

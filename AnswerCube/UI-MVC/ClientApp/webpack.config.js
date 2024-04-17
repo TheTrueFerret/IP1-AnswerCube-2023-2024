@@ -11,6 +11,7 @@ module.exports = {
         startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
         singlechoice: './src/ts/flow/slide/SingleChoice.ts',
+        rangequestion: './src/ts/flow/slide/RangeQuestion.ts',
         infoslide: './src/ts/flow/slide/InfoSlide.ts',
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
         qr : './src/ts/qr/qr.ts',

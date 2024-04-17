@@ -38,7 +38,7 @@ public class Repository : IRepository
 
     public List<Slide> GetInfoSlides()
     {
-        return _context.Slides.Where(s => s.SlideType == SlideType.Info).ToList();
+        return _context.Slides.Where(s => s.SlideType == SlideType.InfoSlide).ToList();
     }
 
     public LinearFlow GetLinearFlow()
@@ -145,10 +145,24 @@ public class Repository : IRepository
         {
             return null;
         }
-        
-        
-        
-        
+    }
+    
+    public int[] GetIndexAndSlideListFromInstallations(int id)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+        {
+            int[] idArray = new int[]
+            {
+                installation.CurrentSlideIndex,
+                installation.ActiveSlideListId
+            };
+            return idArray;
+        }
+        else
+        {
+            return null;
+        }
     }
     
     

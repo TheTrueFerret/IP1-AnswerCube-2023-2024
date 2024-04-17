@@ -20,4 +20,5 @@ public interface IManager
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
     Boolean StartInstallation(int id, SlideList slideList);
     int[] UpdateInstallation(int id);
+    int[] GetIndexAndSlideListFromInstallations(int id);
 }

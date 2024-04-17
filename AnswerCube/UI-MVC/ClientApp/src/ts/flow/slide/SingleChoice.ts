@@ -1,5 +1,5 @@
 
-function getNextSlide() {
+function loadSingleChoiceSlide() {
     const slideElement: HTMLElement | null = document.getElementById("slide");
     fetch("http://localhost:5104/CircularFlow/GetNextSlide/", {
         method: "GET",
@@ -16,7 +16,6 @@ function getNextSlide() {
         }
     }).then((slide: any) => {
         console.log(slide);
-        const slideElement = document.getElementById("slide");
         if (slideElement) {
             slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
             for (const answer of slide.answerList) {
@@ -30,4 +29,4 @@ function getNextSlide() {
         }
     });
 }
-getNextSlide()
+loadSingleChoiceSlide()
