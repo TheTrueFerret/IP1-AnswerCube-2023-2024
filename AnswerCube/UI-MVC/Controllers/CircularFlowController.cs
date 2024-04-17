@@ -69,15 +69,22 @@ public class CircularFlowController : BaseController
             Slides = slideList.Slides,
         };*/
 
-        _flowModel.ActiveSlideList = slideList;
-        
-        return new JsonResult(slideList);
+        Boolean installationStarted = _manager.StartInstallation(1, slideList);
+        if (installationStarted)
+        {
+            return new JsonResult(slideList);
+        }
+        else
+        {
+            return Error();
+        }
     }
     
     [HttpGet]
     public IActionResult GetNextSlide()
     {
-        Slide slide = _manager.GetSlideById(1);
+        int[] idArray = _manager.UpdateInstallation(1);
+        Slide slide = _manager.GetSlideFromSlideListByIndex(idArray[0], idArray[1]);
         return new JsonResult(slide);
     }
     
@@ -85,8 +92,8 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult UpdatePage()
     {
-        Slide slideDto = _manager.GetSlideById(1);
-        string actionName = slideDto.SlideType.ToString();
+        Slide slide = _manager.GetSlideById(1);
+        string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
     }

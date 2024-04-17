@@ -14,6 +14,8 @@ builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
 );
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IManager, Manager>();
+builder.Services.AddScoped<FlowModel>();
+
 
 // Add IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();

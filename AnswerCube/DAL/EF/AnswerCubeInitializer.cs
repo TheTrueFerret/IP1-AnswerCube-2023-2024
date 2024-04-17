@@ -258,7 +258,6 @@ public static class AnswerCubeInitializer
                 SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
                 Slides = new List<Slide>()
             };
-            slideList1.Slides.Add(startSlide1);
             slideList1.Slides.Add(singleChoice1);
             slideList1.Slides.Add(singleChoice2);
             slideList1.Slides.Add(singleChoice3);
@@ -307,8 +306,18 @@ public static class AnswerCubeInitializer
             circularFlow.SlideList.Add(slideList2);
 
             context.CircularFlows.Add(circularFlow);
-            context.SaveChanges();
 
+
+            Installation installation = new Installation()
+            {
+                Location = "Antwerpen",
+                Active = false,
+                CurrentSlideIndex = 0,
+                ActiveSlideListId = 0,
+                MaxSlideIndex = 0,
+            };
+            context.Installations.Add(installation);
+            
 
             context.SaveChanges();
             context.ChangeTracker.Clear();

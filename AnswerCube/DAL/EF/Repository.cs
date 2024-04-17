@@ -2,6 +2,7 @@ using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace AnswerCube.DAL.EF;
 
@@ -13,8 +14,7 @@ public class Repository : IRepository
     {
         _context = context;
     }
-
-
+    
     public List<Slide> GetOpenSlides()
     {
         return _context.Slides.Where(s => s.SlideType == SlideType.OpenQuestion).ToList();
@@ -112,5 +112,44 @@ public class Repository : IRepository
         return slides[index];
     }
 
+
+    public Boolean StartInstallation(int id, SlideList slideList)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        installation.Active = true;
+        installation.ActiveSlideListId = slideList.Id;
+        installation.Slides = slideList.Slides;
+        installation.CurrentSlideIndex = 1;
+        installation.MaxSlideIndex = slideList.Slides.Count;
+        _context.SaveChanges();
+        return true;
+    }
+
+
+    public int[] UpdateInstallation(int id)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+        {
+            int[] idArray = new int[]
+            {
+                installation.CurrentSlideIndex,
+                installation.ActiveSlideListId
+            };
+            installation.CurrentSlideIndex++;
+            _context.SaveChanges();
+        
+            return idArray;
+        }
+        else
+        {
+            return null;
+        }
+        
+        
+        
+        
+    }
+    
     
 }

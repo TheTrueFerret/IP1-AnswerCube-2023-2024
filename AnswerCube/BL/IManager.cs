@@ -18,4 +18,6 @@ public interface IManager
     Boolean AddAnswer(List<string> answers,int id);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
+    Boolean StartInstallation(int id, SlideList slideList);
+    int[] UpdateInstallation(int id);
 }

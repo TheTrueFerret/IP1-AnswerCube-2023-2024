@@ -23,4 +23,6 @@ public interface IRepository
     Boolean AddAnswer(List<string> answers,int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     
+    Boolean StartInstallation(int id, SlideList slideList);
+    int[] UpdateInstallation(int id);
 }

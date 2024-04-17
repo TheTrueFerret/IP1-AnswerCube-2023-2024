@@ -75,4 +75,15 @@ public class Manager : IManager
     {
         return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
+
+    public Boolean StartInstallation(int id, SlideList slideList)
+    {
+        return _repository.StartInstallation(id, slideList);
+    }
+
+    public int[] UpdateInstallation(int id)
+    {
+        return _repository.UpdateInstallation(id);
+    }
+
 }
