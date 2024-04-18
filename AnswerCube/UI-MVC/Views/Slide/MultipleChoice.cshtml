@@ -2,7 +2,7 @@
     ViewBag.Title = "MultipleChoice";
 }
 @using Domain
-@model List<Domain.ListQuestion>
+@model List<Domain.Slide>
 
 @section Scripts
 {
@@ -20,8 +20,9 @@
         <th></th>
     </tr>
     </thead>
+    @* TODO: Uncomment this code when the model is fixed
     <tbody id="MultipleQuestionTableBody">
-        @foreach (ListQuestion listQuestion in Model)
+        @foreach (Slide listQuestion in Model)
         {
             <tr>
                 <td>@listQuestion.Text</td>
@@ -36,7 +37,7 @@
                 <td>@listQuestion.IsMultipleChoice</td>
             </tr>
         }
-    </tbody>
+    </tbody>*@
 </table>
 
 <div id="slide">

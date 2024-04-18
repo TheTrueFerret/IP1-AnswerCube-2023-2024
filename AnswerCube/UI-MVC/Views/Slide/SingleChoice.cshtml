@@ -2,7 +2,7 @@
     ViewBag.Title = "MultipleChoice";
 }
 @using Domain
-@model List<Domain.ListQuestion>
+@model List<Domain.Slide>
 @section Scripts
 {
     <script src="~/dist/singlechoice.entry.js" defer></script>
@@ -19,6 +19,7 @@
         <th></th>
     </tr>
     </thead>
+    @* TODO: Uncomment this code when the model is fixed 
     <tbody id="MultipleQuestionTableBody">
         @foreach (ListQuestion listQuestion in Model)
         {
@@ -35,7 +36,7 @@
                 <td>@listQuestion.IsMultipleChoice</td>
             </tr>
         }
-    </tbody>
+    </tbody>*@
 </table>
 
 <div id="slide">

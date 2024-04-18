@@ -305,7 +305,7 @@ public static class AnswerCubeInitializer
             circularFlow.SlideList = new List<SlideList>();
             circularFlow.SlideList.Add(slideList2);
 
-            context.CircularFlows.Add(circularFlow);
+            //context.CircularFlows.Add(circularFlow);
 
 
             Installation installation = new Installation()
