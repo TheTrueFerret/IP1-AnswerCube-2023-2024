@@ -1,38 +1,26 @@
 
-
-function initialise() {
-    fetch("http://localhost:5104/api/Installation/initialiseSlideList",
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
+function InitializeFlow() {
+    const slideElement = document.getElementById("slide");
+    fetch("http://localhost:5104/CircularFlow/InitializeFLow/", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
             }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                nextSlide()
-                return response.json();
-            } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
-            }
-        })
+        }
+    }).then((data: any) => {
+        
+    }).catch((error: any) => {
+        console.error(error);
+        if (slideElement) {
+            slideElement.innerHTML = "<em>Problem loading the slide</em>";
+        }
+    });
 }
-
-function nextSlide() {
-    fetch("http://localhost:5104/api/Installation/nextSlide",
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
-            }
-        })
-}
-
-const btn = document.getElementById("nextSlide").addEventListener('click', initialise);
+InitializeFlow()

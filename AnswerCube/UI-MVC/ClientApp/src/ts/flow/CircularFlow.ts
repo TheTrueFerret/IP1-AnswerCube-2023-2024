@@ -1,43 +1,44 @@
 
-function getSlideList() {
-    fetch("http://localhost:5104/api/Slides",
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
+
+function UpdatePage() {
+    const slideElement: HTMLElement | null = document.getElementById("slide");
+    fetch("http://localhost:5104/CircularFlow/UpdatePage/", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
             }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                document.getElementById("CircularFlowTableBody").innerHTML = "<em>Problem!!!</em>";
+        }
+    }).then((slideInfo: any) => {
+        if (slideInfo.url) {
+            // Redirect to the URL of the next slide
+            window.location.href = slideInfo.url;
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>Next slide URL not found</em>";
             }
-        })
-        .then(slideList => {
-            console.log(slideList);
-            updateCondition(slideList[1])
-        })
+        }
+    }).catch((error: any) => {
+        console.error(error);
+        if (slideElement) {
+            slideElement.innerHTML = "<em>Problem loading the next slide</em>";
+        }
+    });
 }
 
-function updateCondition(newCondition) {
-    fetch("http://localhost:5104/api/Slides", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(newCondition)
-    }).then(res => {
-        if(res.ok) {
-            if(res.status === 201) {
-                return res.json();
-            }
-        } else {
-            alert("No 2xx code returned")
-        }
-    }).catch(err => {
-        alert("Something went wrong: " + err);
-    })
+
+const btn: HTMLElement | null = document.getElementById("nextSlide");
+if (btn) {
+    btn.addEventListener('click', nextSlide);
+}
+
+function nextSlide() {
+    UpdatePage();
 }
 

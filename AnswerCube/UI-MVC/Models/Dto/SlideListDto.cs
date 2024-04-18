@@ -8,8 +8,10 @@ public class SlideListDto
     public int Id { get; set; }
     public string Title { get; set; }
     public SubTheme SubTheme { get; set; }
-    public LinkedList<AbstractSlide> Slides { get; set; }
+    public ICollection<Slide> Slides { get; set; }
 
+    public SlideListDto(){}
+    
     public SlideListDto(SlideList slideList)
     {
         Id = slideList.Id;

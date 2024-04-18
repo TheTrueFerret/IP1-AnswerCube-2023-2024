@@ -10,21 +10,14 @@ namespace AnswerCube.DAL.EF;
 
 public class AnswerCubeDbContext : DbContext
 {
-    //public DbSet<Project> Projects { get; set; }
-    //public DbSet<Organization> Organizations { get; set; }
     public DbSet<LinearFlow> LinearFlows { get; set; }
     public DbSet<CircularFlow> CircularFlow { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
+    public DbSet<Slide> Slides { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
-    
-    public DbSet<Info> InfoSlide { get; set; }
-    public DbSet<ListQuestion> ListQuestions { get; set; }
-    public DbSet<OpenQuestion> OpenQuestions { get; set; }
-    public DbSet<RequestingInfo> RequestingInfo { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
     
-    //TODO: add dbsets if needed
     
     
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
@@ -47,10 +40,10 @@ public class AnswerCubeDbContext : DbContext
     {
         var connectionString = new NpgsqlConnectionStringBuilder()
         {
-            Host = Environment.GetEnvironmentVariable("INSTANCE_HOST"),     // e.g. '127.0.0.1'
-            Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user'
-            Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
-            Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
+            Host = Environment.GetEnvironmentVariable("localhost"),     // e.g. '127.0.0.1'
+            Username = Environment.GetEnvironmentVariable("postgres"), // e.g. 'my-db-user'
+            Password = Environment.GetEnvironmentVariable("Student_1234"), // e.g. 'my-db-password'
+            Database = Environment.GetEnvironmentVariable("DataBase IP1 Testssssss"), // e.g. 'my-database'
 
             // The Cloud SQL proxy provides encryption between the proxy and instance.
             SslMode = SslMode.Disable,
@@ -66,10 +59,10 @@ public class AnswerCubeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         
         // relation between Slide and SlideList
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasOne(s => s.SlideList)
             .WithMany(sl => sl.Slides);
-        
+
         modelBuilder.Entity<SlideList>()
             .HasMany(sl => sl.Slides)
             .WithOne(s => s.SlideList);
@@ -97,12 +90,12 @@ public class AnswerCubeDbContext : DbContext
 
         // relation between Answer and Slide
         modelBuilder.Entity<Answer>()
-            .HasOne(a => a.AbstractSlide)
+            .HasOne(a => a.Slide)
             .WithMany(s => s.Answers);
         
-        modelBuilder.Entity<AbstractSlide>()
+        modelBuilder.Entity<Slide>()
             .HasMany(s => s.Answers)
-            .WithOne(a => a.AbstractSlide);
+            .WithOne(a => a.Slide);
         
         
         // relation between Installation and Flow

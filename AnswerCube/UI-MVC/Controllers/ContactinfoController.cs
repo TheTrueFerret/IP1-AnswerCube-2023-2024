@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-public class ContactinfoController : Controller
+public class ContactinfoController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     //Mailservice _mailService = new Mailservice();

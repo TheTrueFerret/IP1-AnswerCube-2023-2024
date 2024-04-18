@@ -34,7 +34,7 @@ public class CliTest
 
     public void ShowListSlides()
     {
-        _manager.GetListSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
+        _manager.GetListOfSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowSingleChoiceSlides()

@@ -1,6 +1,7 @@
 using AnswerCube.BL;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
+using AnswerCube.UI.MVC.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,22 @@ builder.Services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
 );
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IManager, Manager>();
+builder.Services.AddScoped<FlowModel>();
+
+
+// Add IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add Sessions to make sure Models Persist between Controller Requests
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddLogging(logging =>
 {
@@ -39,6 +53,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
