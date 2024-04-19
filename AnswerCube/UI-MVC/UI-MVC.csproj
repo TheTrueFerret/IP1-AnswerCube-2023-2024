@@ -162,6 +162,7 @@
     <ItemGroup>
       <Folder Include="Areas\" />
       <Folder Include="Areas\Identity\Data\" />
+      <Folder Include="wwwroot\dist\" />
     </ItemGroup>
 
 </Project>
