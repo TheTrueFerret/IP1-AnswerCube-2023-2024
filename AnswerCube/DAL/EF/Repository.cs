@@ -126,25 +126,16 @@ public class Repository : IRepository
     }
 
 
-    public int[] UpdateInstallation(int id)
+    public Boolean UpdateInstallation(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).First();
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
-            int[] idArray = new int[]
-            {
-                installation.CurrentSlideIndex,
-                installation.ActiveSlideListId
-            };
             installation.CurrentSlideIndex++;
             _context.SaveChanges();
-        
-            return idArray;
+            return true;
         }
-        else
-        {
-            return null;
-        }
+        return false;
     }
     
     public int[] GetIndexAndSlideListFromInstallations(int id)
@@ -164,6 +155,17 @@ public class Repository : IRepository
             return null;
         }
     }
-    
-    
+
+
+    public Slide ReadActiveSlideByInstallationId(int id)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
+        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.Slides).First();
+        Slide slide = new Slide();
+        if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+        {
+            slide = slideList.Slides[installation.CurrentSlideIndex];
+        }
+        return slide;
+    }
 }

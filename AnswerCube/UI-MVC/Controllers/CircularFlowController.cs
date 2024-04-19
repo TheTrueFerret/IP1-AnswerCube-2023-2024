@@ -89,8 +89,8 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult GetNextSlide()
     {
-        int[] idArray = _manager.UpdateInstallation(1);
-        Slide slide = _manager.GetSlideFromSlideListByIndex(idArray[0], idArray[1]);
+        Boolean installationUpdated = _manager.UpdateInstallation(1);
+        Slide slide = _manager.GetActiveSlideByInstallationId(1);
         return new JsonResult(slide);
     }
     
@@ -98,12 +98,28 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult UpdatePage()
     {
-        int[] idArray = _manager.GetIndexAndSlideListFromInstallations(1);
-        Slide slide = _manager.GetSlideFromSlideListByIndex(idArray[0], idArray[1]);
+        Slide slide = _manager.GetActiveSlideByInstallationId(1);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
     }
+    
+    
+    [HttpPost]
+    public IActionResult PostAnswer([FromBody] AnswerModel answer)
+    {
+        Slide slide = _manager.GetActiveSlideByInstallationId(1);
+        List<string> answerText = answer.Answer;
+        if (_manager.AddAnswer(answerText, slide.Id))
+        {
+            return new JsonResult(new OkResult());
+        }
+        else
+        {
+            return new JsonResult(new BadRequestResult());
+        }
+    }
+
     
     
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

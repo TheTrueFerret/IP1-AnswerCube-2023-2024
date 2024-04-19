@@ -24,6 +24,7 @@ public interface IRepository
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     
     Boolean StartInstallation(int id, SlideList slideList);
-    int[] UpdateInstallation(int id);
+    Boolean UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
+    Slide ReadActiveSlideByInstallationId(int id);
 }

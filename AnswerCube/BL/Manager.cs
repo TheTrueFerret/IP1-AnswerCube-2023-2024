@@ -81,7 +81,7 @@ public class Manager : IManager
         return _repository.StartInstallation(id, slideList);
     }
 
-    public int[] UpdateInstallation(int id)
+    public Boolean UpdateInstallation(int id)
     {
         return _repository.UpdateInstallation(id);
     }
@@ -89,6 +89,11 @@ public class Manager : IManager
     public int[] GetIndexAndSlideListFromInstallations(int id)
     {
         return _repository.GetIndexAndSlideListFromInstallations(id);
+    }
+
+    public Slide GetActiveSlideByInstallationId(int id)
+    {
+        return _repository.ReadActiveSlideByInstallationId(id);
     }
 
 }
