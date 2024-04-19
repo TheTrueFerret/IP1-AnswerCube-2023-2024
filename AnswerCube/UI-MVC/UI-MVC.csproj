@@ -128,8 +128,6 @@
       <AdditionalFiles Include="Views\Slides\InfoSlide.cshtml" />
       <AdditionalFiles Include="Views\Slides\OpenQuestion.cshtml" />
       <AdditionalFiles Include="Views\Slides\SingleChoice.cshtml" />
-
-    <ItemGroup>
       <AdditionalFiles Include="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
       <AdditionalFiles Include="Areas\Identity\Pages\Account\ConfirmEmail.cshtml" />
       <AdditionalFiles Include="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
