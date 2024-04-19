@@ -118,7 +118,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\dist\"/>
         <AdditionalFiles Include="Views\Slides\InfoSlide.cshtml"/>
         <AdditionalFiles Include="Views\Slides\OpenQuestion.cshtml"/>
         <AdditionalFiles Include="Views\Slides\SingleChoice.cshtml"/>
