@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../site";
+import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 
 function loadRangeQuestionSlide() {
     const slideElement: HTMLElement | null = document.getElementById("slide");

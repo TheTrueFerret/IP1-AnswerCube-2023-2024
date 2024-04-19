@@ -18,14 +18,12 @@ public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
-    private readonly FlowModel _flowModel;
     
     
-    public CircularFlowController(ILogger<HomeController> logger, IManager manager, FlowModel flowModel)
+    public CircularFlowController(ILogger<HomeController> logger, IManager manager)
     {
         _logger = logger;
         _manager = manager;
-        _flowModel = flowModel;
     }
     
     public IActionResult CircularFlow()

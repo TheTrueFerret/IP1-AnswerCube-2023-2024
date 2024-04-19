@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../site";
+import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 
 function InitializeFlow() {
     const slideElement = document.getElementById("slide");
