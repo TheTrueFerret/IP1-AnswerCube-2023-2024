@@ -1,15 +1,20 @@
 using System.Diagnostics;
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace AnswerCube.DAL.EF;
 
-public class AnswerCubeDbContext : DbContext
+public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 {
+    //public DbSet<Project> Projects { get; set; }
+    //public DbSet<Organization> Organizations { get; set; }
     public DbSet<LinearFlow> LinearFlows { get; set; }
     public DbSet<CircularFlow> CircularFlow { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
@@ -17,9 +22,9 @@ public class AnswerCubeDbContext : DbContext
     public DbSet<SubTheme> SubThemes { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
+    public DbSet<AnswerCubeUser> AnswerCubeUsers { get; set; }
     
-    
-    
+
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
         AnswerCubeInitializer.Initialize(this, true);
@@ -40,10 +45,10 @@ public class AnswerCubeDbContext : DbContext
     {
         var connectionString = new NpgsqlConnectionStringBuilder()
         {
-            Host = Environment.GetEnvironmentVariable("localhost"),     // e.g. '127.0.0.1'
-            Username = Environment.GetEnvironmentVariable("postgres"), // e.g. 'my-db-user'
-            Password = Environment.GetEnvironmentVariable("Student_1234"), // e.g. 'my-db-password'
-            Database = Environment.GetEnvironmentVariable("DataBase IP1 Testssssss"), // e.g. 'my-database'
+            Host = Environment.GetEnvironmentVariable("INSTANCE_HOST"),     // e.g. '127.0.0.1'
+            Username = Environment.GetEnvironmentVariable("DB_USER"), // e.g. 'my-db-user'
+            Password = Environment.GetEnvironmentVariable("DB_PASS"), // e.g. 'my-db-password'
+            Database = Environment.GetEnvironmentVariable("DB_NAME"), // e.g. 'my-database'
 
             // The Cloud SQL proxy provides encryption between the proxy and instance.
             SslMode = SslMode.Disable,
@@ -106,7 +111,21 @@ public class AnswerCubeDbContext : DbContext
         modelBuilder.Entity<Flow>()
             .HasMany(s => s.ActiveInstallations)
             .WithOne(i => i.Flow);
-        
+
+        SeedRoles(modelBuilder);
+
         //TODO: add modelbuilder (relations, required, etc.)
+    }
+
+    private void SeedRoles(ModelBuilder builder)
+    {
+        builder.Entity<IdentityRole>().HasData
+        (
+            new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+            new IdentityRole { Name = "Organization", NormalizedName = "ORGANIZATION" },
+            new IdentityRole { Name = "DeelplatofmBeheerder", NormalizedName = "DEELPLATFORMBEHEERDER" },
+            new IdentityRole { Name = "Supervisor", NormalizedName = "SUPERVISOR" },
+            new IdentityRole { Name = "Gebruiker", NormalizedName = "GEBRUIKER" }
+        );
     }
 }

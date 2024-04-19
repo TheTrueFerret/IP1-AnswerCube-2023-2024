@@ -24,7 +24,75 @@ public static class AnswerCubeInitializer
 
     private static void Seed(AnswerCubeDbContext context)
     {
-        
+        //Add Users
+        var hasher = new PasswordHasher<AnswerCubeUser>();
+        var yannick = new AnswerCubeUser()
+        {
+            Id = "superUser1",
+            FirstName = "Yannick",
+            LastName = "Vandenbulcke",
+            UserName = "vandenbulckeyannick@gmail.com",
+            NormalizedUserName = "VANDENBULCKEYANNICK@GMAIL.COM",
+            Email = "vandenbulckeyannick@gmail.com",
+            NormalizedEmail = "VANDENBULCKEYANNICK@GMAIL.COM",
+            EmailConfirmed = true
+        };
+        yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
+
+        var jarno = new AnswerCubeUser()
+        {
+            Id = "superUser2",
+            FirstName = "jarno",
+            LastName = "Fret",
+            UserName = "jarno",
+            NormalizedUserName = "JARNO",
+            Email = "jarno.fret@student.kdg.be",
+            NormalizedEmail = "JARNO.FRET@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        jarno.PasswordHash = hasher.HashPassword(jarno, "Student_1234");
+
+        var alexander = new AnswerCubeUser()
+        {
+            Id = "superUser3",
+            FirstName = "Alexander",
+            LastName = "Van Puyenbroeck",
+            UserName = "Alexander",
+            NormalizedUserName = "ALEXANDER",
+            Email = "alexander.vanpuyenbroeck@student.kdg.be",
+            NormalizedEmail = "ALEXANDER.VANPUYENBROECK@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        var nemo = new AnswerCubeUser()
+        {
+            Id = "superUser4",
+            FirstName = "Nemo",
+            LastName = "Van Den Eynde",
+            UserName = "Nemo",
+            NormalizedUserName = "NEMO",
+            Email = "nemo.vandeneynde@student.kdg.be",
+            NormalizedEmail = "NEMO.VANDENEYNDE@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        var ilyasse = new AnswerCubeUser()
+        {
+            Id = "superUser5",
+            FirstName = "Ilyasse",
+            LastName = "jmida",
+            UserName = "Ilyasse",
+            NormalizedUserName = "ILYASSE",
+            Email = "ilyasse.jmida@student.kdg.be",
+            NormalizedEmail = "ILYASSE.JMIDA@STUDENT.KDG.BE",
+            EmailConfirmed = true
+        };
+        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+
+        context.AnswerCubeUsers.AddRange(alexander, yannick, jarno, nemo, ilyasse);
+
             //SingleChoice
             Slide singleChoice1 = new Slide
             {
