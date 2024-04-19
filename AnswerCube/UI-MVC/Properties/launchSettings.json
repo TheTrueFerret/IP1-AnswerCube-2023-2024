@@ -59,7 +59,7 @@
       "applicationUrl": "http://0.0.0.0:5104",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
-        "INSTANCE_HOST": "localhost",
+        "INSTANCE_HOST": "10.15.176.3",
         "DB_USER": "postgres",
         "DB_PASS": "Student_1234",
         "DB_NAME": "DataBase IP1 Testssssss",
