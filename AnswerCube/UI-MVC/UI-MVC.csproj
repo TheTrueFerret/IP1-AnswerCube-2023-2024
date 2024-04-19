@@ -90,10 +90,12 @@
       <_ContentIncludedByDefault Remove="Views\Shared\Slide\MultipleChoice.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\OpenQuestion.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Slide\StartSlide.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Slide\SingleChoice.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Views\Slide\InfoSlide.cshtml" />
+      <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml" />
     </ItemGroup>
 
 
