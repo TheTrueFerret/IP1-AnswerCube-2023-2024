@@ -1,6 +1,8 @@
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace AnswerCube.DAL.EF;
 
