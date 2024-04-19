@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Mail;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace AnswerCube.UI.MVC.Services;
 
@@ -32,34 +34,19 @@ public class MailService : IEmailSender
         throw new NotImplementedException();
     }
 
-    private Task Execute(string fromEmail, string toEmail, string subject, string htmlMessage)
+    private async Task Execute(string fromEmail, string toEmail, string subject, string htmlMessage)
     {
-        _logger.LogInformation("OAuth authentication started...");
-        // OAuth2 authentication
-        var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-            new ClientSecrets
-            {
-                ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID"),
-                ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")
-            },
-            new[] { "https://mail.google.com/" }, // Scope for accessing Gmail
-            Environment.GetEnvironmentVariable("SMTPUSERNAME"), // User identifier (can be any string)
-            CancellationToken.None
-        ).Result;
-        
-        _logger.LogInformation("OAuth authentication completed...");
-        _logger.LogInformation(credential.ToString());
-
-        var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+        var apiKey = Environment.GetEnvironmentVariable("SENDGRIDAPIKEY");
+        var client = new SendGridClient(apiKey);
+        var msg = new SendGridMessage
         {
-            Credentials = new NetworkCredential("", credential.Token.AccessToken),
-            EnableSsl = true
+            From = new EmailAddress(fromEmail, "AnswerCube"),
+            Subject = subject,
+            PlainTextContent = htmlMessage,
+            HtmlContent = htmlMessage
         };
-        var mailMessage = new MailMessage(fromEmail, toEmail, subject, htmlMessage)
-        {
-            IsBodyHtml = true
-        };
-        smtpClient.Send(mailMessage);
-        return Task.CompletedTask;
+        msg.AddTo(new EmailAddress(toEmail));
+        msg.SetClickTracking(false, false);
+        await client.SendEmailAsync(msg);
     }
 }

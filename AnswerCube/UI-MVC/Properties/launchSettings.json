@@ -26,7 +26,8 @@
         "SMTPPORT": "587",
         "SMTPUSERNAME": "answercubeintegratie@gmail.com",
         "SMTPPASSWORD": "Student_1234",
-        "SMTPFROM": "answercubeintegratie@gmail.com"
+        "SMTPFROM": "answercubeintegratie@gmail.com",
+        "SENDGRIDAPIKEY": "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"
       }
     },
     "https": {
@@ -47,7 +48,8 @@
         "SMTPPORT": "587",
         "SMTPUSERNAME": "answercubeintegratie@gmail.com",
         "SMTPPASSWORD": "Student_1234",
-        "SMTPFROM": "answercubeintegratie@gmail.com"
+        "SMTPFROM": "answercubeintegratie@gmail.com",
+        "SENDGRIDAPIKEY": "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"
       }
     },
     "IIS Express": {
