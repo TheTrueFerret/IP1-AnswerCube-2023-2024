@@ -164,7 +164,7 @@ public class Repository : IRepository
         Slide slide = new Slide();
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
-            slide = slideList.Slides[installation.CurrentSlideIndex];
+            slide = installation.Slides[installation.CurrentSlideIndex];
         }
         return slide;
     }

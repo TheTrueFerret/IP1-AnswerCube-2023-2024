@@ -87,7 +87,6 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult GetNextSlide()
     {
-        Boolean installationUpdated = _manager.UpdateInstallation(1);
         Slide slide = _manager.GetActiveSlideByInstallationId(1);
         return new JsonResult(slide);
     }
@@ -96,6 +95,7 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult UpdatePage()
     {
+        Boolean installationUpdated = _manager.UpdateInstallation(1);
         Slide slide = _manager.GetActiveSlideByInstallationId(1);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
