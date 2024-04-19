@@ -9,11 +9,5 @@ import 'bootstrap/dist/css/bootstrap.css';
 // Custom CSS imports
 import '../scss/site.scss';
 
-export function RemoveLastDirectoryPartOf(the_url: string)
-{
-    var the_arr = the_url.split('/');
-    the_arr.pop();
-    return( the_arr.join('/') );
-} 
 console.log('The \'site\' bundle has been loaded!');
 

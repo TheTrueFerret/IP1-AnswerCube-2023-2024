@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../site";
+import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 
 
 function loadMultipleChoiceSlide() {
