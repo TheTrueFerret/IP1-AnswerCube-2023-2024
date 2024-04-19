@@ -15,43 +15,85 @@ public class Manager : IManager
     }
 
 
-    public List<OpenQuestion> GetOpenSlides()
+    public List<Slide> GetOpenSlides()
     {
         return _repository.GetOpenSlides();
     }
 
-    public List<ListQuestion> GetListSlides()
+    public List<Slide> GetListOfSlides()
     {
         return _repository.GetListSlides();
+
     }
 
-    public List<ListQuestion> GetSingleChoiceSlides()
+    public List<Slide> GetSingleChoiceSlides()
     {
         return _repository.GetSingleChoiceSlides();
     }
     
-    public List<ListQuestion> GetMultipleChoiceSlides()
+    public List<Slide> GetMultipleChoiceSlides()
     {
         return _repository.GetMultipleChoiceSlides();
     }
     
-    public List<Info> GetInfoSlides()
+    public List<Slide> GetInfoSlides()
     {
         return _repository.GetInfoSlides();
     }
 
+    public LinearFlow GetLinearFlow()
+    {
+        return _repository.GetLinearFlow();
+    }
+
+    public Slide GetSlideFromFlow(int flowId, int number)
+    {
+        return _repository.GetSlideFromFlow(flowId, number);
+    }
+
+    public SlideList GetSlideList()
+    {
+        return _repository.getSlideList();
+    }
+    
     public SlideList GetSlideListById(int id)
     {
-        return _repository.ReadSlideList(id);
+        return _repository.ReadSlideListById(id);
     }
 
-    public List<SlideList> GetSlideLists()
+    public Slide GetSlideById(int id)
     {
-        return _repository.ReadSlideLists();
+        return _repository.ReadSlideById(id);
+    }
+    
+    public Boolean AddAnswer(List<string> answers,int id)
+    {
+        return _repository.AddAnswer(answers,id);
     }
 
-    public List<CircularFlow> GetCirculaireFlow()
+    public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
     {
-        return _repository.ReadCirculaireFlows();
+        return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
+
+    public Boolean StartInstallation(int id, SlideList slideList)
+    {
+        return _repository.StartInstallation(id, slideList);
+    }
+
+    public Boolean UpdateInstallation(int id)
+    {
+        return _repository.UpdateInstallation(id);
+    }
+
+    public int[] GetIndexAndSlideListFromInstallations(int id)
+    {
+        return _repository.GetIndexAndSlideListFromInstallations(id);
+    }
+
+    public Slide GetActiveSlideByInstallationId(int id)
+    {
+        return _repository.ReadActiveSlideByInstallationId(id);
+    }
+
 }

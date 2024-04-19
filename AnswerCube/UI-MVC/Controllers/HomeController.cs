@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
 

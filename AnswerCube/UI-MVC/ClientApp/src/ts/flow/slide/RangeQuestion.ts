@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../site";
 
-function loadSingleChoiceSlide() {
+function loadRangeQuestionSlide() {
     const slideElement: HTMLElement | null = document.getElementById("slide");
     var url = window.location.toString()
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
@@ -20,9 +20,11 @@ function loadSingleChoiceSlide() {
         console.log(slide);
         if (slideElement) {
             slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
-            for (const answer of slide.answerList) {
-                slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
+            for (const answers of slide.answerList) {
+                slideElement.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
             }
+
+            // paste the html generating part here
         }
     }).catch((error: any) => {
         console.error(error);
@@ -31,5 +33,4 @@ function loadSingleChoiceSlide() {
         }
     });
 }
-
-loadSingleChoiceSlide()
+loadRangeQuestionSlide()

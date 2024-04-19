@@ -48,6 +48,14 @@ services.AddControllersWithViews();
 services.AddRazorPages().AddRazorRuntimeCompilation();
 services.AddTransient<IEmailSender, MailService>();
 
+// Add Sessions to make sure Models Persist between Controller Requests
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
@@ -77,6 +85,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

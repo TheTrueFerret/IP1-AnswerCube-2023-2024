@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-public class SlideController : Controller
+public class SlideController : BaseController
 {
     private readonly IManager _manager;
 
@@ -15,27 +15,30 @@ public class SlideController : Controller
     [HttpGet]
     public IActionResult MultipleChoice()
     {
-        var multipleChoice = _manager.GetMultipleChoiceSlides();
-        return View(multipleChoice);
+        return View("/Views/Slides/MultipleChoice.cshtml");
     }
     
     [HttpGet]
     public IActionResult OpenQuestion()
     {
-        var openQuestion = _manager.GetOpenSlides();
-        return View(openQuestion);
+        return View("/Views/Slides/OpenQuestion.cshtml");
     }
     
     [HttpGet]
     public IActionResult SingleChoice()
     {
-        var singleChoice = _manager.GetSingleChoiceSlides();
-        return View(singleChoice);
+        return View("/Views/Slides/SingleChoice.cshtml");
     }
     
     [HttpGet]
     public IActionResult InfoSlide()
     {
-        return View("/Views/Slide/InfoSlide.cshtml");
+        return View("/Views/Slides/InfoSlide.cshtml");
+    }
+    
+    [HttpGet]
+    public IActionResult RangeQuestion()
+    {
+        return View("/Views/Slides/RangeQuestion.cshtml");
     }
 }

@@ -1,23 +1,33 @@
+import {RemoveLastDirectoryPartOf} from "../../site";
 
-// deze zijn misschien niet nodig (ge moogt er wel zelf 1 maken <3 jarno)
-function getMultipleChoice() {
-    fetch("http://localhost:5104/api/Slides",
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
+function loadOpenQuestionSlide() {
+    const slideElement: HTMLElement | null = document.getElementById("slide");
+    var url = window.location.toString()
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
+        method: "GET",
+        headers: {
+            "Accept": "application/json"
+        }
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
             }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                document.getElementById("slide").innerHTML = "<em>Problem!!!</em>";
-            }
-        })
-        .then(slide => {
-            console.log(slide);
-            document.getElementById("slide").innerHTML += `<h1>${slide.id}</h1><h2>${slide.text}</h2>`;
-        })
+        }
+    }).then((slide: any) => {
+        console.log(slide);
+        if (slideElement) {
+            slideElement.innerHTML = `<h4> ${slide.text} </h4>`;
+            slideElement.innerHTML += `<input type="text" id="input" value="" placeholder="Answer the question.">`;
+        }
+    }).catch((error: any) => {
+        console.error(error);
+        if (slideElement) {
+            slideElement.innerHTML = "<em>Problem loading the slide</em>";
+        }
+    });
 }
+loadOpenQuestionSlide()
 
