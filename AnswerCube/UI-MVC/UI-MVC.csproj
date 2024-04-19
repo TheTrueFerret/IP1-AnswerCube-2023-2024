@@ -116,10 +116,6 @@
         <UpToDateCheckInput Remove="Views\Slide\InfoSlide.cshtml"/>
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>
-    
-    <ItemGroup>
-        <Folder Include="wwwroot\dist\"/>
-    </ItemGroup>
 
     <ItemGroup>
         <Folder Include="wwwroot\dist\"/>

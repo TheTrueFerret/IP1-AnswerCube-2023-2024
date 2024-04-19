@@ -1,8 +1,9 @@
 @model AnswerCube.UI.MVC.Controllers.DTO_s.ContactInfoDto
+@inject IUrlHelper Url
 
 @{
-    ViewBag.Title = "Contact Info";
-    Layout = "_Layout";
+ViewBag.Title = "Contact Info";
+Layout = "_Layout";
 }
 
 <h2>Contact Info</h2>
@@ -22,10 +23,10 @@
 <div>
     <p>Scan de QR code voor je contactinfo achter te laten.</p>
     <div id="qrCode"></div>
-    <div id="qrCodeData" data-url="https://localhost:7272/Slide/ContactInfo"></div>
+    <div id="qrCodeData" data-url="@Url.Action("ContactInfo", "Slide")"></div>
 </div>
 
 @section Scripts {
-    <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
-    <script type="text/javascript" src="~/dist/qr.entry.js"></script>
+<script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+<script type="text/javascript" src="~/dist/qr.entry.js"></script>
 }

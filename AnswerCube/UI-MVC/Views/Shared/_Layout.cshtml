@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - UI_MVC</title>
+    <title>@ViewData["Title"] - AnswerCube</title>
     <script src="~/dist/site.entry.js" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
     <link rel="stylesheet" href="~/dist/site.css">
@@ -25,28 +25,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Contactinfo" asp-action="ContactInfo">Leave Contact Info</a>
                     </li>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Slide" asp-action="MultipleChoice">=MultipleChoice=</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Slide" asp-action="SingleChoice">=SingleChoice=</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Slide" asp-action="OpenQuestion">=OpenQuestion=</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Slide" asp-action="InfoSlide">=InfoSlide=</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="LinearFlow" asp-action="LinearFlow">LinearFlow</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    }
-                    <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
+                    </li>
                 </ul>
             </div>
             <partial name="_LoginPartial"></partial>
@@ -61,7 +42,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; @DateTime.Now.Year - UI_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; @DateTime.Now.Year - AnswerCube - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 </body>
