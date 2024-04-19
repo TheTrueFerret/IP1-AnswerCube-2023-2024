@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -20,11 +21,6 @@ public class MailService : IEmailSender
 
     public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        _logger.LogInformation(Environment.GetEnvironmentVariable("Smtpfrom"));
-        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpServer"));
-        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpPort"));
-        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpUsername"));
-        _logger.LogInformation(Environment.GetEnvironmentVariable("SmtpPassword"));
         return Execute("answercubeintegratie@gmail.com", email, subject, htmlMessage);
     }
 
