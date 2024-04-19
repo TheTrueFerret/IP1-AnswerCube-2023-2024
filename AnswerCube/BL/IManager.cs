@@ -11,7 +11,6 @@ public interface IManager
     List<Slide> GetSingleChoiceSlides();
     List<Slide> GetMultipleChoiceSlides();
     List<Slide> GetInfoSlides();
-    LinearFlow GetLinearFlow();
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
@@ -20,6 +19,6 @@ public interface IManager
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
     Boolean StartInstallation(int id, SlideList slideList);
     Boolean UpdateInstallation(int id);
-    int[] GetIndexAndSlideListFromInstallations(int id); 
+    int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
 }

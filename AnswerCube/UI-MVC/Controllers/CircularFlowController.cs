@@ -65,14 +65,6 @@ public class CircularFlowController : BaseController
     public IActionResult InitializeFlow()
     {
         SlideList slideList = _manager.GetSlideList();
-        /*SlideListDto slideListDto = new SlideListDto()
-        {
-            Id = slideList.Id,
-            Title = slideList.Title,
-            SubTheme = slideList.SubTheme,
-            Slides = slideList.Slides,
-        };*/
-
         Boolean installationStarted = _manager.StartInstallation(1, slideList);
         if (installationStarted)
         {
@@ -87,16 +79,16 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult GetNextSlide()
     {
-        Boolean installationUpdated = _manager.UpdateInstallation(1);
         Slide slide = _manager.GetActiveSlideByInstallationId(1);
         return new JsonResult(slide);
     }
     
-    //this file gets all of the date on the active flow on this installation
     [HttpGet]
     public IActionResult UpdatePage()
     {
+        Boolean installationUpdated = _manager.UpdateInstallation(1);
         Slide slide = _manager.GetActiveSlideByInstallationId(1);
+        string id = "1";
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
@@ -110,7 +102,8 @@ public class CircularFlowController : BaseController
         List<string> answerText = answer.Answer;
         if (_manager.AddAnswer(answerText, slide.Id))
         {
-            return new JsonResult(new OkResult());
+            
+            return UpdatePage();
         }
         else
         {

@@ -12,19 +12,16 @@ public class LinearFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
-    private readonly FlowModel _flowModel;
     
-    
-    public LinearFlowController(ILogger<HomeController> logger, IManager manager, FlowModel flowModel)
+    public LinearFlowController(ILogger<HomeController> logger, IManager manager)
     {
         _logger = logger;
         _manager = manager;
-        _flowModel = flowModel;
     }
     
     public IActionResult LinearFlow()
     {
-        return View(_flowModel);
+        return View();
     }
     
     [HttpGet]

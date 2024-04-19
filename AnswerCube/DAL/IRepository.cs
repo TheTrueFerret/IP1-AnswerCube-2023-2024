@@ -15,7 +15,6 @@ public interface IRepository
     List<Slide> GetMultipleChoiceSlides();
     List<Slide> GetInfoSlides();
     
-    LinearFlow GetLinearFlow();
     Slide GetSlideFromFlow(int flowId, int number);
     Slide ReadSlideById(int id);
     SlideList getSlideList();
