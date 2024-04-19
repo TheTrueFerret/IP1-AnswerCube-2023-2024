@@ -1,6 +1,10 @@
+import {RemoveLastDirectoryPartOf} from "../../site";
 
 function InitializeFlow() {
     const slideElement = document.getElementById("slide");
+    var url = window.location.toString()
+    console.log(url + '|' + RemoveLastDirectoryPartOf(url) )
+    //fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
     fetch("http://localhost:5104/CircularFlow/InitializeFLow/", {
         method: "GET",
         headers: {

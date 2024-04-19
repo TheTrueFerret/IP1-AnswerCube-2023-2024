@@ -1,8 +1,11 @@
+import {RemoveLastDirectoryPartOf} from "../site";
 
 
 function UpdatePage() {
     const slideElement: HTMLElement | null = document.getElementById("slide");
-    fetch("http://localhost:5104/CircularFlow/UpdatePage/", {
+    console.log(window.location)
+    var url = window.location.toString()
+    fetch(RemoveLastDirectoryPartOf(url) + "/UpdatePage/", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"

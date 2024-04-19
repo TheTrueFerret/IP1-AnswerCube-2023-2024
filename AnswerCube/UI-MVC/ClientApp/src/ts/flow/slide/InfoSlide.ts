@@ -1,8 +1,10 @@
+import {RemoveLastDirectoryPartOf} from "../../site";
 
 
 function loadInfoSlide() {
     const slideElement: HTMLElement | null = document.getElementById("slide");
-    fetch("http://localhost:5104/CircularFlow/GetNextSlide/", {
+    var url = window.location.toString()
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
             "Accept": "application/json"
