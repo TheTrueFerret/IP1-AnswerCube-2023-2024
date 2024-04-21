@@ -86,7 +86,7 @@ public class Repository : IRepository
 
     public Boolean AddAnswer(List<string> answers, int id)
     {
-        Slide slide = _context.Slides.Where(s => s.Id == id).First();
+        Slide slide = _context.Slides.First(s => s.Id == id);
 
         Answer uploadAnswer = new Answer(answers, slide);
         if (answers == null)
@@ -115,7 +115,7 @@ public class Repository : IRepository
 
     public Boolean StartInstallation(int id, SlideList slideList)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        Installation installation = _context.Installations.First(i => i.Id == id);
         installation.Active = true;
         installation.ActiveSlideListId = slideList.Id;
         installation.Slides = slideList.Slides;
@@ -164,6 +164,11 @@ public class Repository : IRepository
         Slide slide = new Slide();
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
+            slide = installation.Slides[installation.CurrentSlideIndex];
+        }
+        else
+        {
+            installation.CurrentSlideIndex = 0;
             slide = installation.Slides[installation.CurrentSlideIndex];
         }
         return slide;
