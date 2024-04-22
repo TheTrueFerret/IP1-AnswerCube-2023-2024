@@ -1,0 +1,98 @@
+@model AnswerCube.BL.Domain.Project.Project
+
+@{
+    ViewBag.Title = "New Project";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        background-color: #f0f0f0; 
+        font-weight: 400;
+    }
+
+    .form-container {
+        width: 160%; 
+        max-width: 800px; 
+        margin: auto; 
+        padding: 20px;
+        border-radius: 5px;
+        background-color: lightgrey;    
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+        overflow: hidden;
+    }
+
+    .form-column {
+        float: left;
+        width: 50%; 
+        padding-right: 20px; 
+    }
+   
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+    }
+
+    .form-input {
+        width: calc(100% - 22px); 
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-checkbox-label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form-submit {
+        padding: 10px 20px; 
+        background-color: #fff; 
+        color: #000; 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        width: auto; 
+        font-weight: bold; 
+        margin-top: 10px; 
+    }
+
+    .form-submit.flows {
+        margin-top: calc(50% - 45px); 
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-column">
+        <h2>New Project</h2>
+
+        <form method="post"/>
+        <div class="form-group">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" class="form-input" value=""/>
+        </div>
+        <div class="form-group">
+            <label for="description" class="form-label">Description:</label>
+            <textarea id="description" name="description" class="form-input"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-checkbox-label">
+                <input type="checkbox" id="active" name="active" checked/>
+                Active
+            </label>
+        </div>
+        <br/>
+        <button type="submit" class="form-submit">Confirm</button>
+    </div>
+
+    <div class="form-column">
+        <button type="button" onclick="location.href='@Url.Action("Flows", "Project")'" class="form-submit flows">Flows</button>
+    </div>
+
+    <div style="clear:both;"></div> 
+</div> 

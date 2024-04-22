@@ -119,7 +119,7 @@ public class Repository : IRepository
         installation.Active = true;
         installation.ActiveSlideListId = slideList.Id;
         installation.Slides = slideList.Slides;
-        installation.CurrentSlideIndex = 1;
+        installation.CurrentSlideIndex = 0;
         installation.MaxSlideIndex = slideList.Slides.Count;
         _context.SaveChanges();
         return true;
@@ -128,7 +128,7 @@ public class Repository : IRepository
 
     public Boolean UpdateInstallation(int id)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        Installation installation = _context.Installations.First(i => i.Id == id);
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
             installation.CurrentSlideIndex++;
