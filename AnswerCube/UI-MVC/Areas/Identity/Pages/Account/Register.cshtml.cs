@@ -130,6 +130,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                 {
                     user.FirstName = Input.FirstName;
                     user.LastName = Input.LastName;
+                    user.TypeUser = TypeUser.USER;
                 }
                 else
                 {

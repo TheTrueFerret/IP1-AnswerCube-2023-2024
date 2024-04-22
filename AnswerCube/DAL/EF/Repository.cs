@@ -1,6 +1,8 @@
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
@@ -14,7 +16,7 @@ public class Repository : IRepository
     {
         _context = context;
     }
-    
+
     public List<Slide> GetOpenSlides()
     {
         return _context.Slides.Where(s => s.SlideType == SlideType.OpenQuestion).ToList();
@@ -68,13 +70,13 @@ public class Repository : IRepository
             .Include(sl => sl.Slides) // This will load the Slides of each SlideList
             .First();
     }
-    
+
     public SlideList ReadSlideListById(int id)
     {
         SlideList slideList = _context.SlideLists
             .Where(sl => sl.Id == id)
             .Include(sl => sl.Slides).First();
-        
+
         if (slideList == null)
         {
             // Handle the case where no SlideList with the given ID was found
@@ -108,7 +110,7 @@ public class Repository : IRepository
     {
         SlideList slideList = getSlideList();
         List<Slide> slides = slideList.Slides.ToList();
-        
+
         return slides[index];
     }
 
@@ -135,9 +137,10 @@ public class Repository : IRepository
             _context.SaveChanges();
             return true;
         }
+
         return false;
     }
-    
+
     public int[] GetIndexAndSlideListFromInstallations(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).First();
@@ -160,12 +163,29 @@ public class Repository : IRepository
     public Slide ReadActiveSlideByInstallationId(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
-        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.Slides).First();
+        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
+            .Include(sl => sl.Slides).First();
         Slide slide = new Slide();
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
             slide = slideList.Slides[installation.CurrentSlideIndex];
         }
+
         return slide;
+    }
+
+    public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
+    {
+        // Filter de rollen op basis van de rollen die de user al heeft
+        var availableRoles = _context.Roles
+            .Where(role => role.Name != null && !userRoles.Contains(role.Name))
+            .ToList();
+
+        return availableRoles;
+    }
+
+    public List<AnswerCubeUser> ReadAllUsers()
+    {
+        return _context.Users.ToList();
     }
 }

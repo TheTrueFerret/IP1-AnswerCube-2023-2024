@@ -23,7 +23,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
     public DbSet<AnswerCubeUser> AnswerCubeUsers { get; set; }
-    
+
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
@@ -123,7 +123,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
         (
             new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
             new IdentityRole { Name = "Organization", NormalizedName = "ORGANIZATION" },
-            new IdentityRole { Name = "DeelplatofmBeheerder", NormalizedName = "DEELPLATFORMBEHEERDER" },
+            new IdentityRole { Name = "DeelplatformBeheerder", NormalizedName = "DEELPLATFORMBEHEERDER" },
             new IdentityRole { Name = "Supervisor", NormalizedName = "SUPERVISOR" },
             new IdentityRole { Name = "Gebruiker", NormalizedName = "GEBRUIKER" }
         );

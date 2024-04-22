@@ -16,7 +16,7 @@ builder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;Use
 
 var answerCubeContext = new AnswerCubeDbContext(builder.Options);
 var repository = new Repository(answerCubeContext);
-var manager = new Manager(repository);
+var manager = new Manager(repository,null);
 var test = new CliTest(manager);
 
 test.TestData();
