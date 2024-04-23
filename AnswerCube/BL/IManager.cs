@@ -1,6 +1,8 @@
 ﻿using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace AnswerCube.BL;
 
@@ -21,4 +23,6 @@ public interface IManager
     Boolean UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
+    List<IdentityRole> GetAllAvailableRoles(AnswerCubeUser user);
+    List<AnswerCubeUser> GetAllUsers();
 }

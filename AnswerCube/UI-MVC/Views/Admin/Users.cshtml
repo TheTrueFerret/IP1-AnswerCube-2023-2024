@@ -1,0 +1,124 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims
+@using AnswerCube.BL.Domain.User
+@model AnswerCube.UI.MVC.Controllers.UserRolesDto
+
+
+@{
+    ViewBag.Title = "Role Assignment";
+    Layout = "_Users";
+}
+
+<h1>Users</h1>
+@if (TempData["ErrorOwnAccountDelete"] != null)
+{
+    <div class="text-danger col-6">@TempData["ErrorOwnAccountDelete"]</div>
+}
+<table class="table">
+    <thead>
+    <input type="text" id="searchQuery" placeholder="Search by email"/>
+    <tr>
+        <th>Email</th>
+        <th>Role's</th>
+        <th>Manage Role</th>
+        <th>Delete User</th>
+    </tr>
+
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Users)
+    {
+        if (user is AnswerCubeUser answerCubeUser)
+        {
+            <tr class="user-row">
+                <td data-email="@answerCubeUser.Email">
+                    @answerCubeUser.Email
+                </td>
+                <td>
+                    @{
+                        Model.Roles.TryGetValue(user.Id, out var roles);
+
+                        string joinedString = string.Join(",", roles);
+                    }
+                    @joinedString
+                </td>
+                <td>
+                    <a style="width: auto" class="btn btn-primary" asp-controller="Admin" asp-action="Role" asp-route-id="@user.Id">
+                        <i class="fas fa-edit"></i >
+                    </a>
+                </td>
+                @if (user.Id != User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <td>
+                        <form asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td> This is you </td>
+                }
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<h1>Deelplatform</h1>
+<div class="col-6">
+
+    <h2>Add Deelplatform</h2>
+    <form action="@Url.Action("AddDeelplatform", "User")" method="post" class="@(TempData["Message"] != null ? "alert alert-danger" : "")">
+        <label for="email">Deelplatform Email</label>
+        <input type="text" id="email" name="email" required>
+        <button class="btn btn-primary" type="submit" value="Send Mail">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+        @if (TempData["Error"] != null)
+        {
+            <div class="text-danger col-6">@TempData["Error"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="text-info col-6">@TempData["Success"]</div>
+        }
+    </form>
+
+</div>
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Users)
+    {
+        if (user is not AnswerCubeUser)
+        {
+            <tr>
+                <td>
+                    @user.FirstName
+                </td>
+
+                <td>
+                    <form asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" method="post"
+                          onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>

@@ -35,8 +35,7 @@ services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
-services.AddDefaultIdentity<AnswerCubeUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
+services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AnswerCubeDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
