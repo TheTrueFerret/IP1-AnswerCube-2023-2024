@@ -1,3 +1,5 @@
+using Domain;
+
 namespace AnswerCube.BL.Domain;
 
 public class SupInstLink

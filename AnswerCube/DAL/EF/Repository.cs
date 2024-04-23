@@ -161,8 +161,26 @@ public class Repository : IRepository
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
         SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.Slides).First();
-        Slide slide = new Slide();
+
+        LinkedListNode<Slide> slide;
+
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+        {
+            slide = slideList.Slides.First;
+            for (int i = 0; i < installation.CurrentSlideIndex; i++)
+            {
+                slide = slide.Next;
+            }
+        }
+        else
+        {
+            installation.CurrentSlideIndex = 0;
+            slide = slideList.Slides.First;
+        }
+
+        return slide.Value;
+        
+       /* if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
             slide = installation.Slides[installation.CurrentSlideIndex];
         }
@@ -171,6 +189,8 @@ public class Repository : IRepository
             installation.CurrentSlideIndex = 0;
             slide = installation.Slides[installation.CurrentSlideIndex];
         }
-        return slide;
+        return slide;*/
+        
+        
     }
 }
