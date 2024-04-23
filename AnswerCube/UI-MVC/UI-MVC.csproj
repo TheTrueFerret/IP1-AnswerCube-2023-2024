@@ -110,6 +110,8 @@
         <_ContentIncludedByDefault Remove="Views\Slide\OpenQuestion.cshtml"/>
         <_ContentIncludedByDefault Remove="Views\Slide\StartSlide.cshtml"/>
         <_ContentIncludedByDefault Remove="Views\Slide\SingleChoice.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Beheerder\Flows.cshtml" />
+        <_ContentIncludedByDefault Remove="Views\Beheerder\Projects.cshtml" />
     </ItemGroup>
 
     <ItemGroup>

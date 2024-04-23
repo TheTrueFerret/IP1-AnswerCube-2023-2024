@@ -51,7 +51,7 @@ public static class AnswerCubeInitializer
             Id = "superUser2",
             FirstName = "jarno",
             LastName = "Fret",
-            UserName = "jarno",
+            UserName = "jarno.fret@student.kdg.be",
             NormalizedUserName = "JARNO",
             Email = "jarno.fret@student.kdg.be",
             NormalizedEmail = "JARNO.FRET@STUDENT.KDG.BE",
@@ -82,7 +82,7 @@ public static class AnswerCubeInitializer
         });
         alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
 
-        var nemo = new AnswerCubeUser()
+        var nemo = new AnswerCubeUser
         {
             Id = "superUser4",
             FirstName = "Nemo",
@@ -98,7 +98,7 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Admin").Id,
             UserId = "superUser4"
         });
-        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+        nemo.PasswordHash = hasher.HashPassword(nemo, "Student_1234");
 
         var ilyasse = new AnswerCubeUser()
         {
@@ -116,7 +116,7 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Admin").Id,
             UserId = "superUser5"
         });
-        alexander.PasswordHash = hasher.HashPassword(alexander, "Student_1234");
+        ilyasse.PasswordHash = hasher.HashPassword(ilyasse, "Student_1234");
 
         context.AnswerCubeUsers.AddRange(alexander, yannick, jarno, nemo, ilyasse);
 
