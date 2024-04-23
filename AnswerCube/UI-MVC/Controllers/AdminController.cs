@@ -143,7 +143,7 @@ public class AdminController : BaseController
         if (user.Id == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
         {
             TempData["ErrorOwnAccountDelete"] = "Je kan jezelf niet verwijderen.";
-            return RedirectToAction("User", "Home");
+            return RedirectToAction("Users", "Admin");
         }
 
 
