@@ -342,13 +342,14 @@ public static class AnswerCubeInitializer
 
             context.SlideLists.Add(slideList1);
 
-            LinearFlow linearFlow = new LinearFlow
+            Flow linearFlow = new Flow
             {
-                Name = "linear"
+                Name = "linear",
+                CircularFlow = false
             };
             linearFlow.SlideList = new List<SlideList>();
             linearFlow.SlideList.Add(slideList1);
-            context.LinearFlows.Add(linearFlow);
+            context.Flows.Add(linearFlow);
 
             context.SaveChanges();
 
@@ -370,14 +371,15 @@ public static class AnswerCubeInitializer
             context.SlideLists.Add(slideList2);
 
 
-            CircularFlow circularFlow = new CircularFlow
+            Flow circularFlow = new Flow
             {
-                Name = "circular"
+                Name = "circular",
+                CircularFlow = true
             };
             circularFlow.SlideList = new List<SlideList>();
             circularFlow.SlideList.Add(slideList2);
 
-            //context.CircularFlows.Add(circularFlow);
+            context.Flows.Add(circularFlow);
 
 
             Installation installation = new Installation()

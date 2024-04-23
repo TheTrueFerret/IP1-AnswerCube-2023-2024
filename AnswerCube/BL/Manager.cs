@@ -41,11 +41,6 @@ public class Manager : IManager
         return _repository.GetInfoSlides();
     }
 
-    public LinearFlow GetLinearFlow()
-    {
-        return _repository.GetLinearFlow();
-    }
-
     public Slide GetSlideFromFlow(int flowId, int number)
     {
         return _repository.GetSlideFromFlow(flowId, number);

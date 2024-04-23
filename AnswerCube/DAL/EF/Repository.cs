@@ -41,14 +41,6 @@ public class Repository : IRepository
         return _context.Slides.Where(s => s.SlideType == SlideType.InfoSlide).ToList();
     }
 
-    public LinearFlow GetLinearFlow()
-    {
-        return _context.LinearFlows
-            .Include(lf => lf.SlideList) // Ensure the SlideList is loaded
-            .ThenInclude(sl => sl.Slides) // Then load the Slides of each SlideList
-            .First();
-    }
-
     public Slide ReadSlideById(int id)
     {
         return _context.Slides.SingleOrDefault(s => s.Id == id);
@@ -128,8 +120,8 @@ public class Repository : IRepository
 
     public Boolean UpdateInstallation(int id)
     {
-        Installation installation = _context.Installations.First(i => i.Id == id);
-        if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        if (installation.CurrentSlideIndex < installation.MaxSlideIndex)
         {
             installation.CurrentSlideIndex++;
             _context.SaveChanges();

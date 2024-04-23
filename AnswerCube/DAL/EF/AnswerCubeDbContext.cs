@@ -15,8 +15,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 {
     //public DbSet<Project> Projects { get; set; }
     //public DbSet<Organization> Organizations { get; set; }
-    public DbSet<LinearFlow> LinearFlows { get; set; }
-    public DbSet<CircularFlow> CircularFlow { get; set; }
+    public DbSet<Flow> Flows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<Slide> Slides { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }

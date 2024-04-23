@@ -1,9 +1,9 @@
 import { RemoveLastDirectoryPartOf } from "../../urlDecoder";
 
-// Functie om de schuifvraag-slide te laden
+const slideElement: HTMLElement | null = document.getElementById("slide");
+var url = window.location.toString();
+
 function loadRangeQuestionSlide() {
-    const slideElement: HTMLElement | null = document.getElementById("slide");
-    var url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
@@ -34,6 +34,60 @@ function loadRangeQuestionSlide() {
         }
     });
 }
+loadRangeQuestionSlide()
+
+
+
+const btn: HTMLElement | null = document.getElementById("submitAnswer");
+if (btn) {
+    btn.addEventListener('click', postAnswer);
+}
+
+function postAnswer() {
+    let answer = getSelectedAnswers();
+
+    let requestBody = {
+        Answer: answer
+    };
+    console.log(requestBody);
+    fetch("http://localhost:5104/CircularFlow/PostAnswer", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).then((nextSlideData: any) => {
+        if (nextSlideData.url) {
+            // Redirect to the URL of the next slide
+            window.location.href = nextSlideData.url;
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+    })
+    console.log(answer);
+}
+
+function getSelectedAnswers() {
+    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
+    let selectedAnswers: string[] = [];
+    for (let i = 0; i < checkboxes.length; i++) {
+        const checkbox = checkboxes[i] as HTMLInputElement; // Assert type to HTMLInputElement
+        if (checkbox.value) {
+            selectedAnswers.push(checkbox.value); // Use value property instead of nodeValue
+        }
+    }
+    return selectedAnswers;
+}
+
 
 // Functie om de opties van de schuifregelaar te vullen
 function fillSliderOptions(options: any) {
