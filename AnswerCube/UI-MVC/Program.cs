@@ -46,6 +46,7 @@ services.AddScoped<IManager, Manager>();
 // Add services to the container.
 services.AddControllersWithViews();
 services.AddRazorPages().AddRazorRuntimeCompilation();
+
 services.AddTransient<IEmailSender, MailService>();
 
 // Add Sessions to make sure Models Persist between Controller Requests

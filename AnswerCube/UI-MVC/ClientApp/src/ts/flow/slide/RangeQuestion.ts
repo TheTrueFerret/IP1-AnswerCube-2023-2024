@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import { RemoveLastDirectoryPartOf } from "../../urlDecoder";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
@@ -14,18 +14,18 @@ function loadRangeQuestionSlide() {
             return response.json();
         } else {
             if (slideElement) {
-                slideElement.innerHTML = "<em>problem!!!</em>";
+                slideElement.innerHTML = "<em>Problem!!!</em>";
             }
         }
     }).then((slide: any) => {
         console.log(slide);
         if (slideElement) {
-            slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
-            for (const answers of slide.answerList) {
-                slideElement.innerHTML += `<input type="radio" id="input" value="${answers}" name="answer">${answers}<br>`;
+            slideElement.innerHTML = `<h3>${slide.text}</h3>`;
+            const answersContainer = document.querySelector(".answers-container");
+            if (answersContainer) {
+                answersContainer.innerHTML = "";
             }
-
-            // paste the html generating part here
+            fillSliderOptions(slide.answerList);
         }
     }).catch((error: any) => {
         console.error(error);
@@ -87,3 +87,26 @@ function getSelectedAnswers() {
     }
     return selectedAnswers;
 }
+
+
+// Functie om de opties van de schuifregelaar te vullen
+function fillSliderOptions(options: any) {
+    const tickmarkLabelsContainer = document.querySelector(".tickmark-labels");
+    if (tickmarkLabelsContainer) {
+        tickmarkLabelsContainer.innerHTML = ""; // Eerst de container leegmaken
+
+        if (Array.isArray(options)) {
+            options.forEach((option: any) => {
+                const tickmarkLabel = document.createElement("div");
+                tickmarkLabel.classList.add("tickmark-label");
+                tickmarkLabel.textContent = option;
+                tickmarkLabelsContainer.appendChild(tickmarkLabel);
+            });
+        }
+    }
+}
+
+// Eventlistener voor het laden van de DOM
+document.addEventListener("DOMContentLoaded", function() {
+    loadRangeQuestionSlide();
+});

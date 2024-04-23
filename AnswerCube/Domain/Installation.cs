@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using AnswerCube.BL.Domain;
 using Domain;
 
 
-namespace AnswerCube.BL.Domain;
+namespace Domain;
 
 public class Installation
 {
@@ -12,7 +13,7 @@ public class Installation
     public bool Active { get; set; }
     public int CurrentSlideIndex { get; set; }
     public int MaxSlideIndex { get; set; }
-    public List<global::Domain.Slide>? Slides { get; set; }
+    public LinkedList<Slide>? Slides { get; set; }
     public int ActiveSlideListId { get; set; }
     public Flow? Flow { get; set; }
 }

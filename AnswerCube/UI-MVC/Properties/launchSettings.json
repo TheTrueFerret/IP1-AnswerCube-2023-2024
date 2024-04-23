@@ -52,6 +52,28 @@
         "SENDGRIDAPIKEY": "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"
       }
     },
+    "deployment": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://0.0.0.0:443;http://0.0.0.0:80",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "INSTANCE_HOST": "10.15.176.3",
+        "DB_USER": "postgres",
+        "DB_PASS": "Student_1234",
+        "DB_NAME": "DataBase IP1 Testssssss",
+        "APP_URL": "https://0.0.0.0:443",
+        "GOOGLE_CLIENT_ID": "800729734126-5gjvbpj4ermmo43d3h03soiakndrcrkq.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_SECRET": "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",
+        "SMTPSERVER": "smtp.gmail.com",
+        "SMTPPORT": "587",
+        "SMTPUSERNAME": "answercubeintegratie@gmail.com",
+        "SMTPPASSWORD": "Student_1234",
+        "SMTPFROM": "answercubeintegratie@gmail.com",
+        "SENDGRIDAPIKEY": "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"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
