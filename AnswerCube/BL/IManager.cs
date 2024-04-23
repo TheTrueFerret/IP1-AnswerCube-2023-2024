@@ -25,4 +25,7 @@ public interface IManager
     Slide GetActiveSlideByInstallationId(int id);
     List<IdentityRole> GetAllAvailableRoles(AnswerCubeUser user);
     List<AnswerCubeUser> GetAllUsers();
+    Boolean GetDeelplatformBeheerderByEmail(string userEmail);
+    Boolean AddDeelplatformBeheerderByEmail(string userEmail);
+    Boolean RemoveDeelplatformBeheerderByEmail(string userEmail);
 }

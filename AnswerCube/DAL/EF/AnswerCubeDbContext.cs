@@ -22,6 +22,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
     public DbSet<AnswerCubeUser> AnswerCubeUsers { get; set; }
+    public DbSet<DeelplatformbeheerderEmail> DeelplatformbeheerderEmails { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)

@@ -169,6 +169,7 @@
 
     <ItemGroup>
         <Folder Include="Areas\"/>
+        <Folder Include="Views\DeelplatformBeheerder\" />
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>
 

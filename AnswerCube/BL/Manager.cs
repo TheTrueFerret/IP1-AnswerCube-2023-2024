@@ -105,4 +105,19 @@ public class Manager : IManager
     {
         return _repository.ReadAllUsers();
     }
+
+    public bool GetDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.ReadDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public bool AddDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.CreateDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public bool RemoveDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.DeleteDeelplatformBeheerderByEmail(userEmail);
+    }
 }

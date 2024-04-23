@@ -155,7 +155,8 @@ public class Repository : IRepository
     public Slide ReadActiveSlideByInstallationId(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
-        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.Slides).First();
+        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
+            .Include(sl => sl.Slides).First();
 
         LinkedListNode<Slide> slide;
 
@@ -174,19 +175,17 @@ public class Repository : IRepository
         }
 
         return slide.Value;
-        
-       /* if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
-        {
-            slide = installation.Slides[installation.CurrentSlideIndex];
-        }
-        else
-        {
-            installation.CurrentSlideIndex = 0;
-            slide = installation.Slides[installation.CurrentSlideIndex];
-        }
-        return slide;*/
-        
-        
+
+        /* if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
+         {
+             slide = installation.Slides[installation.CurrentSlideIndex];
+         }
+         else
+         {
+             installation.CurrentSlideIndex = 0;
+             slide = installation.Slides[installation.CurrentSlideIndex];
+         }
+         return slide;*/
     }
 
     public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
@@ -202,5 +201,28 @@ public class Repository : IRepository
     public List<AnswerCubeUser> ReadAllUsers()
     {
         return _context.Users.ToList();
+    }
+
+    public bool ReadDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _context.DeelplatformbeheerderEmails.Any(d => d.Email == userEmail);
+    }
+
+    public bool CreateDeelplatformBeheerderByEmail(string userEmail)
+    {
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail { Email = userEmail };
+        ;
+        _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DeleteDeelplatformBeheerderByEmail(string userEmail)
+    {
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail =
+            _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
+        _context.SaveChanges();
+        return true;
     }
 }

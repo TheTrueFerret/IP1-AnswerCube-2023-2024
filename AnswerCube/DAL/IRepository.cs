@@ -30,4 +30,7 @@ public interface IRepository
     Slide ReadActiveSlideByInstallationId(int id);
     List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles);
     List<AnswerCubeUser> ReadAllUsers();
+    bool ReadDeelplatformBeheerderByEmail(string userEmail);
+    bool CreateDeelplatformBeheerderByEmail(string userEmail);
+    bool DeleteDeelplatformBeheerderByEmail(string userEmail);
 }

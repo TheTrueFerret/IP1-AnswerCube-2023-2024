@@ -24,12 +24,6 @@ public class MailService : IEmailSender
         return Execute("answercubeintegratie@gmail.com", email, subject, htmlMessage);
     }
 
-    public Task SendEmailToCompany(string companyMail, string subject, string htmlMessage)
-    {
-        //TODO: Implement SendEmailToCompany
-        throw new NotImplementedException();
-    }
-
     private async Task Execute(string fromEmail, string toEmail, string subject, string htmlMessage)
     {
         var apiKey = Environment.GetEnvironmentVariable("SENDGRIDAPIKEY");
