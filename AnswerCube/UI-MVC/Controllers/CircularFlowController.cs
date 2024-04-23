@@ -88,7 +88,6 @@ public class CircularFlowController : BaseController
     {
         Boolean installationUpdated = _manager.UpdateInstallation(1);
         Slide slide = _manager.GetActiveSlideByInstallationId(1);
-        string id = "1";
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
@@ -102,7 +101,6 @@ public class CircularFlowController : BaseController
         List<string> answerText = answer.Answer;
         if (_manager.AddAnswer(answerText, slide.Id))
         {
-            
             return UpdatePage();
         }
         else

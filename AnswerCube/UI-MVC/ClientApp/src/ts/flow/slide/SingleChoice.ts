@@ -1,8 +1,9 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 
+var url = window.location.toString()
+const slideElement: HTMLElement | null = document.getElementById("slide");
+
 function loadSingleChoiceSlide() {
-    const slideElement: HTMLElement | null = document.getElementById("slide");
-    var url = window.location.toString()
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
@@ -41,15 +42,13 @@ if (btn) {
 }
 
 function postAnswer() {
-    const slideElement: HTMLElement | null = document.getElementById("slide");
-    let answer = getSelectedAnswers();
+    let answer = getSelectedAnswer();
 
     let requestBody = {
         Answer: answer
     };
-    var url = window.location.toString()
     console.log(requestBody);
-    fetch(RemoveLastDirectoryPartOf(url) + "/CircularFlow/PostAnswer", {
+    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -64,14 +63,10 @@ function postAnswer() {
                 slideElement.innerHTML = "<em>problem!!!</em>";
             }
         }
-    }).then((slideData: any) => {
-        if (slideData.url) {
+    }).then((nextSlideData: any) => {
+        if (nextSlideData.url) {
             // Redirect to the URL of the next slide
-            window.location.href = slideData.url;
-        } else {
-            if (slideElement) {
-                slideElement.innerHTML = "<em>Next slide URL not found</em>";
-            }
+            window.location.href = nextSlideData.url;
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
@@ -79,20 +74,12 @@ function postAnswer() {
     console.log(answer);
 }
 
-function getSelectedAnswers() {
-    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
-    let selectedAnswers = [];
-    if (checkboxes && checkboxes.length > 0) {
-        checkboxes.forEach((checkbox) => {
-                selectedAnswers.push(checkbox.nodeValue);
-            }
-        );
-    }
-
-    //Get the value of the text input
-    const textInput = document.querySelector('input[type="text"]#input');
-    if (textInput && textInput.nodeValue) {
-        selectedAnswers.push(textInput.nodeValue);
+function getSelectedAnswer() {
+    const checkboxes = document.querySelector('input[name="answer"]:checked');
+    let selectedAnswers: string[] = [];
+    const checkbox = checkboxes as HTMLInputElement; // Assert type to HTMLInputElement
+    if (checkbox.value) {
+        selectedAnswers.push(checkbox.value); // Use value property instead of nodeValue
     }
     return selectedAnswers;
 }

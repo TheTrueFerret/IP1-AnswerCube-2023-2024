@@ -1,8 +1,8 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 
+const slideElement: HTMLElement | null = document.getElementById("slide");
+var url = window.location.toString();
 function loadOpenQuestionSlide() {
-    const slideElement: HTMLElement | null = document.getElementById("slide");
-    var url = window.location.toString()
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
@@ -45,18 +45,19 @@ function postAnswer() {
         Answer: answer
     };
     console.log(requestBody);
-    fetch("http://localhost:5104/CircularFlow/PostAnswer", {
+    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
         body: JSON.stringify(requestBody)
-    }).then(res => {
-        console.log(res)
-        if (res.ok) {
-            if (res.status === 201) {
-                return res.json();
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
             }
         }
     }).then((nextSlideData: any) => {
@@ -71,19 +72,13 @@ function postAnswer() {
 }
 
 function getSelectedAnswers() {
-    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
-    let selectedAnswers = [];
-    if (checkboxes && checkboxes.length > 0) {
-        checkboxes.forEach((checkbox) => {
-                selectedAnswers.push(checkbox.nodeValue);
-            }
-        );
-    }
-
+    let selectedAnswers: string[] = [];
+    
     //Get the value of the text input
     const textInput = document.querySelector('input[type="text"]#input');
-    if (textInput && textInput.nodeValue) {
-        selectedAnswers.push(textInput.nodeValue);
+    const textbox = textInput as HTMLInputElement; // Assert type to HTMLInputElement
+    if (textbox.value) {
+        selectedAnswers.push(textbox.value); // Use value property instead of nodeValue
     }
     return selectedAnswers;
 }

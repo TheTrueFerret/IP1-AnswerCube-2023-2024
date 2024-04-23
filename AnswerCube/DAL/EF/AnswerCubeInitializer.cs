@@ -345,7 +345,6 @@ public static class AnswerCubeInitializer
             {
                 Name = "linear",
                 CircularFlow = false
-                
             };
             linearFlow.SlideList = new List<SlideList>();
             linearFlow.SlideList.Add(slideList1);
