@@ -107,6 +107,7 @@ public static class AnswerCubeInitializer
                     "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
                 }
             };
+
             Slide singleChoice2 = new Slide
             {
                 Text =
@@ -326,18 +327,18 @@ public static class AnswerCubeInitializer
             {
                 Title = "testlist1",
                 SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
-                Slides = new List<Slide>()
+                Slides = new LinkedList<Slide>()
             };
-            slideList1.Slides.Add(singleChoice1);
-            slideList1.Slides.Add(singleChoice2);
-            slideList1.Slides.Add(singleChoice3);
-            slideList1.Slides.Add(openQuestion2);
-            slideList1.Slides.Add(multipleChoice3);
-            slideList1.Slides.Add(multipleChoice2);
-            slideList1.Slides.Add(multipleChoice1);
-            slideList1.Slides.Add(rangeQuestion4);
-            slideList1.Slides.Add(rangeQuestion5);
-            slideList1.Slides.Add(info1);
+            slideList1.Slides.AddFirst(singleChoice1);
+            slideList1.Slides.AddFirst(singleChoice2);
+            slideList1.Slides.AddFirst(singleChoice3);
+            slideList1.Slides.AddFirst(openQuestion2);
+            slideList1.Slides.AddFirst(multipleChoice3);
+            slideList1.Slides.AddFirst(multipleChoice2);
+            slideList1.Slides.AddFirst(multipleChoice1);
+            slideList1.Slides.AddFirst(rangeQuestion4);
+            slideList1.Slides.AddFirst(rangeQuestion5);
+            slideList1.Slides.AddFirst(info1);
 
             context.SlideLists.Add(slideList1);
 
@@ -356,15 +357,16 @@ public static class AnswerCubeInitializer
                 Title = "testlist2",
                 SubTheme = new SubTheme("een park", "ipsum lorum")
             };
-            slideList2.Slides = new List<Slide>();
-            slideList2.Slides.Add(openQuestion1);
-            slideList2.Slides.Add(singleChoice4);
-            slideList2.Slides.Add(singleChoice5);
-            slideList2.Slides.Add(rangeQuestion1);
-            slideList2.Slides.Add(rangeQuestion2);
-            slideList2.Slides.Add(rangeQuestion3);
-            slideList2.Slides.Add(multipleChoice4);
-            slideList2.Slides.Add(multipleChoice5);
+
+            slideList2.Slides = new LinkedList<Slide>();
+            slideList2.Slides.AddFirst(openQuestion1); // 7
+            slideList2.Slides.AddFirst(singleChoice4); // 8
+            slideList2.Slides.AddFirst(singleChoice5); // 1
+            slideList2.Slides.AddFirst(rangeQuestion1); // 4
+            slideList2.Slides.AddFirst(rangeQuestion2); // 5
+            slideList2.Slides.AddFirst(rangeQuestion3); // 6
+            slideList2.Slides.AddFirst(multipleChoice4); // 2
+            slideList2.Slides.AddFirst(multipleChoice5); // 3
             context.SlideLists.Add(slideList2);
 
 

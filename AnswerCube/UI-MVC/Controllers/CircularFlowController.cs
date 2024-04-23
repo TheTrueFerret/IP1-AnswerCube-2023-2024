@@ -64,7 +64,7 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult InitializeFlow()
     {
-        SlideList slideList = _manager.GetSlideList();
+        SlideList slideList = _manager.GetSlideListById(2);
         /*SlideListDto slideListDto = new SlideListDto()
         {
             Id = slideList.Id,
