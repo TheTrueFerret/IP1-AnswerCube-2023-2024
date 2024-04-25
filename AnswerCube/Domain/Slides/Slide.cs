@@ -1,5 +1,3 @@
-
-
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using AnswerCube.BL.Domain.Slide;
@@ -12,9 +10,9 @@ public class Slide
     public int Id { get; set; }
     public SlideType SlideType { get; set; }
     public string Text { get; set; } // deze text word gebruikt voor een vraag/info
-    [JsonIgnore]
-    public SlideList? SlideList { get; set; } // Navigation property
     public List<String>? AnswerList { get; set; }
+
+    public ICollection<SlideConnection>? ConnectedSlideLists { get; set; }
     public ICollection<Answer>? Answers { get; set; }
     
     

@@ -12,6 +12,6 @@ public class SlideList
     public string Title { get; set; }
     public Flow? Flow { get; set; }
     public SubTheme? SubTheme { get; set; }
-    public LinkedList<Slide>? Slides { get; set; }
+    public List<SlideConnection>? ConnectedSlides { get; set; }
     
 }

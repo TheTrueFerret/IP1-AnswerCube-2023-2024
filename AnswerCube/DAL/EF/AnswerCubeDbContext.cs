@@ -18,6 +18,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Flow> Flows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<Slide> Slides { get; set; }
+    public DbSet<SlideConnection> SlideConnections { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
@@ -62,15 +63,26 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     {
         base.OnModelCreating(modelBuilder);
         
-        // relation between Slide and SlideList
+        // relation between Slide and SlideConnection
         modelBuilder.Entity<Slide>()
-            .HasOne(s => s.SlideList)
-            .WithMany(sl => sl.Slides);
+            .HasMany(s => s.ConnectedSlideLists)
+            .WithOne(sc => sc.Slide);
 
+        modelBuilder.Entity<SlideConnection>()
+            .HasOne(sc => sc.Slide)
+            .WithMany(s => s.ConnectedSlideLists);
+        
+        
+        // relation between SlideList and SlideConnection
         modelBuilder.Entity<SlideList>()
-            .HasMany(sl => sl.Slides)
-            .WithOne(s => s.SlideList);
+            .HasMany(sl => sl.ConnectedSlides)
+            .WithOne(sc => sc.SlideList);
+        
+        modelBuilder.Entity<SlideConnection>()
+            .HasOne(sc => sc.SlideList)
+            .WithMany(sl => sl.ConnectedSlides);
 
+        
 
         // relation between Flow and SlideList
         modelBuilder.Entity<Flow>()
