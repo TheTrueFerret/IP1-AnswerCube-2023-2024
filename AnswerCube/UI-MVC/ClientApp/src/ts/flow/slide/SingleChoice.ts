@@ -1,13 +1,16 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {getCookie} from "../../CookieHandler";
 
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
+const jwtToken = getCookie("jwtToken");
 
 function loadSingleChoiceSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": `Bearer ${jwtToken}`
         }
     }).then((response: Response) => {
         if (response.status === 200) {
@@ -53,6 +56,7 @@ function postAnswer() {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            "Authorization": `Bearer ${jwtToken}`
         },
         body: JSON.stringify(requestBody)
     }).then((response: Response) => {
