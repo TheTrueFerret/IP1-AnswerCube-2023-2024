@@ -15,5 +15,8 @@ public class Installation
     public int MaxSlideIndex { get; set; }
     public List<Slide>? Slides { get; set; }
     public int ActiveSlideListId { get; set; }
+    
+    // Relational Attributes:
+    public int? FlowId { get; set; }
     public Flow? Flow { get; set; }
 }
