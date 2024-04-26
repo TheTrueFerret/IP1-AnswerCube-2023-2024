@@ -51,15 +51,16 @@ public class Repository : IRepository
     public Slide GetSlideFromFlow(int flowId, int number)
     {
         SlideList slideList = getSlideList();
-        List<Slide> slides = slideList.Slides.ToList();
+        List<SlideConnection> slideConnections = slideList.ConnectedSlides.ToList();
+        Slide slide = slideConnections[number].Slide;
 
-        return slides[number - 1];
+        return slide;
     }
 
     public SlideList getSlideList()
     {
         return _context.SlideLists
-            .Include(sl => sl.Slides) // This will load the Slides of each SlideList
+            .Include(sl => sl.ConnectedSlides)// This will load the Slides of each SlideList
             .First();
     }
 
@@ -67,7 +68,7 @@ public class Repository : IRepository
     {
         SlideList slideList = _context.SlideLists
             .Where(sl => sl.Id == id)
-            .Include(sl => sl.Slides).First();
+            .Include(sl => sl.ConnectedSlides).First();
 
         if (slideList == null)
         {
@@ -78,7 +79,7 @@ public class Repository : IRepository
         return slideList;
     }
 
-    public Boolean AddAnswer(List<string> answers, int id)
+    public bool AddAnswer(List<string> answers, int id)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
 
@@ -101,26 +102,48 @@ public class Repository : IRepository
     public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
     {
         SlideList slideList = getSlideList();
-        List<Slide> slides = slideList.Slides.ToList();
-
-        return slides[index];
+        List<SlideConnection> slideConnections = slideList.ConnectedSlides.ToList();
+        Slide slide = slideConnections[index].Slide;
+        
+        return slide;
     }
 
 
-    public Boolean StartInstallation(int id, SlideList slideList)
+    public bool StartInstallation(int id, SlideList slideList)
     {
         Installation installation = _context.Installations.First(i => i.Id == id);
         installation.Active = true;
         installation.ActiveSlideListId = slideList.Id;
-        installation.Slides = slideList.Slides;
+        
+        
+        installation.Slides = new List<Slide>();
+        foreach (var slide in ReadSlidesFromSlideList(slideList))
+        {
+            installation.Slides.Add(slide);
+        }
         installation.CurrentSlideIndex = 0;
-        installation.MaxSlideIndex = slideList.Slides.Count;
+        installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
         _context.SaveChanges();
         return true;
     }
+    
+    public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
+    {
+        List<SlideConnection> slideConnections = _context.SlideConnections
+            .Where(sc => sc.SlideList.Id == slideList.Id)
+            .OrderBy(sc => sc.SlideOrder)
+            .Include(sc => sc.Slide).ToList();
+        
+        List<Slide> slides = new List<Slide>();
+        foreach (var slideConnection in slideConnections)
+        {
+            slides = _context.Slides.Where(s => s.Id == slideConnection.Slide.Id).ToList();
+        }
+        return slides;
+    }
 
 
-    public Boolean UpdateInstallation(int id)
+    public bool UpdateInstallation(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).First();
         if (installation.CurrentSlideIndex < installation.MaxSlideIndex)
@@ -155,38 +178,14 @@ public class Repository : IRepository
     public Slide ReadActiveSlideByInstallationId(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
-        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.Slides).First();
-
-        LinkedListNode<Slide> slide;
-
-        if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
-        {
-            slide = slideList.Slides.First;
-            for (int i = 0; i < installation.CurrentSlideIndex; i++)
-            {
-                slide = slide.Next;
-            }
-        }
-        else
-        {
-            installation.CurrentSlideIndex = 0;
-            slide = slideList.Slides.First;
-        }
-
-        return slide.Value;
+        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.ConnectedSlides).First();
         
-       /* if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
-        {
-            slide = installation.Slides[installation.CurrentSlideIndex];
-        }
-        else
-        {
-            installation.CurrentSlideIndex = 0;
-            slide = installation.Slides[installation.CurrentSlideIndex];
-        }
-        return slide;*/
-        
-        
+        SlideConnection slideConnections = _context.SlideConnections
+            .Where(sc => sc.SlideList.Id == slideList.Id)
+            .Where(sc => sc.SlideOrder == installation.CurrentSlideIndex).Single();
+
+        Slide slide = _context.Slides.Where(s => s.Id == slideConnections.SlideId).Single();
+        return slide;
     }
 
     public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)

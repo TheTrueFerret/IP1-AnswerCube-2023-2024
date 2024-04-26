@@ -18,6 +18,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Flow> Flows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<Slide> Slides { get; set; }
+    public DbSet<SlideConnection> SlideConnections { get; set; }
     public DbSet<SubTheme> SubThemes { get; set; }
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Installation> Installations { get; set; }
@@ -62,16 +63,6 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     {
         base.OnModelCreating(modelBuilder);
         
-        // relation between Slide and SlideList
-        modelBuilder.Entity<Slide>()
-            .HasOne(s => s.SlideList)
-            .WithMany(sl => sl.Slides);
-
-        modelBuilder.Entity<SlideList>()
-            .HasMany(sl => sl.Slides)
-            .WithOne(s => s.SlideList);
-
-
         // relation between Flow and SlideList
         modelBuilder.Entity<Flow>()
             .HasMany(f => f.SlideList)
@@ -101,15 +92,6 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
             .HasMany(s => s.Answers)
             .WithOne(a => a.Slide);
         
-        
-        // relation between Installation and Flow
-        modelBuilder.Entity<Installation>()
-            .HasOne(i => i.Flow)
-            .WithMany(f => f.ActiveInstallations);
-        
-        modelBuilder.Entity<Flow>()
-            .HasMany(s => s.ActiveInstallations)
-            .WithOne(i => i.Flow);
 
         SeedRoles(modelBuilder);
 

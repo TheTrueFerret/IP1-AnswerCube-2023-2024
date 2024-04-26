@@ -64,7 +64,7 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult InitializeFlow()
     {
-        SlideList slideList = _manager.GetSlideList();
+        SlideList slideList = _manager.GetSlideListById(1);
         Boolean installationStarted = _manager.StartInstallation(1, slideList);
         if (installationStarted)
         {

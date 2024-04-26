@@ -13,7 +13,10 @@ public class Installation
     public bool Active { get; set; }
     public int CurrentSlideIndex { get; set; }
     public int MaxSlideIndex { get; set; }
-    public LinkedList<Slide>? Slides { get; set; }
+    public List<Slide>? Slides { get; set; }
     public int ActiveSlideListId { get; set; }
+    
+    // Relational Attributes:
+    public int? FlowId { get; set; }
     public Flow? Flow { get; set; }
 }

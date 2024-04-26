@@ -8,7 +8,7 @@ public class SlideListDto
     public int Id { get; set; }
     public string Title { get; set; }
     public SubTheme SubTheme { get; set; }
-    public ICollection<Slide> Slides { get; set; }
+    public ICollection<SlideConnection> ConnectedSlides { get; set; }
 
     public SlideListDto(){}
     
@@ -17,6 +17,6 @@ public class SlideListDto
         Id = slideList.Id;
         Title = slideList.Title;
         SubTheme = slideList.SubTheme;
-        Slides = slideList.Slides;
+        ConnectedSlides = slideList.ConnectedSlides;
     }
 }
