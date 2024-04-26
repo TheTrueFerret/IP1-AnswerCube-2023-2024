@@ -1,11 +1,14 @@
+using System.Text;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -41,6 +44,19 @@ services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.Req
     .AddDefaultUI();
 services.AddScoped<IRepository, Repository>();
 services.AddScoped<IManager, Manager>();
+services.AddScoped<JwtService>();
+
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 // Add services to the container.
 services.AddControllersWithViews();

@@ -1,9 +1,9 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {setCookie} from "../../CookieHandler";
 
+const slideElement = document.getElementById("slide");
+var url = window.location.toString()
 function InitializeFlow() {
-    const slideElement = document.getElementById("slide");
-    var url = window.location.toString()
-    console.log(url + '|' + RemoveLastDirectoryPartOf(url) )
     fetch(RemoveLastDirectoryPartOf(url) + "/InitializeFLow/", {
         method: "GET",
         headers: {
@@ -18,7 +18,11 @@ function InitializeFlow() {
             }
         }
     }).then((data: any) => {
-        
+        console.log(data)
+        if (data && data.token) {
+            // Save token in a cookie
+            setCookie("jwtToken", data.token, 1); // Change 1 to the number of days you want the cookie to last
+        }
     }).catch((error: any) => {
         console.error(error);
         if (slideElement) {

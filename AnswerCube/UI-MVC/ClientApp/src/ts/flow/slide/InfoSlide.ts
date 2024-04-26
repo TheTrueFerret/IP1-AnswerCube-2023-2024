@@ -1,13 +1,16 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {getCookie} from "../../CookieHandler";
 
+const slideElement: HTMLElement | null = document.getElementById("slide");
+var url = window.location.toString()
 
 function loadInfoSlide() {
-    const slideElement: HTMLElement | null = document.getElementById("slide");
-    var url = window.location.toString()
+    const jwtToken = getCookie("jwtToken");
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "Authorization": `Bearer ${jwtToken}`
         }
     }).then((response: Response) => {
         if (response.status === 200) {

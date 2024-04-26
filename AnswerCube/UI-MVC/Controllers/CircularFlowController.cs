@@ -4,7 +4,10 @@ using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
+using AnswerCube.UI.MVC.Services;
 using Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -18,12 +21,17 @@ public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly JwtService _jwtService;
     
     
-    public CircularFlowController(ILogger<HomeController> logger, IManager manager)
+    public CircularFlowController(ILogger<HomeController> logger, IManager manager, IHttpContextAccessor httpContextAccessor, JwtService jwtService)
     {
         _logger = logger;
         _manager = manager;
+        _httpContextAccessor = httpContextAccessor;
+        _jwtService = jwtService;
+
     }
     
     public IActionResult CircularFlow()
@@ -65,10 +73,11 @@ public class CircularFlowController : BaseController
     public IActionResult InitializeFlow()
     {
         SlideList slideList = _manager.GetSlideListById(1);
-        Boolean installationStarted = _manager.StartInstallation(1, slideList);
+        bool installationStarted = _manager.StartInstallation(1, slideList);
         if (installationStarted)
         {
-            return new JsonResult(slideList);
+            string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
+            return new JsonResult(new { token, slideList });
         }
         else
         {
@@ -79,25 +88,37 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult GetNextSlide()
     {
-        Slide slide = _manager.GetActiveSlideByInstallationId(1);
+        // Retrieve installation ID from token
+        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
+        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         return new JsonResult(slide);
     }
     
     [HttpGet]
     public IActionResult UpdatePage()
     {
-        Boolean installationUpdated = _manager.UpdateInstallation(1);
-        Slide slide = _manager.GetActiveSlideByInstallationId(1);
+        // Retrieve installation ID from token
+        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
+        bool installationUpdated = _manager.UpdateInstallation(installationId);
+        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
     }
     
-    
+     
     [HttpPost]
     public IActionResult PostAnswer([FromBody] AnswerModel answer)
     {
-        Slide slide = _manager.GetActiveSlideByInstallationId(1);
+        // Retrieve installation ID from token
+        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
+        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         List<string> answerText = answer.Answer;
         if (_manager.AddAnswer(answerText, slide.Id))
         {
