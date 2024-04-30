@@ -1,0 +1,81 @@
+@model AnswerCube.UI.MVC.Models.Dto.ProjectOrganizationDTO
+
+@{
+ViewBag.Title = Model.Project.Title;
+Layout = "_Layout";
+}
+<style>
+    .icon-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .project-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        background-color: #fff;
+        border-radius: 5px;
+        border-color: grey;
+        font-size: 30px;
+        color: #000;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+       margin-left: 5px;
+    }
+
+    .project-button:hover {
+        background-color: #ddd;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h2>@Model.Project.Title</h2>
+            <div class="icon-container">
+                <button class="project-button"
+                        onclick="location.href='@Url.Action("EditProject", "Project", new { Model.Project.Id })'">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="project-button"
+                        onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = Model.Project.Id, organisationId = Model.Project.Id })'">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <h3>Project info:</h3>
+            <h4>Description:</h4>
+            <p>@Model.Project.Description</p>
+
+            <p>
+                <strong>Is Active:</strong> @Model.Project.IsActive
+            </p>
+
+            <p>
+                <strong>Total Flows:</strong> @Model.Project.Flows.Count
+            </p>
+
+            <p>
+                <strong>Total Active Installations:</strong> @Model.Project.TotalActiveInstallations
+            </p>
+
+            <h3>Organization:</h3>
+
+            <p>
+                <strong>Name:</strong> @Model.Organization.Name
+            </p>
+            <p>
+                <strong>Email:</strong> @Model.Organization.Email
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>

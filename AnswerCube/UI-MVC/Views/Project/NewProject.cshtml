@@ -71,28 +71,29 @@
     <div class="form-column">
         <h2>New Project</h2>
 
-        <form method="post"/>
-        <div class="form-group">
-            <label for="name" class="form-label">Name:</label>
-            <input type="text" id="name" name="name" class="form-input" value=""/>
-        </div>
-        <div class="form-group">
-            <label for="description" class="form-label">Description:</label>
-            <textarea id="description" name="description" class="form-input"></textarea>
-        </div>
-        <div class="form-group">
-            <label class="form-checkbox-label">
-                <input type="checkbox" id="active" name="active" checked/>
-                Active
-            </label>
-        </div>
-        <br/>
-        <button type="submit" class="form-submit">Confirm</button>
+        <form method="post" action="@Url.Action("CreateProject", "Project")">
+            <div class="form-group">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" id="name" name="name" class="form-input" value=""/>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Description:</label>
+                <textarea id="description" name="description" class="form-input"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-checkbox-label">
+                    <input type="checkbox" id="active" name="active" checked/>
+                    Active
+                </label>
+            </div>
+            <br/>
+            <button type="submit" class="form-submit">Confirm</button>
+        </form>
     </div>
 
     <div class="form-column">
         <button type="button" onclick="location.href='@Url.Action("Flows", "Project")'" class="form-submit flows">Flows</button>
     </div>
 
-    <div style="clear:both;"></div> 
-</div> 
+    <div style="clear:both;"></div>
+</div>

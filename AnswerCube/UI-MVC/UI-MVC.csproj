@@ -120,6 +120,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AdditionalFiles Include="Views\Organization\Index.cshtml" />
+        <AdditionalFiles Include="Views\Organization\NewFlow.cshtml" />
+        <AdditionalFiles Include="Views\Project\NewProject.cshtml" />
         <AdditionalFiles Include="Views\Slides\InfoSlide.cshtml"/>
         <AdditionalFiles Include="Views\Slides\OpenQuestion.cshtml"/>
         <AdditionalFiles Include="Views\Slides\SingleChoice.cshtml"/>

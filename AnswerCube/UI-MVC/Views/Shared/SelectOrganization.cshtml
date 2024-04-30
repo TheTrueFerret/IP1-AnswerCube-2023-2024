@@ -1,0 +1,29 @@
+@using System.Security.Claims
+@model System.Collections.Generic.List<Domain.Organization>
+
+@{
+    ViewBag.Title = "Select Organization";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Select Organization</h2>
+    <div class="row">
+        @foreach (var organization in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@organization.Name</h5>
+                        <p class="card-text">Some description about the organization.</p>
+                        <a href="@Url.Action("Index", "Organization", new { organizationId = organization.Id })"
+                           class="btn btn-primary">
+                            Select
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

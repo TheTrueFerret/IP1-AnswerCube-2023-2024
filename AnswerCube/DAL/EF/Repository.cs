@@ -1,10 +1,12 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.Extensions.Logging;
 
 namespace AnswerCube.DAL.EF;
 
@@ -221,8 +223,53 @@ public class Repository : IRepository
     {
         DeelplatformbeheerderEmail deelplatformbeheerderEmail =
             _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        if (deelplatformbeheerderEmail == null || deelplatformbeheerderEmail.Email != userEmail)
+        {
+            return false;
+        }
+
         _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
         _context.SaveChanges();
         return true;
+    }
+
+    public List<Organization> ReadOrganizationByUserId(string userId)
+    {
+        return _context.UserOrganizations.Where(uo => uo.UserId == userId)
+            .Select(uo => uo.Organization).ToList();
+    }
+
+    public Organization ReadOrganizationById(int organizationId)
+    {
+        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects).First();
+    }
+
+    public bool DeleteProject(int id)
+    {
+        var project = _context.Projects.First(p => p.Id == id);
+        if (project == null || project.Id != id)
+        {
+            return false;
+        }
+
+        _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
+        _context.SaveChanges();
+
+        return true;
+    }
+
+    public Project ReadProjectById(int projectid)
+    {
+        return _context.Projects.First(p => p.Id == projectid);
+    }
+
+    public Project CreateProject(int organizationId)
+    {
+        Organization organization = _context.Organizations.First(o => o.Id == organizationId);
+        
+        Project project = new Project { Organization = organization };
+        _context.Projects.Add(project);
+        _context.SaveChanges();
+        return project;
     }
 }

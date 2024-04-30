@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -39,7 +41,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
                         </li>
-                        
+                    }
+                    @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                        </li>
                     }
                 </ul>
             </div>

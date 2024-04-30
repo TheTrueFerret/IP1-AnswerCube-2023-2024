@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -45,6 +46,84 @@ public static class AnswerCubeInitializer
             UserId = "superUser1"
         });
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
+        //Add Organizations and add user and projects to organization
+        var organization1 = new Organization("KdG",
+            "skybloom44@gmail.com");
+        var organization2 = new Organization("AnswerCube",
+            "answercubeintegratie@gmail.com");
+
+
+        var userOrganization1 = new UserOrganization
+        {
+            User = yannick,
+            UserId = yannick.Id,
+            Organization = organization1,
+            OrganizationId = organization1.Id
+        };
+
+        var userOrganization2 = new UserOrganization
+        {
+            User = yannick,
+            UserId = yannick.Id,
+            Organization = organization2,
+            OrganizationId = organization2.Id
+        };
+
+        // Add the new UserOrganization to the context and save changes
+        context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
+
+        Project project1 = new Project
+        {
+            Title = "Project1",
+            Description = "Project1",
+            IsActive = true,
+            Organization = organization1
+        };
+        Project project2 = new Project
+        {
+            Title = "Project2",
+            Description = "Project2",
+            IsActive = true,
+            Organization = organization1
+        };
+        Project project3 = new Project
+        {
+            Title = "Project3",
+            Description = "Project3",
+            IsActive = true,
+            Organization = organization2
+        };
+        Project project4 = new Project
+        {
+            Title = "Project4",
+            Description = "Project4",
+            IsActive = true,
+            Organization = organization2
+        };
+        Project project5 = new Project
+        {
+            Title = "Project5",
+            Description = "Project5",
+            IsActive = true,
+            Organization = organization1
+        };
+        Project project6 = new Project
+        {
+            Title = "Project6",
+            Description = "Project6",
+            IsActive = true,
+            Organization = organization1
+        };
+        Project project7 = new Project
+        {
+            Title = "Project7",
+            Description = "Project7",
+            IsActive = true,
+            Organization = organization1
+        };
+
+
+        context.Projects.AddRange(project1, project2, project3, project4, project5, project6, project7);
 
         var jarno = new AnswerCubeUser()
         {
@@ -118,8 +197,7 @@ public static class AnswerCubeInitializer
         });
         ilyasse.PasswordHash = hasher.HashPassword(ilyasse, "Student_1234");
 
-        context.AnswerCubeUsers.AddRange(alexander, yannick, jarno, nemo, ilyasse);
-        context.SaveChanges();
+        context.AnswerCubeUsers.AddRange(alexander, jarno, nemo, ilyasse);
 
         //SingleChoice
         Slide singleChoice1 = new Slide
@@ -376,7 +454,6 @@ public static class AnswerCubeInitializer
         linearFlow.SlideList.Add(slideList1);
         context.Flows.Add(linearFlow);
 
-        context.SaveChanges();
 
         SlideList slideList2 = new SlideList
         {

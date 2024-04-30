@@ -1,0 +1,118 @@
+@model Domain.Organization
+
+@{
+    ViewBag.Title = "Project Overzicht";
+    Layout = "_Layout";
+}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevents scrolling on the body and html */
+    }
+
+    .new-project {
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .project-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: 0 -10px;
+        height: 500px; /* Adjust this value according to your needs */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Prevents horizontal scrolling */
+
+    }
+
+    .project {
+        position: relative;
+        background-color: #f0f0f0;
+        color: #000;
+        padding: 20px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        flex: 0 0 calc(50% - 20px);
+        box-sizing: border-box;
+    }
+
+    .icon-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px;
+    }
+
+    .new-project {
+        background-color: #ccc;
+        color: #000;
+        padding: 20px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        flex: 0 0 calc(50% - 20px);
+        box-sizing: border-box;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .project-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        background-color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 30px;
+        color: #000;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 5px;
+    }
+
+    .project-button:hover {
+        background-color: #ddd;
+    }
+</style>
+<h1>Project Overzicht</h1>
+<h1>@Model.Id</h1>
+<div class="project-container">
+    @foreach (var project in Model.Projects)
+    {
+        //TODO: Add onclick event to the div INSIDE OF A TYPESCRIPT FILE
+        <div class="project" onclick="window.location.href='@Url.Action("Project", "Project", new { projectId = project.Id, organizationId = Model.Id })'">
+            <h2>@project.Title</h2>
+            <p>@project.Description</p>
+            <p>Status: @(project.IsActive ? "Actief" : "Niet actief")</p>
+            <p>Totaal aantal flows: @project.Flows.Count</p>
+            <p>Totaal actieve installaties: @project.TotalActiveInstallations</p>
+            <div class="icon-container">
+                <button class="project-button" onclick="location.href='@Url.Action("EditProject", "Project", new { project.Id })'">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="project-button" onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="new-project">
+        <h2>New Project</h2>
+        <p>Voeg een nieuw project toe</p>
+        <button class="project-button" onclick="location.href='@Url.Action("NewProject", "Project")'">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+</div>
+
+
+<script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>

@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -33,4 +34,9 @@ public interface IRepository
     bool ReadDeelplatformBeheerderByEmail(string userEmail);
     bool CreateDeelplatformBeheerderByEmail(string userEmail);
     bool DeleteDeelplatformBeheerderByEmail(string userEmail);
+    List<Organization> ReadOrganizationByUserId(string userId);
+    Organization ReadOrganizationById(int organizationId);
+    bool DeleteProject(int id);
+    Project ReadProjectById(int projectid);
+    Project CreateProject(int organizationId);
 }

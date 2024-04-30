@@ -1,4 +1,5 @@
 ﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
@@ -119,5 +120,30 @@ public class Manager : IManager
     public bool RemoveDeelplatformBeheerderByEmail(string userEmail)
     {
         return _repository.DeleteDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public List<Organization> GetOrganizationByUserId(string userId)
+    {
+        return _repository.ReadOrganizationByUserId(userId);
+    }
+
+    public Organization GetOrganizationById(int organizationId)
+    {
+        return _repository.ReadOrganizationById(organizationId);
+    }
+
+    public bool DeleteProject(int id)
+    {
+        return _repository.DeleteProject(id);
+    }
+
+    public Project GetProjectById(int projectid)
+    {
+        return _repository.ReadProjectById(projectid);
+    }
+
+    public Project CreateProject(int organizationId)
+    {
+        return _repository.CreateProject(organizationId);
     }
 }
