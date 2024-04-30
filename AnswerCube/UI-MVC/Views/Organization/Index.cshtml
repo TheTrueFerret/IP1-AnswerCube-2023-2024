@@ -5,27 +5,20 @@
     Layout = "_Layout";
 }
 <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden; /* Prevents scrolling on the body and html */
-    }
 
     .new-project {
         font-size: 50px;
         font-weight: bold;
     }
 
-    .project-container {
+    .projects-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         margin: 0 -10px;
-        height: 500px; /* Adjust this value according to your needs */
+        height: 400px; /* Adjust this value according to your needs */
         overflow-y: auto; /* Enables vertical scrolling */
         overflow-x: hidden; /* Prevents horizontal scrolling */
-
     }
 
     .project {
@@ -37,6 +30,13 @@
         border: 1px solid #ccc;
         flex: 0 0 calc(50% - 20px);
         box-sizing: border-box;
+    }
+
+    .project p {
+        overflow: hidden; /* Hide the overflow */
+        text-overflow: ellipsis; /* Indicate that text has been clipped */
+        white-space: nowrap; /* Prevent text from wrapping */
+        max-height: 50px; /* Adjust this value according to your needs */
     }
 
     .icon-container {
@@ -82,35 +82,57 @@
         background-color: #ddd;
     }
 </style>
-<h1>Project Overzicht</h1>
-<h1>@Model.Id</h1>
-<div class="project-container">
-    @foreach (var project in Model.Projects)
-    {
-        //TODO: Add onclick event to the div INSIDE OF A TYPESCRIPT FILE
-        <div class="project" onclick="window.location.href='@Url.Action("Project", "Project", new { projectId = project.Id, organizationId = Model.Id })'">
-            <h2>@project.Title</h2>
-            <p>@project.Description</p>
-            <p>Status: @(project.IsActive ? "Actief" : "Niet actief")</p>
-            <p>Totaal aantal flows: @project.Flows.Count</p>
-            <p>Totaal actieve installaties: @project.TotalActiveInstallations</p>
-            <div class="icon-container">
-                <button class="project-button" onclick="location.href='@Url.Action("EditProject", "Project", new { project.Id })'">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button class="project-button" onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+@*//TODO: Add a way to make the big descriptions smaller and finish the Layout*@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Project Overzicht</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="projects-container">
+                @foreach (var project in Model.Projects)
+                {
+                    <div class="col-sm-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">@project.Title</h2>
+                                <p class="card-text">@project.Description</p>
+                                <p>Status: @(project.IsActive ? "Actief" : "Niet actief")</p>
+                                <p>Totaal aantal flows: @project.Flows.Count</p>
+                                <p>Totaal actieve installaties: @project.TotalActiveInstallations</p>
+                                <div class="icon-container">
+                                    <button class="btn btn-primary "
+                                            onclick="location.href='@Url.Action("EditProject", "Project", new { projectId = project.Id })'" title="Edit Project">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger"
+                                            title="Delete Project"
+                                            onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">New Project</h2>
+                            <p class="card-text">Voeg een nieuw project toe</p>
+                            <button class="btn btn-primary project-button"
+                                    title="New Project"
+                                    onclick="location.href='@Url.Action("NewProject", "Project", new { organizationId = Model.Id })'">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    }
-
-    <div class="new-project">
-        <h2>New Project</h2>
-        <p>Voeg een nieuw project toe</p>
-        <button class="project-button" onclick="location.href='@Url.Action("NewProject", "Project")'">
-            <i class="fas fa-plus"></i>
-        </button>
     </div>
 </div>
 

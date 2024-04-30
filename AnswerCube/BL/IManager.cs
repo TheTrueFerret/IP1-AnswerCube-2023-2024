@@ -33,5 +33,6 @@ public interface IManager
     Organization GetOrganizationById(int organizationId);
     bool DeleteProject(int id);
     Project GetProjectById(int projectid);
-    Project CreateProject(int organizationId);
+    Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
+    Task<bool> UpdateProject(Project project, string title, string description);
 }

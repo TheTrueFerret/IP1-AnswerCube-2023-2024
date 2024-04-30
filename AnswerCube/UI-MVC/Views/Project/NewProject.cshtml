@@ -1,4 +1,4 @@
-@model AnswerCube.BL.Domain.Project.Project
+@model Domain.Organization
 
 @{
     ViewBag.Title = "New Project";
@@ -70,20 +70,19 @@
 <div class="form-container">
     <div class="form-column">
         <h2>New Project</h2>
-
-        <form method="post" action="@Url.Action("CreateProject", "Project")">
+        <form method="post" action="@Url.Action("CreateProject", "Project", new {organizationId = Model.Id})">
             <div class="form-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" id="name" name="name" class="form-input" value=""/>
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="Project Title"/>
             </div>
             <div class="form-group">
                 <label for="description" class="form-label">Description:</label>
-                <textarea id="description" name="description" class="form-input"></textarea>
+                <textarea id="description" name="description" class="form-input" placeholder="Project Description"></textarea>
             </div>
             <div class="form-group">
-                <label class="form-checkbox-label">
-                    <input type="checkbox" id="active" name="active" checked/>
-                    Active
+                <label class="form-checkbox-label" for="isActive">
+                    <input type="checkbox" id="isActive" name="isActive" checked/>
+                    IsActive
                 </label>
             </div>
             <br/>

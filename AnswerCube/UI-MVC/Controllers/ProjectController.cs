@@ -20,6 +20,11 @@ namespace AnswerCube.UI.MVC.Controllers
         public IActionResult Project(int projectid, int organizationid)
         {
             var project = _manager.GetProjectById(projectid);
+            if (project == null)
+            {
+                return View("Error");
+            }
+
             var organization = _manager.GetOrganizationById(organizationid);
             return View(new ProjectOrganizationDTO
             {
@@ -28,16 +33,29 @@ namespace AnswerCube.UI.MVC.Controllers
             });
         }
 
-        public IActionResult NewProject(int organizationId,string title,string description)
+        public IActionResult NewProject(int organizationId)
         {
-            Project project = _manager.CreateProject(organizationId);
             Organization organization = _manager.GetOrganizationById(organizationId);
+            if (organization != null)
+            {
+                return View(organization);
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        public async Task<IActionResult> CreateProject(int organizationId, string title, string description,
+            bool isActive)
+        {
+            Project project = await _manager.CreateProject(organizationId, title, description, isActive);
             if (project != null)
             {
-                return View("Project", new ProjectOrganizationDTO
+                return RedirectToAction("Project", new
                 {
-                    Project = project,
-                    Organization = organization
+                    projectId = project.Id,
+                    organizationid = organizationId
                 });
             }
             else
@@ -45,25 +63,7 @@ namespace AnswerCube.UI.MVC.Controllers
                 return View("Error");
             }
         }
-        
-        public IActionResult CreateProject(int organizationId,string title,string description)
-        {
-            Project project = _manager.CreateProject(organizationId);
-            Organization organization = _manager.GetOrganizationById(organizationId);
-            if (project != null)
-            {
-                return View("Project", new ProjectOrganizationDTO
-                {
-                    Project = project,
-                    Organization = organization
-                });
-            }
-            else
-            {
-                return View("Error");
-            }
-        }
-        
+
 
         public IActionResult Flows()
         {
@@ -81,6 +81,36 @@ namespace AnswerCube.UI.MVC.Controllers
             if (_manager.DeleteProject(projectId))
             {
                 return RedirectToAction("Index", "Organization", new { organizationId = organisationId });
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        public IActionResult EditProject(int projectId)
+        {
+            Project project = _manager.GetProjectById(projectId);
+            if (project == null)
+            {
+                return View("Error");
+            }
+
+            return View(project);
+        }
+
+        public async Task<IActionResult> SaveProjectChanges(int projectId, string title, string description)
+        {
+            Project project = _manager.GetProjectById(projectId);
+            if (project == null)
+            {
+                return View("Error");
+            }
+
+            if (await _manager.UpdateProject(project, title, description))
+            {
+                return RedirectToAction("Project",
+                    new { projectid = projectId, organizationId = project.Organization.Id });
             }
             else
             {

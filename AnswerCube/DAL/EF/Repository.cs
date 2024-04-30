@@ -12,7 +12,7 @@ namespace AnswerCube.DAL.EF;
 
 public class Repository : IRepository
 {
-    private AnswerCubeDbContext _context;
+    private readonly AnswerCubeDbContext _context;
 
     public Repository(AnswerCubeDbContext context)
     {
@@ -149,7 +149,7 @@ public class Repository : IRepository
         }
         else
         {
-            return null;
+            return new int[]{};
         }
     }
 
@@ -213,7 +213,6 @@ public class Repository : IRepository
     public bool CreateDeelplatformBeheerderByEmail(string userEmail)
     {
         DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail { Email = userEmail };
-        ;
         _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
         _context.SaveChanges();
         return true;
@@ -260,16 +259,38 @@ public class Repository : IRepository
 
     public Project ReadProjectById(int projectid)
     {
-        return _context.Projects.First(p => p.Id == projectid);
+        return _context.Projects.Include(p => p.Organization).FirstOrDefault(p => p.Id == projectid);
     }
 
-    public Project CreateProject(int organizationId)
+    public async Task<Project> CreateProject(int organizationId, string title, string description, bool isActive)
     {
         Organization organization = _context.Organizations.First(o => o.Id == organizationId);
-        
-        Project project = new Project { Organization = organization };
+
+        Project project = new Project
+        {
+            Organization = organization,
+            Title = title,
+            Description = description,
+            IsActive = isActive
+        };
         _context.Projects.Add(project);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return project;
+    }
+
+    public async Task<bool> UpdateProject(Project project, string title, string description)
+    {
+        if (project == null)
+        {
+            return false;
+        }
+        else
+        {
+            project.Title = title;
+            project.Description = description;
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

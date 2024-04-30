@@ -142,8 +142,13 @@ public class Manager : IManager
         return _repository.ReadProjectById(projectid);
     }
 
-    public Project CreateProject(int organizationId)
+    public async Task<Project> CreateProject(int organizationId, string title, string description, bool isActive)
     {
-        return _repository.CreateProject(organizationId);
+        return await _repository.CreateProject(organizationId, title, description, isActive);
+    }
+
+    public async Task<bool> UpdateProject(Project project, string title, string description)
+    {
+        return await _repository.UpdateProject(project, title, description);
     }
 }

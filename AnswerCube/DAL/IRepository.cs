@@ -38,5 +38,6 @@ public interface IRepository
     Organization ReadOrganizationById(int organizationId);
     bool DeleteProject(int id);
     Project ReadProjectById(int projectid);
-    Project CreateProject(int organizationId);
+    Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
+    Task<bool> UpdateProject(Project project, string title, string description);
 }
