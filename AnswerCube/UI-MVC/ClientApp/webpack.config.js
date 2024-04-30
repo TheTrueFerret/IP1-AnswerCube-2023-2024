@@ -16,6 +16,7 @@ module.exports = {
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
+        project :'./src/ts/Project/Project.ts',
     },
     output: {
         filename: '[name].entry.js',
