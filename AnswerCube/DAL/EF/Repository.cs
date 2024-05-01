@@ -1,16 +1,18 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.Extensions.Logging;
 
 namespace AnswerCube.DAL.EF;
 
 public class Repository : IRepository
 {
-    private AnswerCubeDbContext _context;
+    private readonly AnswerCubeDbContext _context;
 
     public Repository(AnswerCubeDbContext context)
     {
@@ -170,7 +172,7 @@ public class Repository : IRepository
         }
         else
         {
-            return null;
+            return new int[]{};
         }
     }
 
@@ -201,5 +203,94 @@ public class Repository : IRepository
     public List<AnswerCubeUser> ReadAllUsers()
     {
         return _context.Users.ToList();
+    }
+
+    public bool ReadDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _context.DeelplatformbeheerderEmails.Any(d => d.Email == userEmail);
+    }
+
+    public bool CreateDeelplatformBeheerderByEmail(string userEmail)
+    {
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail { Email = userEmail };
+        _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DeleteDeelplatformBeheerderByEmail(string userEmail)
+    {
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail =
+            _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        if (deelplatformbeheerderEmail == null || deelplatformbeheerderEmail.Email != userEmail)
+        {
+            return false;
+        }
+
+        _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public List<Organization> ReadOrganizationByUserId(string userId)
+    {
+        return _context.UserOrganizations.Where(uo => uo.UserId == userId)
+            .Select(uo => uo.Organization).ToList();
+    }
+
+    public Organization ReadOrganizationById(int organizationId)
+    {
+        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects).First();
+    }
+
+    public bool DeleteProject(int id)
+    {
+        var project = _context.Projects.First(p => p.Id == id);
+        if (project == null || project.Id != id)
+        {
+            return false;
+        }
+
+        _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
+        _context.SaveChanges();
+
+        return true;
+    }
+
+    public Project ReadProjectById(int projectid)
+    {
+        return _context.Projects.Include(p => p.Organization).FirstOrDefault(p => p.Id == projectid);
+    }
+
+    public async Task<Project> CreateProject(int organizationId, string title, string description, bool isActive)
+    {
+        Organization organization = _context.Organizations.First(o => o.Id == organizationId);
+
+        Project project = new Project
+        {
+            Organization = organization,
+            Title = title,
+            Description = description,
+            IsActive = isActive
+        };
+        _context.Projects.Add(project);
+        await _context.SaveChangesAsync();
+        return project;
+    }
+
+    public async Task<bool> UpdateProject(Project project, string title, string description)
+    {
+        if (project == null)
+        {
+            return false;
+        }
+        else
+        {
+            project.Title = title;
+            project.Description = description;
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

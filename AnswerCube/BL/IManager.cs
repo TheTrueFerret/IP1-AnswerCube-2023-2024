@@ -1,4 +1,5 @@
 ﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -16,13 +17,22 @@ public interface IManager
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
-    Boolean AddAnswer(List<string> answers,int id);
+    bool AddAnswer(List<string> answers,int id);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    Boolean StartInstallation(int id, SlideList slideList);
-    Boolean UpdateInstallation(int id);
+    bool StartInstallation(int id, SlideList slideList);
+    bool UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
     List<IdentityRole> GetAllAvailableRoles(AnswerCubeUser user);
     List<AnswerCubeUser> GetAllUsers();
+    bool GetDeelplatformBeheerderByEmail(string userEmail);
+    bool AddDeelplatformBeheerderByEmail(string userEmail);
+    bool RemoveDeelplatformBeheerderByEmail(string userEmail);
+    List<Organization> GetOrganizationByUserId(string userId);
+    Organization GetOrganizationById(int organizationId);
+    bool DeleteProject(int id);
+    Project GetProjectById(int projectid);
+    Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
+    Task<bool> UpdateProject(Project project, string title, string description);
 }

@@ -28,7 +28,27 @@ public class AdminController : BaseController
         _emailSender = emailSender;
         _manager = manager;
     }
-    
+
+    public async Task<IActionResult> DeelplatformOverview()
+    {
+        var users = await _userManager.Users.ToListAsync();
+        users = users.Where(user =>
+                _userManager.GetRolesAsync(user).Result.Any(role => role.ToLower().Equals("deelplatformbeheerder")))
+            .ToList();
+
+        var usersRoleDto = new UserRolesDto(users, new Dictionary<string, List<string>>());
+        if (users.Any())
+        {
+            foreach (var user in usersRoleDto.Users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                usersRoleDto.Roles.Add(user.Id, roles.ToList());
+            }
+        }
+
+        return View(usersRoleDto);
+    }
+
     public async Task<IActionResult> Users()
     {
         var usersRoleDto = new UserRolesDto(_manager.GetAllUsers(), new Dictionary<string, List<string>>());
@@ -126,6 +146,11 @@ public class AdminController : BaseController
             ModelState.AddModelError(string.Empty, "Unable to remove role.");
         }
 
+        if (model.SelectedRoleToRemove == "DeelplatformBeheerder")
+        {
+            _manager.RemoveDeelplatformBeheerderByEmail(user.Email);
+        }
+
         await _signInManager.RefreshSignInAsync(_userManager.FindByIdAsync(model.Id).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }
@@ -154,6 +179,53 @@ public class AdminController : BaseController
         }
 
         return RedirectToAction("Users");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("AddDeelplatform")]
+    public async Task<IActionResult> AddDeelplatform([FromForm] string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            // Generate registration link with the email as a query parameter
+            var registerUrl = Url.Page(
+                "/Account/Register",
+                pageHandler: null,
+                values: new { area = "Identity", email = email },
+                protocol: Request.Scheme);
+
+            await _emailSender.SendEmailAsync(email, "Register for DeelplatformBeheerder",
+                $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Welcome to AnswerCube!</title>\n    <style>\n        /* Styles for the email template */\n        body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #fff;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Welcome to AnswerCube!</h1>\n        <p>You have been added as a DeelplatformBeheerder. Please register by using the button below!</p>\n        <a href=\"{registerUrl}\" class=\"btn\">Register Here</a>\n    </div>\n</body>\n</html>\n");
+            TempData["Success"] = "An email has been sent to the provided email address.";
+        }
+        else
+        {
+            // Generate login link with mail
+            var loginUrl = Url.Page(
+                "/Account/Login",
+                pageHandler: null,
+                values: new { area = "Identity", email = email },
+                protocol: Request.Scheme);
+            await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+            await _emailSender.SendEmailAsync(email, "You have been added as a DeelplatformBeheeder",
+                $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Role Update!</title>\n    <style>\n        /* Styles for the email template */\n        body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #fff;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Role Update!</h1>\n        <p>Your role has been updated to DeelplatformBeheerder. Please log in to your account to see the changes!</p>\n        <a href=\"{loginUrl}\" class=\"btn\">Log In Here</a>\n    </div>\n</body>\n</html>\n");
+            TempData["Success"] = "The user now has the DeelplatformBeheerder role.";
+        }
+
+        _manager.AddDeelplatformBeheerderByEmail(email);
+        return RedirectToAction("DeelplatformOverview");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("RemoveDeelplatformBeheederRole/{id}")]
+    public async Task<IActionResult> RemoveDeelplatformBeheederRole(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        await _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
+        _manager.RemoveDeelplatformBeheerderByEmail(user.Email);
+
+        return RedirectToAction("DeelplatformOverview");
     }
 }
 

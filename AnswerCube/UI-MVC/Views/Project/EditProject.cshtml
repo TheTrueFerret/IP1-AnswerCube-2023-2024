@@ -1,0 +1,45 @@
+@model AnswerCube.BL.Domain.Project.Project
+
+@{
+    ViewBag.Title = "Edit Project";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1>Edit Project</h1>
+
+    <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" class="form-control" value="@Model.Title" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" required>@Model.Description</textarea>
+        </div>
+
+        @if (Model.Flows != null && Model.Flows.Any())
+        {
+            <div class="form-group">
+                <label for="flows">Flows</label>
+                <select id="flows" name="flows" class="form-control" multiple>
+                    @foreach (var flow in Model.Flows)
+                    {
+                        <option value="@flow.Id">@flow.Name</option>
+                    }
+                </select>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label for="flows">Flows</label>
+                <p>No flows available</p>
+            </div>
+        }
+
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

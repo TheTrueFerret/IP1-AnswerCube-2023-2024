@@ -1,3 +1,5 @@
+using AnswerCube.BL.Domain.Project;
+
 namespace Domain;
 
 public class Forum

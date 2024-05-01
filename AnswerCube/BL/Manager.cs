@@ -1,4 +1,5 @@
 ﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
@@ -104,5 +105,50 @@ public class Manager : IManager
     public List<AnswerCubeUser> GetAllUsers()
     {
         return _repository.ReadAllUsers();
+    }
+
+    public bool GetDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.ReadDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public bool AddDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.CreateDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public bool RemoveDeelplatformBeheerderByEmail(string userEmail)
+    {
+        return _repository.DeleteDeelplatformBeheerderByEmail(userEmail);
+    }
+
+    public List<Organization> GetOrganizationByUserId(string userId)
+    {
+        return _repository.ReadOrganizationByUserId(userId);
+    }
+
+    public Organization GetOrganizationById(int organizationId)
+    {
+        return _repository.ReadOrganizationById(organizationId);
+    }
+
+    public bool DeleteProject(int id)
+    {
+        return _repository.DeleteProject(id);
+    }
+
+    public Project GetProjectById(int projectid)
+    {
+        return _repository.ReadProjectById(projectid);
+    }
+
+    public async Task<Project> CreateProject(int organizationId, string title, string description, bool isActive)
+    {
+        return await _repository.CreateProject(organizationId, title, description, isActive);
+    }
+
+    public async Task<bool> UpdateProject(Project project, string title, string description)
+    {
+        return await _repository.UpdateProject(project, title, description);
     }
 }
