@@ -3,73 +3,27 @@
     Layout = ViewData["Layout"] as string;
 }
 
+
+<div class="slide-container">
+    <h1 class="question">Range Question</h1>
+    <div id="slide" class="card-body">
+        <!-- Inhoud van de dia -->
+    </div>
+    <div class="modal-footer">
+        <div class="centered-content">
+            <div class="answers-container"></div>
+        </div>
+        <div class="slider-container">
+            <input type="range" id="slider" class="slider custom-slider" list="tickmarks" step="1" min="0" />
+            <datalist id="tickmarks"></datalist>
+            <div class="tickmark-labels"></div>
+        </div>
+    </div>
+    <button id="submitAnswer" type="button">Submit Answer</button>
+    <button id="skipSlide" type="button">Skip</button>
+</div>
+
 @section Scripts
 {
     <script src="~/dist/RangeQuestion.entry.js" defer></script>
 }
-
-
-<style>
-    .slider-container {
-        width: 80%;
-        margin: 50px auto;
-    }
-    .slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 25px;
-        background: #d3d3d3; /* Grijze achtergrond */
-        outline: none;
-        opacity: 0.7;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-    }
-    .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 25px;
-        height: 25px;
-        background: #2196F3; /* Blauwe cirkel */
-        cursor: pointer;
-        border-radius: 50%; /* Omzetten naar een cirkel */
-         /* Plaats de cirkel op de juiste positie boven de slider */
-    }
-    .slider::-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        background: #2196F3; /* Blauwe cirkel */
-        cursor: pointer;
-        /*border-radius: 80%; /* Omzetten naar een cirkel */
-        /*margin-top: 10px; /* Plaats de cirkel op de juiste positie boven de slider */
-    }
-    .tickmark-labels {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-    .tickmark-label {
-        flex: 1;
-        text-align: center;
-    }
-</style>
-
-<div class="card card-custom">
-    <div id="slide" class="card-body">
-        <!-- Content goes here -->
-    </div>
-    <div class="modal-footer">
-        <div class="centered-content">
-            <div class="answers-container"></div> <!-- Container voor de antwoordmogelijkheden -->
-        </div>
-        <div class="slider-container">
-            <input type="range" id="slider" class="slider custom-slider" value="0" list="tickmarks"> <!-- De slider -->
-            <datalist id="tickmarks">
-            </datalist>
-            <div class="tickmark-labels">
-            </div>
-        </div>
-        <a id="nextSlide" class="btn btn-primary" type="button">Next Slide</a>
-    </div>
-    <a id="submitAnswer" class="btn btn-primary" type="button">Submit Answer</a>
-    <a id="skipSlide" class="btn btn-secondary" type="button">Skip</a>
-</div>

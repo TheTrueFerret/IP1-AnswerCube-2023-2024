@@ -1,20 +1,20 @@
 ﻿@{
-    ViewBag.Title = "MultipleChoice";
+    ViewBag.Title = "SingleChoice";
     Layout = ViewData["Layout"] as string;
 }
 
 @section Scripts
 {
     <script src="~/dist/singlechoice.entry.js" defer></script>
+    
 }
-<div>
-    <h1>SingleChoice</h1>
-    <div id="slide">
+
+<div class="slide-container">
+    <h1 class="question">Single Choice</h1>
+    <div id="slide" class="question"></div>
+    <div class="answer-list">
         
     </div>
-    <a id="submitAnswer" class="btn btn-primary" type="button">Submit Answer</a>
-    <a id="skipSlide" class="btn btn-secondary" type="button">Skip</a>
+    <button id="submitAnswer" type="button">Submit Answer</button>
+    <button id="skipSlide" type="button">Skip</button>
 </div>
-
-
-

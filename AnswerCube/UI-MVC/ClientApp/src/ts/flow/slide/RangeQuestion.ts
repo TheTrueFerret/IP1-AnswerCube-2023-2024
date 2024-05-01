@@ -1,9 +1,11 @@
-import { RemoveLastDirectoryPartOf } from "../../urlDecoder";
+import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
 
+let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
-var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
+const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
+
 
 function loadRangeQuestionSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
@@ -12,92 +14,91 @@ function loadRangeQuestionSlide() {
             "Accept": "application/json",
             "Authorization": `Bearer ${jwtToken}`
         }
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
+    })
+        .then((response: Response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                if (slideElement) {
+                    slideElement.innerHTML = "<em>Problem!!!</em>";
+                }
+            }
+        })
+        .then((slide: any) => {
+            console.log(slide);
             if (slideElement) {
-                slideElement.innerHTML = "<em>Problem!!!</em>";
+                slideElement.innerHTML = `<h3>${slide.text}</h3>`;
+                const answersContainer = document.querySelector(".answers-container");
+                if (answersContainer) {
+                    fillSliderOptions(slide.answerList);
+                }
             }
-        }
-    }).then((slide: any) => {
-        console.log(slide);
-        if (slideElement) {
-            slideElement.innerHTML = `<h3>${slide.text}</h3>`;
-            const answersContainer = document.querySelector(".answers-container");
-            if (answersContainer) {
-                answersContainer.innerHTML = "";
+        })
+        .catch((error: any) => {
+            console.error(error);
+            if (slideElement) {
+                slideElement.innerHTML = "<em>Problem loading the slide</em>";
             }
-            fillSliderOptions(slide.answerList);
-        }
-    }).catch((error: any) => {
-        console.error(error);
-        if (slideElement) {
-            slideElement.innerHTML = "<em>Problem loading the slide</em>";
-        }
-    });
+        });
 }
-loadRangeQuestionSlide()
 
+loadRangeQuestionSlide();
 
-
-const btn: HTMLElement | null = document.getElementById("submitAnswer");
-if (btn) {
-    btn.addEventListener('click', postAnswer);
+const btnSubmit: HTMLElement | null = document.getElementById("submitAnswer");
+if (btnSubmit) {
+    btnSubmit.addEventListener('click', postAnswer);
 }
 
 function postAnswer() {
-    let answer = getSelectedAnswers();
-
+    
+    let answer = getSelectedAnswer()
+    
     let requestBody = {
         Answer: answer
     };
     console.log(requestBody);
-    fetch("http://localhost:5104/CircularFlow/PostAnswer", {
+    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            "Authorization": `Bearer ${jwtToken}`
-        },
+            'Accept': 'application/json', 
+            'Authorization': `Bearer ${jwtToken}`
+        }, 
         body: JSON.stringify(requestBody)
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (slideElement) {
-                slideElement.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((nextSlideData: any) => {
-        if (nextSlideData.url) {
-            // Redirect to the URL of the next slide
-            window.location.href = nextSlideData.url;
-        }
-    }).catch(err => {
-        console.log("Something went wrong: " + err);
     })
-    console.log(answer);
+        .then((response: Response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                if (slideElement) {
+                    slideElement.innerHTML = "<em>Problem!!!</em>";
+                }
+            }
+        })
+        .then((nextSlideData: any) => {
+            if (nextSlideData.url) {
+                window.location.href = nextSlideData.url;
+            }
+        })
+        .catch(err => {
+            console.log("Something went wrong: " + err);
+        });
 }
 
-function getSelectedAnswers() {
-    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
-    let selectedAnswers: string[] = [];
-    for (let i = 0; i < checkboxes.length; i++) {
-        const checkbox = checkboxes[i] as HTMLInputElement; // Assert type to HTMLInputElement
-        if (checkbox.value) {
-            selectedAnswers.push(checkbox.value); // Use value property instead of nodeValue
+function getSelectedAnswer() {
+    if (sliderElement) {
+        let selectedAnswers: string[] = [];
+        if (sliderElement.value) {
+            selectedAnswers.push(sliderElement.value); 
         }
+        return selectedAnswers;
     }
-    return selectedAnswers;
 }
 
-
-// Functie om de opties van de schuifregelaar te vullen
 function fillSliderOptions(options: any) {
     const tickmarkLabelsContainer = document.querySelector(".tickmark-labels");
     if (tickmarkLabelsContainer) {
-        tickmarkLabelsContainer.innerHTML = ""; // Eerst de container leegmaken
+        tickmarkLabelsContainer.innerHTML = ""; // Container leegmaken
 
         if (Array.isArray(options)) {
             options.forEach((option: any) => {
@@ -110,7 +111,4 @@ function fillSliderOptions(options: any) {
     }
 }
 
-// Eventlistener voor het laden van de DOM
-document.addEventListener("DOMContentLoaded", function() {
-    loadRangeQuestionSlide();
-});
+
