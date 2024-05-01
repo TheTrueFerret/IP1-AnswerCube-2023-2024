@@ -1,14 +1,16 @@
 html {
   font-size: 14px;
-}
 
-@media (min-width: 768px) {
-  html {
+  @media (min-width: 768px) {
     font-size: 16px;
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
@@ -19,4 +21,80 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+.slider-container {
+  width: 100%;
+  margin-top: 20px;
+
+  .slider {
+    width: calc(100% - 50px);
+    margin: 0 auto;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+
+    &::-webkit-slider-thumb,
+    &::-moz-range-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      background: #2196F3;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+  }
+
+  .tickmark-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+}
+
+.slide-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 2px solid black;
+  border-radius: 15px;
+
+  .question {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  #skipSlide,
+  #submitAnswer {
+    margin-top: 20px;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px; /* voeg padding toe voor een betere klikbaarheid */
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* soepelheid toevoegen aan de overgang */
+  }
+
+  #skipSlide {
+    background-color: navy;
+  }
+
+  #submitAnswer {
+    color: black;
+    background-color: lightgreen;
+  }
+
+  #skipSlide:hover,
+  #submitAnswer:hover {
+    background-color: darken(navy, 10%); /* maak de kleuren donkerder bij hover */
+  }
 }

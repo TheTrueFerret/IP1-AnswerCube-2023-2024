@@ -3,17 +3,14 @@
     Layout = ViewData["Layout"] as string;
 }
 
+<div class="slide-container">
+    <h1 class="question">Open Question</h1>
+    <div id="slide" class="question"></div>
+    <button id="submitAnswer" type="button">Submit Answer</button>
+    <button id="skipSlide" type="button">Skip</button>
+</div>
+
 @section Scripts
 {
     <script src="~/dist/openquestion.entry.js" defer></script>
 }
-
-
-<div>
-    <h1>OpenQuestion</h1>
-    <div id="slide">
-        
-    </div>
-    <a id="submitAnswer" class="btn btn-primary" type="button">Submit Answer</a>
-    <a id="skipSlide" class="btn btn-secondary" type="button">Skip</a>
-</div>
