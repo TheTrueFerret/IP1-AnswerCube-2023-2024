@@ -106,5 +106,17 @@ namespace AnswerCube.UI.MVC.Controllers
                 return View("Error");
             }
         }
+
+        public IActionResult Flows()
+        {
+            //TODO: Flows zijn nog niet compleet gemaakt
+            return View();
+        }
+
+        public IActionResult NewFlow()
+        {
+            //TODO: Flows creation
+            return View();
+        }
     }
 }
