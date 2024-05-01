@@ -6,9 +6,10 @@ namespace Domain;
 
 public class Organization
 {
-    private string Name { get; set; }
-    private string Email { get; set; }
-    private List<Project> Projects { get; set; } = new List<Project>();
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public List<Project> Projects { get; set; } = new List<Project>();
     public List<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
     
     public Organization(string name, string email)
