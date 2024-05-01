@@ -120,6 +120,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AdditionalFiles Include="Views\Flow\Flows.cshtml" />
         <AdditionalFiles Include="Views\Organization\Index.cshtml" />
         <AdditionalFiles Include="Views\Organization\NewFlow.cshtml" />
         <AdditionalFiles Include="Views\Project\NewProject.cshtml" />
@@ -172,6 +173,7 @@
 
     <ItemGroup>
         <Folder Include="Areas\"/>
+        <Folder Include="Pages\" />
         <Folder Include="Views\DeelplatformBeheerder\" />
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>

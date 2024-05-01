@@ -65,17 +65,6 @@ namespace AnswerCube.UI.MVC.Controllers
         }
 
 
-        public IActionResult Flows()
-        {
-            return View();
-        }
-
-        public IActionResult NewFlow()
-        {
-            return View();
-        }
-
-
         public IActionResult DeleteProject(int projectId, int organisationId)
         {
             if (_manager.DeleteProject(projectId))
