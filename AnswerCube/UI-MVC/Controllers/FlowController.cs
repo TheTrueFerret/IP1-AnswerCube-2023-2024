@@ -25,10 +25,10 @@ public class FlowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string info, string[] options)
+    public IActionResult AddSlide(string slideType, string question, string[] options)
     {
         _logger.LogInformation("Creating a new slide");
-        _logger.LogInformation("all the data\n" + "SlideType: " +slideType + "\nQuestion: " + question + "\nInfo: " + info );
+        _logger.LogInformation("all the data\n" + "SlideType: " +slideType + "\nQuestion: " + question);
         options.ToList().ForEach(option => _logger.LogInformation(option));
         //TODO: Add slide to database
         return RedirectToAction("Flows");

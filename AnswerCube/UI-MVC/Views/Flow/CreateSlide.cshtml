@@ -6,7 +6,7 @@
 }
 
 <div class="container">
-    <h2>@ViewBag.Title</h2>
+    <h2>Create Slide</h2>
 
     <form id="slideForm" method="post" action="@Url.Action("AddSlide", "Flow")" >
         <div class="form-group">
@@ -23,10 +23,6 @@
         <div class="form-group">
             <label for="question">Question:</label>
             <input type="text" id="question" name="question" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="info">Info:</label>
-            <textarea id="info" name="info" class="form-control"></textarea>
         </div>
         <div id="answerOptions"></div>
         <div id="optionsButton" class="mb-3"></div>
