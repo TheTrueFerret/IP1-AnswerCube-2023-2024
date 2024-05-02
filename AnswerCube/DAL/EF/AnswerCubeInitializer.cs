@@ -576,8 +576,6 @@ public static class AnswerCubeInitializer
             MaxSlideIndex = 0,
         };
         context.Installations.Add(installation);
-
-
         context.SaveChanges();
         context.ChangeTracker.Clear();
     }

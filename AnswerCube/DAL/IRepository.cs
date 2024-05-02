@@ -40,4 +40,5 @@ public interface IRepository
     Project ReadProjectById(int projectid);
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project, string title, string description);
+    List<Answer> GetAnswers();
 }

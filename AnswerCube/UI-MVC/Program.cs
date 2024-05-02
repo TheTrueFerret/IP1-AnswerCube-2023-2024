@@ -60,6 +60,10 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 services.AddControllersWithViews();
+services.AddControllers().AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 services.AddRazorPages().AddRazorRuntimeCompilation();
 
 services.AddTransient<IEmailSender, MailService>();

@@ -151,4 +151,8 @@ public class Manager : IManager
     {
         return await _repository.UpdateProject(project, title, description);
     }
+    public List<Answer> GetAnswers()
+    {
+        return _repository.GetAnswers();
+    }
 }
