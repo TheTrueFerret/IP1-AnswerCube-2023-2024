@@ -25,12 +25,12 @@ body {
 
 .slider-container {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
 
   .slider {
-    width: calc(100% - 50px);
-    margin: 0 auto;
-    height: 25px;
+    width: calc(100%);
+    margin-top: 20px;
+    height: 25-px;
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
@@ -52,6 +52,7 @@ body {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+    margin-bottom: 60px;
   }
 }
 
@@ -66,7 +67,7 @@ body {
     font-size: 20px;
     margin-bottom: 20px;
   }
-
+  
   input[type="checkbox"],
   input[type="radio"] {
     margin-right: 5px;
@@ -89,12 +90,17 @@ body {
   }
 
   #submitAnswer {
-    color: black;
-    background-color: lightgreen;
+    color: white;
+    background-color: darkgreen;
+  }
+  
+  #submitAnswer:hover {
+    color: white;
+    background-color: green; /* maak de kleuren donkerder bij hover */
   }
 
-  #skipSlide:hover,
-  #submitAnswer:hover {
-    background-color: darken(navy, 10%); /* maak de kleuren donkerder bij hover */
+  #skipSlide:hover {
+    color: white;
+    background-color: blue;
   }
 }

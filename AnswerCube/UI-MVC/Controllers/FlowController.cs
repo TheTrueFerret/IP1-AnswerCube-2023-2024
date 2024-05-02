@@ -40,9 +40,4 @@ public class FlowController : BaseController
         return View();
     }
 
-
-    public IActionResult AddFlowToProject()
-    {
-        return View();
-    }
 }
