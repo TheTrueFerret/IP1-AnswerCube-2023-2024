@@ -5,6 +5,7 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Newtonsoft.Json;
 
 namespace AnswerCube.DAL.EF;
 
@@ -45,7 +46,7 @@ public class Repository : IRepository
 
     public Slide ReadSlideById(int id)
     {
-        return _context.Slides.SingleOrDefault(s => s.Id == id);
+        return _context.Slides.First(s => s.Id == id);
     }
 
     public Slide GetSlideFromFlow(int flowId, int number)
@@ -201,5 +202,13 @@ public class Repository : IRepository
     public List<AnswerCubeUser> ReadAllUsers()
     {
         return _context.Users.ToList();
+    }
+
+    public List<Answer> GetAnswers()
+    {
+        var answers = _context.Answers
+            .Include(a => a.Slide)
+            .ToList();
+        return answers;
     }
 }

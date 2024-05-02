@@ -25,4 +25,5 @@ public interface IManager
     Slide GetActiveSlideByInstallationId(int id);
     List<IdentityRole> GetAllAvailableRoles(AnswerCubeUser user);
     List<AnswerCubeUser> GetAllUsers();
-}
+    List<Answer> GetAnswers();
+}    

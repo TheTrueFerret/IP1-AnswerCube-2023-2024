@@ -30,4 +30,5 @@ public interface IRepository
     Slide ReadActiveSlideByInstallationId(int id);
     List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles);
     List<AnswerCubeUser> ReadAllUsers();
+    List<Answer> GetAnswers();
 }

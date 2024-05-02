@@ -65,6 +65,7 @@ public class Manager : IManager
         return _repository.ReadSlideById(id);
     }
 
+    
     public Boolean AddAnswer(List<string> answers, int id)
     {
         return _repository.AddAnswer(answers, id);
@@ -104,5 +105,9 @@ public class Manager : IManager
     public List<AnswerCubeUser> GetAllUsers()
     {
         return _repository.ReadAllUsers();
+    }
+    public List<Answer> GetAnswers()
+    {
+        return _repository.GetAnswers();
     }
 }
