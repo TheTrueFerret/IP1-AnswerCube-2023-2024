@@ -15,5 +15,6 @@ public class Slide
     // Relational Attributes:
     [JsonIgnore]
     public ICollection<SlideConnection>? ConnectedSlideLists { get; set; }
+    [JsonIgnore]
     public ICollection<Answer>? Answers { get; set; }
 }
