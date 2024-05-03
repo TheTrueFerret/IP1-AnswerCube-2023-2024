@@ -1,0 +1,30 @@
+@model List<Domain.Slide>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Slides</h2>
+    <div class="row">
+        @foreach (var slide in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@slide.SlideType</h5>
+                        <p class="card-text">@slide.Text</p>
+                        @if (slide.AnswerList != null)
+                        {
+                            for (int i = 0; i < slide.AnswerList.Count; i++)
+                            {
+                                <p class="card-text">@i @slide.AnswerList[i]</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

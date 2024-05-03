@@ -56,11 +56,11 @@
                 <p class="card-text">
                     <strong>Is Active:</strong> @Model.Project.IsActive
                 </p>
-
+                
                 <p class="card-text">
                     <strong>Total Flows:</strong> @Model.Project.Flows.Count
                 </p>
-                <button type="button" onclick="location.href='@Url.Action("Flows", "Project")'" class="btn btn-primary btn-block">Flows</button>
+                <button type="button" onclick="location.href='@Url.Action("Flows", "Project",new {projectId = Model.Project.Id})'" class="btn btn-primary btn-block">Flows</button>
 
                 <p class="card-text">
                     <strong>Total Active Installations:</strong> @Model.Project.TotalActiveInstallations

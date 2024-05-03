@@ -36,4 +36,10 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project, string title, string description);
     List<Answer> GetAnswers();
+    bool CreateSlide(SlideType type, string question, string[]? options);
+    List<Slide> GetAllSlides();
+    bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
+    Project GetProjectWithFlowsById(int projectId);
+    Flow GetFlowById(int flowId);
+    void CreateOrganization(string name, string description, string email, int projectId);
 }    

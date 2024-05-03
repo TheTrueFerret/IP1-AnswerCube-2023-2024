@@ -1,8 +1,34 @@
-@model dynamic
+@model Domain.Flow
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>title</h2>;
+
+<div class="container mt-5">
+    <h1 class="mb-4">Flow Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.Description</p>
+            @if (Model.CircularFlow)
+            {
+                <p class="card-text">This is a circular flow</p>
+            }
+            else
+            {
+                <p class="card-text">This is a linear flow</p>
+            }
+            @if (Model.Project != null)
+            {
+            }
+            <p class="card-text">
+                <strong>Project:</strong> @Model.Project.Title
+            </p>
+            @*//TODO: DO THIS SHITTZLZ*@
+            <a href="@Url.Action("EditFlow", "Flow", new { flowId = Model.Id })" class="btn btn-primary">Edit Flow</a>
+            <a href="@Url.Action("AddSlide", "Slide", new { flowId = Model.Id })" class="btn btn-primary">Add Slide</a>
+        </div>
+    </div>
+</div>

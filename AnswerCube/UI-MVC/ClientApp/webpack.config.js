@@ -17,7 +17,7 @@ module.exports = {
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',
-        createSlide: './src/ts/flow/CreateSlide.ts',
+        createSlide: './src/ts/Slide/CreateSlide.ts',
     },
     output: {
         filename: '[name].entry.js',

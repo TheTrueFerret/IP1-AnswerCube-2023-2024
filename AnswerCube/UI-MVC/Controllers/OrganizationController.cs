@@ -45,4 +45,17 @@ public class OrganizationController : BaseController
 
         return NotFound();
     }
+    
+    [Authorize(Roles = "Admin")]
+    public IActionResult CreateOrganization(string name, string description, string email, int projectId)
+    {
+        _manager.CreateOrganization(name, description, email, projectId);
+        return RedirectToAction("AddDeelplatform", "Admin", new { email = email});
+    }
+    
+    [Authorize(Roles = "Admin")]
+    public IActionResult AddOrganizationView()
+    {
+        return View();
+    }
 }

@@ -63,7 +63,7 @@ public class Repository : IRepository
     public SlideList getSlideList()
     {
         return _context.SlideLists
-            .Include(sl => sl.ConnectedSlides)// This will load the Slides of each SlideList
+            .Include(sl => sl.ConnectedSlides) // This will load the Slides of each SlideList
             .First();
     }
 
@@ -107,7 +107,7 @@ public class Repository : IRepository
         SlideList slideList = getSlideList();
         List<SlideConnection> slideConnections = slideList.ConnectedSlides.ToList();
         Slide slide = slideConnections[index].Slide;
-        
+
         return slide;
     }
 
@@ -117,31 +117,33 @@ public class Repository : IRepository
         Installation installation = _context.Installations.First(i => i.Id == id);
         installation.Active = true;
         installation.ActiveSlideListId = slideList.Id;
-        
-        
+
+
         installation.Slides = new List<Slide>();
         foreach (var slide in ReadSlidesFromSlideList(slideList))
         {
             installation.Slides.Add(slide);
         }
+
         installation.CurrentSlideIndex = 0;
         installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
         _context.SaveChanges();
         return true;
     }
-    
+
     public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
     {
         List<SlideConnection> slideConnections = _context.SlideConnections
             .Where(sc => sc.SlideList.Id == slideList.Id)
             .OrderBy(sc => sc.SlideOrder)
             .Include(sc => sc.Slide).ToList();
-        
+
         List<Slide> slides = new List<Slide>();
         foreach (var slideConnection in slideConnections)
         {
             slides = _context.Slides.Where(s => s.Id == slideConnection.Slide.Id).ToList();
         }
+
         return slides;
     }
 
@@ -173,7 +175,7 @@ public class Repository : IRepository
         }
         else
         {
-            return new int[]{};
+            return new int[] { };
         }
     }
 
@@ -181,8 +183,9 @@ public class Repository : IRepository
     public Slide ReadActiveSlideByInstallationId(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
-        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId).Include(sl => sl.ConnectedSlides).First();
-        
+        SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
+            .Include(sl => sl.ConnectedSlides).First();
+
         SlideConnection slideConnections = _context.SlideConnections
             .Where(sc => sc.SlideList.Id == slideList.Id)
             .Where(sc => sc.SlideOrder == installation.CurrentSlideIndex).Single();
@@ -301,5 +304,81 @@ public class Repository : IRepository
             .Include(a => a.Slide)
             .ToList();
         return answers;
+    }
+
+    public bool CreateSlide(SlideType type, string question, string[]? options)
+    {
+        if (options == null || options.Length <= 0)
+        {
+            //Adding an OpenQuestion
+            Slide slide = new Slide
+            {
+                SlideType = type,
+                Text = question,
+                AnswerList = null
+            };
+            _context.Slides.Add(slide);
+            _context.SaveChanges();
+            return true;
+        }
+        else
+        {
+            //Adding a MultipleChoice,SingleChoice,Range or InfoSlide
+            Slide slide = new Slide
+            {
+                SlideType = type,
+                Text = question,
+                AnswerList = options.ToList()
+            };
+            _context.Slides.Add(slide);
+            _context.SaveChanges();
+            return true;
+        }
+    }
+
+    public List<Slide> ReadSlideList()
+    {
+        return _context.Slides.ToList();
+    }
+
+    public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
+    {
+        if (name.Length <= 0)
+        {
+            return false;
+        }
+
+        Flow flow = new Flow
+        {
+            Name = name,
+            Description = desc,
+            CircularFlow = circularFlow,
+            Project = _context.Projects.First(p => p.Id == projectId)
+        };
+        _context.Projects.First(p => p.Id == projectId).Flows.Add(flow);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public Project ReadProjectWithFlowsById(int projectId)
+    {
+        return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
+    }
+
+    public Flow ReadFlowById(int flowId)
+    {
+        return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
+    }
+
+    public void CreateOrganization(string name, string description, string email, int projectId)
+    {
+        Organization organization = new Organization(name, email);
+        UserOrganization userOrganization = new UserOrganization
+        {
+            Organization = organization,
+            UserId = email
+        };
+        _context.Organizations.Add(organization);
+        _context.SaveChanges();
     }
 }

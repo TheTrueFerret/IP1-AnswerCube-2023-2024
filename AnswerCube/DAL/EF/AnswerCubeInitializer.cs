@@ -71,13 +71,21 @@ public static class AnswerCubeInitializer
 
         // Add the new UserOrganization to the context and save changes
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
+        
+        Flow flow = new Flow
+        {
+            Name = "linear",
+            Description = "ipsum lorum",
+            CircularFlow = false
+        };
 
         Project project1 = new Project
         {
-            Title = "Project1",
+            Title = "Project1 with a flow",
             Description = "Project1",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Flows = new List<Flow> { flow }
         };
         Project project2 = new Project
         {
@@ -529,6 +537,7 @@ public static class AnswerCubeInitializer
         Flow linearFlow = new Flow
         {
             Name = "linear",
+            
             CircularFlow = false
         };
         linearFlow.SlideList = new List<SlideList>();

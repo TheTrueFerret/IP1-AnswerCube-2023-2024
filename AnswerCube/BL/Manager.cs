@@ -151,8 +151,45 @@ public class Manager : IManager
     {
         return await _repository.UpdateProject(project, title, description);
     }
+
     public List<Answer> GetAnswers()
     {
         return _repository.GetAnswers();
+    }
+
+    public bool CreateSlide(SlideType type, string question, string[]? options)
+    {
+        if (type == SlideType.InfoSlide && options.Length == 1)
+        {
+            string info = question + "\n" + options[0];
+            return _repository.CreateSlide(type, info, null!);
+        }
+
+        return _repository.CreateSlide(type, question, options);
+    }
+
+    public List<Slide> GetAllSlides()
+    {
+        return _repository.ReadSlideList();
+    }
+
+    public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
+    {
+        return _repository.CreateFlow(name, desc, circularFlow, projectId);
+    }
+
+    public Project GetProjectWithFlowsById(int projectId)
+    {
+        return _repository.ReadProjectWithFlowsById(projectId);
+    }
+
+    public Flow GetFlowById(int flowId)
+    {
+        return _repository.ReadFlowById(flowId);
+    }
+
+    public void CreateOrganization(string name, string description, string email, int projectId)
+    {
+        _repository.CreateOrganization(name, description, email, projectId);
     }
 }

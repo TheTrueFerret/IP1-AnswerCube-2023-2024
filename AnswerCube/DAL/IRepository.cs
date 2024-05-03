@@ -41,4 +41,10 @@ public interface IRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project, string title, string description);
     List<Answer> GetAnswers();
+    bool CreateSlide(SlideType type, string question, string[]? options);
+    List<Slide> ReadSlideList();
+    bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
+    Project ReadProjectWithFlowsById(int projectId);
+    Flow ReadFlowById(int flowId);
+    void CreateOrganization(string name, string description, string email, int projectId);
 }

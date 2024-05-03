@@ -8,11 +8,11 @@
 <div class="container">
     <h2>Create Slide</h2>
 
-    <form id="slideForm" method="post" action="@Url.Action("AddSlide", "Flow")" >
+    <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow">
         <div class="form-group">
             <label for="slideType">Slide Type:</label>
-            <select id="slideType" name="slideType" class="form-control" >
-                <option value="">Select a slide type</option>
+            <select id="slideType" name="slideType" class="form-control form-select">
+                <option value="">Select a SlideType</option>
                 <option value="MultipleChoice">Multiple Choice</option>
                 <option value="RangeQuestion">Range Question</option>
                 <option value="SingleChoice">Single Choice</option>
@@ -20,9 +20,9 @@
                 <option value="InfoSlide">Info Slide</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="question">Question:</label>
-            <input type="text" id="question" name="question" class="form-control">
+        <div class="form-group" id="questionDiv" hidden>
+            <label for="question" id="questionLabel">Question:</label>
+            <input type="text" id="question" name="question" class="form-control" required>
         </div>
         <div id="answerOptions"></div>
         <div id="optionsButton" class="mb-3"></div>

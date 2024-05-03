@@ -107,16 +107,23 @@ namespace AnswerCube.UI.MVC.Controllers
             }
         }
 
-        public IActionResult Flows()
+        public IActionResult Flows(int projectId)
         {
             //TODO: Flows zijn nog niet compleet gemaakt
-            return View();
+            Project project = _manager.GetProjectWithFlowsById(projectId);
+            if (project == null)
+            {
+                return View("Error");
+            }
+
+            return View(project);
         }
 
-        public IActionResult NewFlow()
+        public IActionResult NewFlow(int projectId)
         {
+            Project project = _manager.GetProjectById(projectId);
             //TODO: Flows creation
-            return View();
+            return View(project);
         }
     }
 }

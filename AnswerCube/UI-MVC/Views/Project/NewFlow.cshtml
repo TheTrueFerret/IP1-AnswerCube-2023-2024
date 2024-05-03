@@ -1,8 +1,101 @@
-@model dynamic
+@model AnswerCube.BL.Domain.Project.Project
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "New Flow";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<style>
+    body {
+        background-color: #f0f0f0; 
+        font-weight: 400;
+    }
+
+    .form-container {
+        width: 160%; 
+        max-width: 800px; 
+        margin: auto; 
+        padding: 20px;
+        border-radius: 5px;
+        background-color: lightgrey;    
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /*  schaduw */
+        overflow: hidden; /* floats opheffe */
+    }
+
+    .form-column {
+        float: left;
+        width: 50%; /* twe kolommen */
+        padding-right: 20px; /* space tussen kolommen */
+    }
+   
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+    }
+
+    .form-input {
+        width: calc(100% - 22px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-checkbox-label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .form-submit {
+        padding: 10px 20px;
+        background-color: #fff; 
+        color: #000; 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        width: auto; 
+        font-weight: bold; 
+        margin-top: 10px; 
+    }
+
+    .form-submit.flows {
+        margin-top: calc(50% - 45px); 
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-column">
+        <h2>New Flow</h2>
+        <h2> Creating Flow for @Model.Title</h2>
+
+        <form method="post" asp-action="AddFlow" asp-controller="Flow">
+            <div class="form-group">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="name" required/>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Description:</label>
+                <textarea id="description" name="desc" class="form-input"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Flow Type:</label>
+                <div class="form-checkbox-label">
+                    <input type="radio" id="circularFlow" name="flowType" value="circular" checked/>
+                    <label for="circularFlow">Circular Flow</label>
+                </div>
+                <div class="form-checkbox-label">
+                    <input type="radio" id="linearFlow" name="flowType" value="linear"/>
+                    <label for="linearFlow">Linear Flow</label>
+                </div>
+            </div>
+            <input type="number" for="projectId" name="projectId" hidden value="@Model.Id">
+            <br/>
+            <button type="submit" class="form-submit">Confirm</button>
+        </form>
+    </div>
+    <div style="clear:both;"></div>
+</div>

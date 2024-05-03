@@ -34,7 +34,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     {
         AnswerCubeInitializer.Initialize(this, true);
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -42,10 +42,10 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
             //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
             optionsBuilder.UseNpgsql(NewPostgreSqlTCPConnectionString().ToString());
         }
-        
+
         optionsBuilder.LogTo(message => Debug.WriteLine(message), LogLevel.Information);
     }
-    
+
     public static NpgsqlConnectionStringBuilder NewPostgreSqlTCPConnectionString()
     {
         var connectionString = new NpgsqlConnectionStringBuilder()
@@ -67,22 +67,22 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         // relation between Flow and SlideList
         builder.Entity<Flow>()
             .HasMany(f => f.SlideList)
             .WithOne(sl => sl.Flow);
-        
+
         builder.Entity<SlideList>()
             .HasOne(sl => sl.Flow)
             .WithMany(f => f.SlideList);
-        
-        
+
+
         // relation between Subtheme and SlideList
         builder.Entity<SubTheme>()
             .HasMany(st => st.SlideList)
             .WithOne(sl => sl.SubTheme);
-        
+
         builder.Entity<SlideList>()
             .HasOne(sl => sl.SubTheme)
             .WithMany(st => st.SlideList);
@@ -92,11 +92,11 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
         builder.Entity<Answer>()
             .HasOne(a => a.Slide)
             .WithMany(s => s.Answers);
-        
+
         builder.Entity<Slide>()
             .HasMany(s => s.Answers)
             .WithOne(a => a.Slide);
-        
+
 
         builder.Entity<UserOrganization>()
             .HasKey(uo => new { uo.UserId, uo.OrganizationId });
@@ -110,6 +110,10 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
             .HasOne(uo => uo.Organization)
             .WithMany(o => o.UserOrganizations)
             .HasForeignKey(uo => uo.OrganizationId);
+
+        builder.Entity<Project>()
+            .HasMany(p => p.Flows)
+            .WithOne(f => f.Project);
 
 
         SeedRoles(builder);
