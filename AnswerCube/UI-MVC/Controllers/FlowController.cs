@@ -28,16 +28,12 @@ public class FlowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string[]? options)
+    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId)
     {
-        _logger.LogInformation("1234567 SlideType: {slideType}, Question: {question}, Options: {options}", slideType,
-            question,
-            options);
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
-        _logger.LogInformation(type.ToString());
         if (_manager.CreateSlide(type, question, options))
         {
-            return RedirectToAction("Flows");
+            return RedirectToAction("Flows", "Project", new { projectId });
         }
 
         return RedirectToAction("CreateSlide");
@@ -49,12 +45,12 @@ public class FlowController : BaseController
         //TODO: Add flow to project with ID that we get trough the website
         bool circularFlow = flowType is "circular" or not "linear";
 
-        if (_manager.CreateFlow(name, desc, circularFlow,projectId))
+        if (_manager.CreateFlow(name, desc, circularFlow, projectId))
         {
-            return RedirectToAction("Flows", "Project", new { projectId = projectId });
+            return RedirectToAction("Flows", "Project", new { projectId });
         }
 
-        return RedirectToAction("NewFlow");
+        return RedirectToAction("NewFlow", "Project", new { projectId });
     }
 
 
