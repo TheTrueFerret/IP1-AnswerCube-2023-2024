@@ -1,4 +1,5 @@
 using AnswerCube.BL;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,16 @@ public class FlowController : BaseController
         _logger = logger;
     }
 
-    public IActionResult Flow(int flowId)
+    public IActionResult FlowDetails(int flowId)
     {
-        Flow flow = _manager.GetFlowById(flowId);
+        Flow flow = _manager.GetFlowWithProjectById(flowId);
         return View(flow);
     }
 
-    public IActionResult CreateSlide()
+    public IActionResult CreateSlideView(int projectId)
     {
-        return View();
+        Project project = _manager.GetProjectById(projectId);
+        return View(project);
     }
 
     [HttpPost]
@@ -36,7 +38,8 @@ public class FlowController : BaseController
             return RedirectToAction("Flows", "Project", new { projectId });
         }
 
-        return RedirectToAction("CreateSlide");
+        //TODO: Add error message
+        return RedirectToAction("CreateSlideView");
     }
 
     [HttpPost]
@@ -50,7 +53,7 @@ public class FlowController : BaseController
             return RedirectToAction("Flows", "Project", new { projectId });
         }
 
-        return RedirectToAction("NewFlow", "Project", new { projectId });
+        return RedirectToAction("NewFlowView", "Project", new { projectId });
     }
 
 
@@ -58,5 +61,23 @@ public class FlowController : BaseController
     {
         var slides = _manager.GetAllSlides();
         return View(slides);
+    }
+
+    public IActionResult EditFlowView(int flowid)
+    {
+        Flow flow = _manager.GetFlowWithProjectById(flowid);
+        return View(flow);
+    }
+
+    [HttpPost]
+    public IActionResult EditFlow(Flow model)
+    {
+        if (ModelState.IsValid)
+        {
+            _manager.UpdateFlow(model);
+            return RedirectToAction("FlowDetails", new { flowId = model.Id });
+        }
+
+        return RedirectToAction("EditFlowView", new { flowid = model.Id });
     }
 }

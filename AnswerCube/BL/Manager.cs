@@ -192,4 +192,14 @@ public class Manager : IManager
     {
         _repository.CreateOrganization(name, description, email, projectId);
     }
+
+    public Flow GetFlowWithProjectById(int flowId)
+    {
+        return _repository.ReadFlowWithProjectById(flowId);
+    }
+
+    public void UpdateFlow(Flow model)
+    {
+        _repository.UpdateFlow(model);
+    }
 }

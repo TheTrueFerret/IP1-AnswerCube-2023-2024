@@ -1,4 +1,4 @@
-@model dynamic
+@model AnswerCube.BL.Domain.Project.Project
 
 @{
     ViewBag.Title = "Create Flow";
@@ -26,7 +26,7 @@
         </div>
         <div id="answerOptions"></div>
         <div id="optionsButton" class="mb-3"></div>
-
+        <input type="hidden" id="projectId" name="projectId" value="@Model.Id" hidden>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

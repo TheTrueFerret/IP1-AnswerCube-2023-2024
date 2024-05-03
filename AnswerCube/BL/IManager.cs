@@ -42,4 +42,6 @@ public interface IManager
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
     void CreateOrganization(string name, string description, string email, int projectId);
+    Flow GetFlowWithProjectById(int flowId);
+    void UpdateFlow(Flow model);
 }    

@@ -47,4 +47,6 @@ public interface IRepository
     Project ReadProjectWithFlowsById(int projectId);
     Flow ReadFlowById(int flowId);
     void CreateOrganization(string name, string description, string email, int projectId);
+    Flow ReadFlowWithProjectById(int flowId);
+    void UpdateFlow(Flow model);
 }

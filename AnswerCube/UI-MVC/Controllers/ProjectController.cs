@@ -90,21 +90,19 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public async Task<IActionResult> SaveProjectChanges(int projectId, string title, string description)
         {
-            Project project = _manager.GetProjectById(projectId);
-            if (project == null)
-            {
-                return View("Error");
-            }
+                Project project = _manager.GetProjectById(projectId);
+                if (project == null)
+                {
+                    return View("Error");
+                }
 
-            if (await _manager.UpdateProject(project, title, description))
-            {
-                return RedirectToAction("Project",
-                    new { projectid = projectId, organizationId = project.Organization.Id });
-            }
-            else
-            {
+                if (await _manager.UpdateProject(project, title, description))
+                {
+                    return RedirectToAction("Project",
+                        new { projectid = projectId, organizationId = project.Organization.Id });
+                }
+
                 return View("Error");
-            }
         }
 
         public IActionResult Flows(int projectId)
@@ -119,10 +117,10 @@ namespace AnswerCube.UI.MVC.Controllers
             return View(project);
         }
 
-        public IActionResult NewFlow(int projectId)
+        public IActionResult NewFlowView(int projectId)
         {
+            //This goes to the NewFlowView
             Project project = _manager.GetProjectById(projectId);
-            //TODO: Flows creation
             return View(project);
         }
     }

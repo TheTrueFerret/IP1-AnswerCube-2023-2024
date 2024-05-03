@@ -93,12 +93,12 @@
                     foreach (var flow in Model.Flows)
                     {
                         <div class="flow-button">
-                            <a asp-action="Flow" asp-controller="Flow" asp-route-flowId="@flow.Id">@flow.Name</a>
+                            <a asp-action="FlowDetails" asp-controller="Flow" asp-route-flowId="@flow.Id">@flow.Name</a>
                         </div>
                     }
                 }
                 <div class="new-flow-button">
-                    <a asp-action="NewFlow" asp-controller="Project" asp-route-projectId="@Model.Id"> Create New Flow</a>
+                    <a asp-action="NewFlowView" asp-controller="Project" asp-route-projectId="@Model.Id"> Create New Flow</a>
                 </div>
             </div>
         </div>

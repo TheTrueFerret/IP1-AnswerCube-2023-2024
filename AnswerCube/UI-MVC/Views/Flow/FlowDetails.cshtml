@@ -26,9 +26,9 @@
             <p class="card-text">
                 <strong>Project:</strong> @Model.Project.Title
             </p>
-            @*//TODO: DO THIS SHITTZLZ*@
-            <a href="@Url.Action("EditFlow", "Flow", new { flowId = Model.Id })" class="btn btn-primary">Edit Flow</a>
-            <a href="@Url.Action("AddSlide", "Slide", new { flowId = Model.Id })" class="btn btn-primary">Add Slide</a>
+            <a href="@Url.Action("EditFlowView", "Flow", new { flowId = Model.Id,projectId = Model.Project.Id })" class="btn btn-primary">Edit Flow</a>
+            @*//TODO: Flow needs create SlideList btn where Slides are shown and created*@
+            <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Project.Id })" class="btn btn-primary">Add Slide</a>
         </div>
     </div>
 </div>

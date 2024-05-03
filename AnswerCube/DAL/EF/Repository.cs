@@ -381,4 +381,15 @@ public class Repository : IRepository
         _context.Organizations.Add(organization);
         _context.SaveChanges();
     }
+
+    public Flow ReadFlowWithProjectById(int flowId)
+    {
+        return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
+    }
+
+    public void UpdateFlow(Flow model)
+    {
+        _context.Flows.Update(model);
+        _context.SaveChanges();
+    }
 }
