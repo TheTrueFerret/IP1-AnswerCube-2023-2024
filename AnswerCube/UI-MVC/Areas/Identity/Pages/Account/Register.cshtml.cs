@@ -145,7 +145,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, "Invalid name");
                     return Page();
                 }
-                
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -165,6 +165,8 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                         {
                             if (role.Name != null) await _userManager.AddToRoleAsync(user, role.Name);
                         }
+
+                        _manager.AddUserToOrganization(user);
                     }
 
                     _logger.LogInformation("User created a new account with password.");

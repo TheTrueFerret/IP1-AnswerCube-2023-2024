@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model AnswerCube.UI.MVC.Controllers.UserRolesDto
+@model List<AnswerCube.BL.Domain.User.UserOrganization>
 
 @{
     ViewBag.Title = "title";
@@ -12,54 +12,64 @@
     <h2>Add DeelplatformBeheerder</h2>
     @if (TempData["Error"] != null)
     {
-    <div class="text-danger col-6">@TempData["Error"]</div>
+        <div class="text-danger col-6">@TempData["Error"]</div>
     }
     @if (TempData["Success"] != null)
     {
-    <div class="text-info col-6">@TempData["Success"]</div>
+        <div class="text-info col-6">@TempData["Success"]</div>
     }
-    <form asp-controller="Admin" asp-action="AddDeelplatform" method="post" class="@(TempData["Message"] != null ? "alert alert-danger" : "")">
-        <label for="email">Deelplatform Email</label>
-        <input type="text" id="email" name="email" required>
-        <button class="btn btn-primary" type="submit">
+    <form asp-controller="Admin" asp-action="AddDeelplatform" method="post" class="form-control @(TempData["Message"] != null ? "alert alert-danger" : "")">
+        <div class="mb-3">
+            <label for="name" class="form-label">Deelplatform Naam</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Deelplatform naam" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Deelplatform Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Beheerders email" required>
+        </div>
+        <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-paper-plane"></i>
         </button>
     </form>
 
 </div>
 
-@if (Model.Users == null || Model.Users.Count == 0)
-{
-    <div class="text-danger col-6 fw-bold">No Deelplatform Beheerders found</div>
-}
-else
+@if (Model.Any())
 {
     <table class="table">
         <input type="text" id="searchQuery" placeholder="Search by email"/>
         <thead>
         <tr>
             <th>Email</th>
+            <th> Deelplatform </th>
             <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var user in Model.Users)
+        @foreach (var userOrganization in Model)
         {
-                <tr class="user-row">
-                    <td data-email="@user.Email">
-                        @user.Email
-                    </td>
-                    <td>
-                        <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@user.Id" method="post"
-                              onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+            <tr class="user-row">
+                <td data-email="@userOrganization.User.Email">
+                    @userOrganization.User.Email
+                </td>
+                <td>
+                    @userOrganization.Organization.Name
+                </td>
+                <td>
+                    <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@userOrganization.User.Id" method="post"
+                          onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
         }
         </tbody>
     </table>
+}
+else
+{
+    <div class="text-danger col-6 fw-bold">No Deelplatform Beheerders found</div>
 }
 <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>

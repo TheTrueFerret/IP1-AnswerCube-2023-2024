@@ -188,11 +188,6 @@ public class Manager : IManager
         return _repository.ReadFlowById(flowId);
     }
 
-    public void CreateOrganization(string name, string description, string email, int projectId)
-    {
-        _repository.CreateOrganization(name, description, email, projectId);
-    }
-
     public Flow GetFlowWithProjectById(int flowId)
     {
         return _repository.ReadFlowWithProjectById(flowId);
@@ -201,5 +196,30 @@ public class Manager : IManager
     public void UpdateFlow(Flow model)
     {
         _repository.UpdateFlow(model);
+    }
+
+    public Organization CreateNewOrganization(string email, string name)
+    {
+        return _repository.CreateNewOrganization(email, name);
+    }
+
+    public bool AddUserToOrganization(AnswerCubeUser user)
+    {
+        return _repository.CreateUserOrganization(user);
+    }
+
+    public void SaveBeheerderAndOrganization(string email, Organization organization)
+    {
+        _repository.SaveBeheerderAndOrganization(email, organization.Name);
+    }
+
+    public void CreateUserOrganization(AnswerCubeUser user, Organization organization)
+    {
+        _repository.CreateNewUserOrganization(user, organization);
+    }
+
+    public List<UserOrganization> GetDeelplatformBeheerderUsers()
+    {
+        return _repository.ReadAllDeelplatformBeheerders();
     }
 }

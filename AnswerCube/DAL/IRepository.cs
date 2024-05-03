@@ -46,7 +46,11 @@ public interface IRepository
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
     Project ReadProjectWithFlowsById(int projectId);
     Flow ReadFlowById(int flowId);
-    void CreateOrganization(string name, string description, string email, int projectId);
     Flow ReadFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    Organization CreateNewOrganization(string email, string name);
+    void SaveBeheerderAndOrganization(string email, string organizationName);
+    bool CreateUserOrganization(AnswerCubeUser user);
+    List<UserOrganization> ReadAllDeelplatformBeheerders();
+    void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
 }

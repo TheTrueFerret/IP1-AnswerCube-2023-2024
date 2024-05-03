@@ -41,7 +41,11 @@ public interface IManager
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
-    void CreateOrganization(string name, string description, string email, int projectId);
     Flow GetFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    Organization CreateNewOrganization(string email, string name);
+    bool AddUserToOrganization(AnswerCubeUser user);
+    void SaveBeheerderAndOrganization(string email, Organization organization);
+    void CreateUserOrganization(AnswerCubeUser user,Organization organization);
+    List<UserOrganization> GetDeelplatformBeheerderUsers();
 }    

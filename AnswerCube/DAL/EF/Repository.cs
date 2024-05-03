@@ -230,8 +230,10 @@ public class Repository : IRepository
         {
             return false;
         }
+        //TODO: Make sure to delete all the organizations and projects that are linked to the user
 
         _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
+        _context.UserOrganizations.RemoveRange(_context.UserOrganizations.Where(uo => uo.UserId == userEmail));
         _context.SaveChanges();
         return true;
     }
@@ -370,18 +372,6 @@ public class Repository : IRepository
         return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
     }
 
-    public void CreateOrganization(string name, string description, string email, int projectId)
-    {
-        Organization organization = new Organization(name, email);
-        UserOrganization userOrganization = new UserOrganization
-        {
-            Organization = organization,
-            UserId = email
-        };
-        _context.Organizations.Add(organization);
-        _context.SaveChanges();
-    }
-
     public Flow ReadFlowWithProjectById(int flowId)
     {
         return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
@@ -390,6 +380,61 @@ public class Repository : IRepository
     public void UpdateFlow(Flow model)
     {
         _context.Flows.Update(model);
+        _context.SaveChanges();
+    }
+
+    public Organization CreateNewOrganization(string email, string name)
+    {
+        Organization organization = new Organization(name, email);
+        _context.Organizations.Add(organization);
+        _context.SaveChanges();
+        return organization;
+    }
+
+    public void SaveBeheerderAndOrganization(string email, string organizationName)
+    {
+        _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
+            { Email = email, DeelplatformNaam = organizationName });
+        _context.SaveChanges();
+    }
+
+    public bool CreateUserOrganization(AnswerCubeUser user)
+    {
+        Organization organization = _context.Organizations.First(o => o.Name == _context.DeelplatformbeheerderEmails
+            .First(d => d.Email == user.Email).DeelplatformNaam);
+
+        if (organization != null)
+        {
+            _context.UserOrganizations.Add(new UserOrganization()
+            {
+                Organization = organization,
+                OrganizationId = organization.Id,
+                User = user,
+                UserId = user.Id
+            });
+            _context.SaveChanges();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public List<UserOrganization> ReadAllDeelplatformBeheerders()
+    {
+        return _context.UserOrganizations.Include(uo => uo.Organization).Include(uo => uo.User).ToList();
+    }
+
+    public void CreateNewUserOrganization(AnswerCubeUser user, Organization organization)
+    {
+        _context.UserOrganizations.Add(new UserOrganization()
+        {
+            Organization = organization,
+            OrganizationId = organization.Id,
+            User = user,
+            UserId = user.Id
+        });
         _context.SaveChanges();
     }
 }
