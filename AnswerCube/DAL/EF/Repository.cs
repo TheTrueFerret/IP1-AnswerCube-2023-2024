@@ -365,7 +365,6 @@ public class Repository : IRepository
         _context.Flows.First(f => f.Id == flowId).SlideList?.Add(slideList);
         _context.SaveChanges();
         return true;
-        
     }
 
     public List<Slide> ReadSlideList()
@@ -406,12 +405,13 @@ public class Repository : IRepository
     {
         return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
     }
-    
-    
+
+
     public SlideList GetSlideListWithFlowById(int slideListId)
     {
         var slideList = _context.SlideLists
-            .Include(sl => sl.ConnectedSlides) // This will load the Slides of each SlideList
+            .Include(sl => sl.ConnectedSlides)
+            .ThenInclude(cs => cs.Slide) // This will load the Slides of each SlideList
             .FirstOrDefault(); // Gebruik FirstOrDefault in plaats van First
 
         if (slideList == null)
@@ -421,10 +421,11 @@ public class Repository : IRepository
 
         return slideList;
     }
-    
+
     public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
     {
-        return _context.SlideLists.Where(s => s.FlowId == flowId).ToList();
+        return _context.SlideLists.Include(sl => sl.ConnectedSlides)!.ThenInclude(cs => cs.Slide)
+            .Where(sl => sl.Flow.Id == flowId).ToList();
     }
 
     public IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId)

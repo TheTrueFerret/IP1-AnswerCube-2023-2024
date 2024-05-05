@@ -123,7 +123,6 @@
 
     <ItemGroup>
         <AdditionalFiles Include="Views\Organization\Index.cshtml" />
-        <AdditionalFiles Include="Views\Project\NewFlow.cshtml" />
         <AdditionalFiles Include="Views\Project\NewProject.cshtml" />
         <AdditionalFiles Include="Views\Slides\InfoSlide.cshtml"/>
         <AdditionalFiles Include="Views\Slides\OpenQuestion.cshtml"/>

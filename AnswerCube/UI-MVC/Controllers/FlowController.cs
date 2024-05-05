@@ -22,7 +22,8 @@ public class FlowController : BaseController
     {
         Flow flow = _manager.GetFlowWithProjectById(flowId);
         //SlideList sLideList = _manager.GetSlideListWithFlowById(flowId-1);
-        IEnumerable<SlideList> slideLists = _manager.GetSlideListsByFlowId(flowId);
+        var test = _manager.GetSlideListsByFlowId(flowId).ToList();
+        ViewBag.SlideLists = _manager.GetSlideListsByFlowId(flowId).ToList();
         return View(flow);
     }
 

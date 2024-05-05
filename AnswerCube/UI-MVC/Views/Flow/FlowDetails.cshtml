@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
+    var slideLists = ViewBag.SlideLists as List<SlideList>;
 }
 
 <div class="container mt-5">
@@ -37,13 +38,14 @@
                             <div style="height: 400px; overflow-y: scroll;">
                                 <h6 class="mt-4">Subthema's</h6>
                                 <div class="mt-3">
-                                    @if (Model.SlideList != null && Model.SlideList.Count == 0)
+                                    
+                                    @if (slideLists != null && !slideLists.Any())
                                     {
-                                        <div class="flow-button">No Flows</div>
+                                        <div class="flow-button">No Slide-list</div>
                                     }
-                                    else if (Model.SlideList != null)
+                                    else if (slideLists != null)
                                     {
-                                        @foreach (var slideList in Model.SlideList)
+                                        @foreach (var slideList in slideLists)
                                         {
                                             <div class="flow-button subtheme-rectangle">
                                                 <a asp-action="SlideListDetails" asp-controller="SlideList" asp-route-slideListId="@slideList.Id" style="color: white; font-weight: bold; text-decoration: none;">@slideList.Title</a>
