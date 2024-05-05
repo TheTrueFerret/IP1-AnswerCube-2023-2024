@@ -43,7 +43,6 @@ public interface IManager
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
     SlideList GetSLideListByTitle(string title);
-    void CreateOrganization(string name, string description, string email, int projectId);
     Flow GetFlowWithProjectById(int flowId);
     SlideList GetSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
