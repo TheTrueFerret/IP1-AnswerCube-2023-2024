@@ -42,12 +42,17 @@ public interface IRepository
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
     bool CreateSlide(SlideType type, string question, string[]? options);
+    bool CreateSlideList(string title, int flowId);
     List<Slide> ReadSlideList();
+    SlideList ReadSLideListByTitle(string title);
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
     Project ReadProjectWithFlowsById(int projectId);
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
-    void UpdateFlow(Flow model);
+    SlideList GetSlideListWithFlowById(int slideListId);
+    IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
+    IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
+    void UpdateFlow(Flow model); 
     Organization CreateNewOrganization(string email, string name);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);

@@ -178,6 +178,11 @@ public class Manager : IManager
         return _repository.CreateFlow(name, desc, circularFlow, projectId);
     }
 
+    public bool CreateSlidelist(string title, int flowId)
+    {
+        return _repository.CreateSlideList(title, flowId);
+    }
+
     public Project GetProjectWithFlowsById(int projectId)
     {
         return _repository.ReadProjectWithFlowsById(projectId);
@@ -188,9 +193,34 @@ public class Manager : IManager
         return _repository.ReadFlowById(flowId);
     }
 
+    public SlideList GetSLideListByTitle(string title)
+    {
+        return _repository.ReadSLideListByTitle(title);
+    }
+
+    public void CreateOrganization(string name, string description, string email, int projectId)
+    {
+        _repository.CreateOrganization(name, description, email, projectId);
+    }
+
     public Flow GetFlowWithProjectById(int flowId)
     {
         return _repository.ReadFlowWithProjectById(flowId);
+    }
+
+    public SlideList GetSlideListWithFlowById(int slideListId)
+    {
+        return _repository.GetSlideListWithFlowById(slideListId);
+    }
+
+    public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
+    {
+        return _repository.GetSlideListsByFlowId(flowId);
+    }
+
+    public IEnumerable<Slide> GetSlidesBySlideListId(int slideListId)
+    {
+        return _repository.ReadSlidesBySlideListId(slideListId);
     }
 
     public void UpdateFlow(Flow model)

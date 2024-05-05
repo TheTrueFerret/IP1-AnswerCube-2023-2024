@@ -73,13 +73,18 @@ public class Repository : IRepository
             .Where(sl => sl.Id == id)
             .Include(sl => sl.ConnectedSlides).First();
 
-        if (slideList == null)
+        if (slideList.ConnectedSlides == null)
         {
             // Handle the case where no SlideList with the given ID was found
             throw new Exception("SlideList not found with the provided ID");
         }
 
         return slideList;
+    }
+
+    public SlideList ReadSLideListByTitle(string title)
+    {
+        return _context.SlideLists.FirstOrDefault(sl => sl.Title == title);
     }
 
     public bool AddAnswer(List<string> answers, int id)
@@ -349,6 +354,20 @@ public class Repository : IRepository
         }
     }
 
+    public bool CreateSlideList(string title, int flowId)
+    {
+        SlideList slideList = new SlideList
+        {
+            SubTheme = new SubTheme(title),
+            FlowId = flowId,
+            Flow = _context.Flows.First(f => f.Id == flowId)
+        };
+        _context.Flows.First(f => f.Id == flowId).SlideList?.Add(slideList);
+        _context.SaveChanges();
+        return true;
+        
+    }
+
     public List<Slide> ReadSlideList()
     {
         return _context.Slides.ToList();
@@ -386,6 +405,31 @@ public class Repository : IRepository
     public Flow ReadFlowWithProjectById(int flowId)
     {
         return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
+    }
+    
+    
+    public SlideList GetSlideListWithFlowById(int slideListId)
+    {
+        var slideList = _context.SlideLists
+            .Include(sl => sl.ConnectedSlides) // This will load the Slides of each SlideList
+            .FirstOrDefault(); // Gebruik FirstOrDefault in plaats van First
+
+        if (slideList == null)
+        {
+            throw new Exception("No SlideList found in the database");
+        }
+
+        return slideList;
+    }
+    
+    public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
+    {
+        return _context.SlideLists.Where(s => s.FlowId == flowId).ToList();
+    }
+
+    public IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId)
+    {
+        return _context.Slides.Where(s => s.Id == slideListId).ToList();
     }
 
     public void UpdateFlow(Flow model)

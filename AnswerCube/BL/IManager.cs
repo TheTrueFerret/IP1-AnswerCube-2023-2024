@@ -39,9 +39,15 @@ public interface IManager
     bool CreateSlide(SlideType type, string question, string[]? options);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
+    bool CreateSlidelist(string title, int flowId);
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
+    SlideList GetSLideListByTitle(string title);
+    void CreateOrganization(string name, string description, string email, int projectId);
     Flow GetFlowWithProjectById(int flowId);
+    SlideList GetSlideListWithFlowById(int slideListId);
+    IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
+    IEnumerable<Slide> GetSlidesBySlideListId(int slideListId);
     void UpdateFlow(Flow model);
     Organization CreateNewOrganization(string email, string name);
     bool AddUserToOrganization(AnswerCubeUser user);

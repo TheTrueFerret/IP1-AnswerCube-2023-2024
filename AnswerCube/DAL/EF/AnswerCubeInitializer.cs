@@ -3,6 +3,7 @@ using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 
 namespace AnswerCube.DAL.EF;
@@ -81,8 +82,8 @@ public static class AnswerCubeInitializer
 
         Project project1 = new Project
         {
-            Title = "Project1 with a flow",
-            Description = "Project1",
+            Title = "Pirates of the Carribean",
+            Description = "This is a project about the cast, producers, fans and critics of the filmseries",
             IsActive = true,
             Organization = organization1,
             Flows = new List<Flow> { flow }
@@ -424,11 +425,18 @@ public static class AnswerCubeInitializer
 
         SlideList slideList1 = new SlideList
         {
-            Title = "testlist1",
-            SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
+            Title = "Biography of actors",
+            SubTheme = new SubTheme("Biography of actors", "This theme discusses the biography of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
-
+        
+        SlideList slideList1punt2 = new SlideList
+        {
+            Title = "Career actors",
+            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
+            ConnectedSlides = new List<SlideConnection>()
+        };
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
         {
@@ -509,6 +517,35 @@ public static class AnswerCubeInitializer
             SlideOrder = 10
         };
         info1.ConnectedSlideLists.Add(slideConnection10);
+        
+        /////////////////////////////////////////////////////////////////
+        SlideConnection slideConnection11 = new SlideConnection
+        {
+            Slide = singleChoice4,
+            SlideList = slideList1punt2,
+            SlideOrder = 1
+        };
+        
+        SlideConnection slideConnection12 = new SlideConnection
+        {
+            Slide = openQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 2
+        };
+        
+        SlideConnection slideConnection13 = new SlideConnection
+        {
+            Slide = rangeQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 3
+        };
+        
+        SlideConnection slideConnection14 = new SlideConnection
+        {
+            Slide = info3,
+            SlideList = slideList1punt2,
+            SlideOrder = 4
+        };
 
         // Add the SingleChoice questions to the context
         context.Slides.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
@@ -532,16 +569,23 @@ public static class AnswerCubeInitializer
         slideList1.ConnectedSlides.Add(slideConnection9);
         slideList1.ConnectedSlides.Add(slideConnection10);
         context.SlideLists.Add(slideList1);
+        slideList1punt2.ConnectedSlides.Add(slideConnection11);
+        slideList1punt2.ConnectedSlides.Add(slideConnection12);
+        slideList1punt2.ConnectedSlides.Add(slideConnection13);
+        slideList1punt2.ConnectedSlides.Add(slideConnection14);
+        context.SlideLists.Add(slideList1punt2);
 
 
         Flow linearFlow = new Flow
         {
-            Name = "linear",
-            
-            CircularFlow = false
+            Name = "Actors",
+            Project = project1,
+            CircularFlow = false,
+            Description = "This is a flow about actors and their lives"
         };
         linearFlow.SlideList = new List<SlideList>();
         linearFlow.SlideList.Add(slideList1);
+        linearFlow.SlideList.Add(slideList1punt2);
         context.Flows.Add(linearFlow);
 
         context.SaveChanges();

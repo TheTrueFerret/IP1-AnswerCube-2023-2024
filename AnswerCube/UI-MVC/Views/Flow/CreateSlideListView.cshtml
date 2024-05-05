@@ -1,0 +1,20 @@
+@model Domain.SlideList
+
+@{
+    ViewBag.Title = "Create SlideList";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Create SlideList</h2>
+    <form id="slideListForm" method="post" asp-action="AddSlideList" asp-controller="Flow">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <!-- Het name attribuut toevoegen aan de input -->
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+        <!-- De flowId als hidden field toevoegen -->
+        <input type="hidden" id="flowId" name="flowId" value="@ViewBag.FlowId">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

@@ -2,6 +2,7 @@ using AnswerCube.BL;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using Domain;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
@@ -20,6 +21,8 @@ public class FlowController : BaseController
     public IActionResult FlowDetails(int flowId)
     {
         Flow flow = _manager.GetFlowWithProjectById(flowId);
+        //SlideList sLideList = _manager.GetSlideListWithFlowById(flowId-1);
+        IEnumerable<SlideList> slideLists = _manager.GetSlideListsByFlowId(flowId);
         return View(flow);
     }
 
@@ -41,6 +44,47 @@ public class FlowController : BaseController
         //TODO: Add error message
         return RedirectToAction("CreateSlideView");
     }
+    
+ /*   public IActionResult CreateSlideListView(string title, int flowId)
+    {
+        bool slideList = _manager.CreateSlidelist(title, flowId);
+        return View("CreateSlideListView");
+    }*/
+    
+    public IActionResult CreateSlideListView(int flowId)
+    {
+        ViewBag.FlowId = flowId;
+        return View();
+    }
+    
+    
+    [HttpPost]
+    public IActionResult AddSlideList(string title, int flowId)
+    {
+        if (_manager.CreateSlidelist(title, flowId))
+        {
+            // Nieuw aangemaakte SlideList ophalen
+            var slideList = _manager.GetSLideListByTitle(title);
+        
+            // FlowDetails view opnieuw laden met de bijgewerkte SlideList
+            return RedirectToAction("FlowDetails", new { flowId = flowId });
+        }
+        TempData["ErrorMessage"] = "Failed to create SlideList.";
+        return RedirectToAction("FlowDetails", new { flowId = flowId });
+    }
+    
+    /*
+     * [HttpPost]
+    public IActionResult AddSlideList(string title, int flowId)
+    {
+        if (_manager.CreateSlidelist(title, flowId))
+        {
+            return RedirectToAction("FlowDetails", new { flowId });
+        }
+        TempData["ErrorMessage"] = "Failed to create SlideList.";
+        return RedirectToAction("FlowDetails", new { flowId });
+    }
+     */
 
     [HttpPost]
     public IActionResult AddFlow(string name, string desc, string flowType, int projectId)
@@ -55,7 +99,6 @@ public class FlowController : BaseController
 
         return RedirectToAction("NewFlowView", "Project", new { projectId });
     }
-
 
     public IActionResult ShowSlides()
     {
