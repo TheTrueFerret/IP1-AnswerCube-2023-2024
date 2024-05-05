@@ -38,7 +38,7 @@
             <h2>@Model.Project.Title</h2>
             <div class="icon-container">
                 <button class="btn btn-primary project-button"
-                        onclick="location.href='@Url.Action("EditProject", "Project", new { Model.Project.Id })'">
+                        onclick="location.href='@Url.Action("EditProject", "Project", new {projectId =  Model.Project.Id })'">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
                 <button class="btn btn-danger project-button"

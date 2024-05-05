@@ -26,21 +26,20 @@ public class OrganizationController : BaseController
                 return View(organization);
             }
         }
-        else
+        else if (userId != null)
         {
             var organizations = _manager.GetOrganizationByUserId(userId);
             if (organizations.Count > 1)
             {
                 return View("SelectOrganization", organizations);
             }
-            else if (organizations.Count == 1)
+
+            if (organizations.Count == 1)
             {
-                return View(organizations[0]);
+                return View(organizations.First());
             }
-            else
-            {
-                return RedirectToPage("AccessDenied", new { area = "Identity" });
-            }
+
+            return RedirectToPage("AccessDenied", new { area = "Identity" });
         }
 
         return NotFound();

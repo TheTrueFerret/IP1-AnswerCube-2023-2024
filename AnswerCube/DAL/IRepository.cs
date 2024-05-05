@@ -39,7 +39,7 @@ public interface IRepository
     bool DeleteProject(int id);
     Project ReadProjectById(int projectid);
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
-    Task<bool> UpdateProject(Project project, string title, string description);
+    Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
     bool CreateSlide(SlideType type, string question, string[]? options);
     List<Slide> ReadSlideList();

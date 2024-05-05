@@ -240,8 +240,12 @@ public class Repository : IRepository
 
     public List<Organization> ReadOrganizationByUserId(string userId)
     {
-        return _context.UserOrganizations.Where(uo => uo.UserId == userId)
-            .Select(uo => uo.Organization).ToList();
+        return _context.UserOrganizations
+            .Where(uo => uo.UserId == userId)
+            .Include(uo => uo.Organization)
+            .ThenInclude(o => o.Projects)
+            .Select(uo => uo.Organization)
+            .ToList();
     }
 
     public Organization ReadOrganizationById(int organizationId)
@@ -284,20 +288,27 @@ public class Repository : IRepository
         return project;
     }
 
-    public async Task<bool> UpdateProject(Project project, string title, string description)
+    public async Task<bool> UpdateProject(Project updatedProject)
     {
-        if (project == null)
+        // Fetch the existing project from the database
+        var existingProject = _context.Projects.FirstOrDefault(p => p.Id == updatedProject.Id);
+
+        if (existingProject == null)
         {
+            // Handle the case where the project does not exist
             return false;
         }
-        else
-        {
-            project.Title = title;
-            project.Description = description;
-            _context.Projects.Update(project);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+
+        // Update the specific properties
+        existingProject.Title = updatedProject.Title;
+        existingProject.Description = updatedProject.Description;
+        existingProject.IsActive = updatedProject.IsActive;
+
+        // Save the changes
+        _context.Projects.Update(existingProject);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public List<Answer> GetAnswers()

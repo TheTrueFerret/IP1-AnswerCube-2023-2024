@@ -34,7 +34,7 @@ public interface IManager
     bool DeleteProject(int id);
     Project GetProjectById(int projectid);
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
-    Task<bool> UpdateProject(Project project, string title, string description);
+    Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
     bool CreateSlide(SlideType type, string question, string[]? options);
     List<Slide> GetAllSlides();

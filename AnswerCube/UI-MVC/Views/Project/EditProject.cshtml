@@ -15,8 +15,16 @@
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
+            <label for="description" class="form-label">Description</label>
             <textarea id="description" name="description" class="form-control" required>@Model.Description</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-control" required>
+                <option class="form-control" value="True" selected="@(Model.IsActive ? "selected" : null)">Active</option>
+                <option class="form-control" value="False" selected="@(!Model.IsActive ? "selected" : null)">Inactive</option>
+            </select>
         </div>
 
         @if (Model.Flows != null && Model.Flows.Any())

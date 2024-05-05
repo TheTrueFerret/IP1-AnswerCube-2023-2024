@@ -147,9 +147,9 @@ public class Manager : IManager
         return await _repository.CreateProject(organizationId, title, description, isActive);
     }
 
-    public async Task<bool> UpdateProject(Project project, string title, string description)
+    public async Task<bool> UpdateProject(Project project)
     {
-        return await _repository.UpdateProject(project, title, description);
+        return await _repository.UpdateProject(project);
     }
 
     public List<Answer> GetAnswers()
