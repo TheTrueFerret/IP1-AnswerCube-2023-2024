@@ -72,7 +72,7 @@ public static class AnswerCubeInitializer
 
         // Add the new UserOrganization to the context and save changes
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
-        
+
         Flow flow = new Flow
         {
             Name = "linear",
@@ -426,17 +426,18 @@ public static class AnswerCubeInitializer
         SlideList slideList1 = new SlideList
         {
             Title = "Biography of actors",
-            SubTheme = new SubTheme("Biography of actors", "This theme discusses the biography of the actors, have fun!"),
+            SubTheme = new SubTheme("Biography of actors",
+                "This theme discusses the biography of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
-        
+
         SlideList slideList1punt2 = new SlideList
         {
             Title = "Career actors",
-            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
+            SubTheme = new SubTheme("Career actors",
+                "This theme discusses the career of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
-        context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
         {
@@ -517,35 +518,39 @@ public static class AnswerCubeInitializer
             SlideOrder = 10
         };
         info1.ConnectedSlideLists.Add(slideConnection10);
-        
-        /////////////////////////////////////////////////////////////////
+
+        //Add data to slideList1punt2
         SlideConnection slideConnection11 = new SlideConnection
         {
             Slide = singleChoice4,
             SlideList = slideList1punt2,
             SlideOrder = 1
         };
-        
+        singleChoice4.ConnectedSlideLists.Add(slideConnection11);
+
         SlideConnection slideConnection12 = new SlideConnection
         {
             Slide = openQuestion1,
             SlideList = slideList1punt2,
             SlideOrder = 2
         };
-        
+        openQuestion1.ConnectedSlideLists.Add(slideConnection12);
+
         SlideConnection slideConnection13 = new SlideConnection
         {
             Slide = rangeQuestion1,
             SlideList = slideList1punt2,
             SlideOrder = 3
         };
-        
+        rangeQuestion1.ConnectedSlideLists.Add(slideConnection13);
+
         SlideConnection slideConnection14 = new SlideConnection
         {
             Slide = info3,
             SlideList = slideList1punt2,
             SlideOrder = 4
         };
+        info3.ConnectedSlideLists.Add(slideConnection14);
 
         // Add the SingleChoice questions to the context
         context.Slides.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
@@ -558,23 +563,19 @@ public static class AnswerCubeInitializer
         context.Slides.AddRange(openQuestion1, openQuestion2);
         context.Slides.AddRange(info1, info2, info3);
 
-        slideList1.ConnectedSlides.Add(slideConnection1);
-        slideList1.ConnectedSlides.Add(slideConnection2);
-        slideList1.ConnectedSlides.Add(slideConnection3);
-        slideList1.ConnectedSlides.Add(slideConnection4);
-        slideList1.ConnectedSlides.Add(slideConnection5);
-        slideList1.ConnectedSlides.Add(slideConnection6);
-        slideList1.ConnectedSlides.Add(slideConnection7);
-        slideList1.ConnectedSlides.Add(slideConnection8);
-        slideList1.ConnectedSlides.Add(slideConnection9);
-        slideList1.ConnectedSlides.Add(slideConnection10);
-        context.SlideLists.Add(slideList1);
-        slideList1punt2.ConnectedSlides.Add(slideConnection11);
-        slideList1punt2.ConnectedSlides.Add(slideConnection12);
-        slideList1punt2.ConnectedSlides.Add(slideConnection13);
-        slideList1punt2.ConnectedSlides.Add(slideConnection14);
-        context.SlideLists.Add(slideList1punt2);
+        slideList1.ConnectedSlides.AddRange(new List<SlideConnection>
+        {
+            slideConnection1, slideConnection2, slideConnection3, slideConnection4, slideConnection5, slideConnection6,
+            slideConnection7, slideConnection8, slideConnection9, slideConnection10
+        });
 
+        slideList1punt2.ConnectedSlides.AddRange(new List<SlideConnection>
+        {
+            slideConnection11, slideConnection12, slideConnection13, slideConnection14
+        });
+
+        //Add slidelists to the context
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         Flow linearFlow = new Flow
         {

@@ -411,8 +411,8 @@ public class Repository : IRepository
     {
         var slideList = _context.SlideLists
             .Include(sl => sl.ConnectedSlides)
-            .ThenInclude(cs => cs.Slide) // This will load the Slides of each SlideList
-            .FirstOrDefault(); // Gebruik FirstOrDefault in plaats van First
+            .ThenInclude(cs => cs.Slide)
+            .FirstOrDefault(slideList => slideList.Id == slideListId); // This will load the Slides of each SlideList
 
         if (slideList == null)
         {

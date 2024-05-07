@@ -19,6 +19,10 @@ public class SlideListController : BaseController
     public IActionResult SlideListDetails(int slideListId)
     {
         SlideList slideList =  _manager.GetSlideListWithFlowById(slideListId);
+        foreach (var cSlides in slideList.ConnectedSlides)
+        {
+            _logger.LogInformation(cSlides.Slide.ToString()); 
+        }
         return View(slideList);
     }
 
