@@ -252,4 +252,14 @@ public class Manager : IManager
     {
         return _repository.RemoveSlideFromList(slideId, slidelistid);
     }
+
+    public bool RemoveDpbFromOrganization(string userId, int organisationid)
+    {
+        return _repository.RemoveDpbFromOrganization(userId, organisationid);
+    }
+
+    public bool SearchDeelplatformByName(string deelplatformName)
+    {
+        return _repository.SearchDeelplatformByName(deelplatformName);
+    }
 }

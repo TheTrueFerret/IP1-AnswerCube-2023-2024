@@ -245,17 +245,15 @@ public class Repository : IRepository
 
     public List<Organization> ReadOrganizationByUserId(string userId)
     {
-        return _context.UserOrganizations
-            .Where(uo => uo.UserId == userId)
-            .Include(uo => uo.Organization)
-            .ThenInclude(o => o.Projects)
-            .Select(uo => uo.Organization)
-            .ToList();
+        return _context.Organizations.Include(o => o.Projects)
+            .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User)
+            .Where(o => o.UserOrganizations.Any(uo => uo.UserId == userId)).ToList();
     }
 
     public Organization ReadOrganizationById(int organizationId)
     {
-        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects).First();
+        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects)
+            .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User).First();
     }
 
     public bool DeleteProject(int id)
@@ -521,15 +519,33 @@ public class Repository : IRepository
         SlideList slideList = _context.SlideLists.First(sl => sl.Id == slidelistid);
         SlideConnection slideConnection = new SlideConnection();
 
-        if (slide != null || slideList != null )
+        if (slide != null || slideList != null)
         {
             slideConnection = _context.SlideConnections.First(sc =>
                 sc.SlideId == slideId && sc.SlideListId == slidelistid);
-            
         }
 
         _context.SlideConnections.Remove(slideConnection);
         _context.SaveChanges();
         return true;
+    }
+
+    public bool RemoveDpbFromOrganization(string userId, int organisationid)
+    {
+        UserOrganization userOrganization = _context.UserOrganizations
+            .First(uo => uo.UserId == userId && uo.OrganizationId == organisationid);
+        if (userOrganization == null)
+        {
+            return false;
+        }
+
+        _context.UserOrganizations.Remove(userOrganization);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool SearchDeelplatformByName(string deelplatformName)
+    {
+        return _context.Organizations.Any(o => o.Name == deelplatformName);
     }
 }

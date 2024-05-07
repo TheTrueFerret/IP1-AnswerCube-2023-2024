@@ -18,6 +18,7 @@ module.exports = {
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts',
+        addDeelplatformTS: './src/ts/Deelplatform/AddDeelplatformbeheerder.ts',
     },
     output: {
         filename: '[name].entry.js',

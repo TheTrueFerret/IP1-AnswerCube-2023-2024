@@ -59,4 +59,6 @@ public interface IRepository
     List<UserOrganization> ReadAllDeelplatformBeheerders();
     void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
     bool RemoveSlideFromList(int slideId, int slidelistid);
+    bool RemoveDpbFromOrganization(string userId, int organisationid);
+    bool SearchDeelplatformByName(string deelplatformName);
 }

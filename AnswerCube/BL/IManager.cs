@@ -54,4 +54,6 @@ public interface IManager
     void CreateUserOrganization(AnswerCubeUser user,Organization organization);
     List<UserOrganization> GetDeelplatformBeheerderUsers();
     bool RemoveSlideFromList(int slideId, int slidelistid);
+    bool RemoveDpbFromOrganization(string userId, int organisationid);
+    bool SearchDeelplatformByName(string deelplatformName);
 }    

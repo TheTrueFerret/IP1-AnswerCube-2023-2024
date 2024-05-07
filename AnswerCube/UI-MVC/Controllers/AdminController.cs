@@ -170,9 +170,14 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("AddDeelplatform")]
-    public async Task<IActionResult> AddDeelplatform(string email,string name)
+    public async Task<IActionResult> AddDeelplatform(string email,string deelplatformName)
     {
-        Organization organization = _manager.CreateNewOrganization(email,name);
+        //if (_manager.SearchDeelplatformByName(deelplatformName))
+        //{
+        //    return Json(new { exists = true, deelplatformName = deelplatformName });
+        //}
+        
+        Organization organization = _manager.CreateNewOrganization(email,deelplatformName);
         _manager.SaveBeheerderAndOrganization(email, organization);
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)

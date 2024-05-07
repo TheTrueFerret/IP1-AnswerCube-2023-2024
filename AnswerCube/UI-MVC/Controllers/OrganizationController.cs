@@ -44,4 +44,16 @@ public class OrganizationController : BaseController
 
         return NotFound();
     }
+    
+    public IActionResult RemoveDeelplatformbeheeder(string userId, int organisationid)
+    {
+        if (_manager.RemoveDpbFromOrganization(userId,organisationid))
+        {
+            return RedirectToAction("Index", "Organization", new { organizationId = organisationid });
+        }
+        else
+        {
+            return View("Error");
+        }
+    }
 }
