@@ -66,7 +66,7 @@
                         <p class="text-capitalize">@userOrg.User.UserName</p>
                         <button class="btn btn-danger"
                                 title="Remove Deelplatformbeheerder"
-                                onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Project", new { userId = userOrg.User.Id , organisationId = Model.Id })'">
+                                onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id , organisationId = Model.Id })'">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
