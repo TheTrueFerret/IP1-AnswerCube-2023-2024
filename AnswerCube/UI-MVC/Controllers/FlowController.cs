@@ -58,36 +58,7 @@ public class FlowController : BaseController
         ViewBag.FlowId = flowId;
         return View();
     }
-
-
-    [HttpPost]
-    public IActionResult AddSlideList(string title, int flowId)
-    {
-        if (_manager.CreateSlidelist(title, flowId))
-        {
-            // Nieuw aangemaakte SlideList ophalen
-            var slideList = _manager.GetSLideListByTitle(title);
-
-            // FlowDetails view opnieuw laden met de bijgewerkte SlideList
-            return RedirectToAction("FlowDetails", new { flowId = flowId });
-        }
-
-        TempData["ErrorMessage"] = "Failed to create SlideList.";
-        return RedirectToAction("FlowDetails", new { flowId = flowId });
-    }
-
-    /*
-     * [HttpPost]
-    public IActionResult AddSlideList(string title, int flowId)
-    {
-        if (_manager.CreateSlidelist(title, flowId))
-        {
-            return RedirectToAction("FlowDetails", new { flowId });
-        }
-        TempData["ErrorMessage"] = "Failed to create SlideList.";
-        return RedirectToAction("FlowDetails", new { flowId });
-    }
-     */
+    
 
     [HttpPost]
     public IActionResult AddFlow(string name, string desc, string flowType, int projectId)
@@ -129,11 +100,37 @@ public class FlowController : BaseController
 
     public IActionResult RemoveSlideFromList(int projectId, int slidelistid, int slideId)
     {
+        
         if (_manager.RemoveSlideFromList(slideId, slidelistid))
         {
-            return RedirectToAction("Flows", "Project", new { projectId });
+            return RedirectToAction("SlideListDetails", "SlideList", new { slideListId = slidelistid });
         }
-
-        return RedirectToAction("NewFlowView", "Project", new { projectId });
+        
+        TempData["ErrorMessage"] = "Failed to remove slide from SlideList.";
+        return RedirectToAction("SlideListDetails", "SlideList", new { slideListId = slidelistid });
+        
     }
+
+    public IActionResult AddSlideListToFlow(string title, string description, int flowId)
+    {
+        if (_manager.CreateSlidelist(title, description, flowId))
+        {
+            return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
+        }
+        
+        TempData["ErrorMessage"] = "Failed to add SlideList to Flow.";
+        return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
+    }
+    
+    public IActionResult RemoveSlideListFromFlow(int slideListId, int flowId)
+    {
+        if (_manager.RemoveSlideListFromFlow(slideListId, flowId))
+        {
+            return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
+        }
+        
+        TempData["ErrorMessage"] = "Failed to remove SlideList from Flow.";
+        return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
+    }
+        
 }

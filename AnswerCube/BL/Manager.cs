@@ -178,9 +178,9 @@ public class Manager : IManager
         return _repository.CreateFlow(name, desc, circularFlow, projectId);
     }
 
-    public bool CreateSlidelist(string title, int flowId)
+    public bool CreateSlidelist(string title, string description, int flowId)
     {
-        return _repository.CreateSlideList(title, flowId);
+        return _repository.CreateSlideList(title, description, flowId);
     }
 
     public Project GetProjectWithFlowsById(int projectId)
@@ -196,6 +196,11 @@ public class Manager : IManager
     public SlideList GetSLideListByTitle(string title)
     {
         return _repository.ReadSLideListByTitle(title);
+    }
+
+    public void CreateOrganization(string name, string description, string email, int projectId)
+    {
+        _repository.CreateNewOrganization(email, name);
     }
 
     public Flow GetFlowWithProjectById(int flowId)
@@ -261,5 +266,10 @@ public class Manager : IManager
     public bool SearchDeelplatformByName(string deelplatformName)
     {
         return _repository.SearchDeelplatformByName(deelplatformName);
+    }
+
+    public bool RemoveSlideListFromFlow(int slideListId, int flowId)
+    {
+        return _repository.RemoveSlideListFromFlow(slideListId, flowId);
     }
 }

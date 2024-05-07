@@ -42,7 +42,8 @@ public interface IRepository
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
     bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
-    bool CreateSlideList(string title, int flowId);
+    bool CreateSlideList(string title, string description, int flowId);
+    bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Slide> ReadSlideList();
     SlideList ReadSLideListByTitle(string title);
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);

@@ -56,4 +56,5 @@ public interface IManager
     bool RemoveSlideFromList(int slideId, int slidelistid);
     bool RemoveDpbFromOrganization(string userId, int organisationid);
     bool SearchDeelplatformByName(string deelplatformName);
+    bool RemoveSlideListFromFlow(int slideListId, int flowId);
 }    

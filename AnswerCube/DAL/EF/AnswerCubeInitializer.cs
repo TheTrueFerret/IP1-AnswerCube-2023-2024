@@ -218,8 +218,7 @@ public static class AnswerCubeInitializer
         SlideList slideList1punt2 = new SlideList
         {
             Title = "Career actors",
-            SubTheme = new SubTheme("Career actors",
-                "This theme discusses the career of the actors, have fun!"),
+            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
 
@@ -236,6 +235,7 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
         {
@@ -555,7 +555,6 @@ public static class AnswerCubeInitializer
             SlideList = slideList1punt2,
             SlideOrder = 4
         };
-        info3.ConnectedSlideLists.Add(slideConnection14);
 
         // Add the SingleChoice questions to the context
         context.Slides.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,

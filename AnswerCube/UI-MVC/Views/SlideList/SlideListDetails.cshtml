@@ -6,12 +6,12 @@
 }
 
 <div class="container mt-5">
-    <div class="card ">
+    <div class="card">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="mb-4">SlideList Details</h1>
-                    <h5 class="card-title"> Titel: @Model.Title</h5>
+                    <h5 class="card-title">Titel: @Model.Title</h5>
                     <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id })" class="btn btn-primary">
                         Add New Slide
                     </a>
@@ -34,9 +34,12 @@
                                             {
                                                 <div class="card mt-3">
                                                     <div class="card-body">
-                                                        <h4 class="card-title">SlideType: @ConnetedSlide.Slide.SlideType</h4> <!-- Slide type -->
-                                                        <h5 class="card-text">@ConnetedSlide.Slide.Text</h5> <!-- Slide title -->
-                                                        <h5 class="card-text">@ConnetedSlide.Slide.Id</h5> <!-- Slide title -->
+                                                        <h4 class="card-title">SlideType: @ConnetedSlide.Slide.SlideType</h4>
+                                                        <!-- Slide type -->
+                                                        <h5 class="card-text">@ConnetedSlide.Slide.Text</h5>
+                                                        <!-- Slide title -->
+                                                        <h5 class="card-text">@ConnetedSlide.Slide.Id</h5>
+                                                        <!-- Slide title -->
                                                         <a href="@Url.Action("RemoveSlideFromList", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id, slideId = ConnetedSlide.Slide.Id })" class="btn btn-danger">
                                                             <i class="fa-solid fa-trash-can"></i>
                                                         </a>
@@ -75,6 +78,12 @@
             </div>
         </div>
     </div>
+    <!-- Delete SlideList button -->
+    <form id="deleteSlideListForm" method="post" asp-action="RemoveSlideListFromFlow" asp-controller="Flow">
+        <input type="hidden" id="slideListId" name="slideListId" value="@Model.Id">
+        <input type="hidden" id="flowId" name="flowId" value="@Model.FlowId">
+        <button type="submit" class="btn btn-danger mt-3">Delete SlideList</button>
+    </form>
 </div>
 
 @section Scripts {
