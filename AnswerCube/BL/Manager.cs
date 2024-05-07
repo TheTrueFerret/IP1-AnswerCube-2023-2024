@@ -157,15 +157,15 @@ public class Manager : IManager
         return _repository.GetAnswers();
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
     {
         if (type == SlideType.InfoSlide && options.Length == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!);
+            return _repository.CreateSlide(type, info, null!, slideListId);
         }
 
-        return _repository.CreateSlide(type, question, options);
+        return _repository.CreateSlide(type, question, options, slideListId);
     }
 
     public List<Slide> GetAllSlides()
@@ -246,5 +246,10 @@ public class Manager : IManager
     public List<UserOrganization> GetDeelplatformBeheerderUsers()
     {
         return _repository.ReadAllDeelplatformBeheerders();
+    }
+
+    public bool RemoveSlideFromList(int slideId, int slidelistid)
+    {
+        return _repository.RemoveSlideFromList(slideId, slidelistid);
     }
 }

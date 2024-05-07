@@ -12,10 +12,9 @@
                 <div class="col-md-6">
                     <h1 class="mb-4">SlideList Details</h1>
                     <h5 class="card-title"> Titel: @Model.Title</h5>
-
-                    @*      <a href="@Url.Action("EditFlowView", "Flow", new { flowId = Model.Id,projectId = Model.Project.Id })" class="btn btn-primary">Edit Flow</a>
-                    <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Project.Id })" class="btn btn-primary">Add Slide</a> *@
-
+                    <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id })" class="btn btn-primary">
+                        Add New Slide
+                    </a>
                 </div>
                 <div class="col-md-6">
                     <h4 class="mt-4">Slides</h4>
@@ -28,23 +27,27 @@
                                 }
                                 else if (Model.ConnectedSlides != null)
                                 {
-                                    @foreach (var slide in Model.ConnectedSlides)
+                                    @foreach (var ConnetedSlide in Model.ConnectedSlides)
                                     {
                                         <div class="flow-button subtheme-rectangle">
-                                            @if (slide.Slide != null)
+                                            @if (ConnetedSlide.Slide != null)
                                             {
                                                 <div class="card mt-3">
                                                     <div class="card-body">
-                                                        <h4 class="card-title">SlideType: @slide.Slide.SlideType</h4> <!-- Slide type -->
-                                                        <h5 class="card-text">@slide.Slide.Text</h5> <!-- Slide title -->
-                                                        @if (slide.Slide.AnswerList != null && slide.Slide.AnswerList.Count > 0)
+                                                        <h4 class="card-title">SlideType: @ConnetedSlide.Slide.SlideType</h4> <!-- Slide type -->
+                                                        <h5 class="card-text">@ConnetedSlide.Slide.Text</h5> <!-- Slide title -->
+                                                        <h5 class="card-text">@ConnetedSlide.Slide.Id</h5> <!-- Slide title -->
+                                                        <a href="@Url.Action("RemoveSlideFromList", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id, slideId = ConnetedSlide.Slide.Id })" class="btn btn-danger">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </a>
+                                                        @if (ConnetedSlide.Slide.AnswerList != null && ConnetedSlide.Slide.AnswerList.Count > 0)
                                                         {
-                                                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#answers-@slide.Slide.Id" aria-expanded="false" aria-controls="answers-@slide.Slide.Id">
+                                                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#answers-@ConnetedSlide.Slide.Id" aria-expanded="false" aria-controls="answers-@ConnetedSlide.Slide.Id">
                                                                 Show/Hide Answers
                                                             </button>
-                                                            <div class="collapse" id="answers-@slide.Slide.Id">
+                                                            <div class="collapse" id="answers-@ConnetedSlide.Slide.Id">
                                                                 <ul class="list-group mt-3">
-                                                                    @foreach (var answer in slide.Slide.AnswerList)
+                                                                    @foreach (var answer in ConnetedSlide.Slide.AnswerList)
                                                                     {
                                                                         <li class="list-group-item">@answer</li>
                                                                     }
@@ -73,3 +76,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
+}

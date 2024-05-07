@@ -27,17 +27,18 @@ public class FlowController : BaseController
         return View(flow);
     }
 
-    public IActionResult CreateSlideView(int projectId)
+    public IActionResult CreateSlideView(int projectId, int slidelistId)
     {
         Project project = _manager.GetProjectById(projectId);
+        ViewBag.SlideListId = slidelistId;
         return View(project);
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId)
+    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId)
     {
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
-        if (_manager.CreateSlide(type, question, options))
+        if (_manager.CreateSlide(type, question, options, slideListId))
         {
             return RedirectToAction("Flows", "Project", new { projectId });
         }
@@ -45,20 +46,20 @@ public class FlowController : BaseController
         //TODO: Add error message
         return RedirectToAction("CreateSlideView");
     }
-    
- /*   public IActionResult CreateSlideListView(string title, int flowId)
-    {
-        bool slideList = _manager.CreateSlidelist(title, flowId);
-        return View("CreateSlideListView");
-    }*/
-    
+
+    /*   public IActionResult CreateSlideListView(string title, int flowId)
+       {
+           bool slideList = _manager.CreateSlidelist(title, flowId);
+           return View("CreateSlideListView");
+       }*/
+
     public IActionResult CreateSlideListView(int flowId)
     {
         ViewBag.FlowId = flowId;
         return View();
     }
-    
-    
+
+
     [HttpPost]
     public IActionResult AddSlideList(string title, int flowId)
     {
@@ -66,14 +67,15 @@ public class FlowController : BaseController
         {
             // Nieuw aangemaakte SlideList ophalen
             var slideList = _manager.GetSLideListByTitle(title);
-        
+
             // FlowDetails view opnieuw laden met de bijgewerkte SlideList
             return RedirectToAction("FlowDetails", new { flowId = flowId });
         }
+
         TempData["ErrorMessage"] = "Failed to create SlideList.";
         return RedirectToAction("FlowDetails", new { flowId = flowId });
     }
-    
+
     /*
      * [HttpPost]
     public IActionResult AddSlideList(string title, int flowId)
@@ -123,5 +125,15 @@ public class FlowController : BaseController
         }
 
         return RedirectToAction("EditFlowView", new { flowid = model.Id });
+    }
+
+    public IActionResult RemoveSlideFromList(int projectId, int slidelistid, int slideId)
+    {
+        if (_manager.RemoveSlideFromList(slideId, slidelistid))
+        {
+            return RedirectToAction("Flows", "Project", new { projectId });
+        }
+
+        return RedirectToAction("NewFlowView", "Project", new { projectId });
     }
 }

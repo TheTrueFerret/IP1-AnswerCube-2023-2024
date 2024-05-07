@@ -274,7 +274,8 @@ public class Repository : IRepository
 
     public Project ReadProjectById(int projectid)
     {
-        return _context.Projects.Include(p => p.Organization).FirstOrDefault(p => p.Id == projectid);
+        return _context.Projects.Include(p => p.Organization).Include(p => p.Flows)
+            .FirstOrDefault(p => p.Id == projectid);
     }
 
     public async Task<Project> CreateProject(int organizationId, string title, string description, bool isActive)
@@ -324,7 +325,7 @@ public class Repository : IRepository
         return answers;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
     {
         if (options == null || options.Length <= 0)
         {
@@ -335,6 +336,14 @@ public class Repository : IRepository
                 Text = question,
                 AnswerList = null
             };
+            SlideList slideList = _context.SlideLists.First(sl => sl.Id == slideListId);
+            SlideConnection newSlideConnection = new SlideConnection
+            {
+                Slide = slide,
+                SlideList = _context.SlideLists.First(sl => sl.Id == slideListId)
+            };
+            slideList.ConnectedSlides!.Add(newSlideConnection);
+            _context.SlideConnections.Add(newSlideConnection);
             _context.Slides.Add(slide);
             _context.SaveChanges();
             return true;
@@ -348,10 +357,21 @@ public class Repository : IRepository
                 Text = question,
                 AnswerList = options.ToList()
             };
+            SlideList slideList =
+                _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
+            SlideConnection newSlideConnection = new SlideConnection
+            {
+                Slide = slide,
+                SlideList = _context.SlideLists.First(sl => sl.Id == slideListId)
+            };
+            slideList.ConnectedSlides!.Add(newSlideConnection);
+            _context.SlideConnections.Add(newSlideConnection);
             _context.Slides.Add(slide);
             _context.SaveChanges();
             return true;
         }
+
+        return false;
     }
 
     public bool CreateSlideList(string title, int flowId)
@@ -410,6 +430,7 @@ public class Repository : IRepository
     public SlideList GetSlideListWithFlowById(int slideListId)
     {
         var slideList = _context.SlideLists
+            .Include(sl => sl.Flow).ThenInclude(flow => flow.Project)
             .Include(sl => sl.ConnectedSlides)
             .ThenInclude(cs => cs.Slide)
             .FirstOrDefault(slideList => slideList.Id == slideListId); // This will load the Slides of each SlideList
@@ -492,5 +513,23 @@ public class Repository : IRepository
             UserId = user.Id
         });
         _context.SaveChanges();
+    }
+
+    public bool RemoveSlideFromList(int slideId, int slidelistid)
+    {
+        Slide slide = _context.Slides.First(s => s.Id == slideId);
+        SlideList slideList = _context.SlideLists.First(sl => sl.Id == slidelistid);
+        SlideConnection slideConnection = new SlideConnection();
+
+        if (slide != null || slideList != null )
+        {
+            slideConnection = _context.SlideConnections.First(sc =>
+                sc.SlideId == slideId && sc.SlideListId == slidelistid);
+            
+        }
+
+        _context.SlideConnections.Remove(slideConnection);
+        _context.SaveChanges();
+        return true;
     }
 }

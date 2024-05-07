@@ -8,7 +8,8 @@
 <div class="container">
     <h2>Create Slide</h2>
 
-    <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow">
+    <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow"
+          asp-route-projectId="@Model.Id" asp-route-slideListId="@ViewBag.SlideListId">
         <div class="form-group">
             <label for="slideType">Slide Type:</label>
             <select id="slideType" name="slideType" class="form-control form-select">
@@ -26,12 +27,11 @@
         </div>
         <div id="answerOptions"></div>
         <div id="optionsButton" class="mb-3"></div>
-        <input type="hidden" id="projectId" name="projectId" value="@Model.Id" hidden>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i>Submit</button>
     </form>
 </div>
 
 @section Scripts {
-    <script src="~/dist/createSlide.entry.js"></script> 
+    <script src="~/dist/createSlide.entry.js"></script>
     <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
 }

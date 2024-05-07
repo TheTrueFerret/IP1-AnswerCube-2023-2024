@@ -41,7 +41,7 @@ public interface IRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options);
+    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
     bool CreateSlideList(string title, int flowId);
     List<Slide> ReadSlideList();
     SlideList ReadSLideListByTitle(string title);
@@ -58,4 +58,5 @@ public interface IRepository
     bool CreateUserOrganization(AnswerCubeUser user);
     List<UserOrganization> ReadAllDeelplatformBeheerders();
     void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
+    bool RemoveSlideFromList(int slideId, int slidelistid);
 }

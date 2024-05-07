@@ -36,7 +36,7 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options);
+    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
     bool CreateSlidelist(string title, int flowId);
@@ -53,4 +53,5 @@ public interface IManager
     void SaveBeheerderAndOrganization(string email, Organization organization);
     void CreateUserOrganization(AnswerCubeUser user,Organization organization);
     List<UserOrganization> GetDeelplatformBeheerderUsers();
+    bool RemoveSlideFromList(int slideId, int slidelistid);
 }    

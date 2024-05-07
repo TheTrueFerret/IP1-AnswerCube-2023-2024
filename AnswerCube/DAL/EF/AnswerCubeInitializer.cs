@@ -3,7 +3,6 @@ using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 
 namespace AnswerCube.DAL.EF;
@@ -208,6 +207,22 @@ public static class AnswerCubeInitializer
 
         context.AnswerCubeUsers.AddRange(alexander, jarno, nemo, ilyasse);
 
+        SlideList slideList1 = new SlideList
+        {
+            Title = "Biography of actors",
+            SubTheme = new SubTheme("Biography of actors",
+                "This theme discusses the biography of the actors, have fun!"),
+            ConnectedSlides = new List<SlideConnection>()
+        };
+
+        SlideList slideList1punt2 = new SlideList
+        {
+            Title = "Career actors",
+            SubTheme = new SubTheme("Career actors",
+                "This theme discusses the career of the actors, have fun!"),
+            ConnectedSlides = new List<SlideConnection>()
+        };
+
         //SingleChoice
         Slide singleChoice1 = new Slide
         {
@@ -221,6 +236,16 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection1 = new SlideConnection
+        {
+            Slide = singleChoice1,
+            SlideList = slideList1,
+            SlideOrder = 1
+        };
+        singleChoice1.ConnectedSlideLists.Add(slideConnection1);
+
+
         Slide singleChoice2 = new Slide
         {
             Text =
@@ -229,6 +254,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Eens", "Oneens" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection2 = new SlideConnection
+        {
+            Slide = singleChoice2,
+            SlideList = slideList1,
+            SlideOrder = 2
+        };
+        singleChoice2.ConnectedSlideLists.Add(slideConnection2);
+
         Slide singleChoice3 = new Slide
         {
             Text = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
@@ -240,6 +274,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection3 = new SlideConnection
+        {
+            Slide = singleChoice3,
+            SlideList = slideList1,
+            SlideOrder = 3
+        };
+        singleChoice3.ConnectedSlideLists.Add(slideConnection3);
+
         Slide singleChoice4 = new Slide
         {
             Text = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
@@ -247,6 +290,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Akkoord", "Niet akkoord" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection11 = new SlideConnection
+        {
+            Slide = singleChoice4,
+            SlideList = slideList1punt2,
+            SlideOrder = 1
+        };
+        singleChoice4.ConnectedSlideLists.Add(slideConnection11);
+
         Slide singleChoice5 = new Slide
         {
             Text =
@@ -283,6 +335,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection7 = new SlideConnection
+        {
+            Slide = multipleChoice1,
+            SlideList = slideList1,
+            SlideOrder = 7
+        };
+        multipleChoice1.ConnectedSlideLists.Add(slideConnection7);
+
         Slide multipleChoice2 = new Slide
         {
             Text = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
@@ -290,6 +351,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Tennis", "Hockey", "Padel", "Voetbal", "Fitness" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection6 = new SlideConnection
+        {
+            Slide = multipleChoice2,
+            SlideList = slideList1,
+            SlideOrder = 6
+        };
+        multipleChoice2.ConnectedSlideLists.Add(slideConnection6);
+
         Slide multipleChoice3 = new Slide
         {
             Text =
@@ -305,6 +375,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection5 = new SlideConnection
+        {
+            Slide = multipleChoice3,
+            SlideList = slideList1,
+            SlideOrder = 5
+        };
+        multipleChoice3.ConnectedSlideLists.Add(slideConnection5);
+
         Slide multipleChoice4 = new Slide
         {
             Text = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
@@ -343,6 +422,15 @@ public static class AnswerCubeInitializer
                 { "Zeker niet", "Eerder niet", "Ik weet het nog niet", "Eerder wel", "Zeker wel" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection13 = new SlideConnection
+        {
+            Slide = rangeQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 3
+        };
+        rangeQuestion1.ConnectedSlideLists.Add(slideConnection13);
+
         Slide rangeQuestion2 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -350,6 +438,7 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Ik voel me weinig tot niet betrokken", "Ik voel me (zeer) betrokken" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
         Slide rangeQuestion3 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -360,6 +449,7 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
         Slide rangeQuestion4 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -369,6 +459,13 @@ public static class AnswerCubeInitializer
                 { "Helemaal oneens", "Oneens", "Noch eens, noch oneens", "Eens", "Helemaal eens" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+        SlideConnection slideConnection8 = new SlideConnection
+        {
+            Slide = rangeQuestion4,
+            SlideList = slideList1,
+            SlideOrder = 8
+        };
+        rangeQuestion4.ConnectedSlideLists.Add(slideConnection8);
 
         Slide rangeQuestion5 = new Slide
         {
@@ -379,6 +476,13 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection9 = new SlideConnection
+        {
+            Slide = rangeQuestion5,
+            SlideList = slideList1,
+            SlideOrder = 9
+        };
+        rangeQuestion5.ConnectedSlideLists.Add(slideConnection9);
 
         // Open Questions
         Slide openQuestion1 = new Slide
@@ -388,6 +492,14 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection12 = new SlideConnection
+        {
+            Slide = openQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 2
+        };
+        openQuestion1.ConnectedSlideLists.Add(slideConnection12);
+
         Slide openQuestion2 = new Slide
         {
             SlideType = SlideType.OpenQuestion,
@@ -396,6 +508,13 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection4 = new SlideConnection
+        {
+            Slide = openQuestion2,
+            SlideList = slideList1,
+            SlideOrder = 4
+        };
+        openQuestion2.ConnectedSlideLists.Add(slideConnection4);
 
         // Info slides
         Slide info1 = new Slide
@@ -405,6 +524,14 @@ public static class AnswerCubeInitializer
             SlideType = SlideType.InfoSlide,
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection10 = new SlideConnection
+        {
+            Slide = info1,
+            SlideList = slideList1,
+            SlideOrder = 10
+        };
+        info1.ConnectedSlideLists.Add(slideConnection10);
 
         Slide info2 = new Slide
         {
@@ -421,128 +548,6 @@ public static class AnswerCubeInitializer
             SlideType = SlideType.InfoSlide,
             ConnectedSlideLists = new List<SlideConnection>()
         };
-
-
-        SlideList slideList1 = new SlideList
-        {
-            Title = "Biography of actors",
-            SubTheme = new SubTheme("Biography of actors",
-                "This theme discusses the biography of the actors, have fun!"),
-            ConnectedSlides = new List<SlideConnection>()
-        };
-
-        SlideList slideList1punt2 = new SlideList
-        {
-            Title = "Career actors",
-            SubTheme = new SubTheme("Career actors",
-                "This theme discusses the career of the actors, have fun!"),
-            ConnectedSlides = new List<SlideConnection>()
-        };
-
-        SlideConnection slideConnection1 = new SlideConnection
-        {
-            Slide = singleChoice1,
-            SlideList = slideList1,
-            SlideOrder = 1
-        };
-        singleChoice1.ConnectedSlideLists.Add(slideConnection1);
-
-        SlideConnection slideConnection2 = new SlideConnection
-        {
-            Slide = singleChoice2,
-            SlideList = slideList1,
-            SlideOrder = 2
-        };
-        singleChoice2.ConnectedSlideLists.Add(slideConnection2);
-
-        SlideConnection slideConnection3 = new SlideConnection
-        {
-            Slide = singleChoice3,
-            SlideList = slideList1,
-            SlideOrder = 3
-        };
-        singleChoice3.ConnectedSlideLists.Add(slideConnection3);
-
-        SlideConnection slideConnection4 = new SlideConnection
-        {
-            Slide = openQuestion2,
-            SlideList = slideList1,
-            SlideOrder = 4
-        };
-        openQuestion2.ConnectedSlideLists.Add(slideConnection4);
-
-        SlideConnection slideConnection5 = new SlideConnection
-        {
-            Slide = multipleChoice3,
-            SlideList = slideList1,
-            SlideOrder = 5
-        };
-        multipleChoice3.ConnectedSlideLists.Add(slideConnection5);
-
-        SlideConnection slideConnection6 = new SlideConnection
-        {
-            Slide = multipleChoice2,
-            SlideList = slideList1,
-            SlideOrder = 6
-        };
-        multipleChoice2.ConnectedSlideLists.Add(slideConnection6);
-
-        SlideConnection slideConnection7 = new SlideConnection
-        {
-            Slide = multipleChoice1,
-            SlideList = slideList1,
-            SlideOrder = 7
-        };
-        multipleChoice1.ConnectedSlideLists.Add(slideConnection7);
-
-        SlideConnection slideConnection8 = new SlideConnection
-        {
-            Slide = rangeQuestion4,
-            SlideList = slideList1,
-            SlideOrder = 8
-        };
-        rangeQuestion4.ConnectedSlideLists.Add(slideConnection8);
-
-        SlideConnection slideConnection9 = new SlideConnection
-        {
-            Slide = rangeQuestion5,
-            SlideList = slideList1,
-            SlideOrder = 9
-        };
-        rangeQuestion5.ConnectedSlideLists.Add(slideConnection9);
-
-        SlideConnection slideConnection10 = new SlideConnection
-        {
-            Slide = info1,
-            SlideList = slideList1,
-            SlideOrder = 10
-        };
-        info1.ConnectedSlideLists.Add(slideConnection10);
-
-        //Add data to slideList1punt2
-        SlideConnection slideConnection11 = new SlideConnection
-        {
-            Slide = singleChoice4,
-            SlideList = slideList1punt2,
-            SlideOrder = 1
-        };
-        singleChoice4.ConnectedSlideLists.Add(slideConnection11);
-
-        SlideConnection slideConnection12 = new SlideConnection
-        {
-            Slide = openQuestion1,
-            SlideList = slideList1punt2,
-            SlideOrder = 2
-        };
-        openQuestion1.ConnectedSlideLists.Add(slideConnection12);
-
-        SlideConnection slideConnection13 = new SlideConnection
-        {
-            Slide = rangeQuestion1,
-            SlideList = slideList1punt2,
-            SlideOrder = 3
-        };
-        rangeQuestion1.ConnectedSlideLists.Add(slideConnection13);
 
         SlideConnection slideConnection14 = new SlideConnection
         {
@@ -588,38 +593,6 @@ public static class AnswerCubeInitializer
         linearFlow.SlideList.Add(slideList1);
         linearFlow.SlideList.Add(slideList1punt2);
         context.Flows.Add(linearFlow);
-
-        context.SaveChanges();
-
-        SlideList slideList2 = new SlideList
-        {
-            Title = "testlist2",
-            SubTheme = new SubTheme("een park", "ipsum lorum"),
-            ConnectedSlides = new List<SlideConnection>()
-        };
-
-        /*slideList2.Slides = new LinkedList<Slide>();
-        slideList2.Slides.AddFirst(openQuestion1); // 7
-        slideList2.Slides.AddFirst(singleChoice4); // 8
-        slideList2.Slides.AddFirst(singleChoice5); // 1
-        slideList2.Slides.AddFirst(rangeQuestion1); // 4
-        slideList2.Slides.AddFirst(rangeQuestion2); // 5
-        slideList2.Slides.AddFirst(rangeQuestion3); // 6
-        slideList2.Slides.AddFirst(multipleChoice4); // 2
-        slideList2.Slides.AddFirst(multipleChoice5); // 3
-        context.SlideLists.Add(slideList2);*/
-
-
-        /*Flow circularFlow = new Flow
-        {
-            Name = "circular",
-            CircularFlow = true
-        };
-        circularFlow.SlideList = new List<SlideList>();
-        circularFlow.SlideList.Add(slideList2);
-
-        context.Flows.Add(circularFlow);*/
-
 
         Installation installation = new Installation()
         {
