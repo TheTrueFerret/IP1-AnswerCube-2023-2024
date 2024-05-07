@@ -39,7 +39,7 @@ public interface IManager
     bool CreateSlide(SlideType type, string question, string[]? options,int slideListId);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
-    bool CreateSlidelist(string title, int flowId);
+    bool CreateSlidelist(string title,string description ,int flowId);
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
     SlideList GetSLideListByTitle(string title);
