@@ -40,7 +40,7 @@ public class FlowController : BaseController
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
         if (_manager.CreateSlide(type, question, options, slideListId))
         {
-            return RedirectToAction("Flows", "Project", new { projectId });
+            return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
         }
 
         //TODO: Add error message

@@ -21,21 +21,29 @@
                         <div class="card h-auto">
                             <div class="card-body">
                                 <h2 class="card-title">@project.Title</h2>
+                                <strong>Description:</strong>
                                 <p class="card-text">@project.Description</p>
-                                <p>Status: @(project.IsActive ? "Actief" : "Niet actief")</p>
-                                <p>Totaal aantal flows: @project.Flows.Count</p>
-                                <p>Totaal actieve installaties: @project.TotalActiveInstallations</p>
-                                <div>
-                                    <button class="btn btn-primary "
-                                            onclick="location.href='@Url.Action("EditProject", "Project", new { projectId = project.Id })'" title="Edit Project">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button class="btn btn-danger"
-                                            title="Delete Project"
-                                            onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
+
+                                <p>
+                                    <strong>Status:</strong> @(project.IsActive ? "Actief" : "Niet actief")
+                                </p>
+                                <p>
+                                    <strong>Totaal aantal flows:</strong> @project.Flows.Count
+                                </p>
+                                <p>
+                                    <strong>Totaal actieve installaties:</strong> @project.TotalActiveInstallations
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary "
+                                        onclick="location.href='@Url.Action("EditProject", "Project", new { projectId = project.Id })'" title="Edit Project">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-danger"
+                                        title="Delete Project"
+                                        onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -62,14 +70,14 @@
                 <div class="list-group scrollable-list">
                     @foreach (var userOrg in Model.UserOrganizations)
                     {
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="text-capitalize">@userOrg.User.UserName</p>
-                        <button class="btn btn-danger"
-                                title="Remove Deelplatformbeheerder"
-                                onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id , organisationId = Model.Id })'">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="text-capitalize">@userOrg.User.UserName</p>
+                            <button class="btn btn-danger"
+                                    title="Remove Deelplatformbeheerder"
+                                    onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     }
                 </div>
             </div>

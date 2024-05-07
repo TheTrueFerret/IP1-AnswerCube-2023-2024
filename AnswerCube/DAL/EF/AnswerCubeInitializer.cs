@@ -89,43 +89,43 @@ public static class AnswerCubeInitializer
         };
         Project project2 = new Project
         {
-            Title = "Project2",
-            Description = "Project2",
+            Title = "Management KDG",
+            Description = "This project is about the management of KdG, to see how the students think about the course Management",
             IsActive = true,
             Organization = organization1
         };
         Project project3 = new Project
         {
-            Title = "Project3",
-            Description = "Project3",
+            Title = "Climate Change Research",
+            Description = "A project dedicated to studying the impacts of climate change on local ecosystems.",
             IsActive = true,
             Organization = organization2
         };
         Project project4 = new Project
         {
-            Title = "Project4",
-            Description = "Project4",
+            Title = "Urban Development",
+            Description = "This project focuses on sustainable urban development practices.",
             IsActive = true,
             Organization = organization2
         };
         Project project5 = new Project
         {
-            Title = "Project5",
-            Description = "Project5",
+            Title = "Educational Reform",
+            Description = "A project aimed at improving the quality of education in underprivileged areas.",
             IsActive = true,
             Organization = organization1
         };
         Project project6 = new Project
         {
-            Title = "Project6",
-            Description = "Project6",
+            Title = "Healthcare Improvement",
+            Description = "This project is about improving healthcare services in rural areas.",
             IsActive = true,
             Organization = organization1
         };
         Project project7 = new Project
         {
-            Title = "Project7",
-            Description = "Project7",
+            Title = "Renewable Energy",
+            Description = "A project focused on the research and development of renewable energy sources.",
             IsActive = true,
             Organization = organization1
         };

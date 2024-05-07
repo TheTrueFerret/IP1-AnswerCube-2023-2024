@@ -229,8 +229,7 @@ public class Repository : IRepository
 
     public bool DeleteDeelplatformBeheerderByEmail(string userEmail)
     {
-        DeelplatformbeheerderEmail deelplatformbeheerderEmail =
-            _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail = _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
         if (deelplatformbeheerderEmail == null || deelplatformbeheerderEmail.Email != userEmail)
         {
             return false;
@@ -245,24 +244,33 @@ public class Repository : IRepository
 
     public List<Organization> ReadOrganizationByUserId(string userId)
     {
-        return _context.Organizations.Include(o => o.Projects)
+        return _context.Organizations.Include(o => o.Projects).ThenInclude(p => p.Flows)
             .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User)
             .Where(o => o.UserOrganizations.Any(uo => uo.UserId == userId)).ToList();
     }
 
     public Organization ReadOrganizationById(int organizationId)
     {
-        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects)
+        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects).ThenInclude(p => p.Flows)
             .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User).First();
     }
 
     public bool DeleteProject(int id)
     {
-        var project = _context.Projects.First(p => p.Id == id);
+        var project = _context.Projects.Include(p => p.Flows).First(p => p.Id == id);
         if (project == null || project.Id != id)
         {
             return false;
         }
+
+        if (project.Flows.Count > 0)
+        {
+            foreach (var flow in project.Flows)
+            {
+                _context.Flows.Remove(flow);
+            }
+        }
+        
 
         _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
         _context.SaveChanges();

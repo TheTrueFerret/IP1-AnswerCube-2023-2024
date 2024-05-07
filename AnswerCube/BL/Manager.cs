@@ -198,11 +198,6 @@ public class Manager : IManager
         return _repository.ReadSLideListByTitle(title);
     }
 
-    public void CreateOrganization(string name, string description, string email, int projectId)
-    {
-        _repository.CreateNewOrganization(email, name);
-    }
-
     public Flow GetFlowWithProjectById(int flowId)
     {
         return _repository.ReadFlowWithProjectById(flowId);

@@ -133,11 +133,6 @@ public class AdminController : BaseController
             ModelState.AddModelError(string.Empty, "Unable to remove role.");
         }
 
-        if (model.SelectedRoleToRemove == "DeelplatformBeheerder")
-        {
-            _manager.RemoveDeelplatformBeheerderByEmail(user.Email);
-        }
-
         await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(User).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }

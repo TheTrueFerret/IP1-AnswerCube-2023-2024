@@ -1,71 +1,57 @@
-@using System.Text
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model AnswerCube.UI.MVC.Areas.Identity.Data.UserRoleDto
 
 @{
-    Layout = "_Layout";
+Layout = "_Layout";
 }
-<h1>Role Assignment</h1>
+<h1 class="mb-4">Role Assignment</h1>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Roles</th>
-        <th>Edit Roles</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>@Model.Name</td>
-        <td>@string.Join(", ", Model.Roles)</td>
-        <td>
-            <form asp-controller="Admin" asp-action="AssignRole" method="post">
-                <input type="hidden" name="Id" value="@Model.Id"/>
-                <div class="form-group">
-                    <label for="SelectedRole">Role:</label>
-                    <select class="form-control" id="SelectedRole" name="SelectedRole">
-                        @foreach (var role in Model.AllAvailableIdentityRoles)
-                        {
-                            <option value="@role.Name">@role.Name</option>
-                        }
-                    </select>
-                </div>
-                @if (Model.AllAvailableIdentityRoles.Count > 0)
-                {
-                    <button type="submit" class="btn btn-primary">Assign Role</button>
-                }
-                else
-                {
-                    <p>No roles available</p>
-                }
+<div class="card">
+    <div class="card-header">
+        <h2>@Model.Name</h2>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Roles: @string.Join(", ", Model.Roles)</h5>
+        <form asp-controller="Admin" asp-action="AssignRole" method="post" class="mb-3">
+            <input type="hidden" name="Id" value="@Model.Id"/>
+            <div class="form-group">
+                <label for="SelectedRole">Role:</label>
+                <select class="form-control" id="SelectedRole" name="SelectedRole">
+                    @foreach (var role in Model.AllAvailableIdentityRoles)
+                    {
+                        <option value="@role.Name">@role.Name</option>
+                    }
+                </select>
+            </div>
+            @if (Model.AllAvailableIdentityRoles.Count > 0)
+            {
+                <button type="submit" class="btn btn-primary">Assign Role</button>
+            }
+            else
+            {
+                <p class="text-danger">No roles available</p>
+            }
+        </form>
 
-            </form>
-
-            <form asp-controller="Admin" asp-action="RemoveRole" method="post">
-                <input type="hidden" name="Id" value="@Model.Id"/>
-                <div class="form-group">
-                    <label for="SelectedRoleToRemove">Role:</label>
-                    <select class="form-control" id="SelectedRoleToRemove" name="SelectedRoleToRemove">
-                        @foreach (var role in Model.Roles)
-                        {
-                            <option value="@role">@role</option>
-                            Console.WriteLine(role);
-                        }
-                    </select>
-                </div>
-                @if (Model.Roles.Count > 0)
-                {
-                    <button type="submit" class="btn btn-primary">Remove Role</button>
-                }
-                else
-                {
-                    <p>No roles assigned</p>
-                }
-            </form>
-
-
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <form asp-controller="Admin" asp-action="RemoveRole" method="post">
+            <input type="hidden" name="Id" value="@Model.Id"/>
+            <div class="form-group">
+                <label for="SelectedRoleToRemove">Role:</label>
+                <select class="form-control" id="SelectedRoleToRemove" name="SelectedRoleToRemove">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+            </div>
+            @if (Model.Roles.Count > 0)
+            {
+                <button type="submit" class="btn btn-danger">Remove Role</button>
+            }
+            else
+            {
+                <p class="text-danger">No roles assigned</p>
+            }
+        </form>
+    </div>
+</div>
