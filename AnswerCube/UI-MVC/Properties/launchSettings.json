@@ -56,7 +56,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://0.0.0.0:443;http://0.0.0.0:80;http://0.0.0.0:5000;https://0.0.0.0:5000",
+      "applicationUrl": "https://0.0.0.0:443;http://0.0.0.0:80;http://0.0.0.0:5001;https://0.0.0.0:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production",
         "INSTANCE_HOST": "10.15.176.3",
