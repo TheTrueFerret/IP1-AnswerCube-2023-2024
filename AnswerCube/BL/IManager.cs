@@ -39,7 +39,7 @@ public interface IManager
     bool CreateSlide(SlideType type, string question, string[]? options,int slideListId);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
-    bool CreateSlidelist(string title, int flowId);
+    bool CreateSlidelist(string title, string description, int flowId);
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
     SlideList GetSLideListByTitle(string title);
@@ -54,4 +54,5 @@ public interface IManager
     void CreateUserOrganization(AnswerCubeUser user,Organization organization);
     List<UserOrganization> GetDeelplatformBeheerderUsers();
     bool RemoveSlideFromList(int slideId, int slidelistid);
+    bool RemoveSlideListFromFlow(int slideListId, int flowId);
 }    

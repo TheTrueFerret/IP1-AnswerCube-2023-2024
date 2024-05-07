@@ -374,19 +374,42 @@ public class Repository : IRepository
         return false;
     }
 
-    public bool CreateSlideList(string title, int flowId)
+    public bool CreateSlideList(string title, string description, int flowId)
     {
         SlideList slideList = new SlideList
         {
-            SubTheme = new SubTheme(title),
+            SubTheme = new SubTheme(title, description),
             FlowId = flowId,
-            Flow = _context.Flows.First(f => f.Id == flowId)
+            Title = title,
         };
-        _context.Flows.First(f => f.Id == flowId).SlideList?.Add(slideList);
+        _context.SlideLists.Add(slideList);
         _context.SaveChanges();
-        return true;
+        
+        var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
+        if (flow != null)
+        {
+            flow.SlideList.Add(slideList);
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
     }
 
+    public bool RemoveSlideListFromFlow(int slideListId, int flowId)
+    {
+        SlideList slideList = _context.SlideLists.FirstOrDefault(sl => sl.Id == slideListId);
+        Flow flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
+        
+        if (slideList != null || flow != null )
+        {
+            _context.SlideLists.Remove(slideList);
+            _context.SaveChanges();
+            return true;
+        }
+
+        return false;
+    }
+    
     public List<Slide> ReadSlideList()
     {
         return _context.Slides.ToList();
@@ -532,4 +555,5 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+    
 }
