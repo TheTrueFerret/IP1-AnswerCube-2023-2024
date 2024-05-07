@@ -39,6 +39,27 @@ public interface IRepository
     bool DeleteProject(int id);
     Project ReadProjectById(int projectid);
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
-    Task<bool> UpdateProject(Project project, string title, string description);
+    Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
+    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlideList(string title, string description, int flowId);
+    bool RemoveSlideListFromFlow(int slideListId, int flowId);
+    List<Slide> ReadSlideList();
+    SlideList ReadSLideListByTitle(string title);
+    bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
+    Project ReadProjectWithFlowsById(int projectId);
+    Flow ReadFlowById(int flowId);
+    Flow ReadFlowWithProjectById(int flowId);
+    SlideList GetSlideListWithFlowById(int slideListId);
+    IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
+    IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
+    void UpdateFlow(Flow model); 
+    Organization CreateNewOrganization(string email, string name);
+    void SaveBeheerderAndOrganization(string email, string organizationName);
+    bool CreateUserOrganization(AnswerCubeUser user);
+    List<UserOrganization> ReadAllDeelplatformBeheerders();
+    void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
+    bool RemoveSlideFromList(int slideId, int slidelistid);
+    bool RemoveDpbFromOrganization(string userId, int organisationid);
+    bool SearchDeelplatformByName(string deelplatformName);
 }

@@ -88,35 +88,37 @@ namespace AnswerCube.UI.MVC.Controllers
             return View(project);
         }
 
-        public async Task<IActionResult> SaveProjectChanges(int projectId, string title, string description)
+        public async Task<IActionResult> SaveProjectChanges(Project updatedProject, int projectId)
         {
-            Project project = _manager.GetProjectById(projectId);
+            updatedProject.Id = projectId;
+
+            if (await _manager.UpdateProject(updatedProject))
+            {
+                var project = _manager.GetProjectById(projectId);
+                return RedirectToAction("Project",
+                    new { projectid = project.Id, organizationId = project.Organization.Id });
+            }
+
+            return View("Error");
+        }
+
+        public IActionResult Flows(int projectId)
+        {
+            //TODO: Flows zijn nog niet compleet gemaakt
+            Project project = _manager.GetProjectWithFlowsById(projectId);
             if (project == null)
             {
                 return View("Error");
             }
 
-            if (await _manager.UpdateProject(project, title, description))
-            {
-                return RedirectToAction("Project",
-                    new { projectid = projectId, organizationId = project.Organization.Id });
-            }
-            else
-            {
-                return View("Error");
-            }
+            return View(project);
         }
 
-        public IActionResult Flows()
+        public IActionResult NewFlowView(int projectId)
         {
-            //TODO: Flows zijn nog niet compleet gemaakt
-            return View();
-        }
-
-        public IActionResult NewFlow()
-        {
-            //TODO: Flows creation
-            return View();
+            //This goes to the NewFlowView
+            Project project = _manager.GetProjectById(projectId);
+            return View(project);
         }
     }
 }

@@ -147,12 +147,124 @@ public class Manager : IManager
         return await _repository.CreateProject(organizationId, title, description, isActive);
     }
 
-    public async Task<bool> UpdateProject(Project project, string title, string description)
+    public async Task<bool> UpdateProject(Project project)
     {
-        return await _repository.UpdateProject(project, title, description);
+        return await _repository.UpdateProject(project);
     }
+
     public List<Answer> GetAnswers()
     {
         return _repository.GetAnswers();
+    }
+
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    {
+        if (type == SlideType.InfoSlide && options.Length == 1)
+        {
+            string info = question + "\n" + options[0];
+            return _repository.CreateSlide(type, info, null!, slideListId);
+        }
+
+        return _repository.CreateSlide(type, question, options, slideListId);
+    }
+
+    public List<Slide> GetAllSlides()
+    {
+        return _repository.ReadSlideList();
+    }
+
+    public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
+    {
+        return _repository.CreateFlow(name, desc, circularFlow, projectId);
+    }
+
+    public bool CreateSlidelist(string title, string description, int flowId)
+    {
+        return _repository.CreateSlideList(title, description, flowId);
+    }
+
+    public Project GetProjectWithFlowsById(int projectId)
+    {
+        return _repository.ReadProjectWithFlowsById(projectId);
+    }
+
+    public Flow GetFlowById(int flowId)
+    {
+        return _repository.ReadFlowById(flowId);
+    }
+
+    public SlideList GetSLideListByTitle(string title)
+    {
+        return _repository.ReadSLideListByTitle(title);
+    }
+
+    public Flow GetFlowWithProjectById(int flowId)
+    {
+        return _repository.ReadFlowWithProjectById(flowId);
+    }
+
+    public SlideList GetSlideListWithFlowById(int slideListId)
+    {
+        return _repository.GetSlideListWithFlowById(slideListId);
+    }
+
+    public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
+    {
+        return _repository.GetSlideListsByFlowId(flowId);
+    }
+
+    public IEnumerable<Slide> GetSlidesBySlideListId(int slideListId)
+    {
+        return _repository.ReadSlidesBySlideListId(slideListId);
+    }
+
+    public void UpdateFlow(Flow model)
+    {
+        _repository.UpdateFlow(model);
+    }
+
+    public Organization CreateNewOrganization(string email, string name)
+    {
+        return _repository.CreateNewOrganization(email, name);
+    }
+
+    public bool AddUserToOrganization(AnswerCubeUser user)
+    {
+        return _repository.CreateUserOrganization(user);
+    }
+
+    public void SaveBeheerderAndOrganization(string email, Organization organization)
+    {
+        _repository.SaveBeheerderAndOrganization(email, organization.Name);
+    }
+
+    public void CreateUserOrganization(AnswerCubeUser user, Organization organization)
+    {
+        _repository.CreateNewUserOrganization(user, organization);
+    }
+
+    public List<UserOrganization> GetDeelplatformBeheerderUsers()
+    {
+        return _repository.ReadAllDeelplatformBeheerders();
+    }
+
+    public bool RemoveSlideFromList(int slideId, int slidelistid)
+    {
+        return _repository.RemoveSlideFromList(slideId, slidelistid);
+    }
+
+    public bool RemoveDpbFromOrganization(string userId, int organisationid)
+    {
+        return _repository.RemoveDpbFromOrganization(userId, organisationid);
+    }
+
+    public bool SearchDeelplatformByName(string deelplatformName)
+    {
+        return _repository.SearchDeelplatformByName(deelplatformName);
+    }
+
+    public bool RemoveSlideListFromFlow(int slideListId, int flowId)
+    {
+        return _repository.RemoveSlideListFromFlow(slideListId, flowId);
     }
 }

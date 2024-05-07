@@ -73,11 +73,11 @@
         <form method="post" action="@Url.Action("CreateProject", "Project", new {organizationId = Model.Id})">
             <div class="form-group">
                 <label for="title" class="form-label">Title:</label>
-                <input type="text" id="title" name="title" class="form-input" placeholder="Project Title"/>
+                <input type="text" id="title" name="title" class="form-input" placeholder="Project Title" required/>
             </div>
             <div class="form-group">
                 <label for="description" class="form-label">Description:</label>
-                <textarea id="description" name="description" class="form-input" placeholder="Project Description"></textarea>
+                <textarea id="description" name="description" class="form-input" placeholder="Project Description" required></textarea>
             </div>
             <div class="form-group">
                 <label class="form-checkbox-label" for="isActive">

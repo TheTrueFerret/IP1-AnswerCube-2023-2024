@@ -1,8 +1,173 @@
-@model dynamic
+@using Domain
+@model AnswerCube.BL.Domain.Project.Project
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Flow overzicht";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<div id="flowPageContent">
+    <style>
+        #flowPageContent .container {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        #flowPageContent #forumData {
+            margin: 10px;
+        }
+
+        #flowPageContent .column {
+            flex: 1;
+            padding: 10px;
+        }
+
+        #flowPageContent .box {
+            background-color: #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #flowPageContent .box-title {
+            color: white;
+            background-color: #555;
+            margin: 5px;
+            padding: 5px;
+            font-size: 20px; 
+        }
+
+        #flowPageContent .flow-button {
+            background-color: #fff;
+            margin: 5px;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 20px; 
+        }
+        
+        #flowPageContent .flow-button:hover {
+            background-color: lightcyan;
+        }
+
+        #flowPageContent .active {
+            background-color: white;
+        }
+
+        #flowPageContent .overflow-container {
+            max-height: calc(50vh - 40px);
+            overflow-y: auto;
+        }
+
+        #flowPageContent .new-flow-button {
+            text-align: center;
+            background-color: #fff;
+            margin: 5px;
+            padding: 10px;
+            font-weight: bold; 
+            font-size: 20px; 
+        }
+        
+        #flowPageContent .new-flow-button span {
+            display: block; /*   + teken op nieuwwe regel */
+        }
+
+        #flowPageContent .new-flow-button:hover {
+            background-color: lightcyan;
+        }
+        
+        #flowPageContent .installations-container .flow-button:hover {
+            background-color: white;
+        }
+    </style>
+
+    <div class="container">
+        <div class="column">
+            <div class="box">
+                <div class="box-title">Flows</div>
+                @*TODO: Add way to show installations for each flow*@
+                @if (Model.Flows.Count == 0)
+                {
+                    <div class="flow-button">No Flows</div>
+                }
+                else
+                {
+                    @foreach (var flow in Model.Flows)
+                    {
+                        <div class="flow-button">
+                            <a class="text-decoration-none" asp-action="FlowDetails" asp-controller="Flow" asp-route-flowId="@flow.Id">
+                                <div class="card-header">@flow.Name</div>
+                            </a>
+                        </div>
+                    }
+                }
+                <a asp-action="NewFlowView" asp-controller="Project" asp-route-projectId="@Model.Id">
+                    <div class="card-header new-flow-button">Create New Flow</div>
+                </a>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <div class="box-title">Active Installations</div>
+                <div class="overflow-container installations-container" id="activeInstallations"></div>
+            </div>
+            <div class="box">
+                <div class="box-title">Forum</div>
+                <div class="overflow-container" id="forumData"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function showInstallations(flowName) {
+        var installations = {
+            "Flow 1": ["Installation 100", "Installation 300", "Installation 700"],
+            "Flow 2": ["Installation 200", "Installation 400", "Installation 800"],
+            // ..
+        };
+
+        var activeInstallations = installations[flowName];
+        var activeInstallationsHtml = "";
+
+        activeInstallations.forEach(function (installation) {
+            activeInstallationsHtml += "<div class='flow-button'>" + installation + "</div>";
+        });
+
+        document.getElementById("activeInstallations").innerHTML = activeInstallationsHtml;
+
+        var forumData = {
+            "Flow 1": {
+                ideas: 50,
+                reactions: 60,
+                users: 150
+            },
+            "Flow 2": {
+                ideas: 70,
+                reactions: 80,
+                users: 200
+            },
+            // ..
+        };
+
+        var forumDataHtml = "<div>Total Ideas: " + forumData[flowName].ideas + "</div>" +
+            "<div>Total Reactions: " + forumData[flowName].reactions + "</div>" +
+            "<div>Total Users: " + forumData[flowName].users + "</div>";
+
+        document.getElementById("forumData").innerHTML = forumDataHtml;
+
+        // Highlight
+        var flowButtons = document.querySelectorAll(".flow-button");
+        flowButtons.forEach(function (button) {
+            if (button.textContent === flowName) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
+        });
+    }
+
+    function createNewFlow() {
+        alert("New Flow Created!");
+    }
+</script>
+}

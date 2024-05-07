@@ -70,24 +70,32 @@
 <div class="form-container">
     <div class="form-column">
         <h2>New Flow</h2>
+        <h2> Creating Flow for @Model.Title</h2>
 
-        <form method="post"/>
-        <div class="form-group">
-            <label for="name" class="form-label">Name:</label>
-            <input type="text" id="name" name="name" class="form-input" value=""/>
-        </div>
-        <div class="form-group">
-            <label for="description" class="form-label">Description:</label>
-            <textarea id="description" name="description" class="form-input"></textarea>
-        </div>
-        <div class="form-group">
-            <label class="form-checkbox-label">
-                <input type="checkbox" id="active" name="active" checked/>
-                Active
-            </label>
-        </div>
-        <br/>
-        <button type="submit" class="form-submit">Confirm</button>
+        <form method="post" asp-action="AddFlow" asp-controller="Flow">
+            <div class="form-group">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="name" required/>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Description:</label>
+                <textarea id="description" name="desc" class="form-input"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Flow Type:</label>
+                <div class="form-checkbox-label">
+                    <input type="radio" id="circularFlow" name="flowType" value="circular" checked/>
+                    <label for="circularFlow">Circular Flow</label>
+                </div>
+                <div class="form-checkbox-label">
+                    <input type="radio" id="linearFlow" name="flowType" value="linear"/>
+                    <label for="linearFlow">Linear Flow</label>
+                </div>
+            </div>
+            <input type="number" for="projectId" name="projectId" hidden value="@Model.Id">
+            <br/>
+            <button type="submit" class="form-submit">Confirm</button>
+        </form>
     </div>
-    <div style="clear:both;"></div> 
-</div> 
+    <div style="clear:both;"></div>
+</div>

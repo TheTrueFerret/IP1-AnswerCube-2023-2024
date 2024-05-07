@@ -72,52 +72,60 @@ public static class AnswerCubeInitializer
         // Add the new UserOrganization to the context and save changes
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
 
+        Flow flow = new Flow
+        {
+            Name = "linear",
+            Description = "ipsum lorum",
+            CircularFlow = false
+        };
+
         Project project1 = new Project
         {
-            Title = "Project1",
-            Description = "Project1",
+            Title = "Pirates of the Carribean",
+            Description = "This is a project about the cast, producers, fans and critics of the filmseries",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Flows = new List<Flow> { flow }
         };
         Project project2 = new Project
         {
-            Title = "Project2",
-            Description = "Project2",
+            Title = "Management KDG",
+            Description = "This project is about the management of KdG, to see how the students think about the course Management",
             IsActive = true,
             Organization = organization1
         };
         Project project3 = new Project
         {
-            Title = "Project3",
-            Description = "Project3",
+            Title = "Climate Change Research",
+            Description = "A project dedicated to studying the impacts of climate change on local ecosystems.",
             IsActive = true,
             Organization = organization2
         };
         Project project4 = new Project
         {
-            Title = "Project4",
-            Description = "Project4",
+            Title = "Urban Development",
+            Description = "This project focuses on sustainable urban development practices.",
             IsActive = true,
             Organization = organization2
         };
         Project project5 = new Project
         {
-            Title = "Project5",
-            Description = "Project5",
+            Title = "Educational Reform",
+            Description = "A project aimed at improving the quality of education in underprivileged areas.",
             IsActive = true,
             Organization = organization1
         };
         Project project6 = new Project
         {
-            Title = "Project6",
-            Description = "Project6",
+            Title = "Healthcare Improvement",
+            Description = "This project is about improving healthcare services in rural areas.",
             IsActive = true,
             Organization = organization1
         };
         Project project7 = new Project
         {
-            Title = "Project7",
-            Description = "Project7",
+            Title = "Renewable Energy",
+            Description = "A project focused on the research and development of renewable energy sources.",
             IsActive = true,
             Organization = organization1
         };
@@ -199,6 +207,21 @@ public static class AnswerCubeInitializer
 
         context.AnswerCubeUsers.AddRange(alexander, jarno, nemo, ilyasse);
 
+        SlideList slideList1 = new SlideList
+        {
+            Title = "Biography of actors",
+            SubTheme = new SubTheme("Biography of actors",
+                "This theme discusses the biography of the actors, have fun!"),
+            ConnectedSlides = new List<SlideConnection>()
+        };
+
+        SlideList slideList1punt2 = new SlideList
+        {
+            Title = "Career actors",
+            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
+            ConnectedSlides = new List<SlideConnection>()
+        };
+
         //SingleChoice
         Slide singleChoice1 = new Slide
         {
@@ -212,6 +235,17 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
+
+        SlideConnection slideConnection1 = new SlideConnection
+        {
+            Slide = singleChoice1,
+            SlideList = slideList1,
+            SlideOrder = 1
+        };
+        singleChoice1.ConnectedSlideLists.Add(slideConnection1);
+
+
         Slide singleChoice2 = new Slide
         {
             Text =
@@ -220,6 +254,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Eens", "Oneens" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection2 = new SlideConnection
+        {
+            Slide = singleChoice2,
+            SlideList = slideList1,
+            SlideOrder = 2
+        };
+        singleChoice2.ConnectedSlideLists.Add(slideConnection2);
+
         Slide singleChoice3 = new Slide
         {
             Text = "Waarop wil jij dat de focus wordt gelegd in het nieuwe stadspark?",
@@ -231,6 +274,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection3 = new SlideConnection
+        {
+            Slide = singleChoice3,
+            SlideList = slideList1,
+            SlideOrder = 3
+        };
+        singleChoice3.ConnectedSlideLists.Add(slideConnection3);
+
         Slide singleChoice4 = new Slide
         {
             Text = "Hoe sta jij tegenover deze stelling? “Mijn stad moet meer investeren in fietspaden”",
@@ -238,6 +290,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Akkoord", "Niet akkoord" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection11 = new SlideConnection
+        {
+            Slide = singleChoice4,
+            SlideList = slideList1punt2,
+            SlideOrder = 1
+        };
+        singleChoice4.ConnectedSlideLists.Add(slideConnection11);
+
         Slide singleChoice5 = new Slide
         {
             Text =
@@ -274,6 +335,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection7 = new SlideConnection
+        {
+            Slide = multipleChoice1,
+            SlideList = slideList1,
+            SlideOrder = 7
+        };
+        multipleChoice1.ConnectedSlideLists.Add(slideConnection7);
+
         Slide multipleChoice2 = new Slide
         {
             Text = "Welke sportactiviteit(en) zou jij graag in je eigen stad of gemeente kunnen beoefenen?",
@@ -281,6 +351,15 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Tennis", "Hockey", "Padel", "Voetbal", "Fitness" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection6 = new SlideConnection
+        {
+            Slide = multipleChoice2,
+            SlideList = slideList1,
+            SlideOrder = 6
+        };
+        multipleChoice2.ConnectedSlideLists.Add(slideConnection6);
+
         Slide multipleChoice3 = new Slide
         {
             Text =
@@ -296,6 +375,15 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection5 = new SlideConnection
+        {
+            Slide = multipleChoice3,
+            SlideList = slideList1,
+            SlideOrder = 5
+        };
+        multipleChoice3.ConnectedSlideLists.Add(slideConnection5);
+
         Slide multipleChoice4 = new Slide
         {
             Text = "Jij gaf aan dat je waarschijnlijk niet zal gaan stemmen. Om welke reden(en) zeg je dit?",
@@ -334,6 +422,15 @@ public static class AnswerCubeInitializer
                 { "Zeker niet", "Eerder niet", "Ik weet het nog niet", "Eerder wel", "Zeker wel" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection13 = new SlideConnection
+        {
+            Slide = rangeQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 3
+        };
+        rangeQuestion1.ConnectedSlideLists.Add(slideConnection13);
+
         Slide rangeQuestion2 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -341,6 +438,7 @@ public static class AnswerCubeInitializer
             AnswerList = new List<string> { "Ik voel me weinig tot niet betrokken", "Ik voel me (zeer) betrokken" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
         Slide rangeQuestion3 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -351,6 +449,7 @@ public static class AnswerCubeInitializer
             },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
         Slide rangeQuestion4 = new Slide
         {
             SlideType = SlideType.RangeQuestion,
@@ -360,6 +459,13 @@ public static class AnswerCubeInitializer
                 { "Helemaal oneens", "Oneens", "Noch eens, noch oneens", "Eens", "Helemaal eens" },
             ConnectedSlideLists = new List<SlideConnection>()
         };
+        SlideConnection slideConnection8 = new SlideConnection
+        {
+            Slide = rangeQuestion4,
+            SlideList = slideList1,
+            SlideOrder = 8
+        };
+        rangeQuestion4.ConnectedSlideLists.Add(slideConnection8);
 
         Slide rangeQuestion5 = new Slide
         {
@@ -370,6 +476,13 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection9 = new SlideConnection
+        {
+            Slide = rangeQuestion5,
+            SlideList = slideList1,
+            SlideOrder = 9
+        };
+        rangeQuestion5.ConnectedSlideLists.Add(slideConnection9);
 
         // Open Questions
         Slide openQuestion1 = new Slide
@@ -379,6 +492,14 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection12 = new SlideConnection
+        {
+            Slide = openQuestion1,
+            SlideList = slideList1punt2,
+            SlideOrder = 2
+        };
+        openQuestion1.ConnectedSlideLists.Add(slideConnection12);
+
         Slide openQuestion2 = new Slide
         {
             SlideType = SlideType.OpenQuestion,
@@ -387,6 +508,13 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
+        SlideConnection slideConnection4 = new SlideConnection
+        {
+            Slide = openQuestion2,
+            SlideList = slideList1,
+            SlideOrder = 4
+        };
+        openQuestion2.ConnectedSlideLists.Add(slideConnection4);
 
         // Info slides
         Slide info1 = new Slide
@@ -396,6 +524,14 @@ public static class AnswerCubeInitializer
             SlideType = SlideType.InfoSlide,
             ConnectedSlideLists = new List<SlideConnection>()
         };
+
+        SlideConnection slideConnection10 = new SlideConnection
+        {
+            Slide = info1,
+            SlideList = slideList1,
+            SlideOrder = 10
+        };
+        info1.ConnectedSlideLists.Add(slideConnection10);
 
         Slide info2 = new Slide
         {
@@ -413,94 +549,12 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>()
         };
 
-
-        SlideList slideList1 = new SlideList
+        SlideConnection slideConnection14 = new SlideConnection
         {
-            Title = "testlist1",
-            SubTheme = new SubTheme("openbaar vervoer", "ipsum lorum"),
-            ConnectedSlides = new List<SlideConnection>()
-        };
-
-
-        SlideConnection slideConnection1 = new SlideConnection
-        {
-            Slide = singleChoice1,
-            SlideList = slideList1,
-            SlideOrder = 1
-        };
-        singleChoice1.ConnectedSlideLists.Add(slideConnection1);
-
-        SlideConnection slideConnection2 = new SlideConnection
-        {
-            Slide = singleChoice2,
-            SlideList = slideList1,
-            SlideOrder = 2
-        };
-        singleChoice2.ConnectedSlideLists.Add(slideConnection2);
-
-        SlideConnection slideConnection3 = new SlideConnection
-        {
-            Slide = singleChoice3,
-            SlideList = slideList1,
-            SlideOrder = 3
-        };
-        singleChoice3.ConnectedSlideLists.Add(slideConnection3);
-
-        SlideConnection slideConnection4 = new SlideConnection
-        {
-            Slide = openQuestion2,
-            SlideList = slideList1,
+            Slide = info3,
+            SlideList = slideList1punt2,
             SlideOrder = 4
         };
-        openQuestion2.ConnectedSlideLists.Add(slideConnection4);
-
-        SlideConnection slideConnection5 = new SlideConnection
-        {
-            Slide = multipleChoice3,
-            SlideList = slideList1,
-            SlideOrder = 5
-        };
-        multipleChoice3.ConnectedSlideLists.Add(slideConnection5);
-
-        SlideConnection slideConnection6 = new SlideConnection
-        {
-            Slide = multipleChoice2,
-            SlideList = slideList1,
-            SlideOrder = 6
-        };
-        multipleChoice2.ConnectedSlideLists.Add(slideConnection6);
-
-        SlideConnection slideConnection7 = new SlideConnection
-        {
-            Slide = multipleChoice1,
-            SlideList = slideList1,
-            SlideOrder = 7
-        };
-        multipleChoice1.ConnectedSlideLists.Add(slideConnection7);
-
-        SlideConnection slideConnection8 = new SlideConnection
-        {
-            Slide = rangeQuestion4,
-            SlideList = slideList1,
-            SlideOrder = 8
-        };
-        rangeQuestion4.ConnectedSlideLists.Add(slideConnection8);
-
-        SlideConnection slideConnection9 = new SlideConnection
-        {
-            Slide = rangeQuestion5,
-            SlideList = slideList1,
-            SlideOrder = 9
-        };
-        rangeQuestion5.ConnectedSlideLists.Add(slideConnection9);
-
-        SlideConnection slideConnection10 = new SlideConnection
-        {
-            Slide = info1,
-            SlideList = slideList1,
-            SlideOrder = 10
-        };
-        info1.ConnectedSlideLists.Add(slideConnection10);
 
         // Add the SingleChoice questions to the context
         context.Slides.AddRange(singleChoice1, singleChoice2, singleChoice3, singleChoice4, singleChoice5,
@@ -513,59 +567,31 @@ public static class AnswerCubeInitializer
         context.Slides.AddRange(openQuestion1, openQuestion2);
         context.Slides.AddRange(info1, info2, info3);
 
-        slideList1.ConnectedSlides.Add(slideConnection1);
-        slideList1.ConnectedSlides.Add(slideConnection2);
-        slideList1.ConnectedSlides.Add(slideConnection3);
-        slideList1.ConnectedSlides.Add(slideConnection4);
-        slideList1.ConnectedSlides.Add(slideConnection5);
-        slideList1.ConnectedSlides.Add(slideConnection6);
-        slideList1.ConnectedSlides.Add(slideConnection7);
-        slideList1.ConnectedSlides.Add(slideConnection8);
-        slideList1.ConnectedSlides.Add(slideConnection9);
-        slideList1.ConnectedSlides.Add(slideConnection10);
-        context.SlideLists.Add(slideList1);
+        slideList1.ConnectedSlides.AddRange(new List<SlideConnection>
+        {
+            slideConnection1, slideConnection2, slideConnection3, slideConnection4, slideConnection5, slideConnection6,
+            slideConnection7, slideConnection8, slideConnection9, slideConnection10
+        });
 
+        slideList1punt2.ConnectedSlides.AddRange(new List<SlideConnection>
+        {
+            slideConnection11, slideConnection12, slideConnection13, slideConnection14
+        });
+
+        //Add slidelists to the context
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         Flow linearFlow = new Flow
         {
-            Name = "linear",
-            CircularFlow = false
+            Name = "Actors",
+            Project = project1,
+            CircularFlow = false,
+            Description = "This is a flow about actors and their lives"
         };
         linearFlow.SlideList = new List<SlideList>();
         linearFlow.SlideList.Add(slideList1);
+        linearFlow.SlideList.Add(slideList1punt2);
         context.Flows.Add(linearFlow);
-
-        context.SaveChanges();
-
-        SlideList slideList2 = new SlideList
-        {
-            Title = "testlist2",
-            SubTheme = new SubTheme("een park", "ipsum lorum"),
-            ConnectedSlides = new List<SlideConnection>()
-        };
-
-        /*slideList2.Slides = new LinkedList<Slide>();
-        slideList2.Slides.AddFirst(openQuestion1); // 7
-        slideList2.Slides.AddFirst(singleChoice4); // 8
-        slideList2.Slides.AddFirst(singleChoice5); // 1
-        slideList2.Slides.AddFirst(rangeQuestion1); // 4
-        slideList2.Slides.AddFirst(rangeQuestion2); // 5
-        slideList2.Slides.AddFirst(rangeQuestion3); // 6
-        slideList2.Slides.AddFirst(multipleChoice4); // 2
-        slideList2.Slides.AddFirst(multipleChoice5); // 3
-        context.SlideLists.Add(slideList2);*/
-
-
-        /*Flow circularFlow = new Flow
-        {
-            Name = "circular",
-            CircularFlow = true
-        };
-        circularFlow.SlideList = new List<SlideList>();
-        circularFlow.SlideList.Add(slideList2);
-
-        context.Flows.Add(circularFlow);*/
-
 
         Installation installation = new Installation()
         {

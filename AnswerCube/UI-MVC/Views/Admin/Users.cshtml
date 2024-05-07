@@ -3,27 +3,27 @@
 @using AnswerCube.BL.Domain.User
 @model AnswerCube.UI.MVC.Controllers.UserRolesDto
 
-
 @{
     ViewBag.Title = "Role Assignment";
     Layout = "_Users";
 }
 
-<h1>Users</h1>
+<h1 class="mb-4">Users</h1>
 @if (TempData["ErrorOwnAccountDelete"] != null)
 {
-    <div class="text-danger col-6">@TempData["ErrorOwnAccountDelete"]</div>
+    <div class="alert alert-danger">@TempData["ErrorOwnAccountDelete"]</div>
 }
-<table class="table">
-    <thead>
-    <input type="text" id="searchQuery" placeholder="Search by email"/>
+<div class="input-group mb-3">
+    <input type="text" id="searchQuery" class="form-control" placeholder="Search by email"/>
+</div>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
     <tr>
         <th>Email</th>
-        <th>Role's</th>
+        <th>Roles</th>
         <th>Manage Role</th>
         <th>Delete User</th>
     </tr>
-
     </thead>
     <tbody>
     @foreach (var user in Model.Users)
@@ -43,7 +43,7 @@
                     @joinedString
                 </td>
                 <td>
-                    <a style="width: auto" class="btn btn-primary" asp-controller="Admin" asp-action="Role" asp-route-id="@user.Id">
+                    <a class="btn btn-primary" asp-controller="Admin" asp-action="Role" asp-route-id="@user.Id">
                         <i class="fas fa-edit"></i >
                     </a>
                 </td>

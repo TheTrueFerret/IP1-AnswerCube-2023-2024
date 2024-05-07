@@ -1,0 +1,37 @@
+@model Domain.Flow
+
+@{
+ViewBag.Title = "Edit Flow";
+Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="container">
+    <form asp-action="EditFlow" asp-controller="Flow" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label class="form-label" asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="CircularFlow">Flow Type</label>
+            <select asp-for="CircularFlow" class="form-control">
+                <option value="true">Circular</option>
+                <option value="false">Linear</option>
+            </select>
+            <span asp-validation-for="CircularFlow" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

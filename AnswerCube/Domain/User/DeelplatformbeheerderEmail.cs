@@ -4,4 +4,5 @@ public class DeelplatformbeheerderEmail
 {
     public int Id { get; set; }
     public string Email { get; set; }
+    public string? DeelplatformNaam { get; set; }
 }

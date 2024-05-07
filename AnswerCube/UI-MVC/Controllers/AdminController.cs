@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Areas.Identity.Data;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -31,22 +32,8 @@ public class AdminController : BaseController
 
     public async Task<IActionResult> DeelplatformOverview()
     {
-        var users = await _userManager.Users.ToListAsync();
-        users = users.Where(user =>
-                _userManager.GetRolesAsync(user).Result.Any(role => role.ToLower().Equals("deelplatformbeheerder")))
-            .ToList();
-
-        var usersRoleDto = new UserRolesDto(users, new Dictionary<string, List<string>>());
-        if (users.Any())
-        {
-            foreach (var user in usersRoleDto.Users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                usersRoleDto.Roles.Add(user.Id, roles.ToList());
-            }
-        }
-
-        return View(usersRoleDto);
+        var userOrganizations = _manager.GetDeelplatformBeheerderUsers();
+        return View(userOrganizations);
     }
 
     public async Task<IActionResult> Users()
@@ -124,7 +111,7 @@ public class AdminController : BaseController
             ModelState.AddModelError(string.Empty, "Unable to assign role.");
         }
 
-        await _signInManager.RefreshSignInAsync(_userManager.FindByIdAsync(model.Id).Result);
+        await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(User).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }
 
@@ -146,12 +133,7 @@ public class AdminController : BaseController
             ModelState.AddModelError(string.Empty, "Unable to remove role.");
         }
 
-        if (model.SelectedRoleToRemove == "DeelplatformBeheerder")
-        {
-            _manager.RemoveDeelplatformBeheerderByEmail(user.Email);
-        }
-
-        await _signInManager.RefreshSignInAsync(_userManager.FindByIdAsync(model.Id).Result);
+        await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(User).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }
 
@@ -183,8 +165,15 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("AddDeelplatform")]
-    public async Task<IActionResult> AddDeelplatform([FromForm] string email)
+    public async Task<IActionResult> AddDeelplatform(string email,string deelplatformName)
     {
+        //if (_manager.SearchDeelplatformByName(deelplatformName))
+        //{
+        //    return Json(new { exists = true, deelplatformName = deelplatformName });
+        //}
+        
+        Organization organization = _manager.CreateNewOrganization(email,deelplatformName);
+        _manager.SaveBeheerderAndOrganization(email, organization);
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
@@ -210,7 +199,9 @@ public class AdminController : BaseController
             await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
             await _emailSender.SendEmailAsync(email, "You have been added as a DeelplatformBeheeder",
                 $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Role Update!</title>\n    <style>\n        /* Styles for the email template */\n        body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #fff;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Role Update!</h1>\n        <p>Your role has been updated to DeelplatformBeheerder. Please log in to your account to see the changes!</p>\n        <a href=\"{loginUrl}\" class=\"btn\">Log In Here</a>\n    </div>\n</body>\n</html>\n");
-            TempData["Success"] = "The user now has the DeelplatformBeheerder role.";
+            TempData["Success"] = $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
+            
+            _manager.CreateUserOrganization(user, organization);
         }
 
         _manager.AddDeelplatformBeheerderByEmail(email);
