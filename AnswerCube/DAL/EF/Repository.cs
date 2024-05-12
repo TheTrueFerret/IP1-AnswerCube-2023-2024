@@ -229,7 +229,8 @@ public class Repository : IRepository
 
     public bool DeleteDeelplatformBeheerderByEmail(string userEmail)
     {
-        DeelplatformbeheerderEmail deelplatformbeheerderEmail = _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail =
+            _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
         if (deelplatformbeheerderEmail == null || deelplatformbeheerderEmail.Email != userEmail)
         {
             return false;
@@ -251,7 +252,8 @@ public class Repository : IRepository
 
     public Organization ReadOrganizationById(int organizationId)
     {
-        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects).ThenInclude(p => p.Flows)
+        return _context.Organizations.Where(o => o.Id == organizationId).Include(o => o.Projects)
+            .ThenInclude(p => p.Flows)
             .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User).First();
     }
 
@@ -270,7 +272,7 @@ public class Repository : IRepository
                 _context.Flows.Remove(flow);
             }
         }
-        
+
 
         _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
         _context.SaveChanges();
@@ -335,18 +337,21 @@ public class Repository : IRepository
     {
         if (options == null || options.Length <= 0)
         {
-            //Adding an OpenQuestion
+            //Adding an OpenQuestion or Info Slide
             Slide slide = new Slide
             {
                 SlideType = type,
                 Text = question,
                 AnswerList = null
             };
-            SlideList slideList = _context.SlideLists.First(sl => sl.Id == slideListId);
+            SlideList slideList =
+                _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
             SlideConnection newSlideConnection = new SlideConnection
             {
+                SlideId = slide.Id,
                 Slide = slide,
-                SlideList = _context.SlideLists.First(sl => sl.Id == slideListId)
+                SlideList = slideList,
+                SlideListId = slideList.Id
             };
             slideList.ConnectedSlides!.Add(newSlideConnection);
             _context.SlideConnections.Add(newSlideConnection);
@@ -367,8 +372,10 @@ public class Repository : IRepository
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
             SlideConnection newSlideConnection = new SlideConnection
             {
+                SlideId = slide.Id,
                 Slide = slide,
-                SlideList = _context.SlideLists.First(sl => sl.Id == slideListId)
+                SlideList = slideList,
+                SlideListId = slideList.Id
             };
             slideList.ConnectedSlides!.Add(newSlideConnection);
             _context.SlideConnections.Add(newSlideConnection);
@@ -390,7 +397,7 @@ public class Repository : IRepository
         };
         _context.SlideLists.Add(slideList);
         _context.SaveChanges();
-        
+
         var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
         if (flow != null)
         {
@@ -398,6 +405,7 @@ public class Repository : IRepository
             _context.SaveChanges();
             return true;
         }
+
         return false;
     }
 
@@ -405,8 +413,8 @@ public class Repository : IRepository
     {
         SlideList slideList = _context.SlideLists.FirstOrDefault(sl => sl.Id == slideListId);
         Flow flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
-        
-        if (slideList != null || flow != null )
+
+        if (slideList != null || flow != null)
         {
             _context.SlideLists.Remove(slideList);
             _context.SaveChanges();
@@ -415,7 +423,7 @@ public class Repository : IRepository
 
         return false;
     }
-    
+
     public List<Slide> ReadSlideList()
     {
         return _context.Slides.ToList();
