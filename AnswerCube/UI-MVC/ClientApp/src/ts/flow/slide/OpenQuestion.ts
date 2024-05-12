@@ -4,6 +4,7 @@ import {getCookie} from "../../CookieHandler";
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
+const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 function loadOpenQuestionSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
@@ -24,6 +25,9 @@ function loadOpenQuestionSlide() {
         console.log(slide);
         if (slideElement) {
             slideElement.innerHTML = `<h4> ${slide.text} </h4>`;
+            if (slide.mediaUrl) { // Check if mediaUrl exists
+                slideElement.innerHTML += `<img src="${baseUrl}${slide.mediaUrl}" alt="Slide Image">`;
+            }
             slideElement.innerHTML += `<input type="text" id="input" value="" placeholder="Answer the question.">`;
         }
     }).catch((error: any) => {

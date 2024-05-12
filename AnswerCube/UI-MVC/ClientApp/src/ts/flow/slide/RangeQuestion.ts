@@ -5,6 +5,7 @@ let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 const jwtToken = getCookie("jwtToken");
 const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
+const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 
 function loadRangeQuestionSlide() {
@@ -28,6 +29,9 @@ function loadRangeQuestionSlide() {
             console.log(slide);
             if (slideElement) {
                 slideElement.innerHTML = `<h3>${slide.text}</h3>`;
+                if (slide.mediaUrl) { // Check if mediaUrl exists
+                    slideElement.innerHTML += `<img src="${baseUrl}${slide.mediaUrl}" alt="Slide Image">`;
+                }
                 const answersContainer = document.querySelector(".answers-container");
                 if (answersContainer) {
                     fillSliderOptions(slide.answerList);

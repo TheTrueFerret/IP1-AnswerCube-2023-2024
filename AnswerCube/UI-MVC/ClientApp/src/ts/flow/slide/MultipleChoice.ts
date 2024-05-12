@@ -4,7 +4,7 @@ import {getCookie} from "../../CookieHandler";
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
-
+const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 function loadMultipleChoiceSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
@@ -24,6 +24,9 @@ function loadMultipleChoiceSlide() {
         console.log(slide);
         if (slideElement) {
             slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+            if (slide.mediaUrl) { // Check if mediaUrl exists
+                slideElement.innerHTML += `<img src="${baseUrl}${slide.mediaUrl}" alt="Slide Image">`;
+            }
             for (const answers of slide.answerList) {
                 slideElement.innerHTML += `<input type="checkbox" id="input" value="${answers}" name="answer">${answers}<br>`;
             }

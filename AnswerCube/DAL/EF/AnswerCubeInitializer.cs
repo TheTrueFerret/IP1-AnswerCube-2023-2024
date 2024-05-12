@@ -522,7 +522,8 @@ public static class AnswerCubeInitializer
             Text = "Wat is een gemeenteraad?\n" +
                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
             SlideType = SlideType.InfoSlide,
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "GAtEsfaX0AAtdzb.jpeg"
         };
 
         SlideConnection slideConnection10 = new SlideConnection
