@@ -1,0 +1,21 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!*************************!*\
+  !*** ./src/ts/qr/qr.ts ***!
+  \*************************/
+
+window.addEventListener("load", () => {
+    // @ts-ignore
+    const uri = document.getElementById("qrCodeData").getAttribute('data-url');
+    // @ts-ignore
+    new QRCode(document.getElementById("qrCode"), {
+        text: uri,
+        width: 150,
+        height: 150
+    });
+});
+
+/******/ })()
+;
+//# sourceMappingURL=qr.entry.js.map

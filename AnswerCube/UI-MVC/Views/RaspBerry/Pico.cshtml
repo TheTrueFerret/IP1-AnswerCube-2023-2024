@@ -1,0 +1,38 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "LDR Data";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="ldrValue"></div>
+
+@section scripts {
+    <script>
+        // Function to update the LDR value on the page
+        function updateLDRValue(value) {
+            document.getElementById("ldrValue").innerText = "LDR Value: " + value;
+        }
+
+        // Function to fetch data from the server
+        function fetchData() {
+            fetch('/api/RaspBerry', { // Updated route to match the controller endpoint
+                method: 'GET' // Changed method to GET
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateLDRValue(data); // Update the LDR value on the page
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch data initially when the page loads
+        fetchData();
+
+        // Fetch data every 5 seconds
+        setInterval(fetchData, 5000);
+    </script>
+}
+

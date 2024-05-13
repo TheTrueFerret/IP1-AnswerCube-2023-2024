@@ -31,7 +31,7 @@ public class DataAnalyseController : BaseController
     public Slide GetSlideById(int id)
     {
         return _manager.GetSlideById(id);
-    }
+    }   
 
     public IActionResult Answers()
     {
