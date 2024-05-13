@@ -5,6 +5,7 @@ const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
 
+
 function loadOpenQuestionSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
@@ -87,4 +88,18 @@ function getSelectedAnswers() {
     }
     return selectedAnswers;
 }
+
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'Enter':
+            console.log('Enter');
+            postAnswer()
+            break;
+        default:
+            console.log(event.key, event.keyCode);
+            return;
+    }
+    event.preventDefault();
+});
 
