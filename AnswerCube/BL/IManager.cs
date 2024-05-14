@@ -17,7 +17,7 @@ public interface IManager
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
-    bool AddAnswer(List<string> answers,int id);
+    bool AddAnswer(List<string> answers, int id);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
     bool StartInstallation(int id, SlideList slideList);
@@ -36,10 +36,10 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
     List<Slide> GetAllSlides();
-    bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
-    bool CreateSlidelist(string title,string description ,int flowId);
+    bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
+    bool CreateSlidelist(string title, string description, int flowId);
     Project GetProjectWithFlowsById(int projectId);
     Flow GetFlowById(int flowId);
     SlideList GetSLideListByTitle(string title);
@@ -51,10 +51,21 @@ public interface IManager
     Organization CreateNewOrganization(string email, string name);
     bool AddUserToOrganization(AnswerCubeUser user);
     void SaveBeheerderAndOrganization(string email, Organization organization);
-    void CreateUserOrganization(AnswerCubeUser user,Organization organization);
+    void CreateUserOrganization(AnswerCubeUser user, Organization organization);
     List<UserOrganization> GetDeelplatformBeheerderUsers();
     bool RemoveSlideFromList(int slideId, int slidelistid);
     bool RemoveDpbFromOrganization(string userId, int organisationid);
     bool SearchDeelplatformByName(string deelplatformName);
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
-}    
+    List<Forum> GetForums();
+    Forum GetForum(int forumId);
+    bool AddIdea(int forumId, string title, string content);
+    bool AddReaction(int ideaId, string reaction);
+    int GetForumByIdeaId(int ideaId);
+
+    int GetForumByReactionId(int reactionId);
+    bool LikeReaction(int reactionId);
+    bool DislikeReaction(int reactionId);
+    bool LikeIdea(int ideaId);
+    bool DislikeIdea(int ideaId);
+}

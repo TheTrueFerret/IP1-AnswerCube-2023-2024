@@ -62,4 +62,14 @@ public interface IRepository
     bool RemoveSlideFromList(int slideId, int slidelistid);
     bool RemoveDpbFromOrganization(string userId, int organisationid);
     bool SearchDeelplatformByName(string deelplatformName);
+    List<Forum> ReadForums();
+    Forum ReadForum(int forumId);
+    int ReadForumByIdeaId(int ideaId);
+    bool CreateReaction(int ideaId, string reaction);
+    bool CreateIdea(int forumId, string title, string content);
+    int ReadForumByReactionId(int reactionId);
+    bool LikeReaction(int reactionId);
+    bool DislikeReaction(int reactionId);
+    bool LikeIdea(int ideaId);
+    bool DislikeIdea(int ideaId);
 }

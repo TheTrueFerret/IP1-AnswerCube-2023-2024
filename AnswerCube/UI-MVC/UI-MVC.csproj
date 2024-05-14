@@ -173,6 +173,7 @@
 
     <ItemGroup>
         <Folder Include="Areas\"/>
+        <Folder Include="Pages\" />
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>
 

@@ -13,11 +13,13 @@ namespace AnswerCube.DAL.EF;
 
 public class Repository : IRepository
 {
+    private readonly ILogger<Repository> _logger;
     private readonly AnswerCubeDbContext _context;
 
-    public Repository(AnswerCubeDbContext context)
+    public Repository(AnswerCubeDbContext context, ILogger<Repository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public List<Slide> GetOpenSlides()
@@ -586,5 +588,98 @@ public class Repository : IRepository
     public bool SearchDeelplatformByName(string deelplatformName)
     {
         return _context.Organizations.Any(o => o.Name == deelplatformName);
+    }
+
+    public List<Forum> ReadForums()
+    {
+        return _context.Forums.Include(f => f.Organization).Include(f => f.Ideas).ToList();
+    }
+
+    public Forum ReadForum(int forumId)
+    {
+        _logger.LogInformation("Reading forum with id: " + forumId);
+        foreach (var VARIABLE in _context.Forums)
+        {
+            _logger.LogInformation("Forum id: " + VARIABLE.Id);
+        }
+
+        return _context.Forums.Include(f => f.Ideas).ThenInclude(i => i.Reactions).Include(f => f.Organization)
+            .First(f => f.Id == forumId);
+    }
+
+    public int ReadForumByIdeaId(int ideaId)
+    {
+        return _context.Ideas.First(i => i.Id == ideaId).ForumId;
+    }
+
+    public bool CreateReaction(int ideaId, string reaction)
+    {
+        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
+        //TODO:Add user if exists
+        Reaction newReaction = new Reaction
+        {
+            Text = reaction,
+            IdeaId = ideaId,
+            Idea = idea,
+            Date = DateTime.UtcNow,
+        };
+        _context.Reactions.Add(newReaction);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool CreateIdea(int forumId, string title, string content)
+    {
+        Forum forum = _context.Forums.First(f => f.Id == forumId);
+        // Create the new idea
+        Idea newIdea = new Idea
+        {
+            Title = title,
+            Content = content,
+            ForumId = forumId,
+            Forum = forum
+        };
+
+        _context.Ideas.Add(newIdea);
+        _context.SaveChanges();
+        _logger.LogInformation(newIdea.Id.ToString());
+        return true;
+    }
+
+    public int ReadForumByReactionId(int reactionId)
+    {
+        return _context.Reactions.Include(reaction => reaction.Idea).First(r => r.Id == reactionId).Idea.ForumId;
+    }
+
+    public bool LikeReaction(int reactionId)
+    {
+        Reaction reaction = _context.Reactions.First(r => r.Id == reactionId);
+        reaction.Likes++;
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DislikeReaction(int reactionId)
+    {
+        Reaction reaction = _context.Reactions.First(r => r.Id == reactionId);
+        reaction.Dislikes++;
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool LikeIdea(int ideaId)
+    {
+        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
+        idea.Likes++;
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DislikeIdea(int ideaId)
+    {
+        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
+        idea.Dislikes++;
+        _context.SaveChanges();
+        return true;
     }
 }

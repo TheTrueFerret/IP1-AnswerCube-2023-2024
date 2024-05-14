@@ -1,0 +1,37 @@
+@model List<Domain.Forum>
+
+@{
+ViewBag.Title = "Forums";
+Layout = "_Layout";
+}
+
+<h2>Forums</h2>
+
+<div class="container">
+    <div class="row">
+        @foreach (var forum in Model)
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@forum.Organization.Name Forum</h5>
+                        @if(forum.Ideas != null)
+                        {
+                            <p class="card-text">ideen: @forum.Ideas.Count</p>
+                        }
+                        else
+                        {
+                            <p class="card-text">ideen: 0</p>
+                        }
+                        <a href="@Url.Action("ShowForum", "Forum", new { forumId = forum.Id })" class="btn btn-primary">View Forum</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
+}
