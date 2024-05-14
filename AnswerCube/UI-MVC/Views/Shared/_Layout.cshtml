@@ -33,6 +33,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
+                    </li>
+
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">

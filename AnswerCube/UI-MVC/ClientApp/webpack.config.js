@@ -7,6 +7,7 @@ module.exports = {
         site: './src/ts/site.ts',
         index: './src/ts/index.ts',
         validation: './src/ts/validation.ts',
+        initializeinstallation: './src/ts/initializeInstallation.ts',
         circularflow: './src/ts/flow/CircularFlow.ts',
         startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
