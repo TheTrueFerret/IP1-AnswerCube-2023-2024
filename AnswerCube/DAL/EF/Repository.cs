@@ -682,4 +682,15 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+
+    public List<Installation> ReadInstallationsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Installation> installations = new List<Installation>();
+        foreach (var organization in organizations)
+        {
+            installations.Add(_context.Installations.Where(i => i.Organization == organization).First());
+        }
+        return installations;
+    }
 }

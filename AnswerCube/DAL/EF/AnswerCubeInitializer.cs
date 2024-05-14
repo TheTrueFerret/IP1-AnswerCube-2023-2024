@@ -626,11 +626,13 @@ public static class AnswerCubeInitializer
 
         Installation installation = new Installation()
         {
+            Name = "BIB",
             Location = "Antwerpen",
             Active = false,
             CurrentSlideIndex = 0,
             ActiveSlideListId = 0,
             MaxSlideIndex = 0,
+            Organization = organization1
         };
         context.Installations.Add(installation);
         context.SaveChanges();

@@ -1,5 +1,7 @@
+@using Domain
 @{
     Layout = "_GeneralLayout";
+    var installations = ViewBag.InactiveInstallations as List<Installation>;
 }
 
 @section Scripts
@@ -13,8 +15,10 @@
         <div class="form-group">
             <label for="inactiveInstallations">Select an Inactive Installation</label>
             <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
-                <option value="installation1">Gemeentehuis Antwerpen</option>
-                <option value="installation2">BIB Aartselaar</option>
+                @foreach (var installation in installations)
+                {
+                    <option value="@installation.Id">@installation.Name @installation.Location</option>
+                }
             </select>
         </div>
     </form>

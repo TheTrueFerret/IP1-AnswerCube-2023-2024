@@ -72,4 +72,5 @@ public interface IRepository
     bool DislikeReaction(int reactionId);
     bool LikeIdea(int ideaId);
     bool DislikeIdea(int ideaId);
+    List<Installation> ReadInstallationsByUserId(string userId);
 }

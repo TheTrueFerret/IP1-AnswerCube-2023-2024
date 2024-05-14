@@ -317,4 +317,9 @@ public class Manager : IManager
     {
         return _repository.DislikeIdea(ideaId);
     }
+
+    public List<Installation> GetInstallationsByUserId(string userId)
+    {
+        return _repository.ReadInstallationsByUserId(userId);
+    }
 }
