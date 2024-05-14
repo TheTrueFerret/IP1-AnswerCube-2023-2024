@@ -6,10 +6,10 @@ const slideElement: HTMLElement | null = document.getElementById("slide");
 const jwtToken = getCookie("jwtToken");
 const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
 
-var checkboxes : any;
-var currentCheckedIndex: number;
-var totalCheckboxes: number;
-
+let rangeInput: any;
+let min: number;
+let max: number;
+let step: number;
 
 function loadRangeQuestionSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
@@ -37,6 +37,10 @@ function loadRangeQuestionSlide() {
                     fillSliderOptions(slide.answerList);
                 }
             }
+            rangeInput = document.querySelector<HTMLInputElement>('input[type="range"]');
+            min = parseInt(rangeInput.min, 10);
+            max = parseInt(rangeInput.max, 10);
+            step = rangeInput.step ? parseInt(rangeInput.step, 10) : 1;
         })
         .catch((error: any) => {
             console.error(error);
@@ -119,11 +123,11 @@ document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowDown':
             console.log('ArrowDown');
-            moveCheckedRadioButton('down')
+            moveRangeButton('down')
             break;
         case 'ArrowUp':
             console.log('ArrowUp');
-            moveCheckedRadioButton('up')
+            moveRangeButton('up')
             break;
         case 'ArrowLeft':
             console.log('ArrowLeft');
@@ -161,26 +165,16 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-function moveCheckedRadioButton(direction: 'up' | 'down') {
-    // Check if there's a radio button checked
-    if (currentCheckedIndex === -1) {
-        checkboxes[0].checked = true;
-        currentCheckedIndex = 0
-        return;
+function moveRangeButton(direction: 'up' | 'down') {
+    rangeInput.focus()
+    if (direction == "up") {
+        if (rangeInput.valueAsNumber < max) {
+            rangeInput.valueAsNumber += step;
+        }
     }
-
-    let newIndex;
-    if (direction === 'up') {
-        newIndex = currentCheckedIndex - 1;
-        if (newIndex < 0) newIndex = totalCheckboxes - 1;
-    } else if (direction === 'down') {
-        newIndex = currentCheckedIndex + 1;
-        if (newIndex >= totalCheckboxes) newIndex = 0;
-    } else {
-        return; // Invalid direction
+    if (direction == "down") {
+        if (rangeInput.valueAsNumber > min) {
+            rangeInput.valueAsNumber -= step;
+        }
     }
-
-    checkboxes[currentCheckedIndex].checked = false;
-    checkboxes[newIndex].checked = true;
-    currentCheckedIndex = newIndex
 }

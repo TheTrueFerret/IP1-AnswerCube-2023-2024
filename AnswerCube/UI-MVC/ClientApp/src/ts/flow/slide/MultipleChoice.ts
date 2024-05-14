@@ -32,6 +32,9 @@ function loadMultipleChoiceSlide() {
                 slideElement.innerHTML += `<input type="checkbox" id="input" value="${answers}" name="answer">${answers}<br>`;
             }
         }
+        checkboxes = document.querySelectorAll('input[name="answer"]');
+        currentCheckedIndex = -1;
+        totalCheckboxes = checkboxes.length;
     }).catch((error: any) => {
         console.error(error);
         if (slideElement) {
@@ -111,7 +114,6 @@ document.addEventListener('keydown', (event) => {
             break;
         case 'ArrowRight':
             console.log('ArrowRight');
-            checkButton();
             break;
         case 'a' || 'A':
             console.log('a');
@@ -146,7 +148,7 @@ document.addEventListener('keydown', (event) => {
 function moveSelectedButton(direction: 'up' | 'down') {
     // Check if there's a checkbox checked
     if (currentCheckedIndex === -1) {
-        checkboxes[0].checked = true;
+        checkboxes[0].focus();
         currentCheckedIndex = 0;
         return;
     }
@@ -161,9 +163,7 @@ function moveSelectedButton(direction: 'up' | 'down') {
     } else {
         return; // Invalid direction
     }
-
-    checkboxes[currentCheckedIndex].checked = false;
-    checkboxes[newIndex].checked = true;
+    checkboxes[newIndex].focus();
     currentCheckedIndex = newIndex;
 }
 
