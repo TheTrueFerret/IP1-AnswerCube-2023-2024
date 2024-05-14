@@ -45,6 +45,11 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Admin").Id,
             UserId = "superUser1"
         });
+        context.UserRoles.Add(new IdentityUserRole<string>
+        {
+            RoleId = context.Roles.First(role => role.Name == "Gebruiker").Id,
+            UserId = "superUser1"
+        });
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
@@ -62,19 +67,17 @@ public static class AnswerCubeInitializer
             {
                 Title = "Change the Caribian Flow",
                 Content = "So people can enjoy the Caribian flow",
-                Likes = 10,
-                Dislikes = 2,
                 ForumId = 1,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                User = yannick
             },
             new Idea
             {
                 Title = " Change the way we manage KdG",
                 Content = "So we can improve the quality of the course",
-                Likes = 20,
-                Dislikes = 3,
                 ForumId = 1,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                User = yannick
             }
         };
         answerCubeForum.Ideas.AddRange(ideas);

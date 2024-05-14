@@ -59,13 +59,13 @@ public interface IManager
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Forum> GetForums();
     Forum GetForum(int forumId);
-    bool AddIdea(int forumId, string title, string content);
-    bool AddReaction(int ideaId, string reaction);
+    bool AddIdea(int forumId, string title, string content, AnswerCubeUser user);
+    bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user);
     int GetForumByIdeaId(int ideaId);
 
     int GetForumByReactionId(int reactionId);
-    bool LikeReaction(int reactionId);
-    bool DislikeReaction(int reactionId);
-    bool LikeIdea(int ideaId);
-    bool DislikeIdea(int ideaId);
+    bool LikeReaction(int reactionId,AnswerCubeUser user);
+    bool DislikeReaction(int reactionId,AnswerCubeUser user);
+    bool LikeIdea(int ideaId,AnswerCubeUser user);
+    bool DislikeIdea(int ideaId,AnswerCubeUser user);
 }

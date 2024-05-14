@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @model Domain.Forum
 
 @{
@@ -8,27 +9,27 @@
 <h2>@Model.Organization.Name</h2>
 
 <a href="@Url.Action("Forums", "Forum")" class="btn btn-primary">Back to Forums</a>
-
-
 <div class="row mt-4">
     <div class="col-md-12">
-        <h2>Add an idea</h2>
-        <div class="card">
-            <div class="card-body">
-                <form id="new-idea-form" method="post" asp-action="AddIdea" asp-controller="Forum" asp-route-forumId="@Model.Id">
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" id="title" name="title" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="content">Content</label>
-                        <textarea id="content" name="content" class="form-control" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+        @if (User.IsInRole("Gebruiker"))
+        {
+            <h2>Add an idea</h2>
+            <div class="card">
+                <div class="card-body">
+                    <form id="new-idea-form" method="post" asp-action="AddIdea" asp-controller="Forum" asp-route-forumId="@Model.Id">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            <textarea id="content" name="content" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
             </div>
-        </div>
-
+        }
         @if (Model.Ideas.Any())
         {
             <h3>Ideas</h3>
@@ -42,17 +43,18 @@
                                     <div class="col-md-8">
                                         <h5 class="card-title">@idea.Title</h5>
                                         <p class="card-text">@idea.Content</p>
+                                        <p class="card-text">@idea.User</p>
                                     </div>
                                     <div class="col-md-4 d-flex align-items-start justify-content-end">
                                         <div>
                                             <form asp-action="LikeIdea" asp-controller="Forum" asp-route-ideaId="@idea.Id">
-                                                <button class="btn btn-light">
-                                                    <i class="fa-regular fa-thumbs-up"></i> @idea.Likes
+                                                <button class="btn btn-light" @(User.IsInRole("Gebruiker") && !idea.Likes.Any(l => l.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) ? "" : "disabled")>
+                                                    <i class="fa-regular fa-thumbs-up"></i> @idea.Likes.Count
                                                 </button>
                                             </form>
                                             <form asp-action="DislikeIdea" asp-controller="Forum" asp-route-ideaId="@idea.Id">
-                                                <button class="btn btn-light ml-2">
-                                                    <i class="fa-regular fa-thumbs-down"></i> @idea.Dislikes
+                                                <button class="btn btn-light ml-2" @(User.IsInRole("Gebruiker") && !idea.Dislikes.Any(l => l.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) ? "" : "disabled")>
+                                                    <i class="fa-regular fa-thumbs-down"></i> @idea.Dislikes.Count
                                                 </button>
                                             </form>
                                         </div>
@@ -67,14 +69,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        @if (reaction.User != null)
-                                                        {
-                                                            <h6 class="card-title">@reaction.User?.UserName</h6>
-                                                        }
-                                                        else
-                                                        {
-                                                            <h6 class="card-title">Anonymous</h6>
-                                                        }
+                                                        <h6 class="card-title">@(reaction.User != null ? reaction.User : "Anonymous")</h6>
                                                         <p class="card-text">@reaction.Text</p>
                                                         <p class="card-text">
                                                             <small class="text-muted">@reaction.Date.ToString("g")</small>
@@ -83,13 +78,13 @@
                                                     <div class="col-md-6 d-flex justify-content-end align-items-end">
                                                         <div>
                                                             <form asp-action="LikeReaction" asp-controller="Forum" asp-route-reactionId="@reaction.Id">
-                                                                <button class="btn btn-light">
-                                                                    <i class="fa-regular fa-thumbs-up"></i> @reaction.Likes
+                                                                <button class="btn btn-light" @(User.IsInRole("Gebruiker") && !reaction.Likes.Any(l => l.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) ? "" : "disabled")>
+                                                                    <i class="fa-regular fa-thumbs-up"></i> @reaction.Likes.Count
                                                                 </button>
                                                             </form>
                                                             <form asp-action="DislikeReaction" asp-controller="Forum" asp-route-reactionId="@reaction.Id">
-                                                                <button class="btn btn-light ml-2">
-                                                                    <i class="fa-regular fa-thumbs-down"></i> @reaction.Dislikes
+                                                                <button class="btn btn-light ml-2" @(User.IsInRole("Gebruiker") && !reaction.Dislikes.Any(l => l.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) ? "" : "disabled")>
+                                                                    <i class="fa-regular fa-thumbs-down"></i> @reaction.Dislikes.Count
                                                                 </button>
                                                             </form>
                                                         </div>

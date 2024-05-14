@@ -31,6 +31,8 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Forum> Forums { get; set; }
     public DbSet<Idea> Ideas { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
+    public DbSet<Like> Likes { get; set; }
+    public DbSet<Dislike> Dislikes { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
