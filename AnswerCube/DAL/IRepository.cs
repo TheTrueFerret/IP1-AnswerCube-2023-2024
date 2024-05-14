@@ -65,11 +65,11 @@ public interface IRepository
     List<Forum> ReadForums();
     Forum ReadForum(int forumId);
     int ReadForumByIdeaId(int ideaId);
-    bool CreateReaction(int ideaId, string reaction);
-    bool CreateIdea(int forumId, string title, string content);
+    bool CreateReaction(int ideaId, string reaction,AnswerCubeUser? user);
+    bool CreateIdea(int forumId, string title, string content,AnswerCubeUser user);
     int ReadForumByReactionId(int reactionId);
-    bool LikeReaction(int reactionId);
-    bool DislikeReaction(int reactionId);
-    bool LikeIdea(int ideaId);
-    bool DislikeIdea(int ideaId);
+    bool LikeReaction(int reactionId,AnswerCubeUser user);
+    bool DislikeReaction(int reactionId,AnswerCubeUser user);
+    bool LikeIdea(int ideaId,AnswerCubeUser user);
+    bool DislikeIdea(int ideaId,AnswerCubeUser user);
 }
