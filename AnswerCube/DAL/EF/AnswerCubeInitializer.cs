@@ -51,7 +51,35 @@ public static class AnswerCubeInitializer
             "skybloom44@gmail.com");
         var organization2 = new Organization("AnswerCube",
             "answercubeintegratie@gmail.com");
-
+        Forum answerCubeForum = new Forum()
+        {
+            Organization = organization2,
+            Ideas = new List<Idea>()
+        };
+        List<Idea> ideas = new List<Idea>
+        {
+            new Idea
+            {
+                Title = "Change the Caribian Flow",
+                Content = "So people can enjoy the Caribian flow",
+                Likes = 10,
+                Dislikes = 2,
+                ForumId = 1,
+                Date = DateTime.UtcNow
+            },
+            new Idea
+            {
+                Title = " Change the way we manage KdG",
+                Content = "So we can improve the quality of the course",
+                Likes = 20,
+                Dislikes = 3,
+                ForumId = 1,
+                Date = DateTime.UtcNow
+            }
+        };
+        answerCubeForum.Ideas.AddRange(ideas);
+        organization2.Forum = answerCubeForum;
+        context.Forums.Add(answerCubeForum);
 
         var userOrganization1 = new UserOrganization
         {
@@ -71,6 +99,7 @@ public static class AnswerCubeInitializer
 
         // Add the new UserOrganization to the context and save changes
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
+        context.SaveChanges();
 
         Flow flow = new Flow
         {
@@ -90,7 +119,8 @@ public static class AnswerCubeInitializer
         Project project2 = new Project
         {
             Title = "Management KDG",
-            Description = "This project is about the management of KdG, to see how the students think about the course Management",
+            Description =
+                "This project is about the management of KdG, to see how the students think about the course Management",
             IsActive = true,
             Organization = organization1
         };
@@ -218,7 +248,8 @@ public static class AnswerCubeInitializer
         SlideList slideList1punt2 = new SlideList
         {
             Title = "Career actors",
-            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
+            SubTheme = new SubTheme("Career stuff of all actors",
+                "This theme discusses the career of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
 

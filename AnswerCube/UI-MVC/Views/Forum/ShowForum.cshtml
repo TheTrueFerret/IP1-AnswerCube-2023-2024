@@ -1,0 +1,129 @@
+@model Domain.Forum
+
+@{
+    ViewBag.Title = Model.Organization.Name;
+    Layout = "_Layout";
+}
+
+<h2>@Model.Organization.Name</h2>
+
+<a href="@Url.Action("Forums", "Forum")" class="btn btn-primary">Back to Forums</a>
+
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Add an idea</h2>
+        <div class="card">
+            <div class="card-body">
+                <form id="new-idea-form" method="post" asp-action="AddIdea" asp-controller="Forum" asp-route-forumId="@Model.Id">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea id="content" name="content" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        @if (Model.Ideas.Any())
+        {
+            <h3>Ideas</h3>
+            <div class="row">
+                @foreach (var idea in Model.Ideas)
+                {
+                    <div class="col-md-6">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="card-title">@idea.Title</h5>
+                                        <p class="card-text">@idea.Content</p>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-start justify-content-end">
+                                        <div>
+                                            <form asp-action="LikeIdea" asp-controller="Forum" asp-route-ideaId="@idea.Id">
+                                                <button class="btn btn-light">
+                                                    <i class="fa-regular fa-thumbs-up"></i> @idea.Likes
+                                                </button>
+                                            </form>
+                                            <form asp-action="DislikeIdea" asp-controller="Forum" asp-route-ideaId="@idea.Id">
+                                                <button class="btn btn-light ml-2">
+                                                    <i class="fa-regular fa-thumbs-down"></i> @idea.Dislikes
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (idea.Reactions.Any())
+                                {
+                                    <h6>Reactions:</h6>
+                                    @foreach (var reaction in idea.Reactions.Take(4))
+                                    {
+                                        <div class="card mt-2">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        @if (reaction.User != null)
+                                                        {
+                                                            <h6 class="card-title">@reaction.User?.UserName</h6>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h6 class="card-title">Anonymous</h6>
+                                                        }
+                                                        <p class="card-text">@reaction.Text</p>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">@reaction.Date.ToString("g")</small>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                                        <div>
+                                                            <form asp-action="LikeReaction" asp-controller="Forum" asp-route-reactionId="@reaction.Id">
+                                                                <button class="btn btn-light">
+                                                                    <i class="fa-regular fa-thumbs-up"></i> @reaction.Likes
+                                                                </button>
+                                                            </form>
+                                                            <form asp-action="DislikeReaction" asp-controller="Forum" asp-route-reactionId="@reaction.Id">
+                                                                <button class="btn btn-light ml-2">
+                                                                    <i class="fa-regular fa-thumbs-down"></i> @reaction.Dislikes
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="card-footer">
+                                <form class="reaction-form" asp-action="Addreaction" asp-controller="Forum" asp-route-ideaId="@idea.Id">
+                                    <div class="form-group">
+                                        <label id="reaction" for="reaction">Add a reaction</label>
+                                        <input name="reaction" itemid="reaction" type="text" class="form-control" required>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <h3>
+                <strong>No ideas yet. Be the first to share one!</strong>
+            </h3>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
+}

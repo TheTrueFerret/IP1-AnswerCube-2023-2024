@@ -4,12 +4,18 @@ namespace Domain;
 
 public class Forum
 {
-    private Project Project { get; set; }
-    private List<Idea> Ideas { get; set; }
+    public int Id { get; set; }
+    public int OrganizationId { get; set; }
+    public Organization Organization { get; set; }
+    public List<Idea> Ideas { get; set; }
     
-    public Forum(Project project, List<Idea> ideas)
+    public Forum()
     {
-        Project = project;
+    }
+
+    public Forum(Organization organization, List<Idea> ideas)
+    {
+        Organization = organization;
         Ideas = ideas;
     }
 }

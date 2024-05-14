@@ -267,4 +267,54 @@ public class Manager : IManager
     {
         return _repository.RemoveSlideListFromFlow(slideListId, flowId);
     }
+
+    public List<Forum> GetForums()
+    {
+        return _repository.ReadForums();
+    }
+
+    public Forum GetForum(int forumId)
+    {
+        return _repository.ReadForum(forumId);
+    }
+
+    public bool AddIdea(int forumId, string title, string content)
+    {
+        return _repository.CreateIdea(forumId, title, content);
+    }
+
+    public bool AddReaction(int ideaId, string reaction)
+    {
+        return _repository.CreateReaction(ideaId, reaction);
+    }
+
+    public int GetForumByIdeaId(int ideaId)
+    {
+        return _repository.ReadForumByIdeaId(ideaId);
+    }
+
+    public int GetForumByReactionId(int reactionId)
+    {
+        return _repository.ReadForumByReactionId(reactionId);
+    }
+
+    public bool LikeReaction(int reactionId)
+    {
+        return _repository.LikeReaction(reactionId);
+    }
+
+    public bool DislikeReaction(int reactionId)
+    {
+        return _repository.DislikeReaction(reactionId);
+    }
+
+    public bool LikeIdea(int ideaId)
+    {
+        return _repository.LikeIdea(ideaId);
+    }
+
+    public bool DislikeIdea(int ideaId)
+    {
+        return _repository.DislikeIdea(ideaId);
+    }
 }
