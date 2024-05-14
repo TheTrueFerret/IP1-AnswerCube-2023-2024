@@ -328,4 +328,14 @@ public class Manager : IManager
     {
         return _repository.DislikeIdea(ideaId, user);
     }
+
+    public List<Organization> GetOrganizations()
+    {
+        return _repository.ReadOrganizations();
+    }
+
+    public bool IsUserInOrganization(string? findFirstValue, int organizationid)
+    {
+        return _repository.IsUserInOrganization(findFirstValue, organizationid);
+    }
 }

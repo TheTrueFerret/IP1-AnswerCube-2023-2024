@@ -682,6 +682,7 @@ public class Repository : IRepository
         {
             _context.Dislikes.Remove(dislike);
         }
+
         reaction.Likes.Add(newLike);
         _context.SaveChanges();
         return true;
@@ -703,6 +704,7 @@ public class Repository : IRepository
         {
             _context.Likes.Remove(like);
         }
+
         reaction.Dislikes.Add(newDislike);
         _context.SaveChanges();
         return true;
@@ -724,6 +726,7 @@ public class Repository : IRepository
         {
             _context.Dislikes.Remove(dislike);
         }
+
         idea.Likes.Add(newLike);
         _context.SaveChanges();
         return true;
@@ -745,8 +748,20 @@ public class Repository : IRepository
         {
             _context.Likes.Remove(like);
         }
+
         idea.Dislikes.Add(newDislike);
         _context.SaveChanges();
         return true;
+    }
+
+    public List<Organization> ReadOrganizations()
+    {
+        return _context.Organizations.Include(o => o.Projects).ThenInclude(p => p.Flows)
+            .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User).ToList();
+    }
+
+    public bool IsUserInOrganization(string? findFirstValue, int organizationid)
+    {
+        return _context.UserOrganizations.Any(uo => uo.UserId == findFirstValue && uo.OrganizationId == organizationid);
     }
 }

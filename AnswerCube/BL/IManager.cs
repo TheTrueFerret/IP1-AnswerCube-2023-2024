@@ -68,4 +68,6 @@ public interface IManager
     bool DislikeReaction(int reactionId,AnswerCubeUser user);
     bool LikeIdea(int ideaId,AnswerCubeUser user);
     bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    List<Organization> GetOrganizations();
+    bool IsUserInOrganization(string? findFirstValue, int organizationid);
 }
