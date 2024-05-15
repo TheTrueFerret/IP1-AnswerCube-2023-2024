@@ -1,7 +1,7 @@
-@using Domain
+@model InstallationModel
+
 @{
     Layout = "_GeneralLayout";
-    var installations = ViewBag.InactiveInstallations as List<Installation>;
 }
 
 @section Scripts
@@ -10,12 +10,12 @@
 }
 
 <div id="mainDiv" class="container">
-    <h1 class="mt-5">Choose An Active Installation</h1>
+    <h1 class="mt-5">Choose An InActive Installation</h1>
     <form class="mt-3">
         <div class="form-group">
             <label for="inactiveInstallations">Select an Inactive Installation</label>
             <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
-                @foreach (var installation in installations)
+                @foreach (var installation in @Model.Installations)
                 {
                     <option value="@installation.Id">@installation.Name @installation.Location</option>
                 }
@@ -23,7 +23,7 @@
         </div>
     </form>
     <button id="createInstallationButton" class="btn btn-secondary mt-3">Create new Installation</button><br/>
-    <button id="Confirm" class="btn btn-primary mt-3">Confirm</button>
+    <button id="confirmButton" class="btn btn-primary mt-3">Submit</button>
 </div>
 
 <!-- Create Installation Modal -->

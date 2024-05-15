@@ -322,4 +322,10 @@ public class Manager : IManager
     {
         return _repository.ReadInstallationsByUserId(userId);
     }
+
+    public bool SetInstallationToActive(int installationId)
+    {
+        return _repository.UpdateInstallationToActive(installationId);
+    }
+
 }

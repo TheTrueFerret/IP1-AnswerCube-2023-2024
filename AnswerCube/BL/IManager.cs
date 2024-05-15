@@ -69,4 +69,6 @@ public interface IManager
     bool LikeIdea(int ideaId);
     bool DislikeIdea(int ideaId);
     List<Installation> GetInstallationsByUserId(string userId);
+    bool SetInstallationToActive(int installationId);
+
 }

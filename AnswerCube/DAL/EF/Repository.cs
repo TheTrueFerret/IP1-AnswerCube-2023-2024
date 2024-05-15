@@ -689,8 +689,19 @@ public class Repository : IRepository
         List<Installation> installations = new List<Installation>();
         foreach (var organization in organizations)
         {
-            installations.Add(_context.Installations.Where(i => i.Organization == organization).First());
+            installations.AddRange(_context.Installations
+                .Where(i => i.Organization == organization)
+                .Where(i => i.Active == false));
         }
         return installations;
+    }
+    
+    public bool UpdateInstallationToActive(int installationId)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
+        installation.Active = true;
+        _context.Installations.Update(installation);
+        _context.SaveChanges();
+        return installation.Active;
     }
 }

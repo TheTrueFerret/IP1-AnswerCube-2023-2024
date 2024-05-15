@@ -73,4 +73,5 @@ public interface IRepository
     bool LikeIdea(int ideaId);
     bool DislikeIdea(int ideaId);
     List<Installation> ReadInstallationsByUserId(string userId);
+    bool UpdateInstallationToActive(int installationId);
 }

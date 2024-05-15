@@ -1,3 +1,5 @@
+@model FlowModel
+
 @{
     Layout = "_GeneralLayout";
 }
@@ -7,3 +9,15 @@
     <script src="~/dist/initializeinstallation.entry.js" defer></script>
 }
 
+<div id="mainDiv" class="container">
+    <h1 class="mt-5">Choose a Flow!</h1>
+    <form class="mt-3">
+        <div class="form-group">
+            <label for="inactiveInstallations">Select a Flow</label>
+            <select class="form-control form-select-lg" id="allFlows" name="inactiveInstallations">
+                
+            </select>
+        </div>
+    </form>
+    <button id="confirmButton" class="btn btn-primary mt-3">Submit</button>
+</div>

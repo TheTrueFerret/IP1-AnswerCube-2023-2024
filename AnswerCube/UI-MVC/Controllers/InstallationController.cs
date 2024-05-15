@@ -2,6 +2,7 @@ using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Models.Dto;
 using AnswerCube.UI.MVC.Services;
 using Domain;
@@ -29,8 +30,9 @@ public class InstallationController : BaseController
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
     public IActionResult ChooseInstallation()
     {
-        ViewBag.Installation = _manager.GetInstallationsByUserId(_userManager.GetUserId(User));
-        return View();
+        InstallationModel installationModel = new InstallationModel();
+        installationModel.Installations = _manager.GetInstallationsByUserId(_userManager.GetUserId(User));
+        return View(installationModel);
     }
     
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
@@ -41,11 +43,14 @@ public class InstallationController : BaseController
 
     
     [HttpPost]
-    public IActionResult SetActiveInstallation(int installationId)
+    public IActionResult SetInstallationToActive([FromBody] InstallationDto installationDto)
     {
-        string token = _jwtService.GenerateToken(installationId); // Use JwtService to generate token
-        return new JsonResult(new { token });
+        _manager.SetInstallationToActive(installationDto.Id);
+        string token = _jwtService.GenerateToken(installationDto.Id); // Use JwtService to generate token
+        string url = Url.Action("ChooseFlowForInstallation");
+        return new JsonResult(new { token, url });
     }
+    
     
     [HttpPost]
     public IActionResult CreateInstallation()
@@ -62,7 +67,7 @@ public class InstallationController : BaseController
         if (installationStarted)
         {
             string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
-            return new JsonResult(new { token, slideList });
+            return new JsonResult(new { token });
         }
 
         return null;
