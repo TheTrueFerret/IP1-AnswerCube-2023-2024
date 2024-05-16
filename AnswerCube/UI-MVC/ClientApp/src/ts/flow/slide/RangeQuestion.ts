@@ -30,7 +30,23 @@ function loadRangeQuestionSlide() {
             if (slideElement) {
                 slideElement.innerHTML = `<h3>${slide.text}</h3>`;
                 if (slide.mediaUrl) { // Check if mediaUrl exists
-                    slideElement.innerHTML += `<img src="${baseUrl}${slide.mediaUrl}" alt="Slide Image">`;
+                    // Extract the filename from the media URL
+                    let filename = slide.mediaUrl.split('/').pop();
+                    // Extract the media type from the filename
+                    let mediaType = filename.split('_')[0];
+                    console.log(mediaType);
+                    // Default to "image" if the media type is not "video"
+                    if (mediaType === "video") {
+                        slideElement.innerHTML += `<video width="320" height="240" controls>
+                                                  <source src="${slide.mediaUrl}" type="video/mp4">
+                                                  Your browser does not support the video tag.
+                                                </video><br>`;
+
+                    } else if (mediaType === "image") {
+                        slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
+                    } else {
+                        slideElement.innerHTML += `<em>Unsupported media type</em>`;
+                    }
                 }
                 const answersContainer = document.querySelector(".answers-container");
                 if (answersContainer) {
@@ -54,9 +70,9 @@ if (btnSubmit) {
 }
 
 function postAnswer() {
-    
+
     let answer = getSelectedAnswer()
-    
+
     let requestBody = {
         Answer: answer
     };
@@ -65,9 +81,9 @@ function postAnswer() {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json', 
+            'Accept': 'application/json',
             'Authorization': `Bearer ${jwtToken}`
-        }, 
+        },
         body: JSON.stringify(requestBody)
     })
         .then((response: Response) => {
@@ -93,7 +109,7 @@ function getSelectedAnswer() {
     if (sliderElement) {
         let selectedAnswers: string[] = [];
         if (sliderElement.value) {
-            selectedAnswers.push(sliderElement.value); 
+            selectedAnswers.push(sliderElement.value);
         }
         return selectedAnswers;
     }

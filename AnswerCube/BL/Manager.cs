@@ -157,15 +157,16 @@ public class Manager : IManager
         return _repository.GetAnswers();
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
     {
+        
         if (type == SlideType.InfoSlide && options.Length == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId);
+            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
         }
 
-        return _repository.CreateSlide(type, question, options, slideListId);
+        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
     }
 
     public List<Slide> GetAllSlides()

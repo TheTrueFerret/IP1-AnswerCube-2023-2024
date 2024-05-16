@@ -2,13 +2,28 @@ import {max} from "@popperjs/core/lib/utils/math";
 
 let optionCount = 0;
 let maxOptions = 8;
+
+
 window.addEventListener("DOMContentLoaded", ev => {
     const slideTypeElement = document.getElementById('slideType') as HTMLSelectElement;
     slideTypeElement.onchange = function (event) {
         const selectElement = event.target as HTMLSelectElement;
         showAnswerOptions(selectElement.value);
     }
-});
+    // Get the button element
+    const buttonElement = document.getElementById("upload-button") as HTMLButtonElement;
+
+    // Check if the button element exists
+    if (buttonElement) {
+        // Add a click event listener to the button
+        buttonElement.addEventListener("click", async () => {
+            const imageElement = document.getElementById("uploaded-image") as HTMLImageElement
+            const formElement = document.getElementById("upload-form") as HTMLFormElement;
+            //const resultElement = formElement.elements.namedItem("result") as HTMLInputElement
+            const formData = new FormData(formElement)
+        });
+    }
+})
 
 function showAnswerOptions(slideType: string) {
     const answerOptionsDiv = document.getElementById('answerOptions') as HTMLDivElement;

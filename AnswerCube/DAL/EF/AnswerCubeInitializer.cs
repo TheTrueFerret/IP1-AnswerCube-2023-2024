@@ -51,6 +51,7 @@ public static class AnswerCubeInitializer
             "skybloom44@gmail.com");
         var organization2 = new Organization("AnswerCube",
             "answercubeintegratie@gmail.com");
+        
 
 
         var userOrganization1 = new UserOrganization
@@ -233,8 +234,10 @@ public static class AnswerCubeInitializer
                 "Natuur en ecologie", "Vrije tijd, sport, cultuur", "Huisvesting", "Onderwijs en kinderopvang",
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             },
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
+        
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
@@ -523,7 +526,7 @@ public static class AnswerCubeInitializer
                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
             SlideType = SlideType.InfoSlide,
             ConnectedSlideLists = new List<SlideConnection>(),
-            mediaUrl = "GAtEsfaX0AAtdzb.jpeg"
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/image_202405161408479679.jpeg"
         };
 
         SlideConnection slideConnection10 = new SlideConnection
