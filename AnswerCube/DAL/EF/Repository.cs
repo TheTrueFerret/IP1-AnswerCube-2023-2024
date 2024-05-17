@@ -462,7 +462,7 @@ public class Repository : IRepository
     }
 
 
-    public SlideList GetSlideListWithFlowById(int slideListId)
+    public SlideList ReadSlideListWithFlowById(int slideListId)
     {
         var slideList = _context.SlideLists
             .Include(sl => sl.Flow).ThenInclude(fl => fl.Project)
@@ -505,8 +505,6 @@ public class Repository : IRepository
     public void UpdateSlideList(string title, string description, int slideListId)
     {
         SlideList slideList = _context.SlideLists
-            .Include(sl => sl.Flow)
-            .ThenInclude(fl => fl!.Project)
             .Include(sl => sl.SubTheme)
             .First(sl => sl.Id == slideListId);
 

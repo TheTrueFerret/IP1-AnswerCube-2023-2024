@@ -50,7 +50,7 @@ public interface IRepository
     Project ReadProjectWithFlowsById(int projectId);
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
-    SlideList GetSlideListWithFlowById(int slideListId);
+    SlideList ReadSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     void UpdateFlow(Flow model);
