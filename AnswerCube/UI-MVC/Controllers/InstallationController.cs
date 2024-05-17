@@ -9,6 +9,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UI_MVC.Controllers;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
@@ -30,23 +31,50 @@ public class InstallationController : BaseController
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
     public IActionResult ChooseInstallation()
     {
-        InstallationModel installationModel = new InstallationModel();
-        installationModel.Installations = _manager.GetInstallationsByUserId(_userManager.GetUserId(User));
-        return View(installationModel);
+        List<InstallationModel> installationModels = new List<InstallationModel>();
+        List<Installation> installations = _manager.GetInstallationsByUserId(_userManager.GetUserId(User));
+        foreach (var installation in installations)
+        {
+            installationModels.Add(
+                new InstallationModel(
+                    installation.Id, 
+                    installation.Name, 
+                    installation.Location, 
+                    installation.Active, 
+                    installation.CurrentSlideIndex, 
+                    installation.MaxSlideIndex
+                ));
+        }
+        return View(installationModels);
     }
     
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
     public IActionResult ChooseFlowForInstallation()
     {
-        return View();
+        List<FlowModel> flowModels = new List<FlowModel>();
+        List<Flow> flows = _manager.getFlowsByUserId(_userManager.GetUserId(User));
+        foreach (var flow in flows)
+        {
+            flowModels.Add(
+                new FlowModel(
+                    flow.Id, 
+                    flow.Name, 
+                    flow.Description, 
+                    flow.CircularFlow, 
+                    flow.Project, 
+                    flow.ActiveInstallations, 
+                    flow.SlideLists
+                ));
+        }
+        return View(flowModels);
     }
 
     
     [HttpPost]
-    public IActionResult SetInstallationToActive([FromBody] InstallationDto installationDto)
+    public IActionResult SetInstallationToActive([FromBody] InstallationModel installationModel)
     {
-        _manager.SetInstallationToActive(installationDto.Id);
-        string token = _jwtService.GenerateToken(installationDto.Id); // Use JwtService to generate token
+        _manager.SetInstallationToActive(installationModel.Id);
+        string token = _jwtService.GenerateToken(installationModel.Id); // Use JwtService to generate token
         string url = Url.Action("ChooseFlowForInstallation");
         return new JsonResult(new { token, url });
     }
@@ -60,17 +88,20 @@ public class InstallationController : BaseController
     
     
     [HttpPost]
-    public IActionResult SetFlowForInstallation(int FlowId)
+    public IActionResult SetFlowForInstallation([FromForm] FlowModel flowModel)
     {
-        SlideList slideList = _manager.GetSlideListById(1);
-        bool installationStarted = _manager.StartInstallation(1, slideList);
-        if (installationStarted)
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
+        Installation installation = _manager.StartInstallationWithFlow(installationId, flowModel.Id);
+        if (installation.Flow.CircularFlow)
         {
-            string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
-            return new JsonResult(new { token });
+            return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });
         }
-
-        return null;
+        else
+        {
+            return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
+        }
     }
     
 }

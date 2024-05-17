@@ -1,4 +1,4 @@
-@model FlowModel
+@model List<FlowModel>
 
 @{
     Layout = "_GeneralLayout";
@@ -11,13 +11,30 @@
 
 <div id="mainDiv" class="container">
     <h1 class="mt-5">Choose a Flow!</h1>
-    <form class="mt-3">
-        <div class="form-group">
-            <label for="inactiveInstallations">Select a Flow</label>
-            <select class="form-control form-select-lg" id="allFlows" name="inactiveInstallations">
-                
-            </select>
-        </div>
-    </form>
-    <button id="confirmButton" class="btn btn-primary mt-3">Submit</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Project</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var flow in Model)
+            {
+                <tr>
+                    <td>@flow.Id</td>
+                    <td>@flow.Name</td>
+                    <td>@flow.Project.Title</td>
+                    <td>
+                        <form asp-action="SetFlowForInstallation" method="post">
+                            <input type="hidden" name="Id" value="@flow.Id" />
+                            <button type="submit" class="btn btn-primary">Choose Flow</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

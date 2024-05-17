@@ -34,9 +34,12 @@ public class CircularFlowController : BaseController
 
     }
     
-    public IActionResult CircularFlow()
+    public IActionResult CircularFlow(int id)
     {
-        return View();
+        bool installationUpdated = _manager.UpdateInstallation(id);
+        Slide slide = _manager.GetActiveSlideByInstallationId(id);
+        string actionName = slide.SlideType.ToString();
+        return RedirectToAction(actionName);
     }
     
     [HttpGet]
@@ -70,22 +73,6 @@ public class CircularFlowController : BaseController
     }
     
     [HttpGet]
-    public IActionResult InitializeFlow()
-    {
-        SlideList slideList = _manager.GetSlideListById(1);
-        bool installationStarted = _manager.StartInstallation(1, slideList);
-        if (installationStarted)
-        {
-            string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
-            return new JsonResult(new { token, slideList });
-        }
-        else
-        {
-            return Error();
-        }
-    }
-    
-    [HttpGet]
     public IActionResult GetNextSlide()
     {
         // Retrieve installation ID from token
@@ -100,7 +87,7 @@ public class CircularFlowController : BaseController
     public IActionResult UpdatePage()
     {
         // Retrieve installation ID from token
-        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
         bool installationUpdated = _manager.UpdateInstallation(installationId);

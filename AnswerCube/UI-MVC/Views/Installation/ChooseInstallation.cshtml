@@ -1,4 +1,4 @@
-@model InstallationModel
+@model List<InstallationModel>
 
 @{
     Layout = "_GeneralLayout";
@@ -15,7 +15,7 @@
         <div class="form-group">
             <label for="inactiveInstallations">Select an Inactive Installation</label>
             <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
-                @foreach (var installation in @Model.Installations)
+                @foreach (var installation in @Model)
                 {
                     <option value="@installation.Id">@installation.Name @installation.Location</option>
                 }

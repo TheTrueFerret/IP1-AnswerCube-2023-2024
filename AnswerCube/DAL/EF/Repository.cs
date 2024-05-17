@@ -119,23 +119,18 @@ public class Repository : IRepository
     }
 
 
-    public bool StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        Installation installation = _context.Installations.First(i => i.Id == id);
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
         installation.Active = true;
-        installation.ActiveSlideListId = slideList.Id;
+        installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides).Single(f => f.Id == flowId);
 
-
-        installation.Slides = new List<Slide>();
-        foreach (var slide in ReadSlidesFromSlideList(slideList))
-        {
-            installation.Slides.Add(slide);
-        }
-
+        installation.ActiveSlideListId = installation.Flow.SlideLists.First().Id;
+        
         installation.CurrentSlideIndex = 0;
-        installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
+        installation.MaxSlideIndex = installation.Flow.SlideLists.First().ConnectedSlides.Count;
         _context.SaveChanges();
-        return true;
+        return installation;
     }
 
     public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
@@ -189,7 +184,7 @@ public class Repository : IRepository
 
     public Slide ReadActiveSlideByInstallationId(int id)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
         SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
             .Include(sl => sl.ConnectedSlides).First();
 
@@ -403,7 +398,7 @@ public class Repository : IRepository
         var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
         if (flow != null)
         {
-            flow.SlideList.Add(slideList);
+            flow.SlideLists.Add(slideList);
             _context.SaveChanges();
             return true;
         }
@@ -704,4 +699,17 @@ public class Repository : IRepository
         _context.SaveChanges();
         return installation.Active;
     }
+
+    public List<Flow> readFlowsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Flow> flows = new List<Flow>();
+        var projectIds = organizations.SelectMany(o => o.Projects).ToList();
+
+        flows = _context.Flows
+            .Where(flow => projectIds.Contains(flow.Project))
+            .ToList();
+        return flows;
+    }
+
 }

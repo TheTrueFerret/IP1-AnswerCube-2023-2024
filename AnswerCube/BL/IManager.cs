@@ -20,7 +20,7 @@ public interface IManager
     bool AddAnswer(List<string> answers, int id);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    bool StartInstallation(int id, SlideList slideList);
+    Installation StartInstallationWithFlow(int installationId, int flowId);
     bool UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
@@ -70,5 +70,5 @@ public interface IManager
     bool DislikeIdea(int ideaId);
     List<Installation> GetInstallationsByUserId(string userId);
     bool SetInstallationToActive(int installationId);
-
+    List<Flow> getFlowsByUserId(string userId);
 }

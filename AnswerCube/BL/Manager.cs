@@ -76,9 +76,9 @@ public class Manager : IManager
         return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
 
-    public Boolean StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        return _repository.StartInstallation(id, slideList);
+        return _repository.StartInstallationWithFlow(installationId, flowId);
     }
 
     public Boolean UpdateInstallation(int id)
@@ -327,5 +327,11 @@ public class Manager : IManager
     {
         return _repository.UpdateInstallationToActive(installationId);
     }
+
+    public List<Flow> getFlowsByUserId(string userId)
+    {
+        return _repository.readFlowsByUserId(userId);
+    }
+
 
 }
