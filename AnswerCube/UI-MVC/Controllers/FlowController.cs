@@ -12,11 +12,11 @@ public class FlowController : BaseController
 {
     private readonly IManager _manager;
     private readonly ILogger<FlowController> _logger;
-    private readonly CloudStorageService cloudStorageService;
+    private readonly CloudStorageService _cloudStorageService;
 
     public FlowController(IManager manager, ILogger<FlowController> logger,CloudStorageService cloudStorageService)
     {
-        this.cloudStorageService = cloudStorageService;
+        this._cloudStorageService = cloudStorageService;
         _manager = manager;
         _logger = logger;
     }
@@ -34,6 +34,7 @@ public class FlowController : BaseController
     {
         Project project = _manager.GetProjectById(projectId);
         ViewBag.SlideListId = slidelistId;
+        ViewBag.HasCredential = _cloudStorageService.hasCredential;
         return View(project);
     }
 
@@ -43,7 +44,7 @@ public class FlowController : BaseController
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
         if (imageFile != null)
         {
-            var url = cloudStorageService.UploadFileToBucket(imageFile);
+            var url = _cloudStorageService.UploadFileToBucket(imageFile);
             if (_manager.CreateSlide(type, question, options, slideListId,url))
             {
                 return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });

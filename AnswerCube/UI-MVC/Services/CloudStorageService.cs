@@ -7,6 +7,7 @@ using Google.Cloud.Storage.V1;
 
 public class CloudStorageService
 {
+    public readonly bool hasCredential;
     private readonly string _projectId;
     private readonly string _bucketName;
     private readonly GoogleCredential _credential;
@@ -23,8 +24,16 @@ public class CloudStorageService
         _bucketName = configuration["GOOGLE_STORAGE_BUCKET"];
         //_bucketName = "answer-cube-bucket";
         _jsonAuthFile = configuration["GOOGLE_APPLICATION_CREDENTIALS"];
-        _credential= GoogleCredential.FromServiceAccountCredential(ServiceAccountCredential.FromServiceAccountData(File.OpenRead(_jsonAuthFile)));
+        if (File.Exists(_jsonAuthFile))
+        {
+            _credential= GoogleCredential.FromServiceAccountCredential(ServiceAccountCredential.FromServiceAccountData(File.OpenRead(_jsonAuthFile)));
+            hasCredential = true;
         }
+        else
+        {
+            hasCredential = false;
+        }
+    }
     /// <summary>
     /// Check the sample code from Google:
     ///   https://cloud.google.com/dotnet/docs/reference/Google.Cloud.Storage.V1/latest#sample-code
