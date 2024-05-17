@@ -7,6 +7,7 @@ using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -69,12 +70,16 @@ services.AddRazorPages().AddRazorRuntimeCompilation();
 services.AddTransient<IEmailSender, MailService>();
 
 // Add Sessions to make sure Models Persist between Controller Requests
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
+services.AddDistributedMemoryCache();
+services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+services.AddHttpContextAccessor();
+services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
 
 services.AddAuthentication().AddGoogle(googleOptions =>
 {

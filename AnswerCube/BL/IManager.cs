@@ -69,5 +69,6 @@ public interface IManager
     bool LikeIdea(int ideaId,AnswerCubeUser user);
     bool DislikeIdea(int ideaId,AnswerCubeUser user);
     List<Organization> GetOrganizations();
-    bool IsUserInOrganization(string? findFirstValue, int organizationid);
+    bool IsUserInOrganization(string? userId, int organizationid);
+    Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
 }

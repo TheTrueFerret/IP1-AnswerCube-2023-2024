@@ -17,14 +17,14 @@ public interface IRepository
 
     List<Slide> GetMultipleChoiceSlides();
     List<Slide> GetInfoSlides();
-    
+
     Slide GetSlideFromFlow(int flowId, int number);
     Slide ReadSlideById(int id);
     SlideList getSlideList();
     SlideList ReadSlideListById(int id);
-    Boolean AddAnswer(List<string> answers,int id);
+    Boolean AddAnswer(List<string> answers, int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
-    
+
     Boolean StartInstallation(int id, SlideList slideList);
     Boolean UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
@@ -46,14 +46,14 @@ public interface IRepository
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Slide> ReadSlideList();
     SlideList ReadSLideListByTitle(string title);
-    bool CreateFlow(string name, string desc, bool circularFlow,int projectId);
+    bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
     Project ReadProjectWithFlowsById(int projectId);
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
     SlideList GetSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
-    void UpdateFlow(Flow model); 
+    void UpdateFlow(Flow model);
     Organization CreateNewOrganization(string email, string name);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);
@@ -65,13 +65,14 @@ public interface IRepository
     List<Forum> ReadForums();
     Forum ReadForum(int forumId);
     int ReadForumByIdeaId(int ideaId);
-    bool CreateReaction(int ideaId, string reaction,AnswerCubeUser? user);
-    bool CreateIdea(int forumId, string title, string content,AnswerCubeUser user);
+    bool CreateReaction(int ideaId, string reaction, AnswerCubeUser? user);
+    bool CreateIdea(int forumId, string title, string content, AnswerCubeUser user);
     int ReadForumByReactionId(int reactionId);
-    bool LikeReaction(int reactionId,AnswerCubeUser user);
-    bool DislikeReaction(int reactionId,AnswerCubeUser user);
-    bool LikeIdea(int ideaId,AnswerCubeUser user);
-    bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    bool LikeReaction(int reactionId, AnswerCubeUser user);
+    bool DislikeReaction(int reactionId, AnswerCubeUser user);
+    bool LikeIdea(int ideaId, AnswerCubeUser user);
+    bool DislikeIdea(int ideaId, AnswerCubeUser user);
     List<Organization> ReadOrganizations();
-    bool IsUserInOrganization(string? findFirstValue, int organizationid);
+    bool IsUserInOrganization(string? userId, int organizationid);
+    Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
 }

@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
@@ -12,11 +14,17 @@ public class OrganizationController : BaseController
 {
     private readonly IManager _manager;
     private readonly ILogger<OrganizationController> _logger;
+    private readonly IEmailSender _emailSender;
+    private readonly UserManager<AnswerCubeUser> _userManager;
 
-    public OrganizationController(IManager manager, ILogger<OrganizationController> logger)
+
+    public OrganizationController(IManager manager, ILogger<OrganizationController> logger, IEmailSender emailSender,
+        UserManager<AnswerCubeUser> userManager)
     {
         _manager = manager;
         _logger = logger;
+        _emailSender = emailSender;
+        _userManager = userManager;
     }
 
     public IActionResult Index(string? userId, int? organizationId)
@@ -82,5 +90,27 @@ public class OrganizationController : BaseController
         }
 
         return RedirectToPage("/AccessDenied", new { area = "Identity" });
+    }
+
+    public async Task<IActionResult> AddDeelplatformbeheerderToOrganization(string email, int organizationid)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!_manager.IsUserInOrganization(userId, organizationid))
+        {
+            return Forbid(); // or return to an error page
+        }
+
+        if (_manager.IsUserInOrganization(email, organizationid))
+        {
+            // The user is already part of the organization, return an appropriate response
+            return View("Error", new ErrorViewModel());
+        }
+
+        if (_manager.AddDpbToOrgByEmail(email, userId, organizationid).Result)
+        {
+            return RedirectToAction("Index", "Organization",new{organizationId = organizationid});
+        }
+
+        return View("Error", new ErrorViewModel());
     }
 }
