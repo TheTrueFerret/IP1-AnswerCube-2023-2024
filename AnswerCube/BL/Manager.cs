@@ -333,5 +333,9 @@ public class Manager : IManager
         return _repository.readFlowsByUserId(userId);
     }
 
+    public bool AddNewInstallation(string name, string location, int organizationId)
+    {
+        return _repository.CreateNewInstallation(name, location, organizationId);
+    }
 
 }

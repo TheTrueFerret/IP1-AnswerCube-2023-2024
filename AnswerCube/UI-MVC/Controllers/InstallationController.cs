@@ -9,6 +9,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using UI_MVC.Controllers;
 
 namespace AnswerCube.UI.MVC.Controllers;
@@ -42,10 +43,15 @@ public class InstallationController : BaseController
                     installation.Location, 
                     installation.Active, 
                     installation.CurrentSlideIndex, 
-                    installation.MaxSlideIndex
+                    installation.MaxSlideIndex,
+                    installation.OrganizationId,
+                    installation.Organization
                 ));
         }
-        return View(installationModels);
+        InstallationViewModel installationViewModel = new InstallationViewModel();
+        installationViewModel.InstallationModels = installationModels;
+        installationViewModel.Organizations = _manager.GetOrganizationByUserId(_userManager.GetUserId(User));
+        return View(installationViewModel);
     }
     
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
@@ -81,9 +87,10 @@ public class InstallationController : BaseController
     
     
     [HttpPost]
-    public IActionResult CreateInstallation()
+    public IActionResult CreateInstallation([FromBody] InstallationModel installationModel)
     {
-        return Ok();
+        _manager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
+        return Ok(new { success = true, id = installationModel.Id, name = installationModel.Name, location = installationModel.Location });
     }
     
     

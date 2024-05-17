@@ -1,4 +1,4 @@
-@model List<InstallationModel>
+@model InstallationViewModel
 
 @{
     Layout = "_GeneralLayout";
@@ -15,7 +15,7 @@
         <div class="form-group">
             <label for="inactiveInstallations">Select an Inactive Installation</label>
             <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
-                @foreach (var installation in @Model)
+                @foreach (var installation in @Model.InstallationModels)
                 {
                     <option value="@installation.Id">@installation.Name @installation.Location</option>
                 }
@@ -36,7 +36,6 @@
             </div>
             <div class="modal-body">
                 <form id="newInstallationForm">
-                    <!-- Add installation form fields here -->
                     <div class="form-group">
                         <label for="installationName">Installation Name</label>
                         <input type="text" class="form-control" id="installationName" name="installationName">
@@ -45,7 +44,13 @@
                         <label for="installationLocation">Installation Location</label>
                         <input type="text" class="form-control" id="installationLocation" name="installationLocation">
                     </div>
-                    <!-- Add other installation fields here -->
+                    <label for="inactiveInstallations">Select an Organisation</label>
+                    <select class="form-control form-select-lg" id="organisations" name="organisations">
+                        @foreach (var organization in @Model.Organizations)
+                        {
+                            <option value="@organization.Id">@organization.Name</option>
+                        }
+                    </select>
                 </form>
             </div>
             <div class="modal-footer">

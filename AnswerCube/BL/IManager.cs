@@ -71,4 +71,5 @@ public interface IManager
     List<Installation> GetInstallationsByUserId(string userId);
     bool SetInstallationToActive(int installationId);
     List<Flow> getFlowsByUserId(string userId);
+    bool AddNewInstallation(string name, string location, int organizationId);
 }

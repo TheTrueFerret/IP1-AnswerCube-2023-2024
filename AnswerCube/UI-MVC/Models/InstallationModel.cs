@@ -11,8 +11,10 @@ public class InstallationModel
     public bool? Active { get; set; }
     public int? CurrentSlideIndex { get; set; }
     public int? MaxSlideIndex { get; set; }
+    public int OrganizationId { get; set; }
+    public Organization Organization { get; set; }
 
-    public InstallationModel(int id, string name, string? location, bool? active, int? currentSlideIndex, int? maxSlideIndex)
+    public InstallationModel(int id, string name, string? location, bool? active, int? currentSlideIndex, int? maxSlideIndex, int organizationId, Organization organization)
     {
         Id = id;
         Name = name;
@@ -20,5 +22,7 @@ public class InstallationModel
         Active = active;
         CurrentSlideIndex = currentSlideIndex;
         MaxSlideIndex = maxSlideIndex;
+        OrganizationId = organizationId;
+        Organization = organization;
     }
 }

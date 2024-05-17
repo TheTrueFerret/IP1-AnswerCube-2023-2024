@@ -4,13 +4,20 @@ import {getCookie, setCookie} from "./CookieHandler";
 
 let url = window.location.toString()
 const jwtToken = getCookie("jwtToken");
-let selectElement: HTMLSelectElement | null = document.getElementById("inactiveInstallations") as HTMLSelectElement
 
-const createInstallationButton = document.getElementById("createInstallationButton");
-const saveInstallationButton = document.getElementById("saveInstallationButton");
-const closeInstallationModalButton = document.getElementById("closeInstallationModal");
-const createInstallationModalElement = document.getElementById("createInstallationModal");
-const submitInstallationButton = document.getElementById("confirmButton");
+let installationSelectElement: HTMLSelectElement | null = document.getElementById("inactiveInstallations") as HTMLSelectElement;
+
+let installationName: HTMLInputElement | null = document.getElementById("installationName") as HTMLInputElement;
+let installationLocation: HTMLInputElement | null = document.getElementById("installationLocation") as HTMLInputElement;
+
+let organisationSelectElement: HTMLSelectElement | null = document.getElementById("organisations") as HTMLSelectElement;
+
+
+const createInstallationButton: HTMLElement | null = document.getElementById("createInstallationButton");
+const saveInstallationButton: HTMLElement | null = document.getElementById("saveInstallationButton");
+const closeInstallationModalButton: HTMLElement | null = document.getElementById("closeInstallationModal");
+const createInstallationModalElement: HTMLElement | null = document.getElementById("createInstallationModal");
+const submitInstallationButton: HTMLElement | null = document.getElementById("confirmButton");
 
 
 if (createInstallationButton && saveInstallationButton && createInstallationModalElement &&
@@ -18,24 +25,16 @@ if (createInstallationButton && saveInstallationButton && createInstallationModa
     const createInstallationModal = new Modal(createInstallationModalElement);
     console.log("Buttons and modal found"); // Check if this message appears in the console
 
-    // Show the modal when the "Create New Installation" button is clicked
     createInstallationButton.addEventListener("click", function () {
         createInstallationModal.show();
     });
-    // Handle form submission within the modal
     saveInstallationButton.addEventListener("click", function () {
-        // Here you can add your logic to handle the form submission
-        // For example, you can retrieve form data and perform AJAX request to save the installation
-        // After saving the installation, you can close the modal
+        CreateNewInstallation();
         createInstallationModal.hide();
     });
-
-    // Handle form submission within the modal
     closeInstallationModalButton.addEventListener("click", function () {
         createInstallationModal.hide();
     });
-
-    // When pressing the submit button
     submitInstallationButton.addEventListener("click", function () {
         submitInstallation()
     });
@@ -75,8 +74,70 @@ function submitInstallation() {
 
 
 function getSelectedInstallationValue() {
-    if (selectElement) {
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
+    if (installationSelectElement) {
+        const selectedOption = installationSelectElement.options[installationSelectElement.selectedIndex];
+        const selectedInstallationValue = selectedOption.value;
+        console.log('Selected value:', selectedInstallationValue);
+        return selectedInstallationValue;
+    }
+}
+
+
+function CreateNewInstallation() {
+    const name = getNameNewInstallation();
+    const location = getLocationNewInstallation();
+    const id = getOrganizationId()
+    
+    let requestBody = {
+        Name: name,
+        Location: location,
+        Id: id
+    };
+    console.log(requestBody);
+    fetch(RemoveLastDirectoryPartOf(url) + "/CreateInstallation", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        }
+    }).then((newInstallation: any) => {
+        if (newInstallation.success && installationSelectElement) {
+            const newOption = document.createElement('option');
+            newOption.value = newInstallation.id;
+            newOption.textContent = `${newInstallation.name} ${newInstallation.location}`;
+            installationSelectElement.append(newOption);
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+    })
+}
+
+function getNameNewInstallation() {
+    if (installationName) {
+        return installationName.value
+    } else {
+        console.error("installationName input not found");
+        return null
+    }
+}
+
+function getLocationNewInstallation() {
+    if (installationLocation) {
+        return installationLocation.value
+    } else {
+        console.error("installationLocation input not found");
+        return null
+    }
+}
+
+function getOrganizationId() {
+    if (organisationSelectElement) {
+        const selectedOption = organisationSelectElement.options[organisationSelectElement.selectedIndex];
         const selectedInstallationValue = selectedOption.value;
         console.log('Selected value:', selectedInstallationValue);
         return selectedInstallationValue;

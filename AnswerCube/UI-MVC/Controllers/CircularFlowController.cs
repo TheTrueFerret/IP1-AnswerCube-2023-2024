@@ -34,10 +34,20 @@ public class CircularFlowController : BaseController
 
     }
     
-    public IActionResult CircularFlow(int id)
+    public IActionResult CircularFlow(int? id)
     {
-        bool installationUpdated = _manager.UpdateInstallation(id);
-        Slide slide = _manager.GetActiveSlideByInstallationId(id);
+        int installationId;
+        if (id == null)
+        {
+            string token = Request.Cookies["jwtToken"];
+            installationId = _jwtService.GetInstallationIdFromToken(token);
+        }
+        else
+        {
+            installationId = (int)id;
+            _manager.UpdateInstallation(installationId);
+        }
+        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         string actionName = slide.SlideType.ToString();
         return RedirectToAction(actionName);
     }

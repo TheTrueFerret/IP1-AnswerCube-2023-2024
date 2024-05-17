@@ -75,4 +75,6 @@ public interface IRepository
     List<Installation> ReadInstallationsByUserId(string userId);
     bool UpdateInstallationToActive(int installationId);
     List<Flow> readFlowsByUserId(string userId);
+    bool CreateNewInstallation(string name, string location, int organizationId);
+
 }

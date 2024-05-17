@@ -711,5 +711,25 @@ public class Repository : IRepository
             .ToList();
         return flows;
     }
+    
+    public bool CreateNewInstallation(string name, string location, int organizationId)
+    {
+        Organization organization = _context.Organizations.Single(o => o.Id == organizationId);
+        Installation installation = new Installation
+        {
+            Name = name,
+            Location = location,
+            Active = false,
+            CurrentSlideIndex = 0,
+            MaxSlideIndex = 0,
+            ActiveSlideListId = 0,
+            OrganizationId = organizationId,
+            Organization = organization
+        };
+        _context.Installations.Add(installation);
+        _context.SaveChanges();
+        
+        return false;
+    }
 
 }
