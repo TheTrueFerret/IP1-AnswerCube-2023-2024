@@ -14,19 +14,20 @@ public class SlideListController : BaseController
         _manager = manager;
         _logger = logger;
     }
-    
-    
+
+
     [HttpGet]
     public IActionResult SlideListDetails(int slidelistId)
     {
-        SlideList slideList =  _manager.GetSlideListWithFlowById(slidelistId);
+        SlideList slideList = _manager.GetSlideListWithFlowById(slidelistId);
         foreach (var cSlides in slideList.ConnectedSlides)
         {
-            _logger.LogInformation(cSlides.Slide.ToString()); 
+            _logger.LogInformation(cSlides.Slide.ToString());
         }
+
         return View(slideList);
     }
-    
+
     public IActionResult EditSlideList(string title, string description, int slideListId)
     {
         if (ModelState.IsValid)
@@ -38,14 +39,10 @@ public class SlideListController : BaseController
         return RedirectToAction("EditSlideListView", new { slidelistId = slideListId });
     }
 
-    
+
     public IActionResult EditSlideListView(int slidelistId)
     {
         SlideList slideList = _manager.GetSlideListWithFlowById(slidelistId);
         return View(slideList);
     }
-    
-    
-    
 }
-
