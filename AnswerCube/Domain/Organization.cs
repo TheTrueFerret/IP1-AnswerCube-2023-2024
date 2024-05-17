@@ -11,6 +11,7 @@ public class Organization
     public string Email { get; set; }
     public List<Project> Projects { get; set; } = new List<Project>();
     public List<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
+    public List<Installation>? Installations { get; set; }
     public Forum Forum { get; set; } = new Forum();
     
     public Organization(string name, string email)

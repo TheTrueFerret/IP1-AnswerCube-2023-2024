@@ -104,11 +104,11 @@ public static class AnswerCubeInitializer
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
         context.SaveChanges();
 
-        Flow flow = new Flow
+        Flow circularFlow1 = new Flow
         {
-            Name = "linear",
+            Name = "CircularFlow",
             Description = "ipsum lorum",
-            CircularFlow = false
+            CircularFlow = true
         };
 
         Project project1 = new Project
@@ -117,7 +117,7 @@ public static class AnswerCubeInitializer
             Description = "This is a project about the cast, producers, fans and critics of the filmseries",
             IsActive = true,
             Organization = organization1,
-            Flows = new List<Flow> { flow }
+            Flows = new List<Flow> { circularFlow1 }
         };
         Project project2 = new Project
         {
@@ -618,25 +618,32 @@ public static class AnswerCubeInitializer
         //Add slidelists to the context
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
+        circularFlow1.SlideLists = new List<SlideList>();
+        circularFlow1.SlideLists.Add(slideList1);
+        circularFlow1.SlideLists.Add(slideList1punt2);
+        context.Flows.Add(circularFlow1);
+        
         Flow linearFlow = new Flow
         {
-            Name = "Actors",
+            Name = "LinearFlow",
             Project = project1,
             CircularFlow = false,
             Description = "This is a flow about actors and their lives"
         };
-        linearFlow.SlideList = new List<SlideList>();
-        linearFlow.SlideList.Add(slideList1);
-        linearFlow.SlideList.Add(slideList1punt2);
+        linearFlow.SlideLists = new List<SlideList>();
+        linearFlow.SlideLists.Add(slideList1);
+        linearFlow.SlideLists.Add(slideList1punt2);
         context.Flows.Add(linearFlow);
 
         Installation installation = new Installation()
         {
+            Name = "BIB",
             Location = "Antwerpen",
             Active = false,
             CurrentSlideIndex = 0,
             ActiveSlideListId = 0,
             MaxSlideIndex = 0,
+            Organization = organization1
         };
         context.Installations.Add(installation);
         context.SaveChanges();
