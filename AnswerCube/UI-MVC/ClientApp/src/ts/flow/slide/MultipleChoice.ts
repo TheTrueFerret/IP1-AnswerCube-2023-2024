@@ -6,6 +6,10 @@ var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
+var checkboxes : any;
+var currentCheckedIndex: number;
+var totalCheckboxes: number;
+
 function loadMultipleChoiceSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
@@ -48,6 +52,9 @@ function loadMultipleChoiceSlide() {
                 slideElement.innerHTML += `<input type="checkbox" id="input" value="${answers}" name="answer">${answers}<br>`;
             }
         }
+        checkboxes = document.querySelectorAll('input[name="answer"]');
+        currentCheckedIndex = -1;
+        totalCheckboxes = checkboxes.length;
     }).catch((error: any) => {
         console.error(error);
         if (slideElement) {
@@ -108,5 +115,79 @@ function getSelectedAnswers() {
         }
     }
     return selectedAnswers;
+}
+
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'ArrowDown':
+            console.log('ArrowDown');
+            moveSelectedButton('down');
+            break;
+        case 'ArrowUp':
+            console.log('ArrowUp');
+            moveSelectedButton('up');
+            break;
+        case 'ArrowLeft':
+            console.log('ArrowLeft');
+            checkButton();
+            break;
+        case 'ArrowRight':
+            console.log('ArrowRight');
+            break;
+        case 'a' || 'A':
+            console.log('a');
+            break;
+        case 's' || 'S':
+            console.log('s');
+            break;
+        case 'd' || 'D':
+            console.log('d');
+            break;
+        case 'f' || 'F':
+            console.log('f');
+            break;
+        case 'g' || 'G':
+            console.log('g');
+            break;
+        case 'h' || 'H':
+            console.log('h');
+            break;
+        case 'Enter':
+            console.log('Enter');
+            postAnswer()
+            break;
+        default:
+            console.log(event.key, event.keyCode);
+            return;
+    }
+    event.preventDefault();
+});
+
+
+function moveSelectedButton(direction: 'up' | 'down') {
+    // Check if there's a checkbox checked
+    if (currentCheckedIndex === -1) {
+        checkboxes[0].focus();
+        currentCheckedIndex = 0;
+        return;
+    }
+
+    let newIndex;
+    if (direction === 'up') {
+        newIndex = currentCheckedIndex - 1;
+        if (newIndex < 0) newIndex = totalCheckboxes - 1;
+    } else if (direction === 'down') {
+        newIndex = currentCheckedIndex + 1;
+        if (newIndex >= totalCheckboxes) newIndex = 0;
+    } else {
+        return; // Invalid direction
+    }
+    checkboxes[newIndex].focus();
+    currentCheckedIndex = newIndex;
+}
+
+function checkButton() {
+    checkboxes[currentCheckedIndex].checked = !checkboxes[currentCheckedIndex].checked;
 }
 

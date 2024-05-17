@@ -6,6 +6,7 @@ var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
+
 function loadOpenQuestionSlide() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
@@ -107,4 +108,18 @@ function getSelectedAnswers() {
     }
     return selectedAnswers;
 }
+
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'Enter':
+            console.log('Enter');
+            postAnswer()
+            break;
+        default:
+            console.log(event.key, event.keyCode);
+            return;
+    }
+    event.preventDefault();
+});
 
