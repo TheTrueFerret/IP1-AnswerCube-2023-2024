@@ -75,7 +75,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddSingleton<CloudStorageService>();
 services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");

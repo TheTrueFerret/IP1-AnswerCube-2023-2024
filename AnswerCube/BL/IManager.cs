@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -36,7 +36,7 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId,string? mediaUrl);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
     bool CreateSlidelist(string title, string description, int flowId);
@@ -59,15 +59,14 @@ public interface IManager
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Forum> GetForums();
     Forum GetForum(int forumId);
-    bool AddIdea(int forumId, string title, string content);
-    bool AddReaction(int ideaId, string reaction);
+    bool AddIdea(int forumId, string title, string content, AnswerCubeUser user);
+    bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user);
     int GetForumByIdeaId(int ideaId);
-
     int GetForumByReactionId(int reactionId);
-    bool LikeReaction(int reactionId);
-    bool DislikeReaction(int reactionId);
-    bool LikeIdea(int ideaId);
-    bool DislikeIdea(int ideaId);
+    bool LikeReaction(int reactionId,AnswerCubeUser user);
+    bool DislikeReaction(int reactionId,AnswerCubeUser user);
+    bool LikeIdea(int ideaId,AnswerCubeUser user);
+    bool DislikeIdea(int ideaId,AnswerCubeUser user);
     List<Installation> GetInstallationsByUserId(string userId);
     bool SetInstallationToActive(int installationId);
     List<Flow> getFlowsByUserId(string userId);

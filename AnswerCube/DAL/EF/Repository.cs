@@ -330,7 +330,7 @@ public class Repository : IRepository
         return answers;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl)
     {
         if (options == null || options.Length <= 0)
         {
@@ -339,7 +339,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = null
+                AnswerList = null,
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -363,7 +364,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = options.ToList()
+                AnswerList = options.ToList(),
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -390,7 +392,7 @@ public class Repository : IRepository
         {
             SubTheme = new SubTheme(title, description),
             FlowId = flowId,
-            Title = title,
+            Title = title
         };
         _context.SlideLists.Add(slideList);
         _context.SaveChanges();
@@ -592,13 +594,14 @@ public class Repository : IRepository
 
     public Forum ReadForum(int forumId)
     {
-        _logger.LogInformation("Reading forum with id: " + forumId);
-        foreach (var VARIABLE in _context.Forums)
-        {
-            _logger.LogInformation("Forum id: " + VARIABLE.Id);
-        }
-
-        return _context.Forums.Include(f => f.Ideas).ThenInclude(i => i.Reactions).Include(f => f.Organization)
+        return _context.Forums
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.Likes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.Dislikes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.User)
+            .Include(f => f.Ideas).ThenInclude(i => i.Likes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Dislikes)
+            .Include(f => f.Ideas).ThenInclude(i => i.User)
+            .Include(f => f.Organization)
             .First(f => f.Id == forumId);
     }
 
@@ -607,73 +610,139 @@ public class Repository : IRepository
         return _context.Ideas.First(i => i.Id == ideaId).ForumId;
     }
 
-    public bool CreateReaction(int ideaId, string reaction)
+    public bool CreateReaction(int ideaId, string reaction, AnswerCubeUser? user)
     {
         Idea idea = _context.Ideas.First(i => i.Id == ideaId);
-        //TODO:Add user if exists
-        Reaction newReaction = new Reaction
+        if (user != null)
         {
-            Text = reaction,
-            IdeaId = ideaId,
-            Idea = idea,
-            Date = DateTime.UtcNow,
-        };
-        _context.Reactions.Add(newReaction);
-        _context.SaveChanges();
-        return true;
+            _context.Reactions.Add(new Reaction
+            {
+                Text = reaction,
+                IdeaId = ideaId,
+                Idea = idea,
+                Date = DateTime.UtcNow,
+                User = user
+            });
+            _context.SaveChanges();
+            return true;
+        }
+        else
+        {
+            _context.Reactions.Add(new Reaction
+            {
+                Text = reaction,
+                IdeaId = ideaId,
+                Idea = idea,
+                Date = DateTime.UtcNow,
+            });
+            _context.SaveChanges();
+            return true;
+        }
     }
 
-    public bool CreateIdea(int forumId, string title, string content)
+    public bool CreateIdea(int forumId, string title, string content, AnswerCubeUser user)
     {
-        Forum forum = _context.Forums.First(f => f.Id == forumId);
+        Forum forum = _context.Forums.Single(f => f.Id == forumId);
         // Create the new idea
         Idea newIdea = new Idea
         {
             Title = title,
             Content = content,
             ForumId = forumId,
-            Forum = forum
+            Forum = forum,
+            User = user
         };
 
         _context.Ideas.Add(newIdea);
         _context.SaveChanges();
-        _logger.LogInformation(newIdea.Id.ToString());
         return true;
     }
 
     public int ReadForumByReactionId(int reactionId)
     {
-        return _context.Reactions.Include(reaction => reaction.Idea).First(r => r.Id == reactionId).Idea.ForumId;
+        return _context.Reactions.Include(reaction => reaction.Idea).Single(r => r.Id == reactionId).Idea.ForumId;
     }
 
-    public bool LikeReaction(int reactionId)
+    public bool LikeReaction(int reactionId, AnswerCubeUser user)
     {
-        Reaction reaction = _context.Reactions.First(r => r.Id == reactionId);
-        reaction.Likes++;
+        Reaction reaction = _context.Reactions.Include(r => r.Likes).Single(r => r.Id == reactionId);
+        Like newLike = new Like
+        {
+            ReactionId = reactionId,
+            Reaction = reaction,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the dislike
+        Dislike? dislike = _context.Dislikes.SingleOrDefault(d => d.ReactionId == reactionId && d.UserId == user.Id);
+        if (dislike != null)
+        {
+            _context.Dislikes.Remove(dislike);
+        }
+        reaction.Likes.Add(newLike);
         _context.SaveChanges();
         return true;
     }
 
-    public bool DislikeReaction(int reactionId)
+    public bool DislikeReaction(int reactionId, AnswerCubeUser user)
     {
-        Reaction reaction = _context.Reactions.First(r => r.Id == reactionId);
-        reaction.Dislikes++;
+        Reaction reaction = _context.Reactions.Include(r => r.Dislikes).Single(r => r.Id == reactionId);
+        Dislike newDislike = new Dislike
+        {
+            ReactionId = reactionId,
+            Reaction = reaction,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the like
+        Like? like = _context.Likes.SingleOrDefault(d => d.ReactionId == reactionId && d.UserId == user.Id);
+        if (like != null)
+        {
+            _context.Likes.Remove(like);
+        }
+        reaction.Dislikes.Add(newDislike);
         _context.SaveChanges();
         return true;
     }
 
-    public bool LikeIdea(int ideaId)
+    public bool LikeIdea(int ideaId, AnswerCubeUser user)
     {
-        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
-        idea.Likes++;
+        Idea idea = _context.Ideas.Include(i => i.Likes).Single(i => i.Id == ideaId);
+        Like newLike = new Like
+        {
+            IdeaId = ideaId,
+            Idea = idea,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the dislike
+        Dislike? dislike = _context.Dislikes.SingleOrDefault(d => d.IdeaId == ideaId && d.UserId == user.Id);
+        if (dislike != null)
+        {
+            _context.Dislikes.Remove(dislike);
+        }
+        idea.Likes.Add(newLike);
         _context.SaveChanges();
         return true;
     }
 
-    public bool DislikeIdea(int ideaId)
+    public bool DislikeIdea(int ideaId, AnswerCubeUser user)
     {
-        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
-        idea.Dislikes++;
+        Idea idea = _context.Ideas.Include(i => i.Dislikes).Single(i => i.Id == ideaId);
+        Dislike newDislike = new Dislike
+        {
+            IdeaId = ideaId,
+            Idea = idea,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the like
+        Like? like = _context.Likes.SingleOrDefault(d => d.IdeaId == ideaId && d.UserId == user.Id);
+        if (like != null)
+        {
+            _context.Likes.Remove(like);
+        }
+        idea.Dislikes.Add(newDislike);
         _context.SaveChanges();
         return true;
     }

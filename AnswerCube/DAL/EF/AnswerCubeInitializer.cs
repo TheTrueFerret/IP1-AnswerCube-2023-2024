@@ -45,6 +45,11 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Admin").Id,
             UserId = "superUser1"
         });
+        context.UserRoles.Add(new IdentityUserRole<string>
+        {
+            RoleId = context.Roles.First(role => role.Name == "Gebruiker").Id,
+            UserId = "superUser1"
+        });
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
@@ -62,19 +67,17 @@ public static class AnswerCubeInitializer
             {
                 Title = "Change the Caribian Flow",
                 Content = "So people can enjoy the Caribian flow",
-                Likes = 10,
-                Dislikes = 2,
                 ForumId = 1,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                User = yannick
             },
             new Idea
             {
                 Title = " Change the way we manage KdG",
                 Content = "So we can improve the quality of the course",
-                Likes = 20,
-                Dislikes = 3,
                 ForumId = 1,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                User = yannick
             }
         };
         answerCubeForum.Ideas.AddRange(ideas);
@@ -264,8 +267,10 @@ public static class AnswerCubeInitializer
                 "Natuur en ecologie", "Vrije tijd, sport, cultuur", "Huisvesting", "Onderwijs en kinderopvang",
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             },
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
+        
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
@@ -553,7 +558,8 @@ public static class AnswerCubeInitializer
             Text = "Wat is een gemeenteraad?\n" +
                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
             SlideType = SlideType.InfoSlide,
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/image_202405161408479679.jpeg"
         };
 
         SlideConnection slideConnection10 = new SlideConnection

@@ -41,7 +41,7 @@ public interface IRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl);
     bool CreateSlideList(string title, string description, int flowId);
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Slide> ReadSlideList();
@@ -65,16 +65,15 @@ public interface IRepository
     List<Forum> ReadForums();
     Forum ReadForum(int forumId);
     int ReadForumByIdeaId(int ideaId);
-    bool CreateReaction(int ideaId, string reaction);
-    bool CreateIdea(int forumId, string title, string content);
+    bool CreateReaction(int ideaId, string reaction,AnswerCubeUser? user);
+    bool CreateIdea(int forumId, string title, string content,AnswerCubeUser user);
     int ReadForumByReactionId(int reactionId);
-    bool LikeReaction(int reactionId);
-    bool DislikeReaction(int reactionId);
-    bool LikeIdea(int ideaId);
-    bool DislikeIdea(int ideaId);
+    bool LikeReaction(int reactionId,AnswerCubeUser user);
+    bool DislikeReaction(int reactionId,AnswerCubeUser user);
+    bool LikeIdea(int ideaId,AnswerCubeUser user);
+    bool DislikeIdea(int ideaId,AnswerCubeUser user);
     List<Installation> ReadInstallationsByUserId(string userId);
     bool UpdateInstallationToActive(int installationId);
     List<Flow> readFlowsByUserId(string userId);
     bool CreateNewInstallation(string name, string location, int organizationId);
-
 }

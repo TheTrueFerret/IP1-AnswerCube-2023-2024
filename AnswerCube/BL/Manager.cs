@@ -157,15 +157,16 @@ public class Manager : IManager
         return _repository.GetAnswers();
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
     {
+        
         if (type == SlideType.InfoSlide && options.Length == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId);
+            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
         }
 
-        return _repository.CreateSlide(type, question, options, slideListId);
+        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
     }
 
     public List<Slide> GetAllSlides()
@@ -278,14 +279,23 @@ public class Manager : IManager
         return _repository.ReadForum(forumId);
     }
 
-    public bool AddIdea(int forumId, string title, string content)
+    public bool AddIdea(int forumId, string title, string content, AnswerCubeUser user)
     {
-        return _repository.CreateIdea(forumId, title, content);
+        return _repository.CreateIdea(forumId, title, content,user);
     }
 
-    public bool AddReaction(int ideaId, string reaction)
+
+    public bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user)
     {
-        return _repository.CreateReaction(ideaId, reaction);
+        if (user != null)
+        {
+            return _repository.CreateReaction(ideaId, reaction,user);
+        }
+        else
+        {
+            return _repository.CreateReaction(ideaId, reaction,null);
+        }
+        
     }
 
     public int GetForumByIdeaId(int ideaId)
@@ -298,24 +308,26 @@ public class Manager : IManager
         return _repository.ReadForumByReactionId(reactionId);
     }
 
-    public bool LikeReaction(int reactionId)
+    public bool LikeReaction(int reactionId, AnswerCubeUser user)
     {
-        return _repository.LikeReaction(reactionId);
+        return _repository.LikeReaction(reactionId,user);
     }
 
-    public bool DislikeReaction(int reactionId)
+    public bool DislikeReaction(int reactionId, AnswerCubeUser user)
     {
-        return _repository.DislikeReaction(reactionId);
+        return _repository.DislikeReaction(reactionId, user);
     }
 
-    public bool LikeIdea(int ideaId)
+
+    public bool LikeIdea(int ideaId, AnswerCubeUser user)
     {
-        return _repository.LikeIdea(ideaId);
+        return _repository.LikeIdea(ideaId, user);
     }
 
-    public bool DislikeIdea(int ideaId)
+
+    public bool DislikeIdea(int ideaId, AnswerCubeUser user)
     {
-        return _repository.DislikeIdea(ideaId);
+        return _repository.DislikeIdea(ideaId, user);
     }
 
     public List<Installation> GetInstallationsByUserId(string userId)
