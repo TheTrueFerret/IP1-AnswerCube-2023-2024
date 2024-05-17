@@ -1,11 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
 using AnswerCube.BL;
 using Microsoft.AspNetCore.Authentication;
 using AnswerCube.BL.Domain.User;
@@ -14,7 +10,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using NuGet.Versioning;
 
 namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -134,7 +129,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                if (!CheckName(user.FirstName, user.LastName))
+                if (!CheckName(Input.FirstName, Input.LastName))
                 {
                     user.FirstName = Input.FirstName;
                     user.LastName = Input.LastName;
@@ -142,7 +137,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid name");
+                    ModelState.AddModelError(string.Empty, "Your name contains a bad word. Please try again.");
                     return Page();
                 }
 
@@ -236,7 +231,21 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
         private Boolean CheckName(string name, string lastName)
         {
-            //TODO: Add a check for faulty names like (cuss words, numbers, etc)
+            var badwords = System.IO.File.ReadLines(@"Areas\Identity\Data\BadWords\en.txt")
+                .Select(word => word.Trim().ToLower())
+                .ToArray();
+            if (name != null && (badwords.Contains(name.ToLower()) || name.Any(char.IsDigit) ||
+                                 name.Any(ch => !char.IsLetter(ch))))
+            {
+                return true;
+            }
+
+            if (lastName != null && (badwords.Contains(lastName.ToLower()) || lastName.Any(char.IsDigit) ||
+                                     lastName.Any(ch => !char.IsLetter(ch))))
+            {
+                return true;
+            }
+
             return false;
         }
     }
