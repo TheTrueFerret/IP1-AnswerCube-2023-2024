@@ -36,7 +36,7 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId,string? mediaUrl);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
     bool CreateSlidelist(string title, string description, int flowId);

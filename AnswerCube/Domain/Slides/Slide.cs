@@ -10,7 +10,9 @@ public class Slide
     public int Id { get; set; }
     public SlideType SlideType { get; set; }
     public string Text { get; set; } // deze text word gebruikt voor een vraag/info
-    public List<String>? AnswerList { get; set; }
+    public List<string>? AnswerList { get; set; }
+    
+    public string? mediaUrl { get; set; } // deze url word gebruikt voor een afbeelding/video
     
     // Relational Attributes:
     [JsonIgnore]

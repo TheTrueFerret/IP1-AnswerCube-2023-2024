@@ -1,6 +1,7 @@
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.UI.MVC.Services;
 using Domain;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ public class FlowController : BaseController
 {
     private readonly IManager _manager;
     private readonly ILogger<FlowController> _logger;
+    private readonly CloudStorageService cloudStorageService;
 
-    public FlowController(IManager manager, ILogger<FlowController> logger)
+    public FlowController(IManager manager, ILogger<FlowController> logger,CloudStorageService cloudStorageService)
     {
+        this.cloudStorageService = cloudStorageService;
         _manager = manager;
         _logger = logger;
     }
@@ -35,10 +38,19 @@ public class FlowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId)
+    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId,IFormFile imageFile)
     {
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
-        if (_manager.CreateSlide(type, question, options, slideListId))
+        if (imageFile != null)
+        {
+            var url = cloudStorageService.UploadFileToBucket(imageFile);
+            if (_manager.CreateSlide(type, question, options, slideListId,url))
+            {
+                return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
+            }
+            return RedirectToAction("CreateSlideView");
+        }
+        if (_manager.CreateSlide(type, question, options, slideListId,null))
         {
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
         }

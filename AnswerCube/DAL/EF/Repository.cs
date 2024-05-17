@@ -335,7 +335,7 @@ public class Repository : IRepository
         return answers;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl)
     {
         if (options == null || options.Length <= 0)
         {
@@ -344,7 +344,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = null
+                AnswerList = null,
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -368,7 +369,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = options.ToList()
+                AnswerList = options.ToList(),
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -395,7 +397,7 @@ public class Repository : IRepository
         {
             SubTheme = new SubTheme(title, description),
             FlowId = flowId,
-            Title = title,
+            Title = title
         };
         _context.SlideLists.Add(slideList);
         _context.SaveChanges();

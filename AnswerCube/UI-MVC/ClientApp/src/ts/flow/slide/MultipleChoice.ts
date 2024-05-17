@@ -4,6 +4,7 @@ import {getCookie} from "../../CookieHandler";
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const jwtToken = getCookie("jwtToken");
+const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 var checkboxes : any;
 var currentCheckedIndex: number;
@@ -28,6 +29,25 @@ function loadMultipleChoiceSlide() {
         console.log(slide);
         if (slideElement) {
             slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+            if (slide.mediaUrl) { // Check if mediaUrl exists
+                // Extract the filename from the media URL
+                let filename = slide.mediaUrl.split('/').pop();
+                // Extract the media type from the filename
+                let mediaType = filename.split('_')[0];
+                console.log(mediaType);
+                // Default to "image" if the media type is not "video"
+                if (mediaType === "video") {
+                    slideElement.innerHTML += `<video width="320" height="240" controls>
+                                                  <source src="${slide.mediaUrl}" type="video/mp4">
+                                                  Your browser does not support the video tag.
+                                                </video><br>`;
+
+                } else if (mediaType === "image") {
+                    slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
+                } else {
+                    slideElement.innerHTML += `<em>Unsupported media type</em>`;
+                }
+            }
             for (const answers of slide.answerList) {
                 slideElement.innerHTML += `<input type="checkbox" id="input" value="${answers}" name="answer">${answers}<br>`;
             }
@@ -42,8 +62,8 @@ function loadMultipleChoiceSlide() {
         }
     });
 }
-loadMultipleChoiceSlide()
 
+loadMultipleChoiceSlide()
 
 
 const btn: HTMLElement | null = document.getElementById("submitAnswer");
@@ -53,7 +73,7 @@ if (btn) {
 
 function postAnswer() {
     let answer = getSelectedAnswers();
-    
+
     let requestBody = {
         Answer: answer
     };
