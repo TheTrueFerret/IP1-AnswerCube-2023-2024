@@ -76,9 +76,9 @@ public class Manager : IManager
         return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
 
-    public Boolean StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        return _repository.StartInstallation(id, slideList);
+        return _repository.StartInstallationWithFlow(installationId, flowId);
     }
 
     public Boolean UpdateInstallation(int id)
@@ -329,4 +329,25 @@ public class Manager : IManager
     {
         return _repository.DislikeIdea(ideaId, user);
     }
+
+    public List<Installation> GetInstallationsByUserId(string userId)
+    {
+        return _repository.ReadInstallationsByUserId(userId);
+    }
+
+    public bool SetInstallationToActive(int installationId)
+    {
+        return _repository.UpdateInstallationToActive(installationId);
+    }
+
+    public List<Flow> getFlowsByUserId(string userId)
+    {
+        return _repository.readFlowsByUserId(userId);
+    }
+
+    public bool AddNewInstallation(string name, string location, int organizationId)
+    {
+        return _repository.CreateNewInstallation(name, location, organizationId);
+    }
+
 }

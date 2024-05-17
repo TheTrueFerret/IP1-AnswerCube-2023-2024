@@ -21,7 +21,7 @@ function InitializeFlow() {
         console.log(data)
         if (data && data.token) {
             // Save token in a cookie
-            setCookie("jwtToken", data.token, 1); // Change 1 to the number of days you want the cookie to last
+            setCookie("jwtToken", data.token, 7); // Change 1 to the number of days you want the cookie to last
         }
     }).catch((error: any) => {
         console.error(error);
@@ -31,3 +31,18 @@ function InitializeFlow() {
     });
 }
 InitializeFlow()
+
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+
+        case 'Enter':
+            console.log('Enter');
+            InitializeFlow()
+            break;
+        default:
+            console.log(event.key, event.keyCode);
+            return;
+    }
+    event.preventDefault();
+});

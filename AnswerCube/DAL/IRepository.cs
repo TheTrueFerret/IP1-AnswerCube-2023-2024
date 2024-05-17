@@ -25,7 +25,7 @@ public interface IRepository
     Boolean AddAnswer(List<string> answers,int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     
-    Boolean StartInstallation(int id, SlideList slideList);
+    Installation StartInstallationWithFlow(int installationId, int flowId);
     Boolean UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide ReadActiveSlideByInstallationId(int id);
@@ -72,4 +72,8 @@ public interface IRepository
     bool DislikeReaction(int reactionId,AnswerCubeUser user);
     bool LikeIdea(int ideaId,AnswerCubeUser user);
     bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    List<Installation> ReadInstallationsByUserId(string userId);
+    bool UpdateInstallationToActive(int installationId);
+    List<Flow> readFlowsByUserId(string userId);
+    bool CreateNewInstallation(string name, string location, int organizationId);
 }

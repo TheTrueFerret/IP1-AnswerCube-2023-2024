@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -20,7 +20,7 @@ public interface IManager
     bool AddAnswer(List<string> answers, int id);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    bool StartInstallation(int id, SlideList slideList);
+    Installation StartInstallationWithFlow(int installationId, int flowId);
     bool UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
@@ -62,10 +62,13 @@ public interface IManager
     bool AddIdea(int forumId, string title, string content, AnswerCubeUser user);
     bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user);
     int GetForumByIdeaId(int ideaId);
-
     int GetForumByReactionId(int reactionId);
     bool LikeReaction(int reactionId,AnswerCubeUser user);
     bool DislikeReaction(int reactionId,AnswerCubeUser user);
     bool LikeIdea(int ideaId,AnswerCubeUser user);
     bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    List<Installation> GetInstallationsByUserId(string userId);
+    bool SetInstallationToActive(int installationId);
+    List<Flow> getFlowsByUserId(string userId);
+    bool AddNewInstallation(string name, string location, int organizationId);
 }
