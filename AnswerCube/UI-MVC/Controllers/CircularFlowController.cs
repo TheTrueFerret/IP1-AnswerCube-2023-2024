@@ -23,6 +23,7 @@ public class CircularFlowController : BaseController
     private readonly IManager _manager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JwtService _jwtService;
+    private int _counter = 0;
     
     
     public CircularFlowController(ILogger<HomeController> logger, IManager manager, IHttpContextAccessor httpContextAccessor, JwtService jwtService)
@@ -70,19 +71,27 @@ public class CircularFlowController : BaseController
     }
     
     [HttpGet]
-    public IActionResult InitializeFlow()
+    public IActionResult InitializeFlow(int flowId)
     {
-        SlideList slideList = _manager.GetSlideListById(1);
-        bool installationStarted = _manager.StartInstallation(1, slideList);
-        if (installationStarted)
-        {
-            string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
-            return new JsonResult(new { token, slideList });
-        }
+        //SlideList slideList = _manager.GetSlideListById(1);
+        Flow flow = _manager.GetFlowWithProjectById(flowId);
+         List<SlideList> slideLists = _manager.GetSlideListsByFlowId(flow.Id).ToList();
+        if (flow.SlideList != null) 
+            foreach (var slideList in slideLists) 
+            {
+                bool installationStarted = _manager.StartInstallation(1, slideList);
+                if (installationStarted)
+                { 
+                    string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
+                    return new JsonResult(new { token, slideList});
+                }
+            }
         else
         {
             return Error();
         }
+        
+        return Error();
     }
     
     [HttpGet]

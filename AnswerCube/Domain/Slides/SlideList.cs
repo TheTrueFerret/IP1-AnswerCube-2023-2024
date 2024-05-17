@@ -20,4 +20,9 @@ public class SlideList
     [JsonIgnore]
     public List<SlideConnection>? ConnectedSlides { get; set; }
     
+    public SlideList()
+    {
+        SubTheme = new SubTheme();
+    }
+    
 }

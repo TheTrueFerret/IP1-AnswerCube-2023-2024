@@ -1,21 +1,31 @@
+@using Domain
 @model Domain.SlideList
 
 @{
-    ViewBag.Title = "SlideList Details";
+    ViewBag.Title = "title";
     Layout = "_Layout";
+    var slides = ViewBag.Slides as List<SlideConnection>;
 }
 
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <h1 class="mb-4">SlideList Details</h1>
-                    <h5 class="card-title">Titel: @Model.Title</h5>
-                    <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id })" class="btn btn-primary">
-                        Add New Slide
-                    </a>
-                </div>
+               <div class="col-md-6 d-flex flex-column"> <!-- Voeg d-flex flex-column toe -->
+                   <h2 class="mb-4">SlideList: @Model.Title</h2>
+                   <div class="mb-auto"> <!-- Hier begint de nieuwe div met mb-auto -->
+                       <button class="btn btn-primary project-button" style="width: fit-content;"
+                               onclick="location.href='@Url.Action("EditSlideListView", "SlideList", new { slideListId = Model.Id })'">
+                           Change SlideList:
+                           <i class="fa-solid fa-pen-to-square"></i>
+                       </button>
+                   </div> <!-- Hier eindigt de nieuwe div -->
+                   <div class="mt-auto" style="align-self: flex-end;"> <!-- Hier begint de nieuwe div met mt-auto en align-self: flex-end -->
+                       <a href="@Url.Action("CreateSlideView", "Flow", new { projectId = Model.Flow!.Project!.Id, slideListId = Model.Id })" class="btn btn-primary" style="background-color: darkblue; font-weight: bold;">
+                           Add New Slide
+                       </a>
+                   </div> <!-- Hier eindigt de nieuwe div -->
+               </div>
                 <div class="col-md-6">
                     <h4 class="mt-4">Slides</h4>
                     <div class="card card-right">

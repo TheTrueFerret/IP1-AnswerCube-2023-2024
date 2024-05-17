@@ -16,14 +16,36 @@ public class SlideListController : BaseController
     }
     
     
-    public IActionResult SlideListDetails(int slideListId)
+    [HttpGet]
+    public IActionResult SlideListDetails(int slidelistId)
     {
-        SlideList slideList =  _manager.GetSlideListWithFlowById(slideListId);
+        SlideList slideList =  _manager.GetSlideListWithFlowById(slidelistId);
         foreach (var cSlides in slideList.ConnectedSlides)
         {
             _logger.LogInformation(cSlides.Slide.ToString()); 
         }
         return View(slideList);
     }
+    
+    public IActionResult EditSlideList(string title, string description, int slideListId)
+    {
+        if (ModelState.IsValid)
+        {
+            _manager.UpdateSlideList(title, description, slideListId);
+            return RedirectToAction("SlideListDetails", new { slidelistId = slideListId });
+        }
 
+        return RedirectToAction("EditSlideListView", new { slidelistId = slideListId });
+    }
+
+    
+    public IActionResult EditSlideListView(int slidelistId)
+    {
+        SlideList slideList = _manager.GetSlideListWithFlowById(slidelistId);
+        return View(slideList);
+    }
+    
+    
+    
 }
+

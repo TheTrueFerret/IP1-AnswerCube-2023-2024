@@ -218,7 +218,7 @@ public static class AnswerCubeInitializer
         SlideList slideList1punt2 = new SlideList
         {
             Title = "Career actors",
-            SubTheme = new SubTheme("Career stuff of all actors", "This theme discusses the career of the actors, have fun!"),
+            SubTheme = new SubTheme("Career actors", "This theme discusses the career of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
 

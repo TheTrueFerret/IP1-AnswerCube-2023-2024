@@ -223,6 +223,12 @@ public class Manager : IManager
         _repository.UpdateFlow(model);
     }
 
+    public void UpdateSlideList(string title, string description, int slideListId)
+    {
+        _repository.UpdateSlideList(title, description, slideListId);
+    }
+
+    
     public Organization CreateNewOrganization(string email, string name)
     {
         return _repository.CreateNewOrganization(email, name);

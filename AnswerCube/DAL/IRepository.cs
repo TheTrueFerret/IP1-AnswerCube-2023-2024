@@ -53,7 +53,8 @@ public interface IRepository
     SlideList GetSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
-    void UpdateFlow(Flow model); 
+    void UpdateFlow(Flow model);
+    void UpdateSlideList(string title, string description, int slideListId);
     Organization CreateNewOrganization(string email, string name);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);

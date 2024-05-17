@@ -1,0 +1,31 @@
+@using Domain
+@using AnswerCube.BL.Domain
+@model Domain.SlideList
+
+@{
+    ViewBag.Title = "Edit SlideList";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Edit SlideList: @ViewBag.Title</h2>
+    <h2>Edit SlideList: @Model.Id</h2>
+    <form id="slideListForm" method="post" asp-action="EditSlideList" asp-controller="SlideList">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="slideListId" value="@ViewBag.slideList_Id" /> <!-- Gebruik de slideListId van ViewBag -->
+        
+        <div class="form-group">
+            <label class="form-label" asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    
+        <div class="form-group">
+            <label class="form-label" for="description"></label>
+            <textarea id="description" name="description" for="description" class="form-control"></textarea>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+</div>
