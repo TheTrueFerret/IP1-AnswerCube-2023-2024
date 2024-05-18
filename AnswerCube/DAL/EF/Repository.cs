@@ -802,17 +802,19 @@ public class Repository : IRepository
 
     public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
-        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        if (session != null)
+        {
+            return session;
+        }
+        return null;
     }
 
     public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
     {
         newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
         _context.Sessions.Add(newSession);
-        if (_context.SaveChanges() == 1)
-        {
-            return true;
-        }
-        return false;
+        _context.SaveChanges();
+        return true;
     }
 }

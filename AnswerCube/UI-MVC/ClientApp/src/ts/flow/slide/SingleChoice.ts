@@ -67,14 +67,17 @@ loadSingleChoiceSlide()
 
 const btn: HTMLElement | null = document.getElementById("submitAnswer");
 if (btn) {
-    btn.addEventListener('click', postAnswer);
+    btn.addEventListener('click', function(){
+        postAnswer(1)
+    });
 }
 
-function postAnswer() {
+function postAnswer(cubeId: number) {
     let answer = getSelectedAnswer();
 
     let requestBody = {
-        Answer: answer
+        Answer: answer,
+        CubeId: cubeId
     };
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
@@ -151,7 +154,7 @@ document.addEventListener('keydown', (event) => {
             break;
         case 'Enter':
             console.log('Enter');
-            postAnswer()
+            postAnswer(1)
             break;
         default:
             console.log(event.key, event.keyCode);

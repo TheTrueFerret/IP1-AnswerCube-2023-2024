@@ -78,7 +78,7 @@ function postAnswer(cubeId: number) {
     
     let requestBody = {
         Answer: answer,
-        Session: cubeId
+        CubeId: cubeId
     };
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {

@@ -74,15 +74,17 @@ loadRangeQuestionSlide();
 
 const btnSubmit: HTMLElement | null = document.getElementById("submitAnswer");
 if (btnSubmit) {
-    btnSubmit.addEventListener('click', postAnswer);
+    btnSubmit.addEventListener('click', function(){
+        postAnswer
+    });
 }
 
-function postAnswer() {
-
-    let answer = getSelectedAnswer()
+function postAnswer(cubeId: number) {
+    let answer = getRangeAnswer();
 
     let requestBody = {
-        Answer: answer
+        Answer: answer,
+        CubeId: cubeId
     };
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
@@ -113,7 +115,7 @@ function postAnswer() {
         });
 }
 
-function getSelectedAnswer() {
+function getRangeAnswer() {
     if (sliderElement) {
         let selectedAnswers: string[] = [];
         if (sliderElement.value) {
@@ -175,7 +177,7 @@ document.addEventListener('keydown', (event) => {
             break;
         case 'Enter':
             console.log('Enter');
-            postAnswer()
+            postAnswer(1)
             break;
         default:
             console.log(event.key, event.keyCode);
