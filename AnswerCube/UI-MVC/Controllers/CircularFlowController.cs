@@ -107,17 +107,27 @@ public class CircularFlowController : BaseController
         return Json(new { url });
     }
     
-     
+    
     [HttpPost]
     public IActionResult PostAnswer([FromBody] AnswerModel answer)
     {
         // Retrieve installation ID from token
         string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
         int installationId = _jwtService.GetInstallationIdFromToken(token);
+
+        Session? session = _manager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);
+        if (session == null)
+        {
+            Session newSession = new Session()
+            {
+                CubeId = answer.CubeId
+            };
+            _manager.AddNewSessionWithInstallationId(newSession, installationId);
+        }
         
         Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         List<string> answerText = answer.Answer;
-        if (_manager.AddAnswer(answerText, slide.Id))
+        if (_manager.AddAnswer(answerText, slide.Id, session))
         {
             return UpdatePage();
         }

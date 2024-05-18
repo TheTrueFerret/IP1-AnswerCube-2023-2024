@@ -22,7 +22,7 @@ public interface IRepository
     Slide ReadSlideById(int id);
     SlideList getSlideList();
     SlideList ReadSlideListById(int id);
-    Boolean AddAnswer(List<string> answers,int id);
+    Boolean AddAnswer(List<string> answers,int id, Session session);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     
     Installation StartInstallationWithFlow(int installationId, int flowId);
@@ -76,4 +76,6 @@ public interface IRepository
     bool UpdateInstallationToActive(int installationId);
     List<Flow> readFlowsByUserId(string userId);
     bool CreateNewInstallation(string name, string location, int organizationId);
+    Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    bool WriteNewSessionWithInstallationId(Session newSession, int installationId);
 }

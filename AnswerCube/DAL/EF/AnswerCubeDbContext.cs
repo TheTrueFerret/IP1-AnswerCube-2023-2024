@@ -33,6 +33,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Dislike> Dislikes { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)

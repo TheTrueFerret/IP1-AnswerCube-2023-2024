@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Models.Dto;
@@ -105,10 +106,7 @@ public class InstallationController : BaseController
         {
             return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });
         }
-        else
-        {
-            return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
-        }
+        return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
     }
     
 }
