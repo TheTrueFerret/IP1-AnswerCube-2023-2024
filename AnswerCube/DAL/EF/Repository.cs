@@ -89,24 +89,23 @@ public class Repository : IRepository
         return _context.SlideLists.FirstOrDefault(sl => sl.Title == title);
     }
 
-    public bool AddAnswer(List<string> answers, int id)
+    public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
 
-        Answer uploadAnswer = new Answer(answers, slide);
+        Answer uploadAnswer = new Answer()
+        {
+            AnswerText = answers,
+            Slide = slide,
+            Session = session
+        };
         if (answers == null)
         {
             return false;
         }
-        else
-        {
-            _context.Answers.Add(uploadAnswer);
-            _context.SaveChanges();
-
-            return true;
-        }
-
-        return default;
+        _context.Answers.Add(uploadAnswer);
+        _context.SaveChanges();
+        return true;
     }
 
     public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
@@ -801,4 +800,19 @@ public class Repository : IRepository
         return false;
     }
 
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+    }
+
+    public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
+        _context.Sessions.Add(newSession);
+        if (_context.SaveChanges() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
 }

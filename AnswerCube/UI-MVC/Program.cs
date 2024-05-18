@@ -46,6 +46,7 @@ services.AddScoped<IRepository, Repository>();
 services.AddScoped<IManager, Manager>();
 services.AddScoped<JwtService>();
 
+
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

@@ -66,9 +66,9 @@ public class Manager : IManager
         return _repository.ReadSlideById(id);
     }
 
-    public Boolean AddAnswer(List<string> answers, int id)
+    public Boolean AddAnswer(List<string> answers, int id, Session session)
     {
-        return _repository.AddAnswer(answers, id);
+        return _repository.AddAnswer(answers, id, session);
     }
 
     public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
@@ -348,6 +348,16 @@ public class Manager : IManager
     public bool AddNewInstallation(string name, string location, int organizationId)
     {
         return _repository.CreateNewInstallation(name, location, organizationId);
+    }
+
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
+    }
+
+    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
     }
 
 }

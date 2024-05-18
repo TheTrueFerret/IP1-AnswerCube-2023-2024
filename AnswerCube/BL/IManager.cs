@@ -1,4 +1,4 @@
-using AnswerCube.BL.Domain;
+﻿using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -17,7 +17,7 @@ public interface IManager
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
-    bool AddAnswer(List<string> answers, int id);
+    bool AddAnswer(List<string> answers, int id, Session session);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
     Installation StartInstallationWithFlow(int installationId, int flowId);
@@ -71,4 +71,6 @@ public interface IManager
     bool SetInstallationToActive(int installationId);
     List<Flow> getFlowsByUserId(string userId);
     bool AddNewInstallation(string name, string location, int organizationId);
+    Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    bool AddNewSessionWithInstallationId(Session newSession, int installationId);
 }
