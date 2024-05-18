@@ -71,4 +71,5 @@ public interface IManager
     List<Organization> GetOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Organization GetOrganizationByName(string organizationName);
 }

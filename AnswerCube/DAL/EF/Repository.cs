@@ -17,15 +17,13 @@ public class Repository : IRepository
     private readonly ILogger<Repository> _logger;
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
-    private readonly IEmailSender _emailSender;
 
-    public Repository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager,
-        IEmailSender emailSender)
+
+    public Repository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager)
     {
         _context = context;
         _logger = logger;
         _userManager = userManager;
-        _emailSender = emailSender;
     }
 
     public List<Slide> GetOpenSlides()
@@ -777,6 +775,7 @@ public class Repository : IRepository
 
     public async Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid)
     {
+        var organization = _context.Organizations.Single(o => o.Id == organizationid);
         if (userId == null)
         {
             //Normally never null cause user needs role when on this page.
@@ -810,8 +809,6 @@ public class Repository : IRepository
                 });
                 _context.SaveChanges();
                 await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-                await _emailSender.SendEmailAsync(email, "You have been added as a DeelplatformBeheeder",
-                    "existingmail");
             }
 
             return true;
@@ -819,8 +816,11 @@ public class Repository : IRepository
 
         //The user doesnt exist so we need to send email to register.
         SaveBeheerderAndOrganization(email, _context.Organizations.Single(o => o.Id == organizationid).Name);
-        await _emailSender.SendEmailAsync(email, "Register for DeelplatformBeheerder",
-            "newmail");
         return true;
+    }
+
+    public Organization ReadOrganizationByName(string organizationName)
+    {
+        return _context.Organizations.First(o => o.Name == organizationName);
     }
 }

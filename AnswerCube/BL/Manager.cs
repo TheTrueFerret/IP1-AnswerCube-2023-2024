@@ -342,4 +342,9 @@ public class Manager : IManager
     {
         return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
     }
+
+    public Organization GetOrganizationByName(string organizationName)
+    {
+        return _repository.ReadOrganizationByName(organizationName);
+    }
 }

@@ -20,7 +20,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserStore<AnswerCubeUser> _userStore;
         private readonly IUserEmailStore<AnswerCubeUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailManager _emailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IManager _manager;
 
@@ -29,7 +29,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             IUserStore<AnswerCubeUser> userStore,
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+            IEmailManager emailManager,
             RoleManager<IdentityRole> roleManager, IManager manager)
         {
             _userManager = userManager;
@@ -37,7 +37,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _emailManager = emailManager;
             _roleManager = roleManager;
             _manager = manager;
         }
@@ -169,15 +169,9 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        callbackUrl);
-
+                    
+                    await _emailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
+                    
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation",

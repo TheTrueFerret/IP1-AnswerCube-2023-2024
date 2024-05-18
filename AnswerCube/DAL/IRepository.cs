@@ -75,4 +75,5 @@ public interface IRepository
     List<Organization> ReadOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Organization ReadOrganizationByName(string organizationName);
 }

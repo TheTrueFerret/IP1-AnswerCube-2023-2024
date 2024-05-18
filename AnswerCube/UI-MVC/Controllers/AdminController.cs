@@ -17,16 +17,16 @@ public class AdminController : BaseController
     private readonly ILogger<AdminController> _logger;
     private readonly UserManager<AnswerCubeUser> _userManager;
     private readonly SignInManager<AnswerCubeUser> _signInManager;
-    private readonly IEmailSender _emailSender;
+    private readonly IEmailManager _emailManager;
     private readonly IManager _manager;
 
     public AdminController(ILogger<AdminController> logger, UserManager<AnswerCubeUser> userManager,
-        SignInManager<AnswerCubeUser> signInManager, IEmailSender emailSender, IManager manager)
+        SignInManager<AnswerCubeUser> signInManager, IEmailManager emailManager, IManager manager)
     {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
-        _emailSender = emailSender;
+        _emailManager = emailManager;
         _manager = manager;
     }
 
@@ -172,15 +172,13 @@ public class AdminController : BaseController
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            await _emailSender.SendEmailAsync(email, $"Register as DeelplatformBeheerder for {organization.Name}",
-                "newmail");
+            await _emailManager.SendNewEmail(email, organization.Name);
             TempData["Success"] = "An email has been sent to the provided email address.";
         }
         else
         {
             await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-            await _emailSender.SendEmailAsync(email, $"You have been added as a DeelplatformBeheeder for {organization.Name}",
-                "existingmail");
+            await _emailManager.SendExistingEmail(email, organization.Name);
             TempData["Success"] =
                 $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
             _manager.CreateUserOrganization(user, organization);

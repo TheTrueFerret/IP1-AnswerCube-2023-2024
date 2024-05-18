@@ -45,6 +45,8 @@ services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.Req
     .AddDefaultUI();
 services.AddScoped<IRepository, Repository>();
 services.AddScoped<IManager, Manager>();
+services.AddScoped<IEmailManager, EmailManager>();
+services.AddScoped<IMailRepository, MailRepository>();
 services.AddScoped<JwtService>();
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
