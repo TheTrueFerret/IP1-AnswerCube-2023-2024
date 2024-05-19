@@ -1,6 +1,7 @@
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.UI.MVC.Services;
 using Domain;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ public class FlowController : BaseController
 {
     private readonly IManager _manager;
     private readonly ILogger<FlowController> _logger;
+    private readonly CloudStorageService _cloudStorageService;
 
-    public FlowController(IManager manager, ILogger<FlowController> logger)
+    public FlowController(IManager manager, ILogger<FlowController> logger,CloudStorageService cloudStorageService)
     {
+        this._cloudStorageService = cloudStorageService;
         _manager = manager;
         _logger = logger;
     }
@@ -32,27 +35,33 @@ public class FlowController : BaseController
     {
         Project project = _manager.GetProjectById(projectId);
         ViewBag.SlideListId = slidelistId;
+        ViewBag.HasCredential = _cloudStorageService.hasCredential;
         return View(project);
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId)
+    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId,IFormFile imageFile)
     {
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
-        if (_manager.CreateSlide(type, question, options, slideListId))
+        if (imageFile != null)
+        {
+            var url = _cloudStorageService.UploadFileToBucket(imageFile);
+            if (_manager.CreateSlide(type, question, options, slideListId,url))
+            {
+                return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
+            }
+            return RedirectToAction("CreateSlideView");
+        }
+        if (_manager.CreateSlide(type, question, options, slideListId,null))
         {
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
         }
 
-        //TODO: Add error message
+        TempData["ErrorMessage"] = "Failed to add slide.";
         return RedirectToAction("CreateSlideView");
+        
     }
-
-    /*   public IActionResult CreateSlideListView(string title, int flowId)
-       {
-           bool slideList = _manager.CreateSlidelist(title, flowId);
-           return View("CreateSlideListView");
-       }*/
+    
 
     public IActionResult CreateSlideListView(int flowId)
     {
@@ -64,7 +73,6 @@ public class FlowController : BaseController
     [HttpPost]
     public IActionResult AddFlow(string name, string desc, string flowType, int projectId)
     {
-        //TODO: Add flow to project with ID that we get trough the website
         bool circularFlow = flowType is "circular" or not "linear";
 
         if (_manager.CreateFlow(name, desc, circularFlow, projectId))

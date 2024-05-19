@@ -4,6 +4,7 @@ using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
@@ -13,11 +14,16 @@ namespace AnswerCube.DAL.EF;
 
 public class Repository : IRepository
 {
+    private readonly ILogger<Repository> _logger;
     private readonly AnswerCubeDbContext _context;
+    private readonly UserManager<AnswerCubeUser> _userManager;
 
-    public Repository(AnswerCubeDbContext context)
+
+    public Repository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager)
     {
         _context = context;
+        _logger = logger;
+        _userManager = userManager;
     }
 
     public List<Slide> GetOpenSlides()
@@ -85,24 +91,23 @@ public class Repository : IRepository
         return _context.SlideLists.FirstOrDefault(sl => sl.Title == title);
     }
 
-    public bool AddAnswer(List<string> answers, int id)
+    public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
 
-        Answer uploadAnswer = new Answer(answers, slide);
+        Answer uploadAnswer = new Answer()
+        {
+            AnswerText = answers,
+            Slide = slide,
+            Session = session
+        };
         if (answers == null)
         {
             return false;
         }
-        else
-        {
-            _context.Answers.Add(uploadAnswer);
-            _context.SaveChanges();
-
-            return true;
-        }
-
-        return default;
+        _context.Answers.Add(uploadAnswer);
+        _context.SaveChanges();
+        return true;
     }
 
     public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
@@ -115,23 +120,18 @@ public class Repository : IRepository
     }
 
 
-    public bool StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        Installation installation = _context.Installations.First(i => i.Id == id);
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
         installation.Active = true;
-        installation.ActiveSlideListId = slideList.Id;
+        installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides).Single(f => f.Id == flowId);
 
-
-        installation.Slides = new List<Slide>();
-        foreach (var slide in ReadSlidesFromSlideList(slideList))
-        {
-            installation.Slides.Add(slide);
-        }
-
+        installation.ActiveSlideListId = installation.Flow.SlideLists.First().Id;
+        
         installation.CurrentSlideIndex = 0;
-        installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
+        installation.MaxSlideIndex = installation.Flow.SlideLists.First().ConnectedSlides.Count;
         _context.SaveChanges();
-        return true;
+        return installation;
     }
 
     public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
@@ -185,7 +185,7 @@ public class Repository : IRepository
 
     public Slide ReadActiveSlideByInstallationId(int id)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
         SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
             .Include(sl => sl.ConnectedSlides).First();
 
@@ -331,7 +331,7 @@ public class Repository : IRepository
         return answers;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl)
     {
         if (options == null || options.Length <= 0)
         {
@@ -340,7 +340,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = null
+                AnswerList = null,
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -364,7 +365,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = options.ToList()
+                AnswerList = options.ToList(),
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -391,7 +393,7 @@ public class Repository : IRepository
         {
             SubTheme = new SubTheme(title, description),
             FlowId = flowId,
-            Title = title,
+            Title = title
         };
         _context.SlideLists.Add(slideList);
         _context.SaveChanges();
@@ -399,7 +401,7 @@ public class Repository : IRepository
         var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
         if (flow != null)
         {
-            flow.SlideList.Add(slideList);
+            flow.SlideLists.Add(slideList);
             _context.SaveChanges();
             return true;
         }
@@ -555,6 +557,7 @@ public class Repository : IRepository
 
     public void SaveBeheerderAndOrganization(string email, string organizationName)
     {
+        //HIERE
         _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
             { Email = email, DeelplatformNaam = organizationName });
         _context.SaveChanges();
@@ -619,13 +622,15 @@ public class Repository : IRepository
 
     public bool RemoveDpbFromOrganization(string userId, int organisationid)
     {
-        UserOrganization userOrganization = _context.UserOrganizations
+        UserOrganization userOrganization = _context.UserOrganizations.Include(uo => uo.User)
             .First(uo => uo.UserId == userId && uo.OrganizationId == organisationid);
         if (userOrganization == null)
         {
             return false;
         }
 
+        string email = userOrganization.User.Email;
+        DeleteDeelplatformBeheerderByEmail(email);
         _context.UserOrganizations.Remove(userOrganization);
         _context.SaveChanges();
         return true;
@@ -634,5 +639,303 @@ public class Repository : IRepository
     public bool SearchDeelplatformByName(string deelplatformName)
     {
         return _context.Organizations.Any(o => o.Name == deelplatformName);
+    }
+
+    public List<Forum> ReadForums()
+    {
+        return _context.Forums.Include(f => f.Organization).Include(f => f.Ideas).ToList();
+    }
+
+    public Forum ReadForum(int forumId)
+    {
+        return _context.Forums
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.Likes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.Dislikes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Reactions).ThenInclude(r => r.User)
+            .Include(f => f.Ideas).ThenInclude(i => i.Likes)
+            .Include(f => f.Ideas).ThenInclude(i => i.Dislikes)
+            .Include(f => f.Ideas).ThenInclude(i => i.User)
+            .Include(f => f.Organization)
+            .First(f => f.Id == forumId);
+    }
+
+    public int ReadForumByIdeaId(int ideaId)
+    {
+        return _context.Ideas.First(i => i.Id == ideaId).ForumId;
+    }
+
+    public bool CreateReaction(int ideaId, string reaction, AnswerCubeUser? user)
+    {
+        Idea idea = _context.Ideas.First(i => i.Id == ideaId);
+        if (user != null)
+        {
+            _context.Reactions.Add(new Reaction
+            {
+                Text = reaction,
+                IdeaId = ideaId,
+                Idea = idea,
+                Date = DateTime.UtcNow,
+                User = user
+            });
+            _context.SaveChanges();
+            return true;
+        }
+        else
+        {
+            _context.Reactions.Add(new Reaction
+            {
+                Text = reaction,
+                IdeaId = ideaId,
+                Idea = idea,
+                Date = DateTime.UtcNow,
+            });
+            _context.SaveChanges();
+            return true;
+        }
+    }
+
+    public bool CreateIdea(int forumId, string title, string content, AnswerCubeUser user)
+    {
+        Forum forum = _context.Forums.Single(f => f.Id == forumId);
+        // Create the new idea
+        Idea newIdea = new Idea
+        {
+            Title = title,
+            Content = content,
+            ForumId = forumId,
+            Forum = forum,
+            User = user
+        };
+
+        _context.Ideas.Add(newIdea);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public int ReadForumByReactionId(int reactionId)
+    {
+        return _context.Reactions.Include(reaction => reaction.Idea).Single(r => r.Id == reactionId).Idea.ForumId;
+    }
+
+    public bool LikeReaction(int reactionId, AnswerCubeUser user)
+    {
+        Reaction reaction = _context.Reactions.Include(r => r.Likes).Single(r => r.Id == reactionId);
+        Like newLike = new Like
+        {
+            ReactionId = reactionId,
+            Reaction = reaction,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the dislike
+        Dislike? dislike = _context.Dislikes.SingleOrDefault(d => d.ReactionId == reactionId && d.UserId == user.Id);
+        if (dislike != null)
+        {
+            _context.Dislikes.Remove(dislike);
+        }
+
+        reaction.Likes.Add(newLike);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DislikeReaction(int reactionId, AnswerCubeUser user)
+    {
+        Reaction reaction = _context.Reactions.Include(r => r.Dislikes).Single(r => r.Id == reactionId);
+        Dislike newDislike = new Dislike
+        {
+            ReactionId = reactionId,
+            Reaction = reaction,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the like
+        Like? like = _context.Likes.SingleOrDefault(d => d.ReactionId == reactionId && d.UserId == user.Id);
+        if (like != null)
+        {
+            _context.Likes.Remove(like);
+        }
+
+        reaction.Dislikes.Add(newDislike);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool LikeIdea(int ideaId, AnswerCubeUser user)
+    {
+        Idea idea = _context.Ideas.Include(i => i.Likes).Single(i => i.Id == ideaId);
+        Like newLike = new Like
+        {
+            IdeaId = ideaId,
+            Idea = idea,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the dislike
+        Dislike? dislike = _context.Dislikes.SingleOrDefault(d => d.IdeaId == ideaId && d.UserId == user.Id);
+        if (dislike != null)
+        {
+            _context.Dislikes.Remove(dislike);
+        }
+
+        idea.Likes.Add(newLike);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public bool DislikeIdea(int ideaId, AnswerCubeUser user)
+    {
+        Idea idea = _context.Ideas.Include(i => i.Dislikes).Single(i => i.Id == ideaId);
+        Dislike newDislike = new Dislike
+        {
+            IdeaId = ideaId,
+            Idea = idea,
+            UserId = user.Id,
+            User = user
+        };
+        //Remove the like
+        Like? like = _context.Likes.SingleOrDefault(d => d.IdeaId == ideaId && d.UserId == user.Id);
+        if (like != null)
+        {
+            _context.Likes.Remove(like);
+        }
+
+        idea.Dislikes.Add(newDislike);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public List<Organization> ReadOrganizations()
+    {
+        return _context.Organizations.Include(o => o.Projects).ThenInclude(p => p.Flows)
+            .Include(o => o.UserOrganizations).ThenInclude(uo => uo.User).ToList();
+    }
+
+    public bool IsUserInOrganization(string? userId, int organizationid)
+    {
+        return _context.UserOrganizations.Any(uo => uo.UserId == userId && uo.OrganizationId == organizationid);
+    }
+
+    public async Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid)
+    {
+        var organization = _context.Organizations.Single(o => o.Id == organizationid);
+        if (userId == null)
+        {
+            //Normally never null cause user needs role when on this page.
+            return false;
+        }
+
+        // Check if the user is already part of the organization
+        if (_context.UserOrganizations
+            .Include(uo => uo.User)
+            .Include(uo => uo.Organization)
+            .Any(uo => uo.User.Email == email && uo.OrganizationId == organizationid))
+        {
+            return false;
+        }
+
+        AnswerCubeUser user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+        if (user != null)
+        {
+            // Check if a UserOrganization record already exists for this user and organization
+            var existingUserOrganization = _context.UserOrganizations
+                .FirstOrDefault(uo => uo.UserId == user.Id && uo.OrganizationId == organizationid);
+
+            if (existingUserOrganization == null)
+            {
+                // If not, create a new UserOrganization record
+                _context.UserOrganizations.Add(new UserOrganization
+                {
+                    UserId = user.Id,
+                    OrganizationId = organizationid
+                });
+                _context.SaveChanges();
+                await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+            }
+
+            return true;
+        }
+
+        //The user doesnt exist so we need to send email to register.
+        SaveBeheerderAndOrganization(email, _context.Organizations.Single(o => o.Id == organizationid).Name);
+        return true;
+    }
+
+    public Organization ReadOrganizationByName(string organizationName)
+    {
+        return _context.Organizations.First(o => o.Name == organizationName);
+    }
+
+    public List<Installation> ReadInstallationsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Installation> installations = new List<Installation>();
+        foreach (var organization in organizations)
+        {
+            installations.AddRange(_context.Installations
+                .Where(i => i.Organization == organization)
+                .Where(i => i.Active == false));
+        }
+        return installations;
+    }
+    
+    public bool UpdateInstallationToActive(int installationId)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
+        installation.Active = true;
+        _context.Installations.Update(installation);
+        _context.SaveChanges();
+        return installation.Active;
+    }
+
+    public List<Flow> readFlowsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Flow> flows = new List<Flow>();
+        var projectIds = organizations.SelectMany(o => o.Projects).ToList();
+
+        flows = _context.Flows
+            .Where(flow => projectIds.Contains(flow.Project))
+            .ToList();
+        return flows;
+    }
+    
+    public bool CreateNewInstallation(string name, string location, int organizationId)
+    {
+        Organization organization = _context.Organizations.Single(o => o.Id == organizationId);
+        Installation installation = new Installation
+        {
+            Name = name,
+            Location = location,
+            Active = false,
+            CurrentSlideIndex = 0,
+            MaxSlideIndex = 0,
+            ActiveSlideListId = 0,
+            OrganizationId = organizationId,
+            Organization = organization
+        };
+        _context.Installations.Add(installation);
+        _context.SaveChanges();
+        
+        return false;
+    }
+
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        if (session != null)
+        {
+            return session;
+        }
+        return null;
+    }
+
+    public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
+        _context.Sessions.Add(newSession);
+        _context.SaveChanges();
+        return true;
     }
 }

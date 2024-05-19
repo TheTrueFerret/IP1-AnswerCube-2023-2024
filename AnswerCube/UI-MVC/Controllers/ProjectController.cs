@@ -104,7 +104,6 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public IActionResult Flows(int projectId)
         {
-            //TODO: Flows zijn nog niet compleet gemaakt
             Project project = _manager.GetProjectWithFlowsById(projectId);
             if (project == null)
             {

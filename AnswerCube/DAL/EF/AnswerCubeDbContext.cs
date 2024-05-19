@@ -28,6 +28,12 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<UserOrganization> UserOrganizations { get; set; }
+    public DbSet<Forum> Forums { get; set; }
+    public DbSet<Idea> Ideas { get; set; }
+    public DbSet<Reaction> Reactions { get; set; }
+    public DbSet<Like> Likes { get; set; }
+    public DbSet<Dislike> Dislikes { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
@@ -70,12 +76,12 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 
         // relation between Flow and SlideList
         builder.Entity<Flow>()
-            .HasMany(f => f.SlideList)
+            .HasMany(f => f.SlideLists)
             .WithOne(sl => sl.Flow);
 
         builder.Entity<SlideList>()
             .HasOne(sl => sl.Flow)
-            .WithMany(f => f.SlideList);
+            .WithMany(f => f.SlideLists);
 
 
         // relation between Subtheme and SlideList
@@ -114,6 +120,19 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
         builder.Entity<Project>()
             .HasMany(p => p.Flows)
             .WithOne(f => f.Project);
+
+        builder.Entity<Forum>()
+            .HasOne(f => f.Organization)
+            .WithOne(o => o.Forum)
+            .HasForeignKey<Forum>(f => f.OrganizationId);
+
+        builder.Entity<Idea>().HasOne(i => i.Forum)
+            .WithMany(f => f.Ideas)
+            .HasForeignKey(i => i.ForumId);
+
+        builder.Entity<Reaction>().HasOne(r => r.Idea)
+            .WithMany(i => i.Reactions)
+            .HasForeignKey(r => r.IdeaId);
 
 
         SeedRoles(builder);

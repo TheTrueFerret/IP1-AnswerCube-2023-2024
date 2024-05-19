@@ -1,7 +1,13 @@
 using System.Net;
 using System.Net.Mail;
+using System.Security.Policy;
+using System.Text.Encodings.Web;
+using Azure.Core;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -10,12 +16,10 @@ namespace AnswerCube.UI.MVC.Services;
 
 public class MailService : IEmailSender
 {
-    private readonly IConfiguration _configuration;
     private readonly ILogger<MailService> _logger;
 
-    public MailService(IConfiguration configuration, ILogger<MailService> logger)
+    public MailService(ILogger<MailService> logger)
     {
-        _configuration = configuration;
         _logger = logger;
     }
 

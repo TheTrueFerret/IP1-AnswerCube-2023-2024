@@ -7,6 +7,7 @@ using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -44,7 +45,10 @@ services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.Req
     .AddDefaultUI();
 services.AddScoped<IRepository, Repository>();
 services.AddScoped<IManager, Manager>();
+services.AddScoped<IEmailManager, EmailManager>();
+services.AddScoped<IMailRepository, MailRepository>();
 services.AddScoped<JwtService>();
+
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -69,12 +73,19 @@ services.AddRazorPages().AddRazorRuntimeCompilation();
 services.AddTransient<IEmailSender, MailService>();
 
 // Add Sessions to make sure Models Persist between Controller Requests
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
+services.AddDistributedMemoryCache();
+services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+services.AddHttpContextAccessor();
+services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+
+
+builder.Services.AddSingleton<CloudStorageService>();
 
 services.AddAuthentication().AddGoogle(googleOptions =>
 {
