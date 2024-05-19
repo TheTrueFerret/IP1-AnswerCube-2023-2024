@@ -54,7 +54,7 @@ public class Repository : IRepository
 
     public Slide ReadSlideById(int id)
     {
-        return _context.Slides.First(s => s.Id == id);
+        return _context.Slides.Include(s=>s.ConnectedSlideLists).ThenInclude(cs => cs.SlideList).First(s => s.Id == id);
     }
 
     public Slide GetSlideFromFlow(int flowId, int number)
@@ -75,9 +75,7 @@ public class Repository : IRepository
 
     public SlideList ReadSlideListById(int id)
     {
-        SlideList slideList = _context.SlideLists
-            .Where(sl => sl.Id == id)
-            .Include(sl => sl.ConnectedSlides).First();
+        SlideList slideList = _context.SlideLists.First(sl => sl.Id == id);
 
         if (slideList.ConnectedSlides == null)
         {
@@ -462,17 +460,18 @@ public class Repository : IRepository
 
     public Flow ReadFlowWithProjectById(int flowId)
     {
-        return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
+        return _context.Flows.Include(f => f.Project).Include(f => f.SlideList).ThenInclude(s=>s.ConnectedSlides).FirstOrDefault(f => f.Id == flowId);
     }
 
 
-    public SlideList GetSlideListWithFlowById(int slideListId)
+    public SlideList ReadSlideListWithFlowById(int slideListId)
     {
         var slideList = _context.SlideLists
-            .Include(sl => sl.Flow).ThenInclude(flow => flow.Project)
+            .Include(sl => sl.Flow).ThenInclude(fl => fl.Project)
+            .Include(sl => sl.SubTheme)
             .Include(sl => sl.ConnectedSlides)
             .ThenInclude(cs => cs.Slide)
-            .FirstOrDefault(slideList => slideList.Id == slideListId); // This will load the Slides of each SlideList
+            .First(slideList => slideList.Id == slideListId); // This will load the Slides of each SlideList
 
         if (slideList == null)
         {
@@ -498,6 +497,55 @@ public class Repository : IRepository
         _context.Flows.Update(model);
         _context.SaveChanges();
     }
+
+/*    public void UpdateSlideList(SlideList slideList)
+    {
+       _context.SlideLists.Include(sl =>sl.Flow).Include(sl => sl.ConnectedSlides).Include(Sl => slideList.SubTheme);
+       _context.SlideLists.Update(slideList);
+       _context.SaveChanges();
+    }*/
+    
+    public void UpdateSlideList(string title, string description, int slideListId)
+    {
+        SlideList slideList = _context.SlideLists
+            .Include(sl => sl.SubTheme)
+            .First(sl => sl.Id == slideListId);
+
+        if (slideList == null)
+        {
+            throw new Exception("SlideList not found (jammer gng) in the database");
+        }
+
+        if (slideList.SubTheme != null)
+        {
+            slideList.SubTheme.Name = title;
+            slideList.SubTheme.Description = description;
+        }
+
+        slideList.Title = title;
+
+        _context.SlideLists.Update(slideList);
+        _context.SaveChanges();
+    }
+
+    public void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId)
+    {
+        Slide slide = _context.Slides.Include(sl => sl.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
+            .First(sl => sl.Id == slideId);
+
+        if (slide == null)
+        {
+            throw new Exception("Slide not found in the database");
+        }
+
+        slide.AnswerList = answers;
+        slide.Text = text;
+        slide.SlideType = slideType;
+        
+        _context.Slides.Update(slide);
+        _context.SaveChanges();
+    }
+
 
     public Organization CreateNewOrganization(string email, string name)
     {

@@ -15,9 +15,10 @@ module.exports = {
         rangequestion: './src/ts/flow/slide/RangeQuestion.ts',
         infoslide: './src/ts/flow/slide/InfoSlide.ts',
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
-        qr: './src/ts/qr/qr.ts',
-        searchBar: './src/ts/users/searchbar.ts',
-        project: './src/ts/Project/Project.ts',
+        slideEditor: './src/ts/flow/slide/slideEditor.ts',
+        qr : './src/ts/qr/qr.ts',
+        searchBar : './src/ts/users/searchbar.ts',
+        project :'./src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts'
     },
     output: {

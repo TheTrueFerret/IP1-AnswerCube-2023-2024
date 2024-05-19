@@ -9,29 +9,25 @@ namespace AnswerCube.UI.MVC.Models;
 public class FlowModel
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string? Description { get; set; }
-    public bool CircularFlow { get; set; }
-    public Project? Project { get; set; }
-    public ICollection<Installation>? ActiveInstallations { get; set; }
-    public ICollection<SlideList>? SlideList { get; set; }
-
-    public FlowModel(int id, string name, string? description, bool circularFlow, Project? project,
-        ICollection<Installation>? activeInstallations, ICollection<SlideList>? slideList)
-    {
-        Id = id;
-        Name = name;
-        Description = description;
-        CircularFlow = circularFlow;
-        Project = project;
-        ActiveInstallations = activeInstallations;
-        SlideList = slideList;
-    }
+    // Property to hold the current condition
+    public SlideType CurrentCondition { get; set; } = SlideType.StartSlide;
     
     public FlowModel(int id)
     {
         Id = id;
     }
     
-    public FlowModel(){}
+    public List<Slide> Slides { get; set; }
+    
+    public SlideList ActiveSlideList { get; set; }
+    public List<SlideList> SlideLists { get; set; }
+    public Project? Project { get; set; }
+
+    public ICollection<Installation>? ActiveInstallations { get; set; }
+    
+    public int CurrentSlideIndex { get; set; }
+    
+    public int MaxSlide { get; set; }
+    public bool CircularFlow { get; set; }
+    
 }

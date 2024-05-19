@@ -5,6 +5,7 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
     var slideLists = ViewBag.SlideLists as List<SlideList>;
+    var flow = ViewBag.Flow as Flow;
 }
 
 <div class="container mt-5">
@@ -29,7 +30,8 @@
                             <strong>Project:</strong> @Model.Project.Title
                         </p>
                     }
-                    <a href="@Url.Action("EditFlowView", "Flow", new { flowId = Model.Id, projectId = Model.Project.Id })" class="btn btn-primary">Edit Flow</a>
+                    <a href="@Url.Action("EditFlowView", "Flow", new { flowId = Model.Id,projectId = Model.Project.Id })" class="btn btn-primary">Edit Flow</a>
+                    <a href="@Url.Action("CircularFlow", "CircularFlow")" class="btn btn-primary">Go through flow</a>
                 </div>
                 <div class="col-md-6">
                     <div class="card card-right">
@@ -44,6 +46,7 @@
                                     }
                                     else if (slideLists != null)
                                     {
+                                        
                                         @foreach (var slideList in slideLists)
                                         {
                                             <div class="flow-button subtheme-rectangle">

@@ -48,6 +48,8 @@ public interface IManager
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     IEnumerable<Slide> GetSlidesBySlideListId(int slideListId);
     void UpdateFlow(Flow model);
+    void UpdateSlideList(string title, string description, int slideListId);
+    void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
     Organization CreateNewOrganization(string email, string name);
     bool AddUserToOrganization(AnswerCubeUser user);
     void SaveBeheerderAndOrganization(string email, Organization organization);

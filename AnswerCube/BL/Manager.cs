@@ -206,7 +206,7 @@ public class Manager : IManager
 
     public SlideList GetSlideListWithFlowById(int slideListId)
     {
-        return _repository.GetSlideListWithFlowById(slideListId);
+        return _repository.ReadSlideListWithFlowById(slideListId);
     }
 
     public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
@@ -223,6 +223,17 @@ public class Manager : IManager
     {
         _repository.UpdateFlow(model);
     }
+
+    public void UpdateSlideList(string title, string description, int slideListId)
+    {
+        _repository.UpdateSlideList(title, description, slideListId);
+    }
+
+    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
+    {
+        _repository.UpdateSlide(slideType, text, answersList, slideId);
+    }
+
 
     public Organization CreateNewOrganization(string email, string name)
     {

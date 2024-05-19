@@ -10,6 +10,11 @@ public class SubTheme
     public string Name { get; set; }
     public string? Description { get; set; }
     public ICollection<SlideList>? SlideList { get; set; }
+    
+    public SubTheme()
+    {
+       
+    }
 
     public SubTheme(string name)
     {
