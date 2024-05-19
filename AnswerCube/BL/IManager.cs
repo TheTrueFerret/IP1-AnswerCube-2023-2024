@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -67,6 +67,10 @@ public interface IManager
     bool DislikeReaction(int reactionId,AnswerCubeUser user);
     bool LikeIdea(int ideaId,AnswerCubeUser user);
     bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    List<Organization> GetOrganizations();
+    bool IsUserInOrganization(string? userId, int organizationid);
+    Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Organization GetOrganizationByName(string organizationName);
     List<Installation> GetInstallationsByUserId(string userId);
     bool SetInstallationToActive(int installationId);
     List<Flow> getFlowsByUserId(string userId);

@@ -24,8 +24,6 @@ public class FlowController : BaseController
     public IActionResult FlowDetails(int flowId)
     {
         Flow flow = _manager.GetFlowWithProjectById(flowId);
-        //SlideList sLideList = _manager.GetSlideListWithFlowById(flowId-1);
-        var test = _manager.GetSlideListsByFlowId(flowId).ToList();
         ViewBag.SlideLists = _manager.GetSlideListsByFlowId(flowId).ToList();
         return View(flow);
     }
@@ -56,15 +54,11 @@ public class FlowController : BaseController
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
         }
 
-        //TODO: Add error message
+        TempData["ErrorMessage"] = "Failed to add slide.";
         return RedirectToAction("CreateSlideView");
+        
     }
-
-    /*   public IActionResult CreateSlideListView(string title, int flowId)
-       {
-           bool slideList = _manager.CreateSlidelist(title, flowId);
-           return View("CreateSlideListView");
-       }*/
+    
 
     public IActionResult CreateSlideListView(int flowId)
     {
@@ -76,7 +70,6 @@ public class FlowController : BaseController
     [HttpPost]
     public IActionResult AddFlow(string name, string desc, string flowType, int projectId)
     {
-        //TODO: Add flow to project with ID that we get trough the website
         bool circularFlow = flowType is "circular" or not "linear";
 
         if (_manager.CreateFlow(name, desc, circularFlow, projectId))

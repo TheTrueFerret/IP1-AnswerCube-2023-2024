@@ -164,7 +164,6 @@
 
     <ItemGroup>
         <Folder Include="Areas\"/>
-        <Folder Include="Areas\Identity\Data\"/>
     </ItemGroup>
 
 </Project>

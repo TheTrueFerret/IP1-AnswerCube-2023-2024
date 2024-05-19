@@ -17,16 +17,16 @@ public class AdminController : BaseController
     private readonly ILogger<AdminController> _logger;
     private readonly UserManager<AnswerCubeUser> _userManager;
     private readonly SignInManager<AnswerCubeUser> _signInManager;
-    private readonly IEmailSender _emailSender;
+    private readonly IEmailManager _emailManager;
     private readonly IManager _manager;
 
     public AdminController(ILogger<AdminController> logger, UserManager<AnswerCubeUser> userManager,
-        SignInManager<AnswerCubeUser> signInManager, IEmailSender emailSender, IManager manager)
+        SignInManager<AnswerCubeUser> signInManager, IEmailManager emailManager, IManager manager)
     {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
-        _emailSender = emailSender;
+        _emailManager = emailManager;
         _manager = manager;
     }
 
@@ -165,42 +165,22 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("AddDeelplatform")]
-    public async Task<IActionResult> AddDeelplatform(string email,string deelplatformName)
+    public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName)
     {
-        //if (_manager.SearchDeelplatformByName(deelplatformName))
-        //{
-        //    return Json(new { exists = true, deelplatformName = deelplatformName });
-        //}
-        
-        Organization organization = _manager.CreateNewOrganization(email,deelplatformName);
+        Organization organization = _manager.CreateNewOrganization(email, deelplatformName);
         _manager.SaveBeheerderAndOrganization(email, organization);
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            // Generate registration link with the email as a query parameter
-            var registerUrl = Url.Page(
-                "/Account/Register",
-                pageHandler: null,
-                values: new { area = "Identity", email = email },
-                protocol: Request.Scheme);
-
-            await _emailSender.SendEmailAsync(email, "Register for DeelplatformBeheerder",
-                $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Welcome to AnswerCube!</title>\n    <style>\n        /* Styles for the email template */\n        body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #fff;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Welcome to AnswerCube!</h1>\n        <p>You have been added as a DeelplatformBeheerder. Please register by using the button below!</p>\n        <a href=\"{registerUrl}\" class=\"btn\">Register Here</a>\n    </div>\n</body>\n</html>\n");
+            await _emailManager.SendNewEmail(email, organization.Name);
             TempData["Success"] = "An email has been sent to the provided email address.";
         }
         else
         {
-            // Generate login link with mail
-            var loginUrl = Url.Page(
-                "/Account/Login",
-                pageHandler: null,
-                values: new { area = "Identity", email = email },
-                protocol: Request.Scheme);
             await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-            await _emailSender.SendEmailAsync(email, "You have been added as a DeelplatformBeheeder",
-                $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Role Update!</title>\n    <style>\n        /* Styles for the email template */\n        body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #fff;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Role Update!</h1>\n        <p>Your role has been updated to DeelplatformBeheerder. Please log in to your account to see the changes!</p>\n        <a href=\"{loginUrl}\" class=\"btn\">Log In Here</a>\n    </div>\n</body>\n</html>\n");
-            TempData["Success"] = $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
-            
+            await _emailManager.SendExistingEmail(email, organization.Name);
+            TempData["Success"] =
+                $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
             _manager.CreateUserOrganization(user, organization);
         }
 

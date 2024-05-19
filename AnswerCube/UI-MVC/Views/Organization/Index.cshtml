@@ -4,7 +4,6 @@
     ViewBag.Title = "Project Overzicht";
     Layout = "_Layout";
 }
-@*//TODO: Add a way to make the big descriptions smaller and finish the Layout*@
 <h1>Organizatie</h1>
 <input type="text" id="searchInput" class="row form-control" placeholder="Type a name to search">
 <div class="container">
@@ -68,16 +67,49 @@
             <div class="col-12">
                 <h2>Deelplatformbeheerders</h2>
                 <div class="list-group scrollable-list">
-                    @foreach (var userOrg in Model.UserOrganizations)
-                    {
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="text-capitalize">@userOrg.User.UserName</p>
-                            <button class="btn btn-danger"
-                                    title="Remove Deelplatformbeheerder"
-                                    onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
+                        Add Deelplatformbeheerder
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="addDeelplatformbeheerderModal" tabindex="-1" aria-labelledby="addDeelplatformbeheerderModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addDeelplatformbeheerderModalLabel">Add Deelplatformbeheerder</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" asp-action="AddDeelplatformbeheerderToOrganization" asp-controller="Organization">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                            <input type="hidden" id="organizationid" name="organizationid" value="@Model.Id">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    @if (Model.UserOrganizations.Count == 0)
+                    {
+                        <p>Er zijn geen deelplatformbeheerders</p>
+                    }
+                    else
+                    {
+                        @foreach (var userOrg in Model.UserOrganizations)
+                        {
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-capitalize">@userOrg.User.UserName</p>
+                                <button class="btn btn-danger"
+                                        title="Remove Deelplatformbeheerder"
+                                        onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        }
                     }
                 </div>
             </div>

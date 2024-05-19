@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -281,21 +281,20 @@ public class Manager : IManager
 
     public bool AddIdea(int forumId, string title, string content, AnswerCubeUser user)
     {
-        return _repository.CreateIdea(forumId, title, content,user);
+        return _repository.CreateIdea(forumId, title, content, user);
     }
 
 
-    public bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user)
+    public bool AddReaction(int ideaId, string reaction, AnswerCubeUser? user)
     {
         if (user != null)
         {
-            return _repository.CreateReaction(ideaId, reaction,user);
+            return _repository.CreateReaction(ideaId, reaction, user);
         }
         else
         {
-            return _repository.CreateReaction(ideaId, reaction,null);
+            return _repository.CreateReaction(ideaId, reaction, null);
         }
-        
     }
 
     public int GetForumByIdeaId(int ideaId)
@@ -310,7 +309,7 @@ public class Manager : IManager
 
     public bool LikeReaction(int reactionId, AnswerCubeUser user)
     {
-        return _repository.LikeReaction(reactionId,user);
+        return _repository.LikeReaction(reactionId, user);
     }
 
     public bool DislikeReaction(int reactionId, AnswerCubeUser user)
@@ -328,6 +327,26 @@ public class Manager : IManager
     public bool DislikeIdea(int ideaId, AnswerCubeUser user)
     {
         return _repository.DislikeIdea(ideaId, user);
+    }
+
+    public List<Organization> GetOrganizations()
+    {
+        return _repository.ReadOrganizations();
+    }
+
+    public bool IsUserInOrganization(string? userId, int organizationid)
+    {
+        return _repository.IsUserInOrganization(userId, organizationid);
+    }
+
+    public Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid)
+    {
+        return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
+    }
+
+    public Organization GetOrganizationByName(string organizationName)
+    {
+        return _repository.ReadOrganizationByName(organizationName);
     }
 
     public List<Installation> GetInstallationsByUserId(string userId)

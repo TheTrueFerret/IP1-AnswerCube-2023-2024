@@ -1,11 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
 using AnswerCube.BL;
 using Microsoft.AspNetCore.Authentication;
 using AnswerCube.BL.Domain.User;
@@ -14,7 +10,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using NuGet.Versioning;
 
 namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -25,7 +20,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserStore<AnswerCubeUser> _userStore;
         private readonly IUserEmailStore<AnswerCubeUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailManager _emailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IManager _manager;
 
@@ -34,7 +29,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             IUserStore<AnswerCubeUser> userStore,
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+            IEmailManager emailManager,
             RoleManager<IdentityRole> roleManager, IManager manager)
         {
             _userManager = userManager;
@@ -42,7 +37,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _emailManager = emailManager;
             _roleManager = roleManager;
             _manager = manager;
         }
@@ -134,7 +129,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                if (!CheckName(user.FirstName, user.LastName))
+                if (!CheckName(Input.FirstName, Input.LastName))
                 {
                     user.FirstName = Input.FirstName;
                     user.LastName = Input.LastName;
@@ -142,7 +137,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid name");
+                    ModelState.AddModelError(string.Empty, "Your name contains a bad word. Please try again.");
                     return Page();
                 }
 
@@ -174,15 +169,9 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"<!DOCTYPE html> <html lang='en'><head>    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Registration Confirmation</title>\n    <style>\n body {{\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            margin: 0;\n            padding: 0;\n            text-align: center;\n        }}\n\n        .container {{\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #fff;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }}\n\n        h1 {{\n            color: #333;\n        }}\n\n        p {{\n            color: #666;\n            margin-bottom: 20px;\n        }}\n\n        .btn {{\n            display: inline-block;\n            padding: 10px 20px;\n            background-color: #007bff;\n            color: #000;\n            text-decoration: none;\n            border-radius: 5px;\n            transition: background-color 0.3s;\n        }}\n\n        .btn:hover {{\n            background-color: #0056b3;\n        }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Registration Confirmation</h1>\n        <p>Thank you for registering! To activate your account, please click the button below:</p>\n        <a href=\"{HtmlEncoder.Default.Encode(callbackUrl)}\" class=\"btn\">Confirm Account</a>\n    </div>\n</body>\n</html>\n");
-
+                    
+                    await _emailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
+                    
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation",
@@ -236,7 +225,21 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
         private Boolean CheckName(string name, string lastName)
         {
-            //TODO: Add a check for faulty names like (cuss words, numbers, etc)
+            var badwords = System.IO.File.ReadLines(@"Areas\Identity\Data\BadWords\en.txt")
+                .Select(word => word.Trim().ToLower())
+                .ToArray();
+            if (name != null && (badwords.Contains(name.ToLower()) || name.Any(char.IsDigit) ||
+                                 name.Any(ch => !char.IsLetter(ch))))
+            {
+                return true;
+            }
+
+            if (lastName != null && (badwords.Contains(lastName.ToLower()) || lastName.Any(char.IsDigit) ||
+                                     lastName.Any(ch => !char.IsLetter(ch))))
+            {
+                return true;
+            }
+
             return false;
         }
     }
