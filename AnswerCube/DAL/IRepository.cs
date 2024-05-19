@@ -10,22 +10,20 @@ namespace AnswerCube.DAL;
 public interface IRepository
 {
     List<Slide> GetOpenSlides();
-
     List<Slide> GetListSlides();
-
     List<Slide> GetSingleChoiceSlides();
-
     List<Slide> GetMultipleChoiceSlides();
     List<Slide> GetInfoSlides();
-
     Slide GetSlideFromFlow(int flowId, int number);
     Slide ReadSlideById(int id);
     SlideList getSlideList();
     SlideList ReadSlideListById(int id);
     Boolean AddAnswer(List<string> answers, int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
-
     Boolean StartInstallation(int id, SlideList slideList);
+    Boolean AddAnswer(List<string> answers,int id, Session session);
+    Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
+    Installation StartInstallationWithFlow(int installationId, int flowId);
     Boolean UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide ReadActiveSlideByInstallationId(int id);
@@ -41,7 +39,7 @@ public interface IRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl);
     bool CreateSlideList(string title, string description, int flowId);
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Slide> ReadSlideList();
@@ -76,4 +74,14 @@ public interface IRepository
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
+    bool LikeReaction(int reactionId,AnswerCubeUser user);
+    bool DislikeReaction(int reactionId,AnswerCubeUser user);
+    bool LikeIdea(int ideaId,AnswerCubeUser user);
+    bool DislikeIdea(int ideaId,AnswerCubeUser user);
+    List<Installation> ReadInstallationsByUserId(string userId);
+    bool UpdateInstallationToActive(int installationId);
+    List<Flow> readFlowsByUserId(string userId);
+    bool CreateNewInstallation(string name, string location, int organizationId);
+    Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    bool WriteNewSessionWithInstallationId(Session newSession, int installationId);
 }

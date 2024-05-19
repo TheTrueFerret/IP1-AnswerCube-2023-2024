@@ -49,6 +49,7 @@ services.AddScoped<IEmailManager, EmailManager>();
 services.AddScoped<IMailRepository, MailRepository>();
 services.AddScoped<JwtService>();
 
+
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -82,6 +83,9 @@ services.AddSession(options =>
 services.AddHttpContextAccessor();
 services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+
+
+builder.Services.AddSingleton<CloudStorageService>();
 
 services.AddAuthentication().AddGoogle(googleOptions =>
 {

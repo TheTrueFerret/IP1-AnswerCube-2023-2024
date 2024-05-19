@@ -33,6 +33,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Dislike> Dislikes { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
@@ -75,12 +76,12 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 
         // relation between Flow and SlideList
         builder.Entity<Flow>()
-            .HasMany(f => f.SlideList)
+            .HasMany(f => f.SlideLists)
             .WithOne(sl => sl.Flow);
 
         builder.Entity<SlideList>()
             .HasOne(sl => sl.Flow)
-            .WithMany(f => f.SlideList);
+            .WithMany(f => f.SlideLists);
 
 
         // relation between Subtheme and SlideList

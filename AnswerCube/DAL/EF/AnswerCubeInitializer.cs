@@ -104,11 +104,11 @@ public static class AnswerCubeInitializer
         context.UserOrganizations.AddRange(userOrganization1, userOrganization2);
         context.SaveChanges();
 
-        Flow flow = new Flow
+        Flow circularFlow1 = new Flow
         {
-            Name = "linear",
+            Name = "CircularFlow",
             Description = "ipsum lorum",
-            CircularFlow = false
+            CircularFlow = true
         };
 
         Project project1 = new Project
@@ -117,7 +117,7 @@ public static class AnswerCubeInitializer
             Description = "This is a project about the cast, producers, fans and critics of the filmseries",
             IsActive = true,
             Organization = organization1,
-            Flows = new List<Flow> { flow }
+            Flows = new List<Flow> { circularFlow1 }
         };
         Project project2 = new Project
         {
@@ -267,8 +267,10 @@ public static class AnswerCubeInitializer
                 "Natuur en ecologie", "Vrije tijd, sport, cultuur", "Huisvesting", "Onderwijs en kinderopvang",
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             },
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
+        
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
@@ -556,7 +558,8 @@ public static class AnswerCubeInitializer
             Text = "Wat is een gemeenteraad?\n" +
                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
             SlideType = SlideType.InfoSlide,
-            ConnectedSlideLists = new List<SlideConnection>()
+            ConnectedSlideLists = new List<SlideConnection>(),
+            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/image_202405161408479679.jpeg"
         };
 
         SlideConnection slideConnection10 = new SlideConnection
@@ -615,25 +618,32 @@ public static class AnswerCubeInitializer
         //Add slidelists to the context
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
+        circularFlow1.SlideLists = new List<SlideList>();
+        circularFlow1.SlideLists.Add(slideList1);
+        circularFlow1.SlideLists.Add(slideList1punt2);
+        context.Flows.Add(circularFlow1);
+        
         Flow linearFlow = new Flow
         {
-            Name = "Actors",
+            Name = "LinearFlow",
             Project = project1,
             CircularFlow = false,
             Description = "This is a flow about actors and their lives"
         };
-        linearFlow.SlideList = new List<SlideList>();
-        linearFlow.SlideList.Add(slideList1);
-        linearFlow.SlideList.Add(slideList1punt2);
+        linearFlow.SlideLists = new List<SlideList>();
+        linearFlow.SlideLists.Add(slideList1);
+        linearFlow.SlideLists.Add(slideList1punt2);
         context.Flows.Add(linearFlow);
 
         Installation installation = new Installation()
         {
+            Name = "BIB",
             Location = "Antwerpen",
             Active = false,
             CurrentSlideIndex = 0,
             ActiveSlideListId = 0,
             MaxSlideIndex = 0,
+            Organization = organization1
         };
         context.Installations.Add(installation);
         context.SaveChanges();

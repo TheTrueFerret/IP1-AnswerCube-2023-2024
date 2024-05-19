@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -66,9 +66,9 @@ public class Manager : IManager
         return _repository.ReadSlideById(id);
     }
 
-    public Boolean AddAnswer(List<string> answers, int id)
+    public Boolean AddAnswer(List<string> answers, int id, Session session)
     {
-        return _repository.AddAnswer(answers, id);
+        return _repository.AddAnswer(answers, id, session);
     }
 
     public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
@@ -76,9 +76,9 @@ public class Manager : IManager
         return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
 
-    public Boolean StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        return _repository.StartInstallation(id, slideList);
+        return _repository.StartInstallationWithFlow(installationId, flowId);
     }
 
     public Boolean UpdateInstallation(int id)
@@ -157,15 +157,16 @@ public class Manager : IManager
         return _repository.GetAnswers();
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
     {
+        
         if (type == SlideType.InfoSlide && options.Length == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId);
+            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
         }
 
-        return _repository.CreateSlide(type, question, options, slideListId);
+        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
     }
 
     public List<Slide> GetAllSlides()
@@ -347,4 +348,35 @@ public class Manager : IManager
     {
         return _repository.ReadOrganizationByName(organizationName);
     }
+
+    public List<Installation> GetInstallationsByUserId(string userId)
+    {
+        return _repository.ReadInstallationsByUserId(userId);
+    }
+
+    public bool SetInstallationToActive(int installationId)
+    {
+        return _repository.UpdateInstallationToActive(installationId);
+    }
+
+    public List<Flow> getFlowsByUserId(string userId)
+    {
+        return _repository.readFlowsByUserId(userId);
+    }
+
+    public bool AddNewInstallation(string name, string location, int organizationId)
+    {
+        return _repository.CreateNewInstallation(name, location, organizationId);
+    }
+
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
+    }
+
+    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
+    }
+
 }

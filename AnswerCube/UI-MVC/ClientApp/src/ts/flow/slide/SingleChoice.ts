@@ -28,6 +28,25 @@ function loadSingleChoiceSlide() {
         console.log(slide);
         if (slideElement) {
             slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+            slideElement.innerHTML = `<h3> ${slide.text} </h3> `;
+            if (slide.mediaUrl) { // Check if mediaUrl exists
+                // Extract the filename from the media URL
+                let filename = slide.mediaUrl.split('/').pop();
+                // Extract the media type from the filename
+                let mediaType = filename.split('_')[0];
+                console.log(mediaType);
+                // Default to "image" if the media type is not "video"
+                if (mediaType === "video") {
+                    slideElement.innerHTML += `<video width="320" height="240" controls>
+                                                  <source src="${slide.mediaUrl}" type="video/mp4">
+                                                  Your browser does not support the video tag.
+                                                </video><br>`;
+                
+                } else if (mediaType === "image") {
+                    slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
+                } else {
+                    slideElement.innerHTML += `<em>Unsupported media type</em>`;
+                }}
             for (const answer of slide.answerList) {
                 slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
             }
@@ -48,14 +67,17 @@ loadSingleChoiceSlide()
 
 const btn: HTMLElement | null = document.getElementById("submitAnswer");
 if (btn) {
-    btn.addEventListener('click', postAnswer);
+    btn.addEventListener('click', function(){
+        postAnswer(1)
+    });
 }
 
-function postAnswer() {
+function postAnswer(cubeId: number) {
     let answer = getSelectedAnswer();
 
     let requestBody = {
-        Answer: answer
+        Answer: answer,
+        CubeId: cubeId
     };
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
@@ -132,7 +154,7 @@ document.addEventListener('keydown', (event) => {
             break;
         case 'Enter':
             console.log('Enter');
-            postAnswer()
+            postAnswer(1)
             break;
         default:
             console.log(event.key, event.keyCode);

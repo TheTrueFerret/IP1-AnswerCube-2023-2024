@@ -5,6 +5,7 @@ let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 const jwtToken = getCookie("jwtToken");
 const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
+const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 let rangeInput: any;
 let min: number;
@@ -32,6 +33,25 @@ function loadRangeQuestionSlide() {
             console.log(slide);
             if (slideElement) {
                 slideElement.innerHTML = `<h3>${slide.text}</h3>`;
+                if (slide.mediaUrl) { // Check if mediaUrl exists
+                    // Extract the filename from the media URL
+                    let filename = slide.mediaUrl.split('/').pop();
+                    // Extract the media type from the filename
+                    let mediaType = filename.split('_')[0];
+                    console.log(mediaType);
+                    // Default to "image" if the media type is not "video"
+                    if (mediaType === "video") {
+                        slideElement.innerHTML += `<video width="320" height="240" controls>
+                                                  <source src="${slide.mediaUrl}" type="video/mp4">
+                                                  Your browser does not support the video tag.
+                                                </video><br>`;
+
+                    } else if (mediaType === "image") {
+                        slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
+                    } else {
+                        slideElement.innerHTML += `<em>Unsupported media type</em>`;
+                    }
+                }
                 const answersContainer = document.querySelector(".answers-container");
                 if (answersContainer) {
                     fillSliderOptions(slide.answerList);
@@ -54,24 +74,26 @@ loadRangeQuestionSlide();
 
 const btnSubmit: HTMLElement | null = document.getElementById("submitAnswer");
 if (btnSubmit) {
-    btnSubmit.addEventListener('click', postAnswer);
+    btnSubmit.addEventListener('click', function(){
+        postAnswer
+    });
 }
 
-function postAnswer() {
-    
-    let answer = getSelectedAnswer()
-    
+function postAnswer(cubeId: number) {
+    let answer = getRangeAnswer();
+
     let requestBody = {
-        Answer: answer
+        Answer: answer,
+        CubeId: cubeId
     };
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json', 
+            'Accept': 'application/json',
             'Authorization': `Bearer ${jwtToken}`
-        }, 
+        },
         body: JSON.stringify(requestBody)
     })
         .then((response: Response) => {
@@ -93,11 +115,11 @@ function postAnswer() {
         });
 }
 
-function getSelectedAnswer() {
+function getRangeAnswer() {
     if (sliderElement) {
         let selectedAnswers: string[] = [];
         if (sliderElement.value) {
-            selectedAnswers.push(sliderElement.value); 
+            selectedAnswers.push(sliderElement.value);
         }
         return selectedAnswers;
     }
@@ -155,7 +177,7 @@ document.addEventListener('keydown', (event) => {
             break;
         case 'Enter':
             console.log('Enter');
-            postAnswer()
+            postAnswer(1)
             break;
         default:
             console.log(event.key, event.keyCode);

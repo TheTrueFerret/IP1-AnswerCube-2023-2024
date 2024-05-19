@@ -34,9 +34,22 @@ public class CircularFlowController : BaseController
 
     }
     
-    public IActionResult CircularFlow()
+    public IActionResult CircularFlow(int? id)
     {
-        return View();
+        int installationId;
+        if (id == null)
+        {
+            string token = Request.Cookies["jwtToken"];
+            installationId = _jwtService.GetInstallationIdFromToken(token);
+        }
+        else
+        {
+            installationId = (int)id;
+            _manager.UpdateInstallation(installationId);
+        }
+        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+        string actionName = slide.SlideType.ToString();
+        return RedirectToAction(actionName);
     }
     
     [HttpGet]
@@ -70,22 +83,6 @@ public class CircularFlowController : BaseController
     }
     
     [HttpGet]
-    public IActionResult InitializeFlow()
-    {
-        SlideList slideList = _manager.GetSlideListById(1);
-        bool installationStarted = _manager.StartInstallation(1, slideList);
-        if (installationStarted)
-        {
-            string token = _jwtService.GenerateToken(1); // Use JwtService to generate token
-            return new JsonResult(new { token, slideList });
-        }
-        else
-        {
-            return Error();
-        }
-    }
-    
-    [HttpGet]
     public IActionResult GetNextSlide()
     {
         // Retrieve installation ID from token
@@ -100,7 +97,7 @@ public class CircularFlowController : BaseController
     public IActionResult UpdatePage()
     {
         // Retrieve installation ID from token
-        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
         bool installationUpdated = _manager.UpdateInstallation(installationId);
@@ -110,17 +107,27 @@ public class CircularFlowController : BaseController
         return Json(new { url });
     }
     
-     
+    
     [HttpPost]
     public IActionResult PostAnswer([FromBody] AnswerModel answer)
     {
         // Retrieve installation ID from token
         string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
         int installationId = _jwtService.GetInstallationIdFromToken(token);
+
+        Session? session = _manager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);
+        if (session == null)
+        {
+            Session newSession = new Session()
+            {
+                CubeId = answer.CubeId
+            };
+            _manager.AddNewSessionWithInstallationId(newSession, installationId);
+        }
         
         Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         List<string> answerText = answer.Answer;
-        if (_manager.AddAnswer(answerText, slide.Id))
+        if (_manager.AddAnswer(answerText, slide.Id, session))
         {
             return UpdatePage();
         }

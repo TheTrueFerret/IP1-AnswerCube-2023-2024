@@ -93,24 +93,23 @@ public class Repository : IRepository
         return _context.SlideLists.FirstOrDefault(sl => sl.Title == title);
     }
 
-    public bool AddAnswer(List<string> answers, int id)
+    public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
 
-        Answer uploadAnswer = new Answer(answers, slide);
+        Answer uploadAnswer = new Answer()
+        {
+            AnswerText = answers,
+            Slide = slide,
+            Session = session
+        };
         if (answers == null)
         {
             return false;
         }
-        else
-        {
-            _context.Answers.Add(uploadAnswer);
-            _context.SaveChanges();
-
-            return true;
-        }
-
-        return default;
+        _context.Answers.Add(uploadAnswer);
+        _context.SaveChanges();
+        return true;
     }
 
     public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
@@ -123,23 +122,18 @@ public class Repository : IRepository
     }
 
 
-    public bool StartInstallation(int id, SlideList slideList)
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
-        Installation installation = _context.Installations.First(i => i.Id == id);
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
         installation.Active = true;
-        installation.ActiveSlideListId = slideList.Id;
+        installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides).Single(f => f.Id == flowId);
 
-
-        installation.Slides = new List<Slide>();
-        foreach (var slide in ReadSlidesFromSlideList(slideList))
-        {
-            installation.Slides.Add(slide);
-        }
-
+        installation.ActiveSlideListId = installation.Flow.SlideLists.First().Id;
+        
         installation.CurrentSlideIndex = 0;
-        installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
+        installation.MaxSlideIndex = installation.Flow.SlideLists.First().ConnectedSlides.Count;
         _context.SaveChanges();
-        return true;
+        return installation;
     }
 
     public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
@@ -193,7 +187,7 @@ public class Repository : IRepository
 
     public Slide ReadActiveSlideByInstallationId(int id)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).Include(i => i.Slides).First();
+        Installation installation = _context.Installations.Where(i => i.Id == id).First();
         SlideList slideList = _context.SlideLists.Where(sl => sl.Id == installation.ActiveSlideListId)
             .Include(sl => sl.ConnectedSlides).First();
 
@@ -227,7 +221,6 @@ public class Repository : IRepository
 
     public bool CreateDeelplatformBeheerderByEmail(string userEmail)
     {
-        //HIERE
         DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail { Email = userEmail };
         _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
         _context.SaveChanges();
@@ -340,7 +333,7 @@ public class Repository : IRepository
         return answers;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId)
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl)
     {
         if (options == null || options.Length <= 0)
         {
@@ -349,7 +342,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = null
+                AnswerList = null,
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -373,7 +367,8 @@ public class Repository : IRepository
             {
                 SlideType = type,
                 Text = question,
-                AnswerList = options.ToList()
+                AnswerList = options.ToList(),
+                mediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -400,7 +395,7 @@ public class Repository : IRepository
         {
             SubTheme = new SubTheme(title, description),
             FlowId = flowId,
-            Title = title,
+            Title = title
         };
         _context.SlideLists.Add(slideList);
         _context.SaveChanges();
@@ -408,7 +403,7 @@ public class Repository : IRepository
         var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
         if (flow != null)
         {
-            flow.SlideList.Add(slideList);
+            flow.SlideLists.Add(slideList);
             _context.SaveChanges();
             return true;
         }
@@ -822,5 +817,77 @@ public class Repository : IRepository
     public Organization ReadOrganizationByName(string organizationName)
     {
         return _context.Organizations.First(o => o.Name == organizationName);
+    }
+
+    public List<Installation> ReadInstallationsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Installation> installations = new List<Installation>();
+        foreach (var organization in organizations)
+        {
+            installations.AddRange(_context.Installations
+                .Where(i => i.Organization == organization)
+                .Where(i => i.Active == false));
+        }
+        return installations;
+    }
+    
+    public bool UpdateInstallationToActive(int installationId)
+    {
+        Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
+        installation.Active = true;
+        _context.Installations.Update(installation);
+        _context.SaveChanges();
+        return installation.Active;
+    }
+
+    public List<Flow> readFlowsByUserId(string userId)
+    {
+        List<Organization> organizations = ReadOrganizationByUserId(userId);
+        List<Flow> flows = new List<Flow>();
+        var projectIds = organizations.SelectMany(o => o.Projects).ToList();
+
+        flows = _context.Flows
+            .Where(flow => projectIds.Contains(flow.Project))
+            .ToList();
+        return flows;
+    }
+    
+    public bool CreateNewInstallation(string name, string location, int organizationId)
+    {
+        Organization organization = _context.Organizations.Single(o => o.Id == organizationId);
+        Installation installation = new Installation
+        {
+            Name = name,
+            Location = location,
+            Active = false,
+            CurrentSlideIndex = 0,
+            MaxSlideIndex = 0,
+            ActiveSlideListId = 0,
+            OrganizationId = organizationId,
+            Organization = organization
+        };
+        _context.Installations.Add(installation);
+        _context.SaveChanges();
+        
+        return false;
+    }
+
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        if (session != null)
+        {
+            return session;
+        }
+        return null;
+    }
+
+    public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
+        _context.Sessions.Add(newSession);
+        _context.SaveChanges();
+        return true;
     }
 }

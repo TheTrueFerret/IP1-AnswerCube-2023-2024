@@ -7,6 +7,7 @@ module.exports = {
         site: './src/ts/site.ts',
         index: './src/ts/index.ts',
         validation: './src/ts/validation.ts',
+        initializeinstallation: './src/ts/InitializeInstallation.ts',
         circularflow: './src/ts/flow/CircularFlow.ts',
         startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
@@ -14,9 +15,9 @@ module.exports = {
         rangequestion: './src/ts/flow/slide/RangeQuestion.ts',
         infoslide: './src/ts/flow/slide/InfoSlide.ts',
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
-        qr : './src/ts/qr/qr.ts',
-        searchBar : './src/ts/users/searchbar.ts',
-        project :'./src/ts/Project/Project.ts',
+        qr: './src/ts/qr/qr.ts',
+        searchBar: './src/ts/users/searchbar.ts',
+        project: './src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts'
     },
     output: {

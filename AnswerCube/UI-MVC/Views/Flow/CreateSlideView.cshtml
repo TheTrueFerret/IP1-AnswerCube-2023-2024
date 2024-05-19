@@ -9,7 +9,7 @@
     <h2>Create Slide</h2>
 
     <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow"
-          asp-route-projectId="@Model.Id" asp-route-slideListId="@ViewBag.SlideListId">
+          asp-route-projectId="@Model.Id" asp-route-slideListId="@ViewBag.SlideListId" enctype="multipart/form-data">
         <div class="form-group">
             <label for="slideType">Slide Type:</label>
             <select id="slideType" name="slideType" class="form-control form-select">
@@ -21,6 +21,22 @@
                 <option value="InfoSlide">Info Slide</option>
             </select>
         </div>
+        @if (ViewBag.HasCredential)
+        {  
+            <div class="form-group">
+                <dl>
+                    <dt>
+                        <label for="imageFile" class="form-label">File</label>
+                    </dt>
+                    <dd>
+                        <input id="imageFile" type="file" name="imageFile" class="form-control"/>
+                    </dd>
+                </dl>
+            </div>
+        } else {
+            <p>The CloudStorageService does not have credentials.</p>
+        }
+
         <div class="form-group" id="questionDiv" hidden>
             <label for="question" id="questionLabel">Question:</label>
             <input type="text" id="question" name="question" class="form-control" required>

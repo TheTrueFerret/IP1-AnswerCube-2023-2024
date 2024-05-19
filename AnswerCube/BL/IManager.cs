@@ -1,4 +1,4 @@
-﻿using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -17,10 +17,10 @@ public interface IManager
     Slide GetSlideFromFlow(int flowId, int number);
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
-    bool AddAnswer(List<string> answers, int id);
+    bool AddAnswer(List<string> answers, int id, Session session);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    bool StartInstallation(int id, SlideList slideList);
+    Installation StartInstallationWithFlow(int installationId, int flowId);
     bool UpdateInstallation(int id);
     int[] GetIndexAndSlideListFromInstallations(int id);
     Slide GetActiveSlideByInstallationId(int id);
@@ -36,7 +36,7 @@ public interface IManager
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     List<Answer> GetAnswers();
-    bool CreateSlide(SlideType type, string question, string[]? options, int slideListId);
+    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId,string? mediaUrl);
     List<Slide> GetAllSlides();
     bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
     bool CreateSlidelist(string title, string description, int flowId);
@@ -62,7 +62,6 @@ public interface IManager
     bool AddIdea(int forumId, string title, string content, AnswerCubeUser user);
     bool AddReaction(int ideaId, string reaction,AnswerCubeUser? user);
     int GetForumByIdeaId(int ideaId);
-
     int GetForumByReactionId(int reactionId);
     bool LikeReaction(int reactionId,AnswerCubeUser user);
     bool DislikeReaction(int reactionId,AnswerCubeUser user);
@@ -72,4 +71,10 @@ public interface IManager
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization GetOrganizationByName(string organizationName);
+    List<Installation> GetInstallationsByUserId(string userId);
+    bool SetInstallationToActive(int installationId);
+    List<Flow> getFlowsByUserId(string userId);
+    bool AddNewInstallation(string name, string location, int organizationId);
+    Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    bool AddNewSessionWithInstallationId(Session newSession, int installationId);
 }

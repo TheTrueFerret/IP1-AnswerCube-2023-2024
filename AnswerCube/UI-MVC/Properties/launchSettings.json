@@ -27,7 +27,10 @@
         "SMTPUSERNAME": "answercubeintegratie@gmail.com",
         "SMTPPASSWORD": "Student_1234",
         "SMTPFROM": "answercubeintegratie@gmail.com",
-        "SENDGRIDAPIKEY": "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"
+        "SENDGRIDAPIKEY": "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",
+        "GCLOUD_PROJECT": "Integratie1-Deployment",
+        "GOOGLE_APPLICATION_CREDENTIALS": "integratie1-deployment-d29d2422452c.json",
+        "GOOGLE_STORAGE_BUCKET": "answer-cube-bucket"
       }
     },
     "https": {
@@ -49,7 +52,10 @@
         "SMTPUSERNAME": "answercubeintegratie@gmail.com",
         "SMTPPASSWORD": "Student_1234",
         "SMTPFROM": "answercubeintegratie@gmail.com",
-        "SENDGRIDAPIKEY": "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"
+        "SENDGRIDAPIKEY": "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",
+        "GCLOUD_PROJECT": "Integratie1-Deployment",
+        "GOOGLE_APPLICATION_CREDENTIALS": "integratie1-deployment-d29d2422452c.json",
+        "GOOGLE_STORAGE_BUCKET": "answer-cube-bucket"
       }
     },
     "deployment": {
@@ -71,7 +77,10 @@
         "SMTPUSERNAME": "answercubeintegratie@gmail.com",
         "SMTPPASSWORD": "Student_1234",
         "SMTPFROM": "answercubeintegratie@gmail.com",
-        "SENDGRIDAPIKEY": "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"
+        "SENDGRIDAPIKEY": "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",
+        "GCLOUD_PROJECT": "Integratie1-Deployment",
+        "GOOGLE_APPLICATION_CREDENTIALS": "integratie1-deployment-d29d2422452c.json",
+        "GOOGLE_STORAGE_BUCKET": "answer-cube-bucket"
       }
     },
     "IIS Express": {
