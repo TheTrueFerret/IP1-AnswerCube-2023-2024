@@ -460,7 +460,7 @@ public class Repository : IRepository
 
     public Flow ReadFlowWithProjectById(int flowId)
     {
-        return _context.Flows.Include(f => f.Project).Include(f => f.SlideList).ThenInclude(s=>s.ConnectedSlides).FirstOrDefault(f => f.Id == flowId);
+        return _context.Flows.Include(f => f.Project).Include(f => f.SlideLists).ThenInclude(s=>s.ConnectedSlides).FirstOrDefault(f => f.Id == flowId);
     }
 
 

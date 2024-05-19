@@ -18,9 +18,6 @@ public interface IRepository
     Slide ReadSlideById(int id);
     SlideList getSlideList();
     SlideList ReadSlideListById(int id);
-    Boolean AddAnswer(List<string> answers, int id);
-    Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
-    Boolean StartInstallation(int id, SlideList slideList);
     Boolean AddAnswer(List<string> answers,int id, Session session);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     Installation StartInstallationWithFlow(int installationId, int flowId);
@@ -76,10 +73,6 @@ public interface IRepository
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
-    bool LikeReaction(int reactionId,AnswerCubeUser user);
-    bool DislikeReaction(int reactionId,AnswerCubeUser user);
-    bool LikeIdea(int ideaId,AnswerCubeUser user);
-    bool DislikeIdea(int ideaId,AnswerCubeUser user);
     List<Installation> ReadInstallationsByUserId(string userId);
     bool UpdateInstallationToActive(int installationId);
     List<Flow> readFlowsByUserId(string userId);

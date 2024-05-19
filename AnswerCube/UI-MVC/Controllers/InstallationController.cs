@@ -63,15 +63,15 @@ public class InstallationController : BaseController
         foreach (var flow in flows)
         {
             flowModels.Add(
-                new FlowModel(
-                    flow.Id, 
-                    flow.Name, 
-                    flow.Description, 
-                    flow.CircularFlow, 
-                    flow.Project, 
-                    flow.ActiveInstallations, 
-                    flow.SlideLists
-                ));
+                new FlowModel()
+                {
+                    Id = flow.Id, 
+                    Name = flow.Name, 
+                    Description = flow.Description, 
+                    CircularFlow = flow.CircularFlow, 
+                    Project = flow.Project, 
+                    ActiveInstallations = flow.ActiveInstallations
+                });
         }
         return View(flowModels);
     }
