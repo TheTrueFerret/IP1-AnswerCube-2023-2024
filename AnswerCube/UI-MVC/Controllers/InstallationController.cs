@@ -59,7 +59,7 @@ public class InstallationController : BaseController
     public IActionResult ChooseFlowForInstallation()
     {
         List<FlowModel> flowModels = new List<FlowModel>();
-        List<Flow> flows = _manager.getFlowsByUserId(_userManager.GetUserId(User));
+        List<Flow> flows = _manager.GetFlowsByUserId(_userManager.GetUserId(User));
         foreach (var flow in flows)
         {
             flowModels.Add(
