@@ -9,7 +9,6 @@ module.exports = {
         validation: './src/ts/validation.ts',
         initializeinstallation: './src/ts/InitializeInstallation.ts',
         circularflow: './src/ts/flow/CircularFlow.ts',
-        startslide: './src/ts/flow/slide/StartSlide.ts',
         multiplechoice: './src/ts/flow/slide/MultipleChoice.ts',
         singlechoice: './src/ts/flow/slide/SingleChoice.ts',
         rangequestion: './src/ts/flow/slide/RangeQuestion.ts',
