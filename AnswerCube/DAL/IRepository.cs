@@ -55,6 +55,7 @@ public interface IRepository
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     void UpdateFlow(Flow model);
     void UpdateSlideList(string title, string description, int slideListId);
+    void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
     Organization CreateNewOrganization(string email, string name);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);

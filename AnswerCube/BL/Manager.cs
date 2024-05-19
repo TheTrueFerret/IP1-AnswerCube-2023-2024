@@ -228,6 +228,11 @@ public class Manager : IManager
         _repository.UpdateSlideList(title, description, slideListId);
     }
 
+    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
+    {
+        _repository.UpdateSlide(slideType, text, answersList, slideId);
+    }
+
 
     public Organization CreateNewOrganization(string email, string name)
     {

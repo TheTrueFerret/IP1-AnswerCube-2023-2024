@@ -48,7 +48,7 @@ public class Repository : IRepository
 
     public Slide ReadSlideById(int id)
     {
-        return _context.Slides.First(s => s.Id == id);
+        return _context.Slides.Include(s=>s.ConnectedSlideLists).ThenInclude(cs => cs.SlideList).First(s => s.Id == id);
     }
 
     public Slide GetSlideFromFlow(int flowId, int number)
@@ -466,6 +466,7 @@ public class Repository : IRepository
     {
         var slideList = _context.SlideLists
             .Include(sl => sl.Flow).ThenInclude(fl => fl.Project)
+            .Include(sl => sl.SubTheme)
             .Include(sl => sl.ConnectedSlides)
             .ThenInclude(cs => cs.Slide)
             .First(slideList => slideList.Id == slideListId); // This will load the Slides of each SlideList
@@ -522,6 +523,24 @@ public class Repository : IRepository
         slideList.Title = title;
 
         _context.SlideLists.Update(slideList);
+        _context.SaveChanges();
+    }
+
+    public void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId)
+    {
+        Slide slide = _context.Slides.Include(sl => sl.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
+            .First(sl => sl.Id == slideId);
+
+        if (slide == null)
+        {
+            throw new Exception("Slide not found in the database");
+        }
+
+        slide.AnswerList = answers;
+        slide.Text = text;
+        slide.SlideType = slideType;
+        
+        _context.Slides.Update(slide);
         _context.SaveChanges();
     }
 
