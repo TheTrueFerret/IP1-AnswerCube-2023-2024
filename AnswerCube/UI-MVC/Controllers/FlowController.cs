@@ -110,7 +110,7 @@ public class FlowController : BaseController
     public IActionResult RemoveSlideFromList(int projectId, int slidelistid, int slideId)
     {
         
-        if (_manager.RemoveSlideFromList(slideId, slidelistid))
+        if (_manager.RemoveSlideFromSlideList(slideId, slidelistid))
         {
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId = slidelistid });
         }
