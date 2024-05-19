@@ -20,81 +20,7 @@ public class Manager : IManager
         _userManager = userManager;
     }
 
-
-    public List<Slide> GetOpenSlides()
-    {
-        return _repository.GetOpenSlides();
-    }
-
-    public List<Slide> GetListOfSlides()
-    {
-        return _repository.GetListSlides();
-    }
-
-    public List<Slide> GetSingleChoiceSlides()
-    {
-        return _repository.GetSingleChoiceSlides();
-    }
-
-    public List<Slide> GetMultipleChoiceSlides()
-    {
-        return _repository.GetMultipleChoiceSlides();
-    }
-
-    public List<Slide> GetInfoSlides()
-    {
-        return _repository.GetInfoSlides();
-    }
-
-    public Slide GetSlideFromFlow(int flowId, int number)
-    {
-        return _repository.GetSlideFromFlow(flowId, number);
-    }
-
-    public SlideList GetSlideList()
-    {
-        return _repository.getSlideList();
-    }
-
-    public SlideList GetSlideListById(int id)
-    {
-        return _repository.ReadSlideListById(id);
-    }
-
-    public Slide GetSlideById(int id)
-    {
-        return _repository.ReadSlideById(id);
-    }
-
-    public Boolean AddAnswer(List<string> answers, int id, Session session)
-    {
-        return _repository.AddAnswer(answers, id, session);
-    }
-
-    public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
-    {
-        return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
-    }
-
-    public Installation StartInstallationWithFlow(int installationId, int flowId)
-    {
-        return _repository.StartInstallationWithFlow(installationId, flowId);
-    }
-
-    public Boolean UpdateInstallation(int id)
-    {
-        return _repository.UpdateInstallation(id);
-    }
-
-    public int[] GetIndexAndSlideListFromInstallations(int id)
-    {
-        return _repository.GetIndexAndSlideListFromInstallations(id);
-    }
-
-    public Slide GetActiveSlideByInstallationId(int id)
-    {
-        return _repository.ReadActiveSlideByInstallationId(id);
-    }
+    #region Organization
 
     public List<IdentityRole> GetAllAvailableRoles(AnswerCubeUser user)
     {
@@ -151,90 +77,27 @@ public class Manager : IManager
     {
         return await _repository.UpdateProject(project);
     }
-
-    public List<Answer> GetAnswers()
+    
+    public List<Organization> GetOrganizations()
     {
-        return _repository.GetAnswers();
+        return _repository.ReadOrganizations();
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
+    public bool IsUserInOrganization(string? userId, int organizationid)
     {
-        
-        if (type == SlideType.InfoSlide && options.Length == 1)
-        {
-            string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
-        }
-
-        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
+        return _repository.IsUserInOrganization(userId, organizationid);
     }
 
-    public List<Slide> GetAllSlides()
+    public Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid)
     {
-        return _repository.ReadSlideList();
+        return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
     }
 
-    public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
+    public Organization GetOrganizationByName(string organizationName)
     {
-        return _repository.CreateFlow(name, desc, circularFlow, projectId);
+        return _repository.ReadOrganizationByName(organizationName);
     }
-
-    public bool CreateSlidelist(string title, string description, int flowId)
-    {
-        return _repository.CreateSlideList(title, description, flowId);
-    }
-
-    public Project GetProjectWithFlowsById(int projectId)
-    {
-        return _repository.ReadProjectWithFlowsById(projectId);
-    }
-
-    public Flow GetFlowById(int flowId)
-    {
-        return _repository.ReadFlowById(flowId);
-    }
-
-    public SlideList GetSLideListByTitle(string title)
-    {
-        return _repository.ReadSLideListByTitle(title);
-    }
-
-    public Flow GetFlowWithProjectById(int flowId)
-    {
-        return _repository.ReadFlowWithProjectById(flowId);
-    }
-
-    public SlideList GetSlideListWithFlowById(int slideListId)
-    {
-        return _repository.ReadSlideListWithFlowById(slideListId);
-    }
-
-    public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
-    {
-        return _repository.GetSlideListsByFlowId(flowId);
-    }
-
-    public IEnumerable<Slide> GetSlidesBySlideListId(int slideListId)
-    {
-        return _repository.ReadSlidesBySlideListId(slideListId);
-    }
-
-    public void UpdateFlow(Flow model)
-    {
-        _repository.UpdateFlow(model);
-    }
-
-    public void UpdateSlideList(string title, string description, int slideListId)
-    {
-        _repository.UpdateSlideList(title, description, slideListId);
-    }
-
-    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
-    {
-        _repository.UpdateSlide(slideType, text, answersList, slideId);
-    }
-
-
+    
     public Organization CreateNewOrganization(string email, string name)
     {
         return _repository.CreateNewOrganization(email, name);
@@ -260,9 +123,9 @@ public class Manager : IManager
         return _repository.ReadAllDeelplatformBeheerders();
     }
 
-    public bool RemoveSlideFromList(int slideId, int slidelistid)
+    public bool RemoveSlideFromSlideList(int slideId, int slidelistid)
     {
-        return _repository.RemoveSlideFromList(slideId, slidelistid);
+        return _repository.RemoveSlideFromSlideList(slideId, slidelistid);
     }
 
     public bool RemoveDpbFromOrganization(string userId, int organisationid)
@@ -270,16 +133,223 @@ public class Manager : IManager
         return _repository.RemoveDpbFromOrganization(userId, organisationid);
     }
 
-    public bool SearchDeelplatformByName(string deelplatformName)
+    public bool SearchOrganizationByName(string organizationName)
     {
-        return _repository.SearchDeelplatformByName(deelplatformName);
+        return _repository.SearchOrganizationByName(organizationName);
+    }
+    
+    public Project GetProjectWithFlowsById(int projectId)
+    {
+        return _repository.ReadProjectWithFlowsById(projectId);
     }
 
+    #endregion
+
+    #region Answers
+
+    public Boolean AddAnswer(List<string> answers, int id, Session session)
+    {
+        return _repository.AddAnswer(answers, id, session);
+    }
+    
+    public List<Answer> GetAnswers()
+    {
+        return _repository.GetAnswers();
+    }
+    
+    #endregion
+    
+    #region FlowManager
+    
+    #region Slide
+    public List<Slide> GetOpenSlides()
+    {
+        return _repository.GetOpenSlides();
+    }
+
+    public List<Slide> GetListOfSlides()
+    {
+        return _repository.GetListSlides();
+    }
+
+    public List<Slide> GetSingleChoiceSlides()
+    {
+        return _repository.GetSingleChoiceSlides();
+    }
+
+    public List<Slide> GetMultipleChoiceSlides()
+    {
+        return _repository.GetMultipleChoiceSlides();
+    }
+
+    public List<Slide> GetInfoSlides()
+    {
+        return _repository.GetInfoSlides();
+    }
+    
+    public Slide GetSlideById(int id)
+    {
+        return _repository.ReadSlideById(id);
+    }
+    
+    public Slide GetSlideFromFlow(int flowId, int number)
+    {
+        return _repository.GetSlideFromFlow(flowId, number);
+    }
+    
+    public Slide GetSlideFromSlideListByIndex(int index, int slideListId)
+    {
+        return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
+    }
+    
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
+    {
+        
+        if (type == SlideType.InfoSlide && options.Length == 1)
+        {
+            string info = question + "\n" + options[0];
+            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
+        }
+
+        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
+    }
+
+    public List<Slide> GetAllSlides()
+    {
+        return _repository.ReadSlideList();
+    }
+    
+    public IEnumerable<Slide> GetSlidesBySlideListId(int slideListId)
+    {
+        return _repository.ReadSlidesBySlideListId(slideListId);
+    }
+    
+    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
+    {
+        _repository.UpdateSlide(slideType, text, answersList, slideId);
+    }
+    #endregion
+
+    #region SlideList
+    public SlideList GetSlideList()
+    {
+        return _repository.getSlideList();
+    }
+
+    public SlideList GetSlideListById(int id)
+    {
+        return _repository.ReadSlideListById(id);
+    }
+    
+    public SlideList GetSlideListByTitle(string title)
+    {
+        return _repository.ReadSlideListByTitle(title);
+    }
+    
+    public bool CreateSlidelist(string title, string description, int flowId)
+    {
+        return _repository.CreateSlideList(title, description, flowId);
+    }
+    
+    public SlideList GetSlideListWithFlowById(int slideListId)
+    {
+        return _repository.ReadSlideListWithFlowById(slideListId);
+    }
+    
+    public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
+    {
+        return _repository.GetSlideListsByFlowId(flowId);
+    }
+    
     public bool RemoveSlideListFromFlow(int slideListId, int flowId)
     {
         return _repository.RemoveSlideListFromFlow(slideListId, flowId);
     }
 
+    public void UpdateSlideList(string title, string description, int slideListId)
+    {
+        _repository.UpdateSlideList(title, description, slideListId);
+    }
+    #endregion
+
+    #region Flow
+    public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
+    {
+        return _repository.CreateFlow(name, desc, circularFlow, projectId);
+    }
+    public Flow GetFlowById(int flowId)
+    {
+        return _repository.ReadFlowById(flowId);
+    }
+    
+    public Flow GetFlowWithProjectById(int flowId)
+    {
+        return _repository.ReadFlowWithProjectById(flowId);
+    }
+    public void UpdateFlow(Flow model)
+    {
+        _repository.UpdateFlow(model);
+    }
+    
+    public List<Flow> GetFlowsByUserId(string userId)
+    {
+        return _repository.ReadFlowsByUserId(userId);
+    }
+    #endregion
+
+    #endregion
+    
+    #region Installation
+    
+    public List<Installation> GetInstallationsByUserId(string userId)
+    {
+        return _repository.ReadInstallationsByUserId(userId);
+    }
+
+    public bool SetInstallationToActive(int installationId)
+    {
+        return _repository.UpdateInstallationToActive(installationId);
+    }
+    
+    public bool AddNewInstallation(string name, string location, int organizationId)
+    {
+        return _repository.CreateNewInstallation(name, location, organizationId);
+    }
+
+    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
+    }
+
+    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
+    {
+        return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
+    }
+    
+    public Installation StartInstallationWithFlow(int installationId, int flowId)
+    {
+        return _repository.StartInstallationWithFlow(installationId, flowId);
+    }
+
+    public Boolean UpdateInstallation(int id)
+    {
+        return _repository.UpdateInstallation(id);
+    }
+
+    public int[] GetIndexAndSlideListFromInstallations(int id)
+    {
+        return _repository.GetIndexAndSlideListFromInstallations(id);
+    }
+
+    public Slide GetActiveSlideByInstallationId(int id)
+    {
+        return _repository.ReadActiveSlideByInstallationId(id);
+    }
+
+    #endregion
+    
+    #region Forum
+    
     public List<Forum> GetForums()
     {
         return _repository.ReadForums();
@@ -339,55 +409,6 @@ public class Manager : IManager
     {
         return _repository.DislikeIdea(ideaId, user);
     }
-
-    public List<Organization> GetOrganizations()
-    {
-        return _repository.ReadOrganizations();
-    }
-
-    public bool IsUserInOrganization(string? userId, int organizationid)
-    {
-        return _repository.IsUserInOrganization(userId, organizationid);
-    }
-
-    public Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid)
-    {
-        return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
-    }
-
-    public Organization GetOrganizationByName(string organizationName)
-    {
-        return _repository.ReadOrganizationByName(organizationName);
-    }
-
-    public List<Installation> GetInstallationsByUserId(string userId)
-    {
-        return _repository.ReadInstallationsByUserId(userId);
-    }
-
-    public bool SetInstallationToActive(int installationId)
-    {
-        return _repository.UpdateInstallationToActive(installationId);
-    }
-
-    public List<Flow> getFlowsByUserId(string userId)
-    {
-        return _repository.readFlowsByUserId(userId);
-    }
-
-    public bool AddNewInstallation(string name, string location, int organizationId)
-    {
-        return _repository.CreateNewInstallation(name, location, organizationId);
-    }
-
-    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
-    {
-        return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
-    }
-
-    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
-    {
-        return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
-    }
-
+    
+    #endregion
 }
