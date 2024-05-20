@@ -295,6 +295,11 @@ public class Manager : IManager
     {
         return _repository.ReadFlowsByUserId(userId);
     }
+
+    public Flow GetFlowByInstallationId(int installationId)
+    {
+        return _repository.ReadFlowByInstallationId(installationId);
+    }
     #endregion
 
     #endregion
@@ -321,7 +326,7 @@ public class Manager : IManager
         return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
     }
 
-    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
+    public Session AddNewSessionWithInstallationId(Session newSession, int installationId)
     {
         return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
     }
@@ -344,6 +349,11 @@ public class Manager : IManager
     public Slide GetActiveSlideByInstallationId(int id)
     {
         return _repository.ReadActiveSlideByInstallationId(id);
+    }
+
+    public bool AddSlideListToInstallation(int slideListId, int installationId)
+    {
+        return _repository.WriteSlideListToInstallation(slideListId, installationId);
     }
 
     #endregion

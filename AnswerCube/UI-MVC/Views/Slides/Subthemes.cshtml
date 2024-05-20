@@ -1,0 +1,33 @@
+@model FlowModel
+
+@{
+    ViewBag.Title = "Subtheme";
+    Layout = ViewData["Layout"] as string;
+}
+
+<div class="slide-container">
+    <h1 class="question">Subthemes</h1>
+    <div class="row">
+        @foreach (var slideList in Model.SlideLists)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@slideList.Title</h5>
+                        <p class="card-text">@slideList.SubTheme.Name</p>
+                        <p class="card-text">@slideList.SubTheme.Description</p>
+                        <a class="ChooseSlideList btn btn-primary" data-info="@slideList.Id">Select</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <p>niet op letter dit word op het moment ni gebruikt</p>
+    <button id="submitAnswer" type="button">Choose Theme</button>
+</div>
+
+@section Scripts
+{
+    <script src="~/dist/subtheme.entry.js" defer></script>
+}
+

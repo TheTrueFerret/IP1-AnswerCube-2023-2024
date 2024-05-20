@@ -75,6 +75,7 @@ public interface IRepository
     Flow ReadFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
     List<Flow> ReadFlowsByUserId(string userId);
+    Flow ReadFlowByInstallationId(int installationId);
     #endregion
     
     #endregion
@@ -88,7 +89,8 @@ public interface IRepository
     bool UpdateInstallationToActive(int installationId);
     bool CreateNewInstallation(string name, string location, int organizationId);
     Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
-    bool WriteNewSessionWithInstallationId(Session newSession, int installationId);
+    Session WriteNewSessionWithInstallationId(Session newSession, int installationId);
+    bool WriteSlideListToInstallation(int slideListId, int installationId);
     #endregion
     
     #region Forum

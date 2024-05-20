@@ -75,6 +75,7 @@ public interface IManager
     Flow GetFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
     List<Flow> GetFlowsByUserId(string userId);
+    Flow GetFlowByInstallationId(int installationId);
     #endregion
     
     #endregion
@@ -88,8 +89,8 @@ public interface IManager
     bool SetInstallationToActive(int installationId);
     bool AddNewInstallation(string name, string location, int organizationId);
     Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
-    bool AddNewSessionWithInstallationId(Session newSession, int installationId);
-    
+    Session AddNewSessionWithInstallationId(Session newSession, int installationId);
+    bool AddSlideListToInstallation(int slideListId, int installationId);
     #endregion
     
     #region Forum

@@ -13,8 +13,8 @@ public class Installation
     public string Location { get; set; }
     public bool Active { get; set; }
     public int CurrentSlideIndex { get; set; }
-    public int MaxSlideIndex { get; set; }
-    public int ActiveSlideListId { get; set; }
+    public int? MaxSlideIndex { get; set; }
+    public int? ActiveSlideListId { get; set; }
     
     // Relational Attributes:
     public int OrganizationId { get; set; }

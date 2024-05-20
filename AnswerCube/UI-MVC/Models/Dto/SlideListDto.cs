@@ -9,14 +9,4 @@ public class SlideListDto
     public string Title { get; set; }
     public SubTheme SubTheme { get; set; }
     public ICollection<SlideConnection> ConnectedSlides { get; set; }
-
-    public SlideListDto(){}
-    
-    public SlideListDto(SlideList slideList)
-    {
-        Id = slideList.Id;
-        Title = slideList.Title;
-        SubTheme = slideList.SubTheme;
-        ConnectedSlides = slideList.ConnectedSlides;
-    }
 }
