@@ -3,7 +3,6 @@ import {getCookie} from "../../CookieHandler";
 
 let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
-const jwtToken = getCookie("jwtToken");
 const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
@@ -17,7 +16,6 @@ function loadRangeQuestionSlide() {
         method: "GET",
         headers: {
             "Accept": "application/json",
-            "Authorization": `Bearer ${jwtToken}`
         }
     })
         .then((response: Response) => {
@@ -92,7 +90,6 @@ function postAnswer(cubeId: number) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': `Bearer ${jwtToken}`
         },
         body: JSON.stringify(requestBody)
     })

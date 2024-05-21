@@ -152,7 +152,7 @@ public class Manager : IManager
 
     #region Answers
 
-    public Boolean AddAnswer(List<string> answers, int id, Session session)
+    public bool AddAnswer(List<string> answers, int id, Session session)
     {
         return _repository.AddAnswer(answers, id, session);
     }

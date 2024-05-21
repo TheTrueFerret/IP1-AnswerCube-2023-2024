@@ -319,20 +319,13 @@ public class Repository : IRepository
     public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
-
-        Answer uploadAnswer = new Answer()
+        Answer newAnswer = new Answer
         {
             AnswerText = answers,
             Slide = slide,
-            SessionId = session.Id,
             Session = session
         };
-        if (answers == null)
-        {
-            return false;
-        }
-
-        _context.Answers.Add(uploadAnswer);
+        _context.Answers.Add(newAnswer);
         _context.SaveChanges();
         return true;
     }

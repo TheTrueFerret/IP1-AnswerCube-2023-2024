@@ -9,7 +9,7 @@ public class Session
     public DateTime StartTime { get; private set; }
     public DateTime? EndTime { get; private set; }
     public Installation Installation { get; set; }
-    public ICollection<Answer>? Answers { get; set; } = new List<Answer>();
+    public ICollection<Answer>? Answers { get; set; }
 
     public Session()
     {
