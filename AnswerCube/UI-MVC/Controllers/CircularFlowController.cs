@@ -21,18 +21,15 @@ public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IManager _manager;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JwtService _jwtService;
     private int _counter = 0;
     
     
-    public CircularFlowController(ILogger<HomeController> logger, IManager manager, IHttpContextAccessor httpContextAccessor, JwtService jwtService)
+    public CircularFlowController(ILogger<HomeController> logger, IManager manager, JwtService jwtService)
     {
         _logger = logger;
         _manager = manager;
-        _httpContextAccessor = httpContextAccessor;
         _jwtService = jwtService;
-
     }
     
     public IActionResult CircularFlow(int? id)
@@ -94,6 +91,7 @@ public class CircularFlowController : BaseController
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
         Flow flow = _manager.GetFlowByInstallationId(installationId);
         FlowModel flowModel = new FlowModel
         {
@@ -111,7 +109,7 @@ public class CircularFlowController : BaseController
     public IActionResult GetNextSlide()
     {
         // Retrieve installation ID from token
-        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
         Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
@@ -164,7 +162,7 @@ public class CircularFlowController : BaseController
     public IActionResult PostAnswer([FromBody] AnswerModel answer)
     {
         // Retrieve installation ID from token
-        string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
 
         Session? session = _manager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);

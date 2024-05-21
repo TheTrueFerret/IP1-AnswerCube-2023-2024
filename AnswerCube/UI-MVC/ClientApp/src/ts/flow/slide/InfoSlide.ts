@@ -6,12 +6,10 @@ var url = window.location.toString()
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 function loadInfoSlide() {
-    const jwtToken = getCookie("jwtToken");
     fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
         method: "GET",
         headers: {
             "Accept": "application/json",
-            "Authorization": `Bearer ${jwtToken}`
         }
     }).then((response: Response) => {
         if (response.status === 200) {

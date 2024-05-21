@@ -3,7 +3,6 @@ import {getCookie} from "../../CookieHandler";
 
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
-const jwtToken = getCookie("jwtToken");
 
 var checkboxes : any;
 var currentCheckedIndex: number;
@@ -14,7 +13,6 @@ function loadSingleChoiceSlide() {
         method: "GET",
         headers: {
             "Accept": "application/json",
-            "Authorization": `Bearer ${jwtToken}`
         }
     }).then((response: Response) => {
         if (response.status === 200) {
@@ -85,7 +83,6 @@ function postAnswer(cubeId: number) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            "Authorization": `Bearer ${jwtToken}`
         },
         body: JSON.stringify(requestBody)
     }).then((response: Response) => {

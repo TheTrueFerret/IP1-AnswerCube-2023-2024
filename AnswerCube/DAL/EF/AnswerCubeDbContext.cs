@@ -14,8 +14,6 @@ namespace AnswerCube.DAL.EF;
 
 public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 {
-    //public DbSet<Project> Projects { get; set; }
-    //public DbSet<Organization> Organizations { get; set; }
     public DbSet<Flow> Flows { get; set; }
     public DbSet<SlideList> SlideLists { get; set; }
     public DbSet<Slide> Slides { get; set; }
@@ -83,7 +81,6 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
             .HasOne(sl => sl.Flow)
             .WithMany(f => f.SlideLists);
 
-
         // relation between Subtheme and SlideList
         builder.Entity<SubTheme>()
             .HasMany(st => st.SlideList)
@@ -92,17 +89,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
         builder.Entity<SlideList>()
             .HasOne(sl => sl.SubTheme)
             .WithMany(st => st.SlideList);
-
-
-        // relation between Answer and Slide
-        builder.Entity<Answer>()
-            .HasOne(a => a.Slide)
-            .WithMany(s => s.Answers);
-
-        builder.Entity<Slide>()
-            .HasMany(s => s.Answers)
-            .WithOne(a => a.Slide);
-
+        
 
         builder.Entity<UserOrganization>()
             .HasKey(uo => new { uo.UserId, uo.OrganizationId });

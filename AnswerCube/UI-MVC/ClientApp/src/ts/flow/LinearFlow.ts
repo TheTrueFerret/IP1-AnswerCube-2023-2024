@@ -1,7 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../urlDecoder";
 
 
-
 function UpdatePage() {
     const slideElement: HTMLElement | null = document.getElementById("slide");
     var url = window.location.toString()

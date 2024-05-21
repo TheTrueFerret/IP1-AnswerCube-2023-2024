@@ -1,8 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
 var url: string = window.location.toString()
-const jwtToken = getCookie("jwtToken");
-
 
 function chooseSlideList(slideListId: number) {
     let requestBody = {
@@ -14,7 +12,6 @@ function chooseSlideList(slideListId: number) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            "Authorization": `Bearer ${jwtToken}`
         },
         body: JSON.stringify(requestBody)
     }).then((response: Response) => {
