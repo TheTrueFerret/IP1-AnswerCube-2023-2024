@@ -3,24 +3,31 @@
     Layout = ViewData["Layout"] as string;
 }
 
-
-<div class="slide-container">
-    <h1 class="question">Range Question</h1>
-    <div id="slide" class="card-body">
-        <!-- Inhoud van de dia -->
-    </div>
-    <div class="modal-footer">
-        <div class="centered-content">
-            <div class="answers-container"></div>
+<div class="container mt-5">
+    <div class="slide-container border p-4 rounded position-relative">
+        <div class=" subtheme-container d-flex justify-content-center align-items-center bg-light p-3 mb-3 w-100">
+            <span class="font-weight-bold h3 mb-0">Subtheme - XXX</span>
         </div>
-        <div class="slider-container">
-            <input type="range" id="slider" class="slider custom-slider" list="tickmarks" step="1" min="0" max="100"/>
-            <datalist id="tickmarks"></datalist>
-            <div class="tickmark-labels"></div>
+        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute" style="top: 10px; right: 10px;">
+            Change Subtheme
+        </a>
+        <h1 class="question">Range Question</h1>
+        <div id="slide" class="card-body">
+            <!-- Inhoud van de dia -->
         </div>
+        <div class="modal-footer">
+            <div class="centered-content">
+                <div class="answers-container"></div>
+            </div>
+            <div class="slider-container">
+                <input type="range" id="slider" class="slider custom-slider" list="tickmarks" step="1" min="0" max="100"/>
+                <datalist id="tickmarks"></datalist>
+                <div class="tickmark-labels"></div>
+            </div>
+        </div>
+        <button id="submitAnswer" type="button">Submit Answer</button>
+        <button id="skipSlide" type="button">Skip</button>
     </div>
-    <button id="submitAnswer" type="button">Submit Answer</button>
-    <button id="skipSlide" type="button">Skip</button>
 </div>
 
 @section Scripts
