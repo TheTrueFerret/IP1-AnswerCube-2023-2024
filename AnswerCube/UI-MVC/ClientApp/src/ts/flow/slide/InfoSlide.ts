@@ -54,3 +54,46 @@ function loadInfoSlide() {
 loadInfoSlide()
 
 
+
+
+function SkipQuestion() {
+    fetch(RemoveLastDirectoryPartOf(url) + "/UpdatePage/", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).then((slideData: any) => {
+        if (slideData.url) {
+            // Redirect to the URL of the next slide
+            window.location.href = slideData.url;
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>Next slide URL not found</em>";
+            }
+        }
+    }).catch((error: any) => {
+        console.error(error);
+        if (slideElement) {
+            slideElement.innerHTML = "<em>Problem loading the next slide</em>";
+        }
+    });
+}
+
+
+declare global {
+    interface Window {
+        slideType: string;
+        skipQuestion: (CubeId: number) => void;
+    }
+}
+window.slideType = "InfoSlide"
+window.skipQuestion = SkipQuestion
+

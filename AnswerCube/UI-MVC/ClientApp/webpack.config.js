@@ -15,6 +15,7 @@ module.exports = {
         infoslide: './src/ts/flow/slide/InfoSlide.ts',
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
         subtheme: './src/ts/flow/slide/SubThemes.ts',
+        inputhandler: './src/ts/flow/InputHandler.ts',
         slideEditor: './src/ts/flow/slide/SlideEditor.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
@@ -52,7 +53,7 @@ module.exports = {
                 type: 'asset'
             }
         ]
-    }, 
+    },
     plugins: [
         new MiniCssExtractPlugin({
             filename: "[name].css"

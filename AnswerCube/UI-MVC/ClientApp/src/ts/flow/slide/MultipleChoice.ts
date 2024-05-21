@@ -63,16 +63,15 @@ function loadMultipleChoiceSlide() {
 
 loadMultipleChoiceSlide()
 
+function postAnswer(cubeId: number, action: 'submit' | 'skip') {
+    let answer: string[] = getSelectedAnswers();
 
-const btn: HTMLElement | null = document.getElementById("submitAnswer");
-if (btn) {
-    btn.addEventListener('click', function() {
-        postAnswer(1)
-    });
-}
-
-function postAnswer(cubeId: number) {
-    let answer = getSelectedAnswers();
+    if (action === 'submit' && answer.length === 0) {
+        console.log('No answers selected');
+        // Show error to the user, e.g., alert or some UI indication
+        alert('Please select at least one answer before submitting <3');
+        return;
+    }
     
     let requestBody = {
         Answer: answer,
@@ -105,7 +104,7 @@ function postAnswer(cubeId: number) {
     console.log(answer);
 }
 
-function getSelectedAnswers() {
+function getSelectedAnswers(): string[] {
     const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
     let selectedAnswers: string[] = [];
     for (let i = 0; i < checkboxes.length; i++) {
@@ -116,54 +115,6 @@ function getSelectedAnswers() {
     }
     return selectedAnswers;
 }
-
-
-document.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'ArrowDown':
-            console.log('ArrowDown');
-            moveSelectedButton('down');
-            break;
-        case 'ArrowUp':
-            console.log('ArrowUp');
-            moveSelectedButton('up');
-            break;
-        case 'ArrowLeft':
-            console.log('ArrowLeft');
-            checkButton();
-            break;
-        case 'ArrowRight':
-            console.log('ArrowRight');
-            break;
-        case 'a' || 'A':
-            console.log('a');
-            break;
-        case 's' || 'S':
-            console.log('s');
-            break;
-        case 'd' || 'D':
-            console.log('d');
-            break;
-        case 'f' || 'F':
-            console.log('f');
-            break;
-        case 'g' || 'G':
-            console.log('g');
-            break;
-        case 'h' || 'H':
-            console.log('h');
-            break;
-        case 'Enter':
-            console.log('Enter');
-            
-            postAnswer(1)
-            break;
-        default:
-            console.log(event.key, event.keyCode);
-            return;
-    }
-    event.preventDefault();
-});
 
 
 function moveSelectedButton(direction: 'up' | 'down') {
@@ -188,7 +139,20 @@ function moveSelectedButton(direction: 'up' | 'down') {
     currentCheckedIndex = newIndex;
 }
 
-function checkButton() {
+function selectButton() {
     checkboxes[currentCheckedIndex].checked = !checkboxes[currentCheckedIndex].checked;
 }
 
+
+declare global {
+    interface Window {
+        slideType: string;
+        moveSelectedButton: (direction: 'up' | 'down') => void;
+        selectButton: () => void;
+        postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
+    }
+}
+window.slideType = "MultipleChoice";
+window.moveSelectedButton = moveSelectedButton;
+window.selectButton = selectButton;
+window.postAnswer = postAnswer;
