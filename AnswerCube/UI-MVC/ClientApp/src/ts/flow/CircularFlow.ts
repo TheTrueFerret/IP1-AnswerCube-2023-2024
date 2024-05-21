@@ -5,12 +5,10 @@ const slideElement: HTMLElement | null = document.getElementById("slide");
 var url: string = window.location.toString()
 
 function SkipQuestion() {
-    const jwtToken = getCookie("jwtToken");
     fetch(RemoveLastDirectoryPartOf(url) + "/UpdatePage/", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${jwtToken}`
         },
     }).then((response: Response) => {
         if (response.status === 200) {

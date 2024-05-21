@@ -3,7 +3,6 @@ import {getCookie} from "../../CookieHandler";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
-const jwtToken = getCookie("jwtToken");
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 
@@ -12,7 +11,6 @@ function loadOpenQuestionSlide() {
         method: "GET",
         headers: {
             "Accept": "application/json",
-            "Authorization": `Bearer ${jwtToken}`
         }
     }).then((response: Response) => {
         if (response.status === 200) {
@@ -77,7 +75,6 @@ if (btn) {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                "Authorization": `Bearer ${jwtToken}`
             },
             body: JSON.stringify(requestBody)
         }).then((response: Response) => {

@@ -36,7 +36,7 @@ public interface IRepository
     #endregion
 
     #region Answers
-    Boolean AddAnswer(List<string> answers,int id, Session session);
+    bool AddAnswer(List<string> answers,int id, Session session);
     List<Answer> GetAnswers();
     #endregion
 
