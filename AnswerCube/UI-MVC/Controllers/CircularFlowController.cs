@@ -20,15 +20,18 @@ namespace UI_MVC.Controllers;
 public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly IManager _manager;
+    private readonly IAnswerManager _answerManager;
+    private readonly IFlowManager _flowManager;
+    private readonly IInstallationManager _installationManager;
     private readonly JwtService _jwtService;
-    private int _counter = 0;
+    private readonly int _counter = 0;
     
-    
-    public CircularFlowController(ILogger<HomeController> logger, IManager manager, JwtService jwtService)
+    public CircularFlowController(ILogger<HomeController> logger, IAnswerManager answerManager, IFlowManager flowManager, IInstallationManager installationManager, JwtService jwtService)
     {
         _logger = logger;
-        _manager = manager;
+        _answerManager = answerManager;
+        _flowManager = flowManager;
+        _installationManager = installationManager;
         _jwtService = jwtService;
     }
     
@@ -44,11 +47,11 @@ public class CircularFlowController : BaseController
         else
         {
             installationId = (int)id;
-            installationUpdated = _manager.UpdateInstallation(installationId);
+            installationUpdated = _installationManager.UpdateInstallation(installationId);
         }
         if (installationUpdated)
         {
-            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
             string actionName = slide.SlideType.ToString();
             return RedirectToAction(actionName);
         }
@@ -92,7 +95,7 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
-        Flow flow = _manager.GetFlowByInstallationId(installationId);
+        Flow flow = _flowManager.GetFlowByInstallationId(installationId);
         FlowModel flowModel = new FlowModel
         {
             Id = flow.Id,
@@ -112,7 +115,7 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
-        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+        Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
         return new JsonResult(slide);
     }
     
@@ -123,11 +126,11 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
-        bool installationUpdated = _manager.UpdateInstallation(installationId);
+        bool installationUpdated = _installationManager.UpdateInstallation(installationId);
         string url;
         if (installationUpdated)
         {
-            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
             string actionName = slide.SlideType.ToString();
             url = Url.Action(actionName);
             return Json(new { url });
@@ -144,11 +147,11 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
-        bool isSlideListUpdated = _manager.AddSlideListToInstallation(slideListDto.Id, installationId);
+        bool isSlideListUpdated = _installationManager.AddSlideListToInstallation(slideListDto.Id, installationId);
         if (isSlideListUpdated)
         {
-            _manager.UpdateInstallation(installationId);
-            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            _installationManager.UpdateInstallation(installationId);
+            Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
             string actionName = slide.SlideType.ToString();
             string url = Url.Action(actionName);
             return Json(new { url }); 
@@ -165,19 +168,19 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
 
-        Session? session = _manager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);
+        Session? session = _installationManager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);
         if (session == null)
         {
             Session newSession = new Session()
             {
                 CubeId = answer.CubeId
             };
-            session = _manager.AddNewSessionWithInstallationId(newSession, installationId);
+            session = _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
         }
         
-        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+        Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
         List<string> answerText = answer.Answer;
-        if (_manager.AddAnswer(answerText, slide.Id, session))
+        if (_answerManager.AddAnswer(answerText, slide.Id, session))
         {
             return UpdatePage();
         }

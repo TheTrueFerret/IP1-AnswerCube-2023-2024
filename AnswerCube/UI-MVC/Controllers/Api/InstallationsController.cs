@@ -15,13 +15,10 @@ namespace AnswerCube.UI.MVC.Controllers;
 public class InstallationsController : BaseController
 {
     private readonly ILogger<InstallationsController> _logger;
-    private readonly IManager _manager;
     
-    
-    public InstallationsController(ILogger<InstallationsController> logger, IManager manager)
+    public InstallationsController(ILogger<InstallationsController> logger)
     {
         _logger = logger;
-        _manager = manager;
     }
 
     public void InitializeInstallation()

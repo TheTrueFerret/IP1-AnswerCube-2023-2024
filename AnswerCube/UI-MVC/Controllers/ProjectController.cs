@@ -8,24 +8,24 @@ namespace AnswerCube.UI.MVC.Controllers
 {
     public class ProjectController : Controller
     {
-        private readonly IManager _manager;
+        private readonly IOrganizationManager _organizationManager;
         private readonly ILogger<ProjectController> _logger;
 
-        public ProjectController(IManager manager, ILogger<ProjectController> logger)
+        public ProjectController(IOrganizationManager manager, ILogger<ProjectController> logger)
         {
-            _manager = manager;
+            _organizationManager = manager;
             _logger = logger;
         }
 
         public IActionResult Project(int projectid, int organizationid)
         {
-            var project = _manager.GetProjectById(projectid);
+            var project = _organizationManager.GetProjectById(projectid);
             if (project == null)
             {
                 return View("Error");
             }
 
-            var organization = _manager.GetOrganizationById(organizationid);
+            var organization = _organizationManager.GetOrganizationById(organizationid);
             return View(new ProjectOrganizationDTO
             {
                 Project = project,
@@ -35,7 +35,7 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public IActionResult NewProject(int organizationId)
         {
-            Organization organization = _manager.GetOrganizationById(organizationId);
+            Organization organization = _organizationManager.GetOrganizationById(organizationId);
             if (organization != null)
             {
                 return View(organization);
@@ -49,7 +49,7 @@ namespace AnswerCube.UI.MVC.Controllers
         public async Task<IActionResult> CreateProject(int organizationId, string title, string description,
             bool isActive)
         {
-            Project project = await _manager.CreateProject(organizationId, title, description, isActive);
+            Project project = await _organizationManager.CreateProject(organizationId, title, description, isActive);
             if (project != null)
             {
                 return RedirectToAction("Project", new
@@ -67,7 +67,7 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public IActionResult DeleteProject(int projectId, int organisationId)
         {
-            if (_manager.DeleteProject(projectId))
+            if (_organizationManager.DeleteProject(projectId))
             {
                 return RedirectToAction("Index", "Organization", new { organizationId = organisationId });
             }
@@ -79,7 +79,7 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public IActionResult EditProject(int projectId)
         {
-            Project project = _manager.GetProjectById(projectId);
+            Project project = _organizationManager.GetProjectById(projectId);
             if (project == null)
             {
                 return View("Error");
@@ -92,9 +92,9 @@ namespace AnswerCube.UI.MVC.Controllers
         {
             updatedProject.Id = projectId;
 
-            if (await _manager.UpdateProject(updatedProject))
+            if (await _organizationManager.UpdateProject(updatedProject))
             {
-                var project = _manager.GetProjectById(projectId);
+                var project = _organizationManager.GetProjectById(projectId);
                 return RedirectToAction("Project",
                     new { projectid = project.Id, organizationId = project.Organization.Id });
             }
@@ -104,7 +104,7 @@ namespace AnswerCube.UI.MVC.Controllers
 
         public IActionResult Flows(int projectId)
         {
-            Project project = _manager.GetProjectWithFlowsById(projectId);
+            Project project = _organizationManager.GetProjectWithFlowsById(projectId);
             if (project == null)
             {
                 return View("Error");
@@ -116,7 +116,7 @@ namespace AnswerCube.UI.MVC.Controllers
         public IActionResult NewFlowView(int projectId)
         {
             //This goes to the NewFlowView
-            Project project = _manager.GetProjectById(projectId);
+            Project project = _organizationManager.GetProjectById(projectId);
             return View(project);
         }
     }

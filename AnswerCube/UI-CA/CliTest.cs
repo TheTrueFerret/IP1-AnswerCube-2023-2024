@@ -5,11 +5,11 @@ namespace AnswerCube.UI.CA;
 
 public class CliTest
 {
-    private IManager _manager;
+    private readonly IFlowManager _flowManager;
 
-    public CliTest(Manager manager)
+    public CliTest(IFlowManager manager)
     {
-        _manager = manager;
+        _flowManager = manager;
     }
 
     public void TestData()
@@ -29,21 +29,21 @@ public class CliTest
 
     public void ShowOpenSlides()
     {
-        _manager.GetOpenSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
+        _flowManager.GetOpenSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowListSlides()
     {
-        _manager.GetListOfSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
+        _flowManager.GetListOfSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowSingleChoiceSlides()
     {
-        _manager.GetSingleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
+        _flowManager.GetSingleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 
     public void ShowMultipleChoiceSlides()
     {
-        _manager.GetMultipleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
+        _flowManager.GetMultipleChoiceSlides().ForEach(slide => WriteLine(slide.Id + " " + slide.Text));
     }
 }

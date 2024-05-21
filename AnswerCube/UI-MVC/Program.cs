@@ -43,10 +43,20 @@ services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.Req
     .AddEntityFrameworkStores<AnswerCubeDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
-services.AddScoped<IRepository, Repository>();
-services.AddScoped<IManager, Manager>();
-services.AddScoped<IEmailManager, EmailManager>();
+//ADD ALL MANAGERS
+services.AddScoped<IFlowManager, FlowManager>();
+services.AddScoped<IOrganizationManager, OrganizationManager>();
+services.AddScoped<IInstallationManager, InstallationManager>();
+services.AddScoped<IForumManager, ForumManager>();
+services.AddScoped<IMailManager, MailManager>();
+services.AddScoped<IAnswerManager, AnswerManager>();
+//ADD ALL REPOSITORYS
+services.AddScoped<IFlowRepository, FlowRepository>();
+services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+services.AddScoped<IInstallationRepository, InstallationRepository>();
+services.AddScoped<IForumRepository, ForumRepository>();
 services.AddScoped<IMailRepository, MailRepository>();
+services.AddScoped<IAnswerRepository, AnswerRepository>();
 services.AddScoped<JwtService>();
 
 

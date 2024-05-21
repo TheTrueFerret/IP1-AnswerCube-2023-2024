@@ -9,13 +9,13 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class ForumController : BaseController
 {
-    private readonly IManager _manager;
+    private readonly IForumManager _forumManager;
     private readonly ILogger<ForumController> _logger;
     private UserManager<AnswerCubeUser> _UserManager;
 
-    public ForumController(IManager manager, ILogger<ForumController> logger, UserManager<AnswerCubeUser> userManager)
+    public ForumController(IForumManager manager, ILogger<ForumController> logger, UserManager<AnswerCubeUser> userManager)
     {
-        _manager = manager;
+        _forumManager = manager;
         _logger = logger;
         _UserManager = userManager;
     }
@@ -23,14 +23,14 @@ public class ForumController : BaseController
     public IActionResult Forums()
     {
         //This will show the forums that are available
-        return View(_manager.GetForums());
+        return View(_forumManager.GetForums());
     }
 
     [Route("[action]/{forumId:int}")]
     public IActionResult ShowForum(int forumId)
     {
         //This will show the forum with the given id
-        return View(_manager.GetForum(forumId));
+        return View(_forumManager.GetForum(forumId));
     }
 
     [Authorize(Roles = "Gebruiker")]
@@ -43,7 +43,7 @@ public class ForumController : BaseController
         }
 
         //This will add an idea to the forum with the given id
-        _manager.AddIdea(forumId, title, content, user);
+        _forumManager.AddIdea(forumId, title, content, user);
         return RedirectToAction("ShowForum", new { forumId });
     }
 
@@ -52,16 +52,16 @@ public class ForumController : BaseController
         AnswerCubeUser user = _UserManager.GetUserAsync(User).Result;
         if (user == null)
         {
-            if (_manager.AddReaction(ideaId, reaction, null))
+            if (_forumManager.AddReaction(ideaId, reaction, null))
             {
-                return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByIdeaId(ideaId) });
+                return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
             }
         }
 
         //This will add a reaction to the idea with the given id
-        if (_manager.AddReaction(ideaId, reaction, user))
+        if (_forumManager.AddReaction(ideaId, reaction, user))
         {
-            return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByIdeaId(ideaId) });
+            return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
         }
 
         return NotFound();
@@ -77,8 +77,8 @@ public class ForumController : BaseController
         }
 
         //This will like the reaction with the given id
-        _manager.LikeReaction(reactionId,user);
-        return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByReactionId(reactionId) });
+        _forumManager.LikeReaction(reactionId,user);
+        return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByReactionId(reactionId) });
     }
 
     [Authorize(Roles = "Gebruiker")]
@@ -90,8 +90,8 @@ public class ForumController : BaseController
             return RedirectToAction("Forums");
         }
         //This will dislike the reaction with the given id
-        _manager.DislikeReaction(reactionId,user);
-        return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByReactionId(reactionId) });
+        _forumManager.DislikeReaction(reactionId,user);
+        return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByReactionId(reactionId) });
     }
 
     [Authorize(Roles = "Gebruiker")]
@@ -103,8 +103,8 @@ public class ForumController : BaseController
             return RedirectToAction("Forums");
         }
         //This will like the idea with the given id
-        _manager.LikeIdea(ideaId,user);
-        return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByIdeaId(ideaId) });
+        _forumManager.LikeIdea(ideaId,user);
+        return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
     }
 
     [Authorize(Roles = "Gebruiker")]
@@ -116,7 +116,7 @@ public class ForumController : BaseController
             return RedirectToAction("Forums");
         }
         //This will dislike the idea with the given id
-        _manager.DislikeIdea(ideaId,user);
-        return RedirectToAction("ShowForum", new { forumId = _manager.GetForumByIdeaId(ideaId) });
+        _forumManager.DislikeIdea(ideaId,user);
+        return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
     }
 }

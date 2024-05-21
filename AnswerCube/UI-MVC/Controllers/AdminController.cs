@@ -17,28 +17,32 @@ public class AdminController : BaseController
     private readonly ILogger<AdminController> _logger;
     private readonly UserManager<AnswerCubeUser> _userManager;
     private readonly SignInManager<AnswerCubeUser> _signInManager;
-    private readonly IEmailManager _emailManager;
-    private readonly IManager _manager;
-
-    public AdminController(ILogger<AdminController> logger, UserManager<AnswerCubeUser> userManager,
-        SignInManager<AnswerCubeUser> signInManager, IEmailManager emailManager, IManager manager)
+    private readonly IMailManager _mailManager;
+    private readonly IOrganizationManager _organizationManager;
+    
+    public AdminController(
+        ILogger<AdminController> logger, 
+        UserManager<AnswerCubeUser> userManager, 
+        SignInManager<AnswerCubeUser> signInManager, 
+        IMailManager mailManager, 
+        IOrganizationManager organizationManager)
     {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
-        _emailManager = emailManager;
-        _manager = manager;
+        _mailManager = mailManager;
+        _organizationManager = organizationManager;
     }
 
     public async Task<IActionResult> DeelplatformOverview()
     {
-        var userOrganizations = _manager.GetDeelplatformBeheerderUsers();
+        var userOrganizations = _organizationManager.GetDeelplatformBeheerderUsers();
         return View(userOrganizations);
     }
 
     public async Task<IActionResult> Users()
     {
-        var usersRoleDto = new UserRolesDto(_manager.GetAllUsers(), new Dictionary<string, List<string>>());
+        var usersRoleDto = new UserRolesDto(_organizationManager.GetAllUsers(), new Dictionary<string, List<string>>());
         foreach (var users in usersRoleDto.Users)
         {
             var roles = await _userManager.GetRolesAsync(users);
@@ -54,7 +58,7 @@ public class AdminController : BaseController
     {
         foreach (var user in _userManager.Users.ToList())
         {
-            var allAvailableRoles = _manager.GetAllAvailableRoles(user);
+            var allAvailableRoles = _organizationManager.GetAllAvailableRoles(user);
             if (user.Id.Equals(id))
             {
                 var roles = _userManager.GetRolesAsync(user).Result.ToList();
@@ -167,24 +171,24 @@ public class AdminController : BaseController
     [HttpPost("AddDeelplatform")]
     public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName)
     {
-        Organization organization = _manager.CreateNewOrganization(email, deelplatformName);
-        _manager.SaveBeheerderAndOrganization(email, organization);
+        Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName);
+        _organizationManager.SaveBeheerderAndOrganization(email, organization);
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            await _emailManager.SendNewEmail(email, organization.Name);
+            await _mailManager.SendNewEmail(email, organization.Name);
             TempData["Success"] = "An email has been sent to the provided email address.";
         }
         else
         {
             await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-            await _emailManager.SendExistingEmail(email, organization.Name);
+            await _mailManager.SendExistingEmail(email, organization.Name);
             TempData["Success"] =
                 $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
-            _manager.CreateUserOrganization(user, organization);
+            _organizationManager.CreateUserOrganization(user, organization);
         }
 
-        _manager.AddDeelplatformBeheerderByEmail(email);
+        _organizationManager.AddDeelplatformBeheerderByEmail(email);
         return RedirectToAction("DeelplatformOverview");
     }
 
@@ -193,14 +197,14 @@ public class AdminController : BaseController
     public async Task<IActionResult> RemoveDeelplatformBeheederRole(string id, string deelplatformNaam)
     {
         var user = await _userManager.FindByIdAsync(id);
-        if (_manager.IsUserInMultipleOrganizations(user.Id))
+        if (_organizationManager.IsUserInMultipleOrganizations(user.Id))
         {
-            _manager.RemoveDpbFromOrganization(user.Id, _manager.GetOrganizationByName(deelplatformNaam).Id);
+            _organizationManager.RemoveDpbFromOrganization(user.Id, _organizationManager.GetOrganizationByName(deelplatformNaam).Id);
         }
         else
         {
             await _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
-            _manager.RemoveDeelplatformBeheerderByEmail(user.Email, deelplatformNaam);
+            _organizationManager.RemoveDeelplatformBeheerderByEmail(user.Email, deelplatformNaam);
         }
         return RedirectToAction("DeelplatformOverview");
     }
