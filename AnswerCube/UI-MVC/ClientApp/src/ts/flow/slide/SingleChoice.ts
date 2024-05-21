@@ -63,33 +63,16 @@ function loadSingleChoiceSlide() {
 
 loadSingleChoiceSlide()
 
-
-function moveCheckedRadioButton(direction: 'up' | 'down') {
-    // Check if there's a radio button checked
-    if (currentCheckedIndex === -1) {
-        checkboxes[0].checked = true;
-        currentCheckedIndex = 0
-        return;
-    }
-    let newIndex;
-    if (direction === 'up') {
-        newIndex = currentCheckedIndex - 1;
-        if (newIndex < 0) newIndex = totalCheckboxes - 1;
-    } else if (direction === 'down') {
-        newIndex = currentCheckedIndex + 1;
-        if (newIndex >= totalCheckboxes) newIndex = 0;
-    } else {
-        return; // Invalid direction
-    }
-
-    checkboxes[currentCheckedIndex].checked = false;
-    checkboxes[newIndex].checked = true;
-    currentCheckedIndex = newIndex
-}
-
 function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     let answer = getSelectedAnswer();
-
+    
+    if (action === 'submit' && answer.length === 0) {
+        console.log('No answers selected');
+        // Show error to the user, e.g., alert or some UI indication
+        alert('Please select at least one answer before submitting <3');
+        return;
+    }
+    
     let requestBody = {
         Answer: answer,
         CubeId: cubeId
@@ -133,6 +116,29 @@ function getSelectedAnswer(): string[] {
     return selectedAnswers;
 }
 
+function moveCheckedRadioButton(direction: 'up' | 'down') {
+    // Check if there's a radio button checked
+    if (currentCheckedIndex === -1) {
+        checkboxes[0].checked = true;
+        currentCheckedIndex = 0
+        return;
+    }
+    let newIndex;
+    if (direction === 'up') {
+        newIndex = currentCheckedIndex - 1;
+        if (newIndex < 0) newIndex = totalCheckboxes - 1;
+    } else if (direction === 'down') {
+        newIndex = currentCheckedIndex + 1;
+        if (newIndex >= totalCheckboxes) newIndex = 0;
+    } else {
+        return; // Invalid direction
+    }
+
+    checkboxes[currentCheckedIndex].checked = false;
+    checkboxes[newIndex].checked = true;
+    currentCheckedIndex = newIndex
+}
+
 declare global {
     interface Window {
         slideType: string;
@@ -140,9 +146,8 @@ declare global {
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }
+
 window.slideType = "SingleChoice";
 window.moveCheckedRadioButton = moveCheckedRadioButton;
 window.postAnswer = postAnswer;
-
-
 

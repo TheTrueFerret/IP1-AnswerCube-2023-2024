@@ -54,9 +54,7 @@ function loadInfoSlide() {
 loadInfoSlide()
 
 
-
-
-function SkipQuestion() {
+function skipQuestion() {
     fetch(RemoveLastDirectoryPartOf(url) + "/UpdatePage/", {
         method: "GET",
         headers: {
@@ -87,13 +85,13 @@ function SkipQuestion() {
     });
 }
 
-
 declare global {
     interface Window {
         slideType: string;
-        skipQuestion: (CubeId: number) => void;
+        skipQuestion: () => void;
     }
 }
-window.slideType = "InfoSlide"
-window.skipQuestion = SkipQuestion
+
+window.slideType = "InfoSlide";
+window.skipQuestion = skipQuestion;
 

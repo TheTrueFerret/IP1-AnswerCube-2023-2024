@@ -25,7 +25,7 @@ document.addEventListener('keydown', (event) => {
             window.moveCheckedRadioButton('up');
         }
         if (slideType == "RangeQuestion" && typeof window.moveRangeButton === 'function') {
-            window.moveRangeButton('up')
+            window.moveRangeButton('up');
         }
     }
     if (keysPressed.has('ArrowLeft') && keysPressed.has('1') || keysPressed.has('ArrowLeft')) {
@@ -34,11 +34,19 @@ document.addEventListener('keydown', (event) => {
         }
     }
     if (keysPressed.has('ArrowRight') && keysPressed.has('1') || keysPressed.has('ArrowRight')) {
-        window.postAnswer(1, 'skip')
+        if (slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
+            window.skipQuestion();
+        } else {
+            window.postAnswer(1, 'skip');
+        }
     }
     if (keysPressed.has('Enter') && keysPressed.has('1') || keysPressed.has('Enter')) {
         console.log('Enter + CubeId: 1')
-        window.postAnswer(1, 'submit')
+        if (slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
+            window.skipQuestion();
+        } else {
+            window.postAnswer(1, 'submit');
+        }
     }
     switch (event.key) {
         default:
@@ -55,16 +63,21 @@ document.addEventListener('keyup', (event) => {
 const submitBtn: HTMLElement | null = document.getElementById("submitAnswer");
 if (submitBtn) {
     submitBtn.addEventListener('click', function () {
-        window.postAnswer(1, 'submit')
+        if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
+            window.skipQuestion();
+        } else {
+            window.postAnswer(1, 'submit');
+        }
     });
 }
 
 const skipBtn: HTMLElement | null = document.getElementById("skipSlide");
 if (skipBtn) {
     skipBtn.addEventListener('click', function() {
-        if (window.slideType == "InfoSlide") {
-            window.skipQuestion
+        if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
+            window.skipQuestion();
+        } else {
+            window.postAnswer(1, 'skip');
         }
-        window.postAnswer(1, 'skip')
     });
 }
