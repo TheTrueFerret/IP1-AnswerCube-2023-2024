@@ -240,7 +240,7 @@ public class Manager : IManager
     {
         return _repository.ReadSlideListById(id);
     }
-
+    
     public SlideList GetSlideListByTitle(string title)
     {
         return _repository.ReadSlideListByTitle(title);
