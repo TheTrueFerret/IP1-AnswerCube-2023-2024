@@ -14,7 +14,8 @@ public interface IRepository
     List<AnswerCubeUser> ReadAllUsers();
     bool ReadDeelplatformBeheerderByEmail(string userEmail);
     bool CreateDeelplatformBeheerderByEmail(string userEmail);
-    bool DeleteDeelplatformBeheerderByEmail(string userEmail);
+    bool IsUserInMultipleOrganizations(string userId);
+    bool DeleteDeelplatformBeheerderByEmail(string userEmail, string deelplatformNaam);
     List<Organization> ReadOrganizationByUserId(string userId);
     Organization ReadOrganizationById(int organizationId);
     bool DeleteProject(int id);

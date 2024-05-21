@@ -190,12 +190,18 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("RemoveDeelplatformBeheederRole/{id}")]
-    public async Task<IActionResult> RemoveDeelplatformBeheederRole(string id)
+    public async Task<IActionResult> RemoveDeelplatformBeheederRole(string id, string deelplatformNaam)
     {
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        await _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
-        _manager.RemoveDeelplatformBeheerderByEmail(user.Email);
-
+        var user = await _userManager.FindByIdAsync(id);
+        if (_manager.IsUserInMultipleOrganizations(user.Id))
+        {
+            _manager.RemoveDpbFromOrganization(user.Id, _manager.GetOrganizationByName(deelplatformNaam).Id);
+        }
+        else
+        {
+            await _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
+            _manager.RemoveDeelplatformBeheerderByEmail(user.Email, deelplatformNaam);
+        }
         return RedirectToAction("DeelplatformOverview");
     }
 }

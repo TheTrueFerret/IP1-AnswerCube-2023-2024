@@ -42,10 +42,15 @@ public class Manager : IManager
     {
         return _repository.CreateDeelplatformBeheerderByEmail(userEmail);
     }
-
-    public bool RemoveDeelplatformBeheerderByEmail(string userEmail)
+    
+    public bool IsUserInMultipleOrganizations(string userId)
     {
-        return _repository.DeleteDeelplatformBeheerderByEmail(userEmail);
+        return _repository.IsUserInMultipleOrganizations(userId);
+    }
+
+    public bool RemoveDeelplatformBeheerderByEmail(string userEmail, string deelplatformNaam)
+    {
+        return _repository.DeleteDeelplatformBeheerderByEmail(userEmail,deelplatformNaam);
     }
 
     public List<Organization> GetOrganizationByUserId(string userId)
