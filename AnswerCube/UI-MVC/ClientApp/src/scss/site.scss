@@ -86,11 +86,11 @@ header {
     margin-top: 20px;
     color: white;
     font-weight: bold;
-    padding: 10px 20px; /* voeg padding toe voor een betere klikbaarheid */
+    padding: 10px 20px; 
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease; /* soepelheid toevoegen aan de overgang */
+    transition: background-color 0.3s ease; 
   }
 
   #skipSlide {
@@ -104,11 +104,30 @@ header {
 
   #submitAnswer:hover {
     color: white;
-    background-color: green; /* maak de kleuren donkerder bij hover */
+    background-color: green; 
   }
 
   #skipSlide:hover {
     color: white;
     background-color: blue;
   }
+
+  #changeSubtheme {
+    background-color: navy;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border: none;
+    border-radius: 10px; 
+    width: 100px; 
+    height: 80px;
+    top: 24px; 
+    right: 12px; 
+    position: absolute;
+  }
+
+  .subtheme-container {
+    height: 80px;
+  }
+  
 }

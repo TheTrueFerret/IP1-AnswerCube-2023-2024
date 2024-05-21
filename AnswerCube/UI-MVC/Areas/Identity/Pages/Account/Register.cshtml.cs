@@ -20,26 +20,26 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserStore<AnswerCubeUser> _userStore;
         private readonly IUserEmailStore<AnswerCubeUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailManager _emailManager;
+        private readonly IMailManager _mailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IManager _manager;
+        private readonly IOrganizationManager _organizationManager;
 
         public RegisterModel(
             UserManager<AnswerCubeUser> userManager,
             IUserStore<AnswerCubeUser> userStore,
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailManager emailManager,
-            RoleManager<IdentityRole> roleManager, IManager manager)
+            IMailManager mailManager,
+            RoleManager<IdentityRole> roleManager, IOrganizationManager manager)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailManager = emailManager;
+            _mailManager = mailManager;
             _roleManager = roleManager;
-            _manager = manager;
+            _organizationManager = manager;
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                             if (role.Name != null) await _userManager.AddToRoleAsync(user, role.Name);
                         }
 
-                        _manager.AddUserToOrganization(user);
+                        _organizationManager.AddUserToOrganization(user);
                     }
 
                     _logger.LogInformation("User created a new account with password.");
@@ -170,7 +170,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     
-                    await _emailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
+                    await _mailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
                     
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -196,7 +196,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
         private bool IsDeelplatformBeheerder(AnswerCubeUser user)
         {
-            return _manager.GetDeelplatformBeheerderByEmail(user.Email);
+            return _organizationManager.GetDeelplatformBeheerderByEmail(user.Email);
         }
 
         private AnswerCubeUser CreateUser()

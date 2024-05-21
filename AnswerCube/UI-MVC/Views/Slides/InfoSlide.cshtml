@@ -3,12 +3,20 @@
     Layout = ViewData["Layout"] as string;
 }
 
-<div class="slide-container">
-    <h1>InfoSlide</h1>
+<div class="container mt-5">
+    <div class="slide-container border p-4 rounded position-relative">
+        <div class=" subtheme-container d-flex justify-content-center align-items-center bg-light p-3 mb-3 w-100">
+            <span class="font-weight-bold h3 mb-0">Subtheme - XXX</span>
+        </div>
+        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute" style="top: 10px; right: 10px;">
+            Change Subtheme
+        </a>
+        <h1>InfoSlide</h1>
     <div id="slide" class="info-text">
         
     </div>
     <a id="skipSlide" class="btn btn-primary" type="button">Next Slide</a>
+</div>
 </div>
 
 @section Scripts

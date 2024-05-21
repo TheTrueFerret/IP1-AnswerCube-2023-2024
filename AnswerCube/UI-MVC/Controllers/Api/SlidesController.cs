@@ -11,11 +11,11 @@ namespace UI_MVC.Controllers.Api;
 [Route("/api/[controller]")]
 public class SlidesController : ControllerBase
 {
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
 
-    public SlidesController(IManager manager)
+    public SlidesController(IFlowManager manager)
     {
-        _manager = manager;
+        _flowManager = manager;
     }
     
     
@@ -23,7 +23,7 @@ public class SlidesController : ControllerBase
     [HttpGet]
     public IActionResult GetSlideData(int id)
     {
-        Slide slide = _manager.GetSlideById(id);
+        Slide slide = _flowManager.GetSlideById(id);
         return new JsonResult(slide);
     }
     

@@ -29,7 +29,7 @@ public class MailRepository : IMailRepository
             pageHandler: null,
             values: new { area = "Identity", email = email },
             protocol: _httpContextAccessor.HttpContext?.Request.Scheme);
-        htmlMessage = File.ReadAllText(@"Services\MailTemplates\ExistingEmail.txt");
+        htmlMessage = File.ReadAllText(@"Services/MailTemplates/ExistingEmail.txt");
         htmlMessage = htmlMessage.Replace("\\n", "\n")
             .Replace("\\\"", "\"")
             .Replace("{loginUrl}", loginUrl);
@@ -46,7 +46,7 @@ public class MailRepository : IMailRepository
             pageHandler: null,
             values: new { area = "Identity", email = email },
             protocol: _httpContextAccessor.HttpContext?.Request.Scheme);
-        htmlMessage = File.ReadAllText(@"Services\MailTemplates\NewEmail.txt");
+        htmlMessage = File.ReadAllText(@"Services/MailTemplates/NewEmail.txt");
         htmlMessage = htmlMessage.Replace("\\n", "\n")
             .Replace("\\\"", "\"")
             .Replace("{registerUrl}", registerUrl);
@@ -62,7 +62,7 @@ public class MailRepository : IMailRepository
             pageHandler: null,
             values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
             protocol: _httpContextAccessor.HttpContext?.Request.Scheme);
-        htmlMessage = File.ReadAllText(@"Services\MailTemplates\ConfirmEmail.txt");
+        htmlMessage = File.ReadAllText(@"Services/MailTemplates/ConfirmEmail.txt");
         htmlMessage = htmlMessage.Replace("\\n", "\n")
             .Replace("\\\"", "\"")
             .Replace("{callbackUrl}", callbackUrl);

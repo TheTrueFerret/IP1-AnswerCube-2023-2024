@@ -53,9 +53,9 @@ public static class AnswerCubeInitializer
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
-            "skybloom44@gmail.com");
+            "skybloom44@gmail.com", null);
         var organization2 = new Organization("AnswerCube",
-            "answercubeintegratie@gmail.com");
+            "answercubeintegratie@gmail.com", null);
         Forum answerCubeForum = new Forum()
         {
             Organization = organization2,
@@ -279,7 +279,7 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>(),
             mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
-        
+
         context.SlideLists.AddRange(slideList1, slideList1punt2);
 
         SlideConnection slideConnection1 = new SlideConnection
@@ -631,7 +631,7 @@ public static class AnswerCubeInitializer
         circularFlow1.SlideLists.Add(slideList1);
         circularFlow1.SlideLists.Add(slideList1punt2);
         context.Flows.Add(circularFlow1);
-        
+
         Flow linearFlow = new Flow
         {
             Name = "LinearFlow",
@@ -654,6 +654,112 @@ public static class AnswerCubeInitializer
             MaxSlideIndex = 0,
             Organization = organization1
         };
+
+        Session session1 = new Session()
+        {
+            CubeId = 1,
+            Installation = installation,
+            StartTime = DateTime.Now.ToUniversalTime()
+        };
+        session1.Answers = new List<Answer>();
+
+        Session session2 = new Session()
+        {
+            CubeId = 2,
+            Installation = installation,
+            StartTime = DateTime.Now.ToUniversalTime()
+        };
+        session2.Answers = new List<Answer>();
+
+        Session session3 = new Session()
+        {
+            CubeId = 1,
+            Installation = installation,
+            StartTime = DateTime.Now.AddDays(-3).ToUniversalTime()
+        };
+        session3.Answers = new List<Answer>();
+
+        Answer answer = new Answer()
+        {
+            Slide = multipleChoice4,
+            Session = session1,
+            AnswerText = new List<string> { "Ik heb geen interesse", "Ik heb geen idee voor wie ik zou moeten stemmen" }
+        };
+        Answer answer1 = new Answer()
+        {
+            Slide = multipleChoice5,
+            Session = session1,
+            AnswerText = new List<string>
+                { "Kunnen gaan stemmen op een toffere locatie", "Online, van thuis uit kunnen stemmen" }
+        };
+        Answer answer2 = new Answer()
+        {
+            Slide = singleChoice1,
+            Session = session1,
+            AnswerText = new List<string> { "Natuur en ecologie" }
+        };
+        Answer answer3 = new Answer()
+        {
+            Slide = singleChoice2,
+            Session = session2,
+            AnswerText = new List<string> { "Eens" }
+        };
+        Answer answer4 = new Answer()
+        {
+            Slide = rangeQuestion1,
+            Session = session2,
+            AnswerText = new List<string> { "Zeker niet" }
+        };
+
+        Answer answer5 = new Answer()
+        {
+            Slide = rangeQuestion2,
+            Session = session2,
+            AnswerText = new List<string> { "Ik voel me weinig tot niet betrokken" }
+        };
+
+        Answer answer6 = new Answer()
+        {
+            Slide = singleChoice1,
+            Session = session3,
+            AnswerText = new List<string> { "Natuur en ecologie" }
+        };
+
+        Answer answer7 = new Answer()
+        {
+            Slide = multipleChoice4,
+            Session = session3,
+            AnswerText = new List<string>
+            {
+                "Ik kan niet naar het stemkantoor gaan", "Ik denk niet dat mijn stem een verschil zal uitmaken",
+                "Ik heb geen idee voor wie ik zou moeten stemmen"
+            }
+        };
+
+        session1.Answers.Add(answer);
+        session1.Answers.Add(answer1);
+        session1.Answers.Add(answer2);
+
+        session2.Answers.Add(answer3);
+        session2.Answers.Add(answer4);
+        session2.Answers.Add(answer5);
+
+        session3.Answers.Add(answer6);
+        session3.Answers.Add(answer7);
+
+        context.Sessions.Add(session1);
+        context.Sessions.Add(session2);
+        context.Sessions.Add(session3);
+
+        context.Answers.Add(answer);
+        context.Answers.Add(answer1);
+        context.Answers.Add(answer2);
+        context.Answers.Add(answer3);
+        context.Answers.Add(answer4);
+        context.Answers.Add(answer5);
+        context.Answers.Add(answer6);
+        context.Answers.Add(answer7);
+
         context.Installations.Add(installation);
         context.SaveChanges();
         context.ChangeTracker.Clear();

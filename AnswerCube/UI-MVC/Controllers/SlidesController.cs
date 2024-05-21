@@ -7,19 +7,19 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class SlidesController : BaseController
 {
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
     private readonly ILogger<FlowController> _logger;
-
-    public SlidesController(IManager manager, ILogger<FlowController> logger)
+    
+    public SlidesController(IFlowManager flowManager, ILogger<FlowController> logger)
     {
-        _manager = manager;
+        _flowManager = flowManager;
         _logger = logger;
     }
     
     
     public IActionResult SlidesDetails(int slideId)
     {
-        Slide slide = _manager.GetSlideById(slideId);
+        Slide slide = _flowManager.GetSlideById(slideId);
         return View(slide);
     }
     
@@ -28,7 +28,7 @@ public class SlidesController : BaseController
     {
         if (ModelState.IsValid)
         {
-            _manager.UpdateSlide(slideType, text, answersList, slide_id);
+            _flowManager.UpdateSlide(slideType, text, answersList, slide_id);
             ViewBag.SlideListId = slideListId;
             return RedirectToAction("SlideListDetails", "SlideList",new { slidelistId = slideListId });
         }
@@ -39,7 +39,7 @@ public class SlidesController : BaseController
 
     public IActionResult EditSlide(int slideId)
     {
-        Slide slide = _manager.GetSlideById(slideId);
+        Slide slide = _flowManager.GetSlideById(slideId);
         return View(slide);
     }
     

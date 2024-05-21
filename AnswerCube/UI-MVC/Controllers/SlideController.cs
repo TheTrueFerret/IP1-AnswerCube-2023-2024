@@ -5,12 +5,6 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class SlideController : BaseController
 {
-    private readonly IManager _manager;
-
-    public SlideController(IManager manager)
-    {
-        _manager = manager;
-    }
     
     [HttpGet]
     public IActionResult MultipleChoice()

@@ -6,12 +6,12 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class SlideListController : BaseController
 {
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
     private readonly ILogger<FlowController> _logger;
 
-    public SlideListController(IManager manager, ILogger<FlowController> logger)
+    public SlideListController(IFlowManager flowManager, ILogger<FlowController> logger)
     {
-        _manager = manager;
+        _flowManager = flowManager;
         _logger = logger;
     }
 
@@ -19,7 +19,7 @@ public class SlideListController : BaseController
     [HttpGet]
     public IActionResult SlideListDetails(int slidelistId)
     {
-        SlideList slideList = _manager.GetSlideListWithFlowById(slidelistId);
+        SlideList slideList = _flowManager.GetSlideListWithFlowById(slidelistId);
         foreach (var cSlides in slideList.ConnectedSlides)
         {
             _logger.LogInformation(cSlides.Slide.ToString());
@@ -32,7 +32,7 @@ public class SlideListController : BaseController
     {
         if (ModelState.IsValid)
         {
-            _manager.UpdateSlideList(title, description, slideListId);
+            _flowManager.UpdateSlideList(title, description, slideListId);
             return RedirectToAction("SlideListDetails", new { slidelistId = slideListId });
         }
 
@@ -42,7 +42,7 @@ public class SlideListController : BaseController
 
     public IActionResult EditSlideListView(int slidelistId)
     {
-        SlideList slideList = _manager.GetSlideListWithFlowById(slidelistId);
+        SlideList slideList = _flowManager.GetSlideListWithFlowById(slidelistId);
         return View(slideList);
     }
 }

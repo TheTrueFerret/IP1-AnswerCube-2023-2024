@@ -17,14 +17,24 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class InstallationController : BaseController
 {
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
+    private readonly IOrganizationManager _organizationManager;
+    private readonly IInstallationManager _installationManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JwtService _jwtService;
     private readonly UserManager<AnswerCubeUser> _userManager;
     
-    public InstallationController(IManager manager, IHttpContextAccessor httpContextAccessor, JwtService jwtService, UserManager<AnswerCubeUser> userManager)
+    public InstallationController(
+        IFlowManager flowManager, 
+        IOrganizationManager organizationManager, 
+        IInstallationManager installationManager, 
+        IHttpContextAccessor httpContextAccessor, 
+        JwtService jwtService, 
+        UserManager<AnswerCubeUser> userManager)
     {
-        _manager = manager;
+        _flowManager = flowManager;
+        _organizationManager = organizationManager;
+        _installationManager = installationManager;
         _httpContextAccessor = httpContextAccessor;
         _jwtService = jwtService;
         _userManager = userManager;
@@ -34,7 +44,7 @@ public class InstallationController : BaseController
     public IActionResult ChooseInstallation()
     {
         List<InstallationModel> installationModels = new List<InstallationModel>();
-        List<Installation> installations = _manager.GetInstallationsByUserId(_userManager.GetUserId(User));
+        List<Installation> installations = _installationManager.GetInstallationsByUserId(_userManager.GetUserId(User));
         foreach (var installation in installations)
         {
             installationModels.Add(
@@ -51,7 +61,7 @@ public class InstallationController : BaseController
         }
         InstallationViewModel installationViewModel = new InstallationViewModel();
         installationViewModel.InstallationModels = installationModels;
-        installationViewModel.Organizations = _manager.GetOrganizationByUserId(_userManager.GetUserId(User));
+        installationViewModel.Organizations = _organizationManager.GetOrganizationByUserId(_userManager.GetUserId(User));
         return View(installationViewModel);
     }
     
@@ -59,7 +69,7 @@ public class InstallationController : BaseController
     public IActionResult ChooseFlowForInstallation()
     {
         List<FlowModel> flowModels = new List<FlowModel>();
-        List<Flow> flows = _manager.GetFlowsByUserId(_userManager.GetUserId(User));
+        List<Flow> flows = _flowManager.GetFlowsByUserId(_userManager.GetUserId(User));
         foreach (var flow in flows)
         {
             flowModels.Add(
@@ -80,7 +90,7 @@ public class InstallationController : BaseController
     [HttpPost]
     public IActionResult SetInstallationToActive([FromBody] InstallationModel installationModel)
     {
-        _manager.SetInstallationToActive(installationModel.Id);
+        _installationManager.SetInstallationToActive(installationModel.Id);
         string token = _jwtService.GenerateToken(installationModel.Id); // Use JwtService to generate token
         string url = Url.Action("ChooseFlowForInstallation");
         return new JsonResult(new { token, url });
@@ -90,7 +100,7 @@ public class InstallationController : BaseController
     [HttpPost]
     public IActionResult CreateInstallation([FromBody] InstallationModel installationModel)
     {
-        _manager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
+        _installationManager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
         return Ok(new { success = true, id = installationModel.Id, name = installationModel.Name, location = installationModel.Location });
     }
     
@@ -101,7 +111,7 @@ public class InstallationController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
-        Installation installation = _manager.StartInstallationWithFlow(installationId, flowModel.Id);
+        Installation installation = _installationManager.StartInstallationWithFlow(installationId, flowModel.Id);
         if (installation.Flow.CircularFlow)
         {
             return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });

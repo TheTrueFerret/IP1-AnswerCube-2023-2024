@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AnswerCube.BL;
 
-public class EmailManager : IEmailManager
+public class MailManager : IMailManager
 {
     private readonly IMailRepository _mailRepository;
 
-    public EmailManager(IMailRepository mailRepository)
+    public MailManager(IMailRepository mailRepository)
     {
         _mailRepository = mailRepository;
     }

@@ -10,30 +10,32 @@ namespace AnswerCube.UI.MVC.Controllers;
 
 public class FlowController : BaseController
 {
-    private readonly IManager _manager;
+    private readonly IOrganizationManager _organizationManager;
+    private readonly IFlowManager _flowManager;
     private readonly ILogger<FlowController> _logger;
     private readonly CloudStorageService _cloudStorageService;
-
-    public FlowController(IManager manager, ILogger<FlowController> logger,CloudStorageService cloudStorageService)
+    
+    public FlowController(IOrganizationManager organizationManager, IFlowManager flowManager, ILogger<FlowController> logger, CloudStorageService cloudStorageService)
     {
-        this._cloudStorageService = cloudStorageService;
-        _manager = manager;
+        _organizationManager = organizationManager;
+        _flowManager = flowManager;
         _logger = logger;
+        _cloudStorageService = cloudStorageService;
     }
 
     public IActionResult FlowDetails(int flowId)
     {
-        Flow flow = _manager.GetFlowWithProjectById(flowId);
+        Flow flow = _flowManager.GetFlowWithProjectById(flowId);
         //SlideList sLideList = _manager.GetSlideListWithFlowById(flowId-1);
         //var test = _manager.GetSlideListsByFlowId(flowId).ToList();
-        ViewBag.SlideLists = _manager.GetSlideListsByFlowId(flowId).ToList();
-        ViewBag.Flow = _manager.GetFlowWithProjectById(flowId);
+        ViewBag.SlideLists = _flowManager.GetSlideListsByFlowId(flowId).ToList();
+        ViewBag.Flow = _flowManager.GetFlowWithProjectById(flowId);
         return View(flow);
     }
 
     public IActionResult CreateSlideView(int projectId, int slidelistId)
     {
-        Project project = _manager.GetProjectById(projectId);
+        Project project = _organizationManager.GetProjectById(projectId);
         ViewBag.SlideListId = slidelistId;
         ViewBag.HasCredential = _cloudStorageService.hasCredential;
         return View(project);
@@ -46,13 +48,13 @@ public class FlowController : BaseController
         if (imageFile != null)
         {
             var url = _cloudStorageService.UploadFileToBucket(imageFile);
-            if (_manager.CreateSlide(type, question, options, slideListId,url))
+            if (_flowManager.CreateSlide(type, question, options, slideListId,url))
             {
                 return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
             }
             return RedirectToAction("CreateSlideView");
         }
-        if (_manager.CreateSlide(type, question, options, slideListId,null))
+        if (_flowManager.CreateSlide(type, question, options, slideListId,null))
         {
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
         }
@@ -75,7 +77,7 @@ public class FlowController : BaseController
     {
         bool circularFlow = flowType is "circular" or not "linear";
 
-        if (_manager.CreateFlow(name, desc, circularFlow, projectId))
+        if (_flowManager.CreateFlow(name, desc, circularFlow, projectId))
         {
             return RedirectToAction("Flows", "Project", new { projectId });
         }
@@ -85,13 +87,13 @@ public class FlowController : BaseController
 
     public IActionResult ShowSlides()
     {
-        var slides = _manager.GetAllSlides();
+        var slides = _flowManager.GetAllSlides();
         return View(slides);
     }
 
     public IActionResult EditFlowView(int flowid)
     {
-        Flow flow = _manager.GetFlowWithProjectById(flowid);
+        Flow flow = _flowManager.GetFlowWithProjectById(flowid);
         return View(flow);
     }
 
@@ -100,7 +102,7 @@ public class FlowController : BaseController
     {
         if (ModelState.IsValid)
         {
-            _manager.UpdateFlow(model);
+            _flowManager.UpdateFlow(model);
             return RedirectToAction("FlowDetails", new { flowId = model.Id });
         }
 
@@ -110,7 +112,7 @@ public class FlowController : BaseController
     public IActionResult RemoveSlideFromList(int projectId, int slidelistid, int slideId)
     {
         
-        if (_manager.RemoveSlideFromSlideList(slideId, slidelistid))
+        if (_flowManager.RemoveSlideFromSlideList(slideId, slidelistid))
         {
             return RedirectToAction("SlideListDetails", "SlideList", new { slideListId = slidelistid });
         }
@@ -122,7 +124,7 @@ public class FlowController : BaseController
 
     public IActionResult AddSlideListToFlow(string title, string description, int flowId)
     {
-        if (_manager.CreateSlidelist(title, description, flowId))
+        if (_flowManager.CreateSlidelist(title, description, flowId))
         {
             return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
         }
@@ -133,7 +135,7 @@ public class FlowController : BaseController
     
     public IActionResult RemoveSlideListFromFlow(int slideListId, int flowId)
     {
-        if (_manager.RemoveSlideListFromFlow(slideListId, flowId))
+        if (_flowManager.RemoveSlideListFromFlow(slideListId, flowId))
         {
             return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
         }
