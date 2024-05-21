@@ -4,11 +4,9 @@ using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+
 
 namespace AnswerCube.DAL.EF;
 
@@ -17,7 +15,7 @@ public class Repository : IRepository
     private readonly ILogger<Repository> _logger;
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
-    
+
     public Repository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager)
     {
         _context = context;
@@ -26,6 +24,7 @@ public class Repository : IRepository
     }
 
     #region Organization
+
     public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
     {
         // Filter de rollen op basis van de rollen die de user al heeft
@@ -54,18 +53,37 @@ public class Repository : IRepository
         return true;
     }
 
-    public bool DeleteDeelplatformBeheerderByEmail(string userEmail)
+    public bool IsUserInMultipleOrganizations(string userId)
     {
-        DeelplatformbeheerderEmail deelplatformbeheerderEmail =
-            _context.DeelplatformbeheerderEmails.First(d => d.Email == userEmail);
+        return _context.UserOrganizations.Count(uo => uo.UserId == userId) > 1;
+    }
+
+    public bool DeleteDeelplatformBeheerderByEmail(string userEmail, string deelplatformNaam)
+    {
+        var organization = _context.Organizations.Include(o => o.UserOrganizations)
+            .SingleOrDefault(o => o.Name.ToLower() == deelplatformNaam.ToLower());
+        var user = _context.Users.First(u => u.Email == userEmail);
+        DeelplatformbeheerderEmail? deelplatformbeheerderEmail =
+            _context.DeelplatformbeheerderEmails.SingleOrDefault(d =>
+                d.Email.ToLower() == userEmail.ToLower() && d.DeelplatformNaam.ToLower() == deelplatformNaam.ToLower());
         if (deelplatformbeheerderEmail == null || deelplatformbeheerderEmail.Email != userEmail)
         {
             return false;
         }
-        //TODO: Make sure to delete all the organizations and projects that are linked to the user
 
         _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
-        _context.UserOrganizations.RemoveRange(_context.UserOrganizations.Where(uo => uo.UserId == userEmail));
+        var uo = _context.UserOrganizations.Single(uo => uo.UserId == user.Id && uo.OrganizationId == organization.Id);
+        _context.UserOrganizations.Remove(uo);
+        _context.SaveChanges();
+        //Check if any other deelplatformbeheerders are assigned to the organization, if not delete the organization.
+        if (_context.Organizations.Single(organization => organization.Id == uo.OrganizationId).UserOrganizations
+                .Count == 0)
+        {
+            _context.Organizations.Remove(organization);
+            _context.Forums.Remove(_context.Forums.First(f => f.OrganizationId == organization.Id));
+        }
+
+
         _context.SaveChanges();
         return true;
     }
@@ -151,12 +169,12 @@ public class Repository : IRepository
 
         return true;
     }
-    
+
     public Project ReadProjectWithFlowsById(int projectId)
     {
         return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
     }
-    
+
     public Organization CreateNewOrganization(string email, string name)
     {
         Organization organization = new Organization(name, email);
@@ -212,20 +230,18 @@ public class Repository : IRepository
         });
         _context.SaveChanges();
     }
-    
+
     public bool RemoveDpbFromOrganization(string userId, int organisationid)
     {
         UserOrganization userOrganization = _context.UserOrganizations.Include(uo => uo.User)
+            .Include(uo => uo.Organization)
             .First(uo => uo.UserId == userId && uo.OrganizationId == organisationid);
         if (userOrganization == null)
         {
             return false;
         }
 
-        string email = userOrganization.User.Email;
-        DeleteDeelplatformBeheerderByEmail(email);
-        _context.UserOrganizations.Remove(userOrganization);
-        _context.SaveChanges();
+        DeleteDeelplatformBeheerderByEmail(userOrganization.User.Email, userOrganization.Organization.Name);
         return true;
     }
 
@@ -233,7 +249,7 @@ public class Repository : IRepository
     {
         return _context.Organizations.Any(o => o.Name == organizationName);
     }
-    
+
     public List<Organization> ReadOrganizations()
     {
         return _context.Organizations.Include(o => o.Projects).ThenInclude(p => p.Flows)
@@ -279,8 +295,8 @@ public class Repository : IRepository
                     UserId = user.Id,
                     OrganizationId = organizationid
                 });
-                _context.SaveChanges();
                 await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+                _context.SaveChanges();
             }
 
             return true;
@@ -295,9 +311,11 @@ public class Repository : IRepository
     {
         return _context.Organizations.First(o => o.Name == organizationName);
     }
+
     #endregion
-    
+
     #region Answers
+
     public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);
@@ -311,6 +329,7 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+
     public List<Answer> GetAnswers()
     {
         var answers = _context.Answers
@@ -318,11 +337,13 @@ public class Repository : IRepository
             .ToList();
         return answers;
     }
+
     #endregion
 
     #region FlowManager
 
     #region Slide
+
     public List<Slide> GetOpenSlides()
     {
         return _context.Slides.Where(s => s.SlideType == SlideType.OpenQuestion).ToList();
@@ -351,7 +372,8 @@ public class Repository : IRepository
 
     public Slide ReadSlideById(int id)
     {
-        return _context.Slides.Include(s=>s.ConnectedSlideLists).ThenInclude(cs => cs.SlideList).First(s => s.Id == id);
+        return _context.Slides.Include(s => s.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
+            .First(s => s.Id == id);
     }
 
     public Slide GetSlideFromFlow(int flowId, int number)
@@ -362,7 +384,7 @@ public class Repository : IRepository
 
         return slide;
     }
-    
+
     public Slide ReadSlideFromSlideListByIndex(int index, int slideListId)
     {
         SlideList slideList = getSlideList();
@@ -371,7 +393,7 @@ public class Repository : IRepository
 
         return slide;
     }
-    
+
     public List<Slide> ReadSlidesFromSlideList(SlideList slideList)
     {
         List<SlideConnection> slideConnections = _context.SlideConnections
@@ -387,7 +409,7 @@ public class Repository : IRepository
 
         return slides;
     }
-    
+
     public Slide ReadActiveSlideByInstallationId(int id)
     {
         Installation installation = _context.Installations.Where(i => i.Id == id).First();
@@ -401,8 +423,8 @@ public class Repository : IRepository
         Slide slide = _context.Slides.Where(s => s.Id == slideConnections.SlideId).Single();
         return slide;
     }
-    
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl)
+
+    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl)
     {
         if (options == null || options.Length <= 0)
         {
@@ -457,12 +479,12 @@ public class Repository : IRepository
 
         return false;
     }
-    
+
     public IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId)
     {
         return _context.Slides.Where(s => s.Id == slideListId).ToList();
     }
-    
+
     public void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId)
     {
         Slide slide = _context.Slides.Include(sl => sl.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
@@ -476,11 +498,11 @@ public class Repository : IRepository
         slide.AnswerList = answers;
         slide.Text = text;
         slide.SlideType = slideType;
-        
+
         _context.Slides.Update(slide);
         _context.SaveChanges();
     }
-    
+
     public bool RemoveSlideFromSlideList(int slideId, int slidelistid)
     {
         Slide slide = _context.Slides.First(s => s.Id == slideId);
@@ -497,9 +519,11 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+
     #endregion
 
     #region SlideList
+
     public SlideList getSlideList()
     {
         return _context.SlideLists
@@ -524,7 +548,7 @@ public class Repository : IRepository
     {
         return _context.SlideLists.FirstOrDefault(sl => sl.Title == title);
     }
-    
+
     public bool CreateSlideList(string title, string description, int flowId)
     {
         SlideList slideList = new SlideList
@@ -566,7 +590,7 @@ public class Repository : IRepository
     {
         return _context.Slides.ToList();
     }
-    
+
     public SlideList ReadSlideListWithFlowById(int slideListId)
     {
         var slideList = _context.SlideLists
@@ -589,14 +613,14 @@ public class Repository : IRepository
         return _context.SlideLists.Include(sl => sl.ConnectedSlides)!.ThenInclude(cs => cs.Slide)
             .Where(sl => sl.Flow.Id == flowId).ToList();
     }
-    
+
     /*public void UpdateSlideList(SlideList slideList)
     {
        _context.SlideLists.Include(sl =>sl.Flow).Include(sl => sl.ConnectedSlides).Include(Sl => slideList.SubTheme);
        _context.SlideLists.Update(slideList);
        _context.SaveChanges();
     }*/
-    
+
     public void UpdateSlideList(string title, string description, int slideListId)
     {
         SlideList slideList = _context.SlideLists
@@ -623,6 +647,7 @@ public class Repository : IRepository
     #endregion
 
     #region Flow
+
     public bool CreateFlow(string name, string desc, bool circularFlow, int projectId)
     {
         if (name.Length <= 0)
@@ -641,23 +666,24 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
-    
+
     public Flow ReadFlowById(int flowId)
     {
         return _context.Flows.Include(f => f.Project).FirstOrDefault(f => f.Id == flowId);
     }
-    
+
     public Flow ReadFlowWithProjectById(int flowId)
     {
-        return _context.Flows.Include(f => f.Project).Include(f => f.SlideLists).ThenInclude(s=>s.ConnectedSlides).FirstOrDefault(f => f.Id == flowId);
+        return _context.Flows.Include(f => f.Project).Include(f => f.SlideLists).ThenInclude(s => s.ConnectedSlides)
+            .FirstOrDefault(f => f.Id == flowId);
     }
-    
+
     public void UpdateFlow(Flow model)
     {
         _context.Flows.Update(model);
         _context.SaveChanges();
     }
-    
+
     public List<Flow> ReadFlowsByUserId(string userId)
     {
         List<Organization> organizations = ReadOrganizationByUserId(userId);
@@ -673,18 +699,22 @@ public class Repository : IRepository
     public Flow ReadFlowByInstallationId(int installationId)
     {
         Installation installation = _context.Installations.Single(i => i.Id == installationId);
-        return _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.SubTheme).Single(f => f.Id == installation.FlowId);
+        return _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.SubTheme)
+            .Single(f => f.Id == installation.FlowId);
     }
+
     #endregion
-    
+
     #endregion
-    
+
     #region Installation
+
     public Installation StartInstallationWithFlow(int installationId, int flowId)
     {
         Installation installation = _context.Installations.Single(i => i.Id == installationId);
         installation.Active = true;
-        installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides).Single(f => f.Id == flowId);
+        installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides)
+            .Single(f => f.Id == flowId);
 
         installation.ActiveSlideListId = null;
         installation.CurrentSlideIndex = 0;
@@ -692,7 +722,7 @@ public class Repository : IRepository
         _context.SaveChanges();
         return installation;
     }
-    
+
     public bool UpdateInstallation(int installationId)
     {
         Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
@@ -702,6 +732,7 @@ public class Repository : IRepository
             _context.SaveChanges();
             return true;
         }
+
         installation.ActiveSlideListId = null;
         // returns false if the currentslideindex exceeds the current slidelist
         return false;
@@ -719,13 +750,15 @@ public class Repository : IRepository
                     installation.CurrentSlideIndex,
                     (int)installation.ActiveSlideListId
                 };
-                return idArray; 
+                return idArray;
             }
+
             return new int[] { };
         }
+
         return new int[] { };
     }
-    
+
     public List<Installation> ReadInstallationsByUserId(string userId)
     {
         List<Organization> organizations = ReadOrganizationByUserId(userId);
@@ -736,9 +769,10 @@ public class Repository : IRepository
                 .Where(i => i.Organization == organization)
                 .Where(i => i.Active == false));
         }
+
         return installations;
     }
-    
+
     public bool UpdateInstallationToActive(int installationId)
     {
         Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
@@ -747,7 +781,7 @@ public class Repository : IRepository
         _context.SaveChanges();
         return installation.Active;
     }
-    
+
     public bool CreateNewInstallation(string name, string location, int organizationId)
     {
         Organization organization = _context.Organizations.Single(o => o.Id == organizationId);
@@ -764,17 +798,19 @@ public class Repository : IRepository
         };
         _context.Installations.Add(installation);
         _context.SaveChanges();
-        
+
         return false;
     }
 
     public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
-        Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        Session? session =
+            _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
         if (session != null)
         {
             return session;
         }
+
         return null;
     }
 
@@ -796,9 +832,11 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+
     #endregion
-    
+
     #region Forum
+
     public List<Forum> ReadForums()
     {
         return _context.Forums.Include(f => f.Organization).Include(f => f.Ideas).ToList();
@@ -962,5 +1000,6 @@ public class Repository : IRepository
         _context.SaveChanges();
         return true;
     }
+
     #endregion
 }

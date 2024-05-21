@@ -56,7 +56,8 @@
                     @userOrganization.Organization.Name
                 </td>
                 <td>
-                    <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@userOrganization.User.Id" method="post"
+                    <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@userOrganization.User.Id"
+                          asp-route-deelplatformNaam="@userOrganization.Organization.Name" method="post"
                           onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-trash"></i>

@@ -1,4 +1,4 @@
-using AnswerCube.BL.Domain;
+﻿using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -14,7 +14,8 @@ public interface IManager
     List<AnswerCubeUser> GetAllUsers();
     bool GetDeelplatformBeheerderByEmail(string userEmail);
     bool AddDeelplatformBeheerderByEmail(string userEmail);
-    bool RemoveDeelplatformBeheerderByEmail(string userEmail);
+    bool IsUserInMultipleOrganizations(string userId);
+    bool RemoveDeelplatformBeheerderByEmail(string userEmail, string deelplatformNaam);
     List<Organization> GetOrganizationByUserId(string userId);
     Organization GetOrganizationById(int organizationId);
     bool DeleteProject(int id);

@@ -91,6 +91,15 @@ public static class AnswerCubeInitializer
             Organization = organization1,
             OrganizationId = organization1.Id
         };
+        context.DeelplatformbeheerderEmails.AddRange(new DeelplatformbeheerderEmail
+        {
+            Email = yannick.Email,
+            DeelplatformNaam = organization1.Name
+        }, new DeelplatformbeheerderEmail
+        {
+            Email = yannick.Email,
+            DeelplatformNaam = organization2.Name
+        });
 
         var userOrganization2 = new UserOrganization
         {
