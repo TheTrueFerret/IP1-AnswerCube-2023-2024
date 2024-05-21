@@ -64,7 +64,6 @@ public interface IRepository
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
     List<Slide> ReadSlideList();
     SlideList ReadSlideListByTitle(string title);
-    SlideList ReadSlideListBySlideId(int slideId);
     SlideList ReadSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     void UpdateSlideList(string title, string description, int slideListId);

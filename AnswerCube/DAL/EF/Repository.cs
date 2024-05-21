@@ -589,21 +589,6 @@ public class Repository : IRepository
 
         return slideList;
     }
-    
-    public SlideList ReadSlideListBySlideId(int slideId)
-    {
-        var slideList = _context.SlideLists
-            .Include(sl => sl.ConnectedSlides)
-            .ThenInclude(cs => cs.Slide)
-            .FirstOrDefault(sl => sl.ConnectedSlides.Any(cs => cs.Slide.Id == slideId));
-
-        if (slideList == null)
-        {
-            throw new Exception("No SlideList found in the database");
-        }
-
-        return slideList;
-    }
 
     public IEnumerable<SlideList> GetSlideListsByFlowId(int flowId)
     {

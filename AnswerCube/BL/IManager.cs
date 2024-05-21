@@ -61,7 +61,6 @@ public interface IManager
     #region SlideList
     SlideList GetSlideList();
     SlideList GetSlideListById(int id);
-    SlideList GetSlideListBySlideId(int slideId);
     bool CreateSlidelist(string title, string description, int flowId);
     SlideList GetSlideListByTitle(string title);
     SlideList GetSlideListWithFlowById(int slideListId);
