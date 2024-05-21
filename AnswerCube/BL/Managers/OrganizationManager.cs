@@ -96,10 +96,10 @@ public class OrganizationManager : IOrganizationManager
     {
         return _repository.ReadOrganizationByName(organizationName);
     }
-    
-    public Organization CreateNewOrganization(string email, string name)
+
+    public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
-        return _repository.CreateNewOrganization(email, name);
+        return _repository.CreateNewOrganization(email, name, logoUrl); 
     }
 
     public bool AddUserToOrganization(AnswerCubeUser user)
