@@ -12,12 +12,13 @@ namespace AnswerCube.UI.MVC.Controllers;
 public class DataAnalyseController : BaseController
 {
     private readonly IAnswerManager _answerManager;
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
     private readonly ILogger<DataAnalyseController> _logger;
-
-    public DataAnalyseController(IRepository repository, IManager manager, ILogger<DataAnalyseController> logger)
+    
+    public DataAnalyseController(IAnswerManager answerManager, IFlowManager flowManager, ILogger<DataAnalyseController> logger)
     {
-        _manager = manager;
+        _answerManager = answerManager;
+        _flowManager = flowManager;
         _logger = logger;
     }
 
@@ -31,7 +32,7 @@ public class DataAnalyseController : BaseController
     [HttpGet("SlideById/{id:int}")]
     public Slide GetSlideById(int id)
     {
-        return _manager.GetSlideById(id);
+        return _flowManager.GetSlideById(id);
     }
 
     public IActionResult Answers()

@@ -22,7 +22,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailManager _emailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IManager _manager;
+        private readonly IOrganizationManager _organizationManager;
 
         public RegisterModel(
             UserManager<AnswerCubeUser> userManager,
@@ -30,7 +30,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailManager emailManager,
-            RoleManager<IdentityRole> roleManager, IManager manager)
+            RoleManager<IdentityRole> roleManager, IOrganizationManager manager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -39,7 +39,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _logger = logger;
             _emailManager = emailManager;
             _roleManager = roleManager;
-            _manager = manager;
+            _organizationManager = manager;
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                             if (role.Name != null) await _userManager.AddToRoleAsync(user, role.Name);
                         }
 
-                        _manager.AddUserToOrganization(user);
+                        _organizationManager.AddUserToOrganization(user);
                     }
 
                     _logger.LogInformation("User created a new account with password.");
@@ -196,7 +196,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
         private bool IsDeelplatformBeheerder(AnswerCubeUser user)
         {
-            return _manager.GetDeelplatformBeheerderByEmail(user.Email);
+            return _organizationManager.GetDeelplatformBeheerderByEmail(user.Email);
         }
 
         private AnswerCubeUser CreateUser()

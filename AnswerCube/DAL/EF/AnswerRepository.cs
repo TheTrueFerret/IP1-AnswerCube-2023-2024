@@ -9,11 +9,11 @@ namespace AnswerCube.DAL.EF;
 
 public class AnswerRepository : IAnswerRepository
 {
-    private readonly ILogger<Repository> _logger;
+    private readonly ILogger<AnswerRepository> _logger;
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
 
-    public AnswerRepository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager)
+    public AnswerRepository(AnswerCubeDbContext context, ILogger<AnswerRepository> logger, UserManager<AnswerCubeUser> userManager)
     {
         _context = context;
         _logger = logger;

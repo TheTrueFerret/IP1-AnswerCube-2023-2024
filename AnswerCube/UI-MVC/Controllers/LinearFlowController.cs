@@ -11,12 +11,12 @@ namespace AnswerCube.UI.MVC.Controllers;
 public class LinearFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly IManager _manager;
+    private readonly IFlowManager _flowManager;
     
-    public LinearFlowController(ILogger<HomeController> logger, IManager manager)
+    public LinearFlowController(ILogger<HomeController> logger, IFlowManager flowManager)
     {
         _logger = logger;
-        _manager = manager;
+        _flowManager = flowManager;
     }
     
     public IActionResult LinearFlow()
@@ -51,7 +51,7 @@ public class LinearFlowController : BaseController
     [HttpPost]
     public IActionResult getNextSlide(int slideListId)
     {
-        SlideList slideList = _manager.GetSlideList();
+        SlideList slideList = _flowManager.GetSlideList();
         return new JsonResult(slideList);
     }
     
@@ -59,7 +59,7 @@ public class LinearFlowController : BaseController
     [HttpPost]
     public IActionResult updatePAge(int currentSlideIndex, SlideList slideList)
     {
-        Slide slide = _manager.GetSlideFromSlideListByIndex(currentSlideIndex, slideList.Id);
+        Slide slide = _flowManager.GetSlideFromSlideListByIndex(currentSlideIndex, slideList.Id);
         string actionName = slide.SlideType.ToString();
         string url = Url.Action(actionName);
         return Json(new { url });
