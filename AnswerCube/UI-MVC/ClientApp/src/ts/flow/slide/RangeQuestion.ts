@@ -1,9 +1,8 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
-import {getCookie} from "../../CookieHandler";
 
 let url = window.location.toString()
-const slideElement: HTMLElement | null = document.getElementById("slide");
-const sliderElement: HTMLInputElement | null = document.getElementById("slider") as HTMLInputElement;
+var slideElement: HTMLElement | null = document.getElementById("slide");
+var  sliderElement: HTMLInputElement = document.getElementById("slider") as HTMLInputElement;
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 let rangeInput: any;
@@ -70,16 +69,17 @@ function loadRangeQuestionSlide() {
 
 loadRangeQuestionSlide();
 
-const btnSubmit: HTMLElement | null = document.getElementById("submitAnswer");
-if (btnSubmit) {
-    btnSubmit.addEventListener('click', function(){
-        postAnswer
-    });
-}
 
-function postAnswer(cubeId: number) {
-    let answer = getRangeAnswer();
+function postAnswer(cubeId: number, action: 'submit' | 'skip') {
+    let answer: string[] = getRangeAnswer();
 
+    if (action === 'submit' && answer.length === 0) {
+        console.log('No answers selected');
+        // Show error to the user, e.g., alert or some UI indication
+        alert('Please select at least one answer before submitting <3');
+        return;
+    }
+    
     let requestBody = {
         Answer: answer,
         CubeId: cubeId
@@ -112,14 +112,12 @@ function postAnswer(cubeId: number) {
         });
 }
 
-function getRangeAnswer() {
-    if (sliderElement) {
-        let selectedAnswers: string[] = [];
-        if (sliderElement.value) {
-            selectedAnswers.push(sliderElement.value);
-        }
-        return selectedAnswers;
+function getRangeAnswer(): string[] {
+    let selectedAnswers: string[] = [];
+    if (sliderElement.value) {
+        selectedAnswers.push(sliderElement.value);
     }
+    return selectedAnswers;
 }
 
 function fillSliderOptions(options: any) {
@@ -138,52 +136,6 @@ function fillSliderOptions(options: any) {
     }
 }
 
-document.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'ArrowDown':
-            console.log('ArrowDown');
-            moveRangeButton('down')
-            break;
-        case 'ArrowUp':
-            console.log('ArrowUp');
-            moveRangeButton('up')
-            break;
-        case 'ArrowLeft':
-            console.log('ArrowLeft');
-            break;
-        case 'ArrowRight':
-            console.log('ArrowRight');
-            break;
-        case 'a' || 'A':
-            console.log('a');
-            break;
-        case 's' || 'S':
-            console.log('s');
-            break;
-        case 'd' || 'D':
-            console.log('d');
-            break;
-        case 'f' || 'F':
-            console.log('f');
-            break;
-        case 'g' || 'G':
-            console.log('g');
-            break;
-        case 'h' || 'H':
-            console.log('h');
-            break;
-        case 'Enter':
-            console.log('Enter');
-            postAnswer(1)
-            break;
-        default:
-            console.log(event.key, event.keyCode);
-            return;
-    }
-    event.preventDefault();
-});
-
-
 function moveRangeButton(direction: 'up' | 'down') {
     rangeInput.focus()
     if (direction == "up") {
@@ -197,3 +149,15 @@ function moveRangeButton(direction: 'up' | 'down') {
         }
     }
 }
+
+
+declare global {
+    interface Window {
+        slideType: string;
+        moveRangeButton: (direction: 'up' | 'down') => void;
+        postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
+    }
+}
+window.slideType = "RangeQuestion";
+window.moveRangeButton = moveRangeButton;
+window.postAnswer = postAnswer;

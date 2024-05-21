@@ -4,7 +4,7 @@ import {getCookie} from "../../CookieHandler";
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
-var checkboxes : any;
+var checkboxes: any;
 var currentCheckedIndex: number;
 var totalCheckboxes: number;
 
@@ -39,12 +39,13 @@ function loadSingleChoiceSlide() {
                                                   <source src="${slide.mediaUrl}" type="video/mp4">
                                                   Your browser does not support the video tag.
                                                 </video><br>`;
-                
+
                 } else if (mediaType === "image") {
                     slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
                 } else {
                     slideElement.innerHTML += `<em>Unsupported media type</em>`;
-                }}
+                }
+            }
             for (const answer of slide.answerList) {
                 slideElement.innerHTML += `<input type="radio" id="input" value="${answer}" name="answer">${answer}<br>`;
             }
@@ -62,17 +63,16 @@ function loadSingleChoiceSlide() {
 
 loadSingleChoiceSlide()
 
-
-const btn: HTMLElement | null = document.getElementById("submitAnswer");
-if (btn) {
-    btn.addEventListener('click', function(){
-        postAnswer(1)
-    });
-}
-
-function postAnswer(cubeId: number) {
+function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     let answer = getSelectedAnswer();
-
+    
+    if (action === 'submit' && answer.length === 0) {
+        console.log('No answers selected');
+        // Show error to the user, e.g., alert or some UI indication
+        alert('Please select at least one answer before submitting <3');
+        return;
+    }
+    
     let requestBody = {
         Answer: answer,
         CubeId: cubeId
@@ -104,62 +104,17 @@ function postAnswer(cubeId: number) {
     console.log(answer);
 }
 
-function getSelectedAnswer() {
-    const checkboxes = document.querySelector('input[name="answer"]:checked');
+function getSelectedAnswer(): string[] {
+    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
     let selectedAnswers: string[] = [];
-    const checkbox = checkboxes as HTMLInputElement; // Assert type to HTMLInputElement
-    if (checkbox.value) {
-        selectedAnswers.push(checkbox.value); // Use value property instead of nodeValue
-    }
+    checkboxes.forEach((checkbox: Element) => {
+        const inputElement = checkbox as HTMLInputElement;
+        if (inputElement.value) {
+            selectedAnswers.push(inputElement.value);
+        }
+    });
     return selectedAnswers;
 }
-
-
-document.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'ArrowDown':
-            console.log('ArrowDown');
-            moveCheckedRadioButton('down')
-            break;
-        case 'ArrowUp':
-            console.log('ArrowUp');
-            moveCheckedRadioButton('up')
-            break;
-        case 'ArrowLeft':
-            console.log('ArrowLeft');
-            break;
-        case 'ArrowRight':
-            console.log('ArrowRight');
-            break;
-        case 'a' || 'A':
-            console.log('a');
-            break;
-        case 's' || 'S':
-            console.log('s');
-            break;
-        case 'd' || 'D':
-            console.log('d');
-            break;
-        case 'f' || 'F':
-            console.log('f');
-            break;
-        case 'g' || 'G':
-            console.log('g');
-            break;
-        case 'h' || 'H':
-            console.log('h');
-            break;
-        case 'Enter':
-            console.log('Enter');
-            postAnswer(1)
-            break;
-        default:
-            console.log(event.key, event.keyCode);
-            return;
-    }
-    event.preventDefault();
-});
-
 
 function moveCheckedRadioButton(direction: 'up' | 'down') {
     // Check if there's a radio button checked
@@ -168,7 +123,6 @@ function moveCheckedRadioButton(direction: 'up' | 'down') {
         currentCheckedIndex = 0
         return;
     }
-
     let newIndex;
     if (direction === 'up') {
         newIndex = currentCheckedIndex - 1;
@@ -185,5 +139,15 @@ function moveCheckedRadioButton(direction: 'up' | 'down') {
     currentCheckedIndex = newIndex
 }
 
+declare global {
+    interface Window {
+        slideType: string;
+        moveCheckedRadioButton: (direction: 'up' | 'down') => void;
+        postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
+    }
+}
 
+window.slideType = "SingleChoice";
+window.moveCheckedRadioButton = moveCheckedRadioButton;
+window.postAnswer = postAnswer;
 

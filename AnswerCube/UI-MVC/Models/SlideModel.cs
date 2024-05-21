@@ -10,5 +10,5 @@ public class SlideModel
     public SlideType SlideType { get; set; }
     public string Text { get; set; }
     public ICollection<Answer> Answers { get; set; }
-    public int slideListId { get; set; }
+    public int? slideListId { get; set; }
 }
