@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Areas.Identity.Data;
+using AnswerCube.UI.MVC.Services;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -19,24 +20,28 @@ public class AdminController : BaseController
     private readonly SignInManager<AnswerCubeUser> _signInManager;
     private readonly IMailManager _mailManager;
     private readonly IOrganizationManager _organizationManager;
+    private readonly CloudStorageService _cloudStorageService;
     
     public AdminController(
         ILogger<AdminController> logger, 
         UserManager<AnswerCubeUser> userManager, 
         SignInManager<AnswerCubeUser> signInManager, 
         IMailManager mailManager, 
-        IOrganizationManager organizationManager)
+        IOrganizationManager organizationManager,
+        CloudStorageService cloudStorageService)
     {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
         _mailManager = mailManager;
         _organizationManager = organizationManager;
+        _cloudStorageService = cloudStorageService;
     }
 
     public async Task<IActionResult> DeelplatformOverview()
     {
         var userOrganizations = _organizationManager.GetDeelplatformBeheerderUsers();
+        ViewBag.HasCredential = _cloudStorageService.hasCredential;
         return View(userOrganizations);
     }
 
@@ -169,9 +174,18 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("AddDeelplatform")]
-    public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName)
+    public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName,IFormFile? logo)
     {
-        Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName);
+        string? logoUrl;
+        if (logo != null)
+        {
+            logoUrl= _cloudStorageService.UploadFileToBucket(logo);
+        }
+        else
+        {
+            logoUrl = null;
+        }
+        Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName,logoUrl);
         _organizationManager.SaveBeheerderAndOrganization(email, organization);
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
