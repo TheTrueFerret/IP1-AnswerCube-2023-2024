@@ -149,20 +149,6 @@ public class Manager : IManager
     }
 
     #endregion
-
-    #region Answers
-
-    public bool AddAnswer(List<string> answers, int id, Session session)
-    {
-        return _repository.AddAnswer(answers, id, session);
-    }
-    
-    public List<Answer> GetAnswers()
-    {
-        return _repository.GetAnswers();
-    }
-    
-    #endregion
     
     #region FlowManager
     

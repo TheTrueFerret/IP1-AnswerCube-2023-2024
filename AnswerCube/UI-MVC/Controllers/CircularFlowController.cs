@@ -20,6 +20,7 @@ namespace UI_MVC.Controllers;
 public class CircularFlowController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IAnswerManager _answerManager;
     private readonly IManager _manager;
     private readonly JwtService _jwtService;
     private int _counter = 0;
@@ -177,7 +178,7 @@ public class CircularFlowController : BaseController
         
         Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
         List<string> answerText = answer.Answer;
-        if (_manager.AddAnswer(answerText, slide.Id, session))
+        if (_answerManager.AddAnswer(answerText, slide.Id, session))
         {
             return UpdatePage();
         }

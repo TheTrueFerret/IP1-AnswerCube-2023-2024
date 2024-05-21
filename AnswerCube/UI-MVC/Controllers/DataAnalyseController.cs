@@ -11,6 +11,7 @@ namespace AnswerCube.UI.MVC.Controllers;
 [ApiController]
 public class DataAnalyseController : BaseController
 {
+    private readonly IAnswerManager _answerManager;
     private readonly IManager _manager;
     private readonly ILogger<DataAnalyseController> _logger;
 
@@ -23,7 +24,7 @@ public class DataAnalyseController : BaseController
     [HttpGet("Answers")]
     public ActionResult<List<Answer>> GetAnswers()
     {
-        var answers = _manager.GetAnswers();
+        var answers = _answerManager.GetAnswers();
         return answers;
     }
 

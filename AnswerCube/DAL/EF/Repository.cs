@@ -314,32 +314,6 @@ public class Repository : IRepository
 
     #endregion
 
-    #region Answers
-
-    public bool AddAnswer(List<string> answers, int id, Session session)
-    {
-        Slide slide = _context.Slides.First(s => s.Id == id);
-        Answer newAnswer = new Answer
-        {
-            AnswerText = answers,
-            Slide = slide,
-            Session = session
-        };
-        _context.Answers.Add(newAnswer);
-        _context.SaveChanges();
-        return true;
-    }
-
-    public List<Answer> GetAnswers()
-    {
-        var answers = _context.Answers
-            .Include(a => a.Slide)
-            .ToList();
-        return answers;
-    }
-
-    #endregion
-
     #region FlowManager
 
     #region Slide

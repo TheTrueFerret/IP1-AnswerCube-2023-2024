@@ -35,11 +35,6 @@ public interface IManager
     Organization GetOrganizationByName(string organizationName);
     Project GetProjectWithFlowsById(int projectId);
     #endregion
-
-    #region Answers
-    bool AddAnswer(List<string> answers, int id, Session session);
-    List<Answer> GetAnswers();
-    #endregion
     
     #region FlowManager
 

@@ -1,0 +1,21 @@
+using AnswerCube.BL.Domain;
+using AnswerCube.DAL;
+using Domain;
+
+namespace AnswerCube.BL;
+
+public class AnswerManager : IAnswerManager
+{
+    private readonly IAnswerRepository _repository;
+    
+    
+    public bool AddAnswer(List<string> answers, int id, Session session)
+    {
+        return _repository.AddAnswer(answers, id, session);
+    }
+    
+    public List<Answer> GetAnswers()
+    {
+        return _repository.GetAnswers();
+    }
+}

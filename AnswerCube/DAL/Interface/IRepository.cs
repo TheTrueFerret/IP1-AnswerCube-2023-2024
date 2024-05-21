@@ -35,11 +35,7 @@ public interface IRepository
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
     #endregion
-
-    #region Answers
-    bool AddAnswer(List<string> answers,int id, Session session);
-    List<Answer> GetAnswers();
-    #endregion
+    
 
     #region FlowManager
 
