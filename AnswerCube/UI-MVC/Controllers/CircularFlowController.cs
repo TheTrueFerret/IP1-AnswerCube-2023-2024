@@ -37,6 +37,7 @@ public class CircularFlowController : BaseController
     
     public IActionResult CircularFlow(int? id)
     {
+        bool installationUpdated = false;
         int installationId;
         if (id == null)
         {
@@ -46,11 +47,15 @@ public class CircularFlowController : BaseController
         else
         {
             installationId = (int)id;
-            _manager.UpdateInstallation(installationId);
+            installationUpdated = _manager.UpdateInstallation(installationId);
         }
-        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
-        string actionName = slide.SlideType.ToString();
-        return RedirectToAction(actionName);
+        if (installationUpdated)
+        {
+            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            string actionName = slide.SlideType.ToString();
+            return RedirectToAction(actionName);
+        }
+        return RedirectToAction("Subthemes");
     }
     
     [HttpGet]
@@ -83,6 +88,24 @@ public class CircularFlowController : BaseController
         return View("/Views/Slides/RangeQuestion.cshtml");
     }
     
+    [HttpGet]
+    public IActionResult Subthemes()
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        Flow flow = _manager.GetFlowByInstallationId(installationId);
+        FlowModel flowModel = new FlowModel
+        {
+            Id = flow.Id,
+            Name = flow.Name,
+            Description = flow.Description,
+            CircularFlow = flow.CircularFlow,
+            SlideLists = flow.SlideLists
+        };
+        return View("/Views/Slides/Subthemes.cshtml", flowModel);
+    }
+    
     
     [HttpGet]
     public IActionResult GetNextSlide()
@@ -103,10 +126,37 @@ public class CircularFlowController : BaseController
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
         bool installationUpdated = _manager.UpdateInstallation(installationId);
-        Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
-        string actionName = slide.SlideType.ToString();
-        string url = Url.Action(actionName);
+        string url;
+        if (installationUpdated)
+        {
+            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            string actionName = slide.SlideType.ToString();
+            url = Url.Action(actionName);
+            return Json(new { url });
+        }
+        url = Url.Action("Subthemes");
         return Json(new { url });
+    }
+    
+    
+    [HttpPost]
+    public IActionResult ChooseSlideList([FromBody] SlideListDto slideListDto)
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        
+        bool isSlideListUpdated = _manager.AddSlideListToInstallation(slideListDto.Id, installationId);
+        if (isSlideListUpdated)
+        {
+            _manager.UpdateInstallation(installationId);
+            Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
+            string actionName = slide.SlideType.ToString();
+            string url = Url.Action(actionName);
+            return Json(new { url }); 
+            //return UpdatePage();
+        }
+        return Error();
     }
     
     
@@ -124,7 +174,7 @@ public class CircularFlowController : BaseController
             {
                 CubeId = answer.CubeId
             };
-            _manager.AddNewSessionWithInstallationId(newSession, installationId);
+            session = _manager.AddNewSessionWithInstallationId(newSession, installationId);
         }
         
         Slide slide = _manager.GetActiveSlideByInstallationId(installationId);
@@ -133,10 +183,7 @@ public class CircularFlowController : BaseController
         {
             return UpdatePage();
         }
-        else
-        {
-            return new JsonResult(new BadRequestResult());
-        }
+        return new JsonResult(new BadRequestResult());
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -17,8 +17,7 @@ public class Repository : IRepository
     private readonly ILogger<Repository> _logger;
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
-
-
+    
     public Repository(AnswerCubeDbContext context, ILogger<Repository> logger, UserManager<AnswerCubeUser> userManager)
     {
         _context = context;
@@ -307,6 +306,7 @@ public class Repository : IRepository
         {
             AnswerText = answers,
             Slide = slide,
+            SessionId = session.Id,
             Session = session
         };
         if (answers == null)
@@ -675,6 +675,12 @@ public class Repository : IRepository
             .ToList();
         return flows;
     }
+
+    public Flow ReadFlowByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
+        return _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.SubTheme).Single(f => f.Id == installation.FlowId);
+    }
     #endregion
     
     #endregion
@@ -686,24 +692,24 @@ public class Repository : IRepository
         installation.Active = true;
         installation.Flow = _context.Flows.Include(f => f.SlideLists).ThenInclude(sl => sl.ConnectedSlides).Single(f => f.Id == flowId);
 
-        installation.ActiveSlideListId = installation.Flow.SlideLists.First().Id;
-        
+        installation.ActiveSlideListId = null;
         installation.CurrentSlideIndex = 0;
-        installation.MaxSlideIndex = installation.Flow.SlideLists.First().ConnectedSlides.Count;
+        installation.MaxSlideIndex = null;
         _context.SaveChanges();
         return installation;
     }
     
-    public bool UpdateInstallation(int id)
+    public bool UpdateInstallation(int installationId)
     {
-        Installation installation = _context.Installations.Where(i => i.Id == id).First();
+        Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
         if (installation.CurrentSlideIndex < installation.MaxSlideIndex)
         {
             installation.CurrentSlideIndex++;
             _context.SaveChanges();
             return true;
         }
-
+        installation.ActiveSlideListId = null;
+        // returns false if the currentslideindex exceeds the current slidelist
         return false;
     }
 
@@ -712,17 +718,18 @@ public class Repository : IRepository
         Installation installation = _context.Installations.Where(i => i.Id == id).First();
         if (installation.MaxSlideIndex > installation.CurrentSlideIndex)
         {
-            int[] idArray = new int[]
+            if (installation.ActiveSlideListId != null)
             {
-                installation.CurrentSlideIndex,
-                installation.ActiveSlideListId
-            };
-            return idArray;
-        }
-        else
-        {
+                int[] idArray = new int[]
+                {
+                    installation.CurrentSlideIndex,
+                    (int)installation.ActiveSlideListId
+                };
+                return idArray; 
+            }
             return new int[] { };
         }
+        return new int[] { };
     }
     
     public List<Installation> ReadInstallationsByUserId(string userId)
@@ -777,10 +784,21 @@ public class Repository : IRepository
         return null;
     }
 
-    public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
+    public Session WriteNewSessionWithInstallationId(Session newSession, int installationId)
     {
         newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
         _context.Sessions.Add(newSession);
+        _context.SaveChanges();
+        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == newSession.CubeId);
+    }
+
+    public bool WriteSlideListToInstallation(int slideListId, int installationId)
+    {
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
+        installation.ActiveSlideListId = slideListId;
+        installation.CurrentSlideIndex = 0;
+        SlideList slideList = _context.SlideLists.Include(sl => sl.ConnectedSlides).Single(sl => sl.Id == slideListId);
+        installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
         _context.SaveChanges();
         return true;
     }
