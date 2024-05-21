@@ -1,6 +1,6 @@
 namespace AnswerCube.BL;
 
-public interface IEmailManager
+public interface IMailManager
 {
     Task SendExistingEmail(string email, string organizationName);
     Task SendNewEmail(string email, string organizationName);

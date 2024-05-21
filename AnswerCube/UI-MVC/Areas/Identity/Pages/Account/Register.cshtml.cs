@@ -20,7 +20,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserStore<AnswerCubeUser> _userStore;
         private readonly IUserEmailStore<AnswerCubeUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailManager _emailManager;
+        private readonly IMailManager _mailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IOrganizationManager _organizationManager;
 
@@ -29,7 +29,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             IUserStore<AnswerCubeUser> userStore,
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailManager emailManager,
+            IMailManager mailManager,
             RoleManager<IdentityRole> roleManager, IOrganizationManager manager)
         {
             _userManager = userManager;
@@ -37,7 +37,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailManager = emailManager;
+            _mailManager = mailManager;
             _roleManager = roleManager;
             _organizationManager = manager;
         }
@@ -170,7 +170,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     
-                    await _emailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
+                    await _mailManager.SendConfirmationEmail(Input.Email, userId, code, returnUrl);
                     
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
