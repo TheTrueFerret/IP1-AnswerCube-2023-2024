@@ -22,7 +22,7 @@ public interface IManager
     Project GetProjectById(int projectid);
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
-    Organization CreateNewOrganization(string email, string name);
+    Organization CreateNewOrganization(string email, string name, string? logoUrl);
     bool AddUserToOrganization(AnswerCubeUser user);
     void SaveBeheerderAndOrganization(string email, Organization organization);
     void CreateUserOrganization(AnswerCubeUser user, Organization organization);

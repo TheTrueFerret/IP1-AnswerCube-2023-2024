@@ -175,9 +175,9 @@ public class Repository : IRepository
         return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
     }
 
-    public Organization CreateNewOrganization(string email, string name)
+    public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
-        Organization organization = new Organization(name, email);
+        Organization organization = new Organization(name, email, logoUrl);
         _context.Organizations.Add(organization);
         _context.SaveChanges();
         return organization;

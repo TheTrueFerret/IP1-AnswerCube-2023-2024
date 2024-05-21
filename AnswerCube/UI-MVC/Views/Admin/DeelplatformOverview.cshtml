@@ -9,7 +9,7 @@
 <h1>Deelplatform</h1>
 <div class="col-9">
 
-    <h2>Add DeelplatformBeheerder</h2>
+    <h2>Maak een nieuw deelplatform aan</h2>
     @if (TempData["Error"] != null)
     {
         <div class="text-danger col-6">@TempData["Error"]</div>
@@ -27,11 +27,25 @@
             <label for="email" class="form-label">Deelplatform Email</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="Beheerders email" required>
         </div>
+        @if (ViewBag.HasCredential)
+        {
+        <div class="form-group">
+            <dl>
+                <dt>
+                    <label for="logo" class="form-label">logo</label>
+                </dt>
+                <dd>
+                    <input id="logo" type="file" name="logo" class="form-control" accept="image/*"/>
+                </dd>
+            </dl>
+        </div>
+        } else {
+        <p>The CloudStorageService does not have credentials.</p>
+        }
         <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-paper-plane"></i>
         </button>
     </form>
-
 </div>
 
 @if (Model.Any())
