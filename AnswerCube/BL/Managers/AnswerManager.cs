@@ -8,6 +8,10 @@ public class AnswerManager : IAnswerManager
 {
     private readonly IAnswerRepository _repository;
     
+    public AnswerManager(IAnswerRepository repository)
+    {
+        _repository = repository;
+    }
     
     public bool AddAnswer(List<string> answers, int id, Session session)
     {

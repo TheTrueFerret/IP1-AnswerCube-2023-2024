@@ -12,7 +12,7 @@ public class Slide
     public string Text { get; set; } // deze text word gebruikt voor een vraag/info
     public List<string>? AnswerList { get; set; }
     
-    public string? mediaUrl { get; set; } // deze url word gebruikt voor een afbeelding/video
+    public string? MediaUrl { get; set; } // deze url word gebruikt voor een afbeelding/video
     
     // Relational Attributes:
     [JsonIgnore]

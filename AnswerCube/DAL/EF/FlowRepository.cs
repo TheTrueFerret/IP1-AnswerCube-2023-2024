@@ -110,7 +110,7 @@ public class FlowRepository : IFlowRepository
                 SlideType = type,
                 Text = question,
                 AnswerList = null,
-                mediaUrl = mediaUrl
+                MediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -135,7 +135,7 @@ public class FlowRepository : IFlowRepository
                 SlideType = type,
                 Text = question,
                 AnswerList = options.ToList(),
-                mediaUrl = mediaUrl
+                MediaUrl = mediaUrl
             };
             SlideList slideList =
                 _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
@@ -318,6 +318,13 @@ public class FlowRepository : IFlowRepository
 
         _context.SlideLists.Update(slideList);
         _context.SaveChanges();
+    }
+    
+    public SlideList ReadSlideListByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
+        SlideList slideList = _context.SlideLists.Include(sl => sl.SubTheme).Single(sl => sl.Id == installation.ActiveSlideListId);
+        return slideList;
     }
 
     #endregion

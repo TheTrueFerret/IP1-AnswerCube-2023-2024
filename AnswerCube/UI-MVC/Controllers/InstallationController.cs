@@ -118,5 +118,4 @@ public class InstallationController : BaseController
         }
         return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
     }
-    
 }

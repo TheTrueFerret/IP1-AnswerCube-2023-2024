@@ -19,6 +19,7 @@ public class AnswerRepository : IAnswerRepository
         _logger = logger;
         _userManager = userManager;
     }
+    
     public bool AddAnswer(List<string> answers, int id, Session session)
     {
         Slide slide = _context.Slides.First(s => s.Id == id);

@@ -127,6 +127,11 @@ public class FlowManager : IFlowManager
     {
         _repository.UpdateSlideList(title, description, slideListId);
     }
+
+    public SlideList GetSlideListByInstallationId(int installationId)
+    {
+        return _repository.ReadSlideListByInstallationId(installationId);
+    }
     #endregion
 
     #region Flow

@@ -30,6 +30,7 @@ public interface IFlowRepository
     SlideList ReadSlideListWithFlowById(int slideListId);
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     void UpdateSlideList(string title, string description, int slideListId);
+    SlideList ReadSlideListByInstallationId(int installationId);
     #endregion
 
     #region Flow

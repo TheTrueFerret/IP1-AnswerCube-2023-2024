@@ -61,31 +61,31 @@ public class CircularFlowController : BaseController
     [HttpGet]
     public IActionResult MultipleChoice()
     {
-        return View("/Views/Slides/MultipleChoice.cshtml");
+        return View("/Views/Slides/MultipleChoice.cshtml", GetNextSlide());
     }
     
     [HttpGet]
     public IActionResult OpenQuestion()
     {
-        return View("/Views/Slides/OpenQuestion.cshtml");
+        return View("/Views/Slides/OpenQuestion.cshtml", GetNextSlide());
     }
     
     [HttpGet]
     public IActionResult SingleChoice()
     {
-        return View("/Views/Slides/SingleChoice.cshtml");
+        return View("/Views/Slides/SingleChoice.cshtml", GetNextSlide());
     }
     
     [HttpGet]
     public IActionResult InfoSlide()
     {
-        return View("/Views/Slides/InfoSlide.cshtml");
+        return View("/Views/Slides/InfoSlide.cshtml", GetNextSlide());
     }
     
     [HttpGet]
     public IActionResult RangeQuestion()
     {
-        return View("/Views/Slides/RangeQuestion.cshtml");
+        return View("/Views/Slides/RangeQuestion.cshtml", GetNextSlide());
     }
     
     [HttpGet]
@@ -108,15 +108,25 @@ public class CircularFlowController : BaseController
     }
     
     
-    [HttpGet]
-    public IActionResult GetNextSlide()
+    public SlideModel GetNextSlide()
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
-        return new JsonResult(slide);
+        SlideList slideList = _flowManager.GetSlideListByInstallationId(installationId);
+        SlideModel slideModel = new SlideModel
+        {
+            Id = slide.Id,
+            Text = slide.Text,
+            SlideType = slide.SlideType,
+            AnswerList = slide.AnswerList,
+            MediaUrl = slide.MediaUrl,
+            SlideList = slideList,
+            SubTheme = slideList.SubTheme
+        };
+        return slideModel;
     }
     
     [HttpGet]
@@ -150,12 +160,7 @@ public class CircularFlowController : BaseController
         bool isSlideListUpdated = _installationManager.AddSlideListToInstallation(slideListDto.Id, installationId);
         if (isSlideListUpdated)
         {
-            _installationManager.UpdateInstallation(installationId);
-            Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
-            string actionName = slide.SlideType.ToString();
-            string url = Url.Action(actionName);
-            return Json(new { url }); 
-            //return UpdatePage();
+            return UpdatePage();
         }
         return Error();
     }

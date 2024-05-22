@@ -1,7 +1,4 @@
-using System.Text.Json.Serialization;
 using AnswerCube.BL.Domain.Project;
-using AnswerCube.BL.Domain.Slide;
-using AnswerCube.UI.MVC.Models.Dto;
 using Domain;
 
 namespace AnswerCube.UI.MVC.Models;
