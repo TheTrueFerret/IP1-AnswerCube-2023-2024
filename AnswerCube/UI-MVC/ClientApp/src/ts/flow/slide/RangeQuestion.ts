@@ -5,69 +5,10 @@ var slideElement: HTMLElement | null = document.getElementById("slide");
 var  sliderElement: HTMLInputElement = document.getElementById("slider") as HTMLInputElement;
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
-let rangeInput: any;
-let min: number;
-let max: number;
-let step: number;
-
-function loadRangeQuestionSlide() {
-    fetch(RemoveLastDirectoryPartOf(url) + "/GetNextSlide/", {
-        method: "GET",
-        headers: {
-            "Accept": "application/json",
-        }
-    })
-        .then((response: Response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                if (slideElement) {
-                    slideElement.innerHTML = "<em>Problem!!!</em>";
-                }
-            }
-        })
-        .then((slide: any) => {
-            console.log(slide);
-            if (slideElement) {
-                slideElement.innerHTML = `<h3>${slide.text}</h3>`;
-                if (slide.mediaUrl) { // Check if mediaUrl exists
-                    // Extract the filename from the media URL
-                    let filename = slide.mediaUrl.split('/').pop();
-                    // Extract the media type from the filename
-                    let mediaType = filename.split('_')[0];
-                    console.log(mediaType);
-                    // Default to "image" if the media type is not "video"
-                    if (mediaType === "video") {
-                        slideElement.innerHTML += `<video width="320" height="240" controls>
-                                                  <source src="${slide.mediaUrl}" type="video/mp4">
-                                                  Your browser does not support the video tag.
-                                                </video><br>`;
-
-                    } else if (mediaType === "image") {
-                        slideElement.innerHTML += `<img src="${slide.mediaUrl}" alt="Slide Image">`;
-                    } else {
-                        slideElement.innerHTML += `<em>Unsupported media type</em>`;
-                    }
-                }
-                const answersContainer = document.querySelector(".answers-container");
-                if (answersContainer) {
-                    fillSliderOptions(slide.answerList);
-                }
-            }
-            rangeInput = document.querySelector<HTMLInputElement>('input[type="range"]');
-            min = parseInt(rangeInput.min, 10);
-            max = parseInt(rangeInput.max, 10);
-            step = rangeInput.step ? parseInt(rangeInput.step, 10) : 1;
-        })
-        .catch((error: any) => {
-            console.error(error);
-            if (slideElement) {
-                slideElement.innerHTML = "<em>Problem loading the slide</em>";
-            }
-        });
-}
-
-loadRangeQuestionSlide();
+let rangeInput: any = document.querySelector<HTMLInputElement>('input[type="range"]');
+let min: number = parseInt(rangeInput.min, 10);
+let max: number = parseInt(rangeInput.max, 10);
+let step: number = rangeInput.step ? parseInt(rangeInput.step, 10) : 1;
 
 
 function postAnswer(cubeId: number, action: 'submit' | 'skip') {
@@ -118,22 +59,6 @@ function getRangeAnswer(): string[] {
         selectedAnswers.push(sliderElement.value);
     }
     return selectedAnswers;
-}
-
-function fillSliderOptions(options: any) {
-    const tickmarkLabelsContainer = document.querySelector(".tickmark-labels");
-    if (tickmarkLabelsContainer) {
-        tickmarkLabelsContainer.innerHTML = ""; // Container leegmaken
-
-        if (Array.isArray(options)) {
-            options.forEach((option: any) => {
-                const tickmarkLabel = document.createElement("div");
-                tickmarkLabel.classList.add("tickmark-label");
-                tickmarkLabel.textContent = option;
-                tickmarkLabelsContainer.appendChild(tickmarkLabel);
-            });
-        }
-    }
 }
 
 function moveRangeButton(direction: 'up' | 'down') {

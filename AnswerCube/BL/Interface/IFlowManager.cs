@@ -30,6 +30,7 @@ public interface IFlowManager
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     void UpdateSlideList(string title, string description, int slideListId);
     bool RemoveSlideListFromFlow(int slideListId, int flowId);
+    SlideList GetSlideListByInstallationId(int installationId);
     #endregion
     
     #region Flow

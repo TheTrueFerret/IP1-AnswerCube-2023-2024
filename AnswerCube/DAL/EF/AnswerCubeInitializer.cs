@@ -277,7 +277,7 @@ public static class AnswerCubeInitializer
                 "Gezondheidszorg en welzijn", "Verkeersveiligheid en mobiliteit", "Ondersteunen van lokale handel"
             },
             ConnectedSlideLists = new List<SlideConnection>(),
-            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
+            MediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
 
         context.SlideLists.AddRange(slideList1, slideList1punt2);
@@ -568,7 +568,7 @@ public static class AnswerCubeInitializer
                    "De gemeenteraad is het hoogste orgaan van de gemeente. De gemeenteraad is samengesteld uit de burgemeester en de schepenen, en de gemeenteraadsleden. De gemeenteraad is bevoegd voor alles wat de gemeente aanbelangt. De gemeenteraad is het wetgevend orgaan van de gemeente. De gemeenteraad vergadert minstens tien keer per jaar.",
             SlideType = SlideType.InfoSlide,
             ConnectedSlideLists = new List<SlideConnection>(),
-            mediaUrl = "https://storage.googleapis.com/answer-cube-bucket/image_202405161408479679.jpeg"
+            MediaUrl = "https://storage.googleapis.com/answer-cube-bucket/image_202405161408479679.jpeg"
         };
 
         SlideConnection slideConnection10 = new SlideConnection
@@ -659,7 +659,8 @@ public static class AnswerCubeInitializer
         {
             CubeId = 1,
             Installation = installation,
-            StartTime = DateTime.Now.ToUniversalTime()
+            StartTime = DateTime.Now.ToUniversalTime(),
+            EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
         };
         session1.Answers = new List<Answer>();
 
@@ -667,7 +668,8 @@ public static class AnswerCubeInitializer
         {
             CubeId = 2,
             Installation = installation,
-            StartTime = DateTime.Now.ToUniversalTime()
+            StartTime = DateTime.Now.ToUniversalTime(),
+            EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
         };
         session2.Answers = new List<Answer>();
 
@@ -675,7 +677,8 @@ public static class AnswerCubeInitializer
         {
             CubeId = 1,
             Installation = installation,
-            StartTime = DateTime.Now.AddDays(-3).ToUniversalTime()
+            StartTime = DateTime.Now.AddDays(-3).ToUniversalTime(),
+            EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
         };
         session3.Answers = new List<Answer>();
 

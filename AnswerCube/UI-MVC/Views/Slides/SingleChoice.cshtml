@@ -1,27 +1,60 @@
-﻿@{
+﻿@model SlideModel
+
+@{
     ViewBag.Title = "SingleChoice";
     Layout = ViewData["Layout"] as string;
-}
-
-@section Scripts
-{
-    <script src="~/dist/singlechoice.entry.js" defer></script>
 }
 
 <div class="container mt-5">
     <div class="slide-container border p-4 rounded position-relative">
         <div class=" subtheme-container d-flex justify-content-center align-items-center bg-light p-3 mb-3 w-100">
-            <span class="font-weight-bold h3 mb-0">Subtheme - XXX</span>
+            <span class="font-weight-bold h3 mb-0">Subtheme - @Model.SubTheme.Name</span>
         </div>
-        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute" >
-        Change Subtheme
+        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
+            Change Subtheme
         </a>
         <h1 class="question">Single Choice</h1>
-        <div id="slide" class="question"></div>
-        <div class="answer-list">
-            
+        <div id="slide" class="question">
+            <h3>@Model.Text</h3>
+            @if (Model.MediaUrl != null)
+            {
+                // Check if mediaUrl exists
+                // Extract the filename from the media URL
+                var filename = Model.MediaUrl.Split('/').Last();
+                // Extract the media type from the filename
+                var mediaType = filename.Split('_')[0];
+                // Default to "image" if the media type is not "video"
+                if (mediaType == "video")
+                {
+                    <video width="320" height="240" controls><source src="@Model.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video><br>
+                }
+                else if (mediaType == "image")
+                {
+                    <img src="@Model.MediaUrl" alt="Slide Image">
+                }
+                else
+                {
+                    <em>Unsupported media type</em>
+                }
+            }
+            @if (Model.AnswerList != null)
+            {
+                @foreach (var answer in Model.AnswerList)
+                {
+                    <input type="radio" id="input" value="@answer" name="answer">@answer<br>
+                }
+            }
+            else
+            {
+                <p>no Answers Found</p>
+            }
         </div>
         <button id="submitAnswer" type="button">Submit Answer</button>
         <button id="skipSlide" type="button">Skip</button>
-        </div>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/dist/singlechoice.entry.js" defer></script>
+}

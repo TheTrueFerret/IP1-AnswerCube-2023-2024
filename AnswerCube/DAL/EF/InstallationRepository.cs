@@ -123,13 +123,11 @@ public class InstallationRepository : IInstallationRepository
 
     public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
-        Session? session =
-            _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId);
+        Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId && s.EndTime == null);
         if (session != null)
         {
             return session;
         }
-
         return null;
     }
 
@@ -138,7 +136,7 @@ public class InstallationRepository : IInstallationRepository
         newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
         _context.Sessions.Add(newSession);
         _context.SaveChanges();
-        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == newSession.CubeId);
+        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == newSession.CubeId && s.StartTime == newSession.StartTime);
     }
 
     public bool WriteSlideListToInstallation(int slideListId, int installationId)
@@ -151,5 +149,4 @@ public class InstallationRepository : IInstallationRepository
         _context.SaveChanges();
         return true;
     }
-
 }
