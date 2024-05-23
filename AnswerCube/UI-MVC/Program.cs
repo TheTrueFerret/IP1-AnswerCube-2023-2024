@@ -96,6 +96,20 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 builder.Services.AddSingleton<CloudStorageService>();
+if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
+    });
+    services.AddSession(options =>
+    {
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+        options.IdleTimeout = TimeSpan.FromMinutes(30);
+    });
+}
+
 
 services.AddAuthentication().AddGoogle(googleOptions =>
 {
@@ -123,6 +137,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production"){app.UseSession();}
 
 app.UseAuthentication();
 app.UseAuthorization();
