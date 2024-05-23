@@ -100,7 +100,7 @@ if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
 {
     builder.Services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = "localhost:6379";
+        options.Configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
     });
     services.AddSession(options =>
     {
