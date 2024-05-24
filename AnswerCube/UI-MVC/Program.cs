@@ -106,6 +106,7 @@ if (Environment.GetEnvironmentVariable("ENVIRONMENT")!="Development")
 { 
     string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
     //string REDISCONNECT = "10.146.248.99:6379";
+    Console.WriteLine(REDISCONNECT);
     var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
     services
         .AddDataProtection()
