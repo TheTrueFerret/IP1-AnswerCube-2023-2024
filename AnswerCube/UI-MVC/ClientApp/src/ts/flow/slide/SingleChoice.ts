@@ -8,6 +8,31 @@ const checkboxes: any = document.querySelectorAll('input[name="answer"]')
 var currentCheckedIndex: number = -1;
 const totalCheckboxes: number = checkboxes.length;
 
+
+function generateAnswerColumns(numberOfSessions: number) {
+    const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
+    if (table) {
+        const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
+        if (headerRow) {
+            for (let i = 0; i < numberOfSessions; i++) {
+                const newHeaderCell = document.createElement("th");
+                newHeaderCell.textContent = "User" + (1 + i); // Adjust this to your needs
+                headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
+            }
+        }
+
+        // Add new cells to each existing row (excluding the header)
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            for (let i = 0; i < numberOfSessions; i++) {
+                const newCell = row.insertCell(i);
+                newCell.innerHTML = `<div>User${1 + i}</div>`;
+            }
+        }
+    }
+}
+generateAnswerColumns(2)
+
 function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     let answer = getSelectedAnswer();
     
@@ -61,7 +86,7 @@ function getSelectedAnswer(): string[] {
     return selectedAnswers;
 }
 
-function moveCheckedRadioButton(direction: 'up' | 'down') {
+function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
     // Check if there's a radio button checked
     if (currentCheckedIndex === -1) {
         checkboxes[0].checked = true;
@@ -87,7 +112,7 @@ function moveCheckedRadioButton(direction: 'up' | 'down') {
 declare global {
     interface Window {
         slideType: string;
-        moveCheckedRadioButton: (direction: 'up' | 'down') => void;
+        moveCheckedRadioButton: (CubeId: number, direction: 'up' | 'down') => void;
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }

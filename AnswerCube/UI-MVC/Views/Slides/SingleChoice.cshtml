@@ -39,10 +39,17 @@
             }
             @if (Model.AnswerList != null)
             {
-                @foreach (var answer in Model.AnswerList)
-                {
-                    <input type="radio" id="input" value="@answer" name="answer">@answer<br>
-                }
+                <table id="AnswerTable">
+                    <tr id="HeaderRow">
+                        <td></td>
+                    </tr>
+                    @foreach (var answer in Model.AnswerList)
+                    {
+                        <tr>
+                            <td><input type="radio" id="input" value="@answer" name="answer">@answer<br></td>
+                        </tr>
+                    }
+                </table>
             }
             else
             {

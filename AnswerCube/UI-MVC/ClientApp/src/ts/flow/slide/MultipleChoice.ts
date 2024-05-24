@@ -1,8 +1,9 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
+import {getSessions} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
-var url = window.location.toString();
+var url: string = window.location.toString();
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
 const checkboxes: any = document.querySelectorAll('input[name="answer"]')
@@ -64,7 +65,7 @@ function getSelectedAnswers(): string[] {
 }
 
 
-function moveSelectedButton(direction: 'up' | 'down') {
+function moveSelectedButton(cubeId: number, direction: 'up' | 'down') {
     // Check if there's a checkbox checked
     if (currentCheckedIndex === -1) {
         checkboxes[0].focus();
@@ -86,15 +87,15 @@ function moveSelectedButton(direction: 'up' | 'down') {
     currentCheckedIndex = newIndex;
 }
 
-function selectButton() {
+function selectButton(cubeId: number) {
     checkboxes[currentCheckedIndex].checked = !checkboxes[currentCheckedIndex].checked;
 }
 
 declare global {
     interface Window {
         slideType: string;
-        moveSelectedButton: (direction: 'up' | 'down') => void;
-        selectButton: () => void;
+        moveSelectedButton: (cubeId: number, direction: 'up' | 'down') => void;
+        selectButton: (cubeId: number) => void;
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }
