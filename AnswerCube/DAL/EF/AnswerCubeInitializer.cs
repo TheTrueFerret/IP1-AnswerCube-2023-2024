@@ -682,6 +682,15 @@ public static class AnswerCubeInitializer
         };
         session3.Answers = new List<Answer>();
 
+        Session session4 = new Session()
+        {
+            CubeId = 2,
+            Installation = installation,
+            StartTime = DateTime.Now.AddDays(-2).ToUniversalTime(),
+            EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
+        };
+        session4.Answers = new List<Answer>();
+
         Answer answer = new Answer()
         {
             Slide = multipleChoice4,
@@ -690,78 +699,192 @@ public static class AnswerCubeInitializer
         };
         Answer answer1 = new Answer()
         {
-            Slide = multipleChoice5,
-            Session = session1,
-            AnswerText = new List<string>
-                { "Kunnen gaan stemmen op een toffere locatie", "Online, van thuis uit kunnen stemmen" }
-        };
-        Answer answer2 = new Answer()
-        {
             Slide = singleChoice1,
             Session = session1,
             AnswerText = new List<string> { "Natuur en ecologie" }
         };
-        Answer answer3 = new Answer()
+
+        Answer answer2 = new Answer()
         {
             Slide = singleChoice2,
-            Session = session2,
+            Session = session1,
             AnswerText = new List<string> { "Eens" }
         };
+
+        Answer answer3 = new Answer()
+        {
+            Slide = singleChoice3,
+            Session = session1,
+            AnswerText = new List<string> { "Sportinfrastructuur" }
+        };
+
         Answer answer4 = new Answer()
         {
-            Slide = rangeQuestion1,
-            Session = session2,
-            AnswerText = new List<string> { "Zeker niet" }
+            Slide = singleChoice4,
+            Session = session1,
+            AnswerText = new List<string> { "Akkoord" }
         };
 
         Answer answer5 = new Answer()
         {
-            Slide = rangeQuestion2,
-            Session = session2,
-            AnswerText = new List<string> { "Ik voel me weinig tot niet betrokken" }
+            Slide = singleChoice5,
+            Session = session1,
+            AnswerText = new List<string> { "Verplaatsingen met de fiets" }
         };
 
         Answer answer6 = new Answer()
         {
-            Slide = singleChoice1,
-            Session = session3,
-            AnswerText = new List<string> { "Natuur en ecologie" }
+            Slide = singleChoice6,
+            Session = session1,
+            AnswerText = new List<string> { "Goed idee" }
         };
 
         Answer answer7 = new Answer()
         {
-            Slide = multipleChoice4,
-            Session = session3,
+            Slide = multipleChoice1,
+            Session = session1,
+            AnswerText = new List<string> { "Een debat georganiseerd door een jeugdhuis met de verschillende partijen" }
+        };
+
+        Answer answer8 = new Answer()
+        {
+            Slide = multipleChoice2,
+            Session = session1,
+            AnswerText = new List<string> { "Tennis", "Hockey", "Padel" }
+        };
+
+        Answer answer9 = new Answer()
+        {
+            Slide = multipleChoice3,
+            Session = session1,
             AnswerText = new List<string>
             {
-                "Ik kan niet naar het stemkantoor gaan", "Ik denk niet dat mijn stem een verschil zal uitmaken",
+                "Bijwonen van een gemeenteraad",
+                "Een overleg waarbij ik onderwerpen kan aandragen die voor jongeren belangrijk zijn"
+            }
+        };
+
+        Answer answer10 = new Answer()
+        {
+            Slide = multipleChoice4,
+            Session = session1,
+            AnswerText = new List<string>
+            {
+                "Ik heb geen interesse", "Ik kan niet naar het stemkantoor gaan",
                 "Ik heb geen idee voor wie ik zou moeten stemmen"
             }
+        };
+
+        Answer answer11 = new Answer()
+        {
+            Slide = multipleChoice5,
+            Session = session1,
+            AnswerText = new List<string>
+            {
+                "Meer aandacht voor jeugd in de programma’s van de partijen",
+                "Beter weten of mijn stem echt impact heeft"
+            }
+        };
+
+        Answer answer12 = new Answer()
+        {
+            Slide = rangeQuestion1,
+            Session = session2,
+            AnswerText = new List<string> { "Eerder wel" }
+        };
+
+        Answer answer13 = new Answer()
+        {
+            Slide = rangeQuestion2,
+            Session = session2,
+            AnswerText = new List<string> { "Ik voel me (zeer) betrokken" }
+        };
+
+        Answer answer14 = new Answer()
+        {
+            Slide = rangeQuestion3,
+            Session = session2,
+            AnswerText = new List<string> { "Tevreden" }
+        };
+
+        Answer answer15 = new Answer()
+        {
+            Slide = rangeQuestion4,
+            Session = session2,
+            AnswerText = new List<string> { "Eens" }
+        };
+
+        Answer answer16 = new Answer()
+        {
+            Slide = rangeQuestion5,
+            Session = session2,
+            AnswerText = new List<string> { "Ik sta hier volledig achter" }
+        };
+
+        Answer answer17 = new Answer()
+        {
+            Slide = openQuestion1,
+            Session = session3,
+            AnswerText = new List<string> { "Meer leraren aannemen voor kleinere klassen" }
+        };
+
+        Answer answer18 = new Answer()
+        {
+            Slide = openQuestion2,
+            Session = session3,
+            AnswerText = new List<string> { "Een grote speeltuin met avontuurlijke toestellen en een waterpartij" }
+        };
+
+        Answer answer19 = new Answer()
+        {
+            Slide = singleChoice1,
+            Session = session4,
+            AnswerText = new List<string> { "Onderwijs en kinderopvang" }
+        };
+
+        Answer answer20 = new Answer()
+        {
+            Slide = singleChoice2,
+            Session = session4,
+            AnswerText = new List<string> { "Oneens" }
         };
 
         session1.Answers.Add(answer);
         session1.Answers.Add(answer1);
         session1.Answers.Add(answer2);
+        session1.Answers.Add(answer3);
+        session1.Answers.Add(answer4);
+        session1.Answers.Add(answer5);
+        session1.Answers.Add(answer6);
+        session1.Answers.Add(answer7);
+        session1.Answers.Add(answer8);
+        session1.Answers.Add(answer9);
+        session1.Answers.Add(answer10);
+        session1.Answers.Add(answer11);
 
-        session2.Answers.Add(answer3);
-        session2.Answers.Add(answer4);
-        session2.Answers.Add(answer5);
+        session2.Answers.Add(answer12);
+        session2.Answers.Add(answer13);
+        session2.Answers.Add(answer14);
+        session2.Answers.Add(answer15);
+        session2.Answers.Add(answer16);
 
-        session3.Answers.Add(answer6);
-        session3.Answers.Add(answer7);
+        session3.Answers.Add(answer17);
+        session3.Answers.Add(answer18);
+        
+        session4.Answers.Add(answer19);
+        session4.Answers.Add(answer20);
 
         context.Sessions.Add(session1);
         context.Sessions.Add(session2);
         context.Sessions.Add(session3);
+        context.Sessions.Add(session4);
 
-        context.Answers.Add(answer);
-        context.Answers.Add(answer1);
-        context.Answers.Add(answer2);
-        context.Answers.Add(answer3);
-        context.Answers.Add(answer4);
-        context.Answers.Add(answer5);
-        context.Answers.Add(answer6);
-        context.Answers.Add(answer7);
+        context.Answers.AddRange(
+            answer, answer1, answer2, answer3, answer4, answer5, answer6, answer7,
+            answer8, answer9, answer10, answer11, answer12, answer13, answer14, 
+            answer15, answer16, answer17, answer18, answer19, answer20
+        );
+
 
         context.Installations.Add(installation);
         context.SaveChanges();

@@ -22,4 +22,16 @@ public class AnswerManager : IAnswerManager
     {
         return _repository.GetAnswers();
     }
+    
+    public List<Slide> GetSlides()
+    {
+        return _repository.GetSlides();
+    }
+    
+    public List<Answer> GetAnswersBySessionId(int sessionId)
+    {
+        return _repository.GetAnswersBySessionId(sessionId);
+    }
+    
+    
 }

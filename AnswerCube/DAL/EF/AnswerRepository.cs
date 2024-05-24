@@ -38,6 +38,27 @@ public class AnswerRepository : IAnswerRepository
     {
         var answers = _context.Answers
             .Include(a => a.Slide)
+            .Include(q => q.Session)
+            .ThenInclude(i => i.Installation)
+            .ToList();
+        return answers;
+    }
+    
+    public List<Slide> GetSlides()
+    {
+        var slides = _context.Slides
+            .Include(s => s.Answers)
+            .ThenInclude(s => s.Session)
+            .ToList();
+        return slides;
+    }
+    
+    public List<Answer> GetAnswersBySessionId(int sessionId)
+    {
+        var answers = _context.Answers.Where(s => s.Session.Id == sessionId)
+            .Include(a => a.Slide)
+            .Include(q => q.Session)
+            .ThenInclude(i => i.Installation)
             .ToList();
         return answers;
     }
