@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
@@ -5,11 +6,13 @@ using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -95,14 +98,23 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 
-builder.Services.AddSingleton<CloudStorageService>();
+services.AddSingleton<CloudStorageService>();
 if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
 {
-    builder.Services.AddStackExchangeRedisCache(options =>
+    services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
+        options.Configuration = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
         options.InstanceName = Environment.GetEnvironmentVariable("REDIS_NAME");
     });
+    var redisConfigOptions = new StackExchange.Redis.ConfigurationOptions()
+    {
+        ClientName = Environment.GetEnvironmentVariable("REDIS_NAME"),
+        EndPoints = { new DnsEndPoint(Environment.GetEnvironmentVariable("REDIS_HOST"), int.Parse(Environment.GetEnvironmentVariable("REDIS_PORT"))) },
+    };
+var redisConnection = StackExchange.Redis.ConnectionMultiplexer.Connect(redisConfigOptions);
+services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redisConnection, "DataProtection-Keys");
+
     services.AddSession(options =>
     {
         options.Cookie.HttpOnly = true;
