@@ -1,3 +1,44 @@
+$light-background: #f2f2f2;
+$light-text-color: black;
+$dark-background: black;
+$dark-text-color: white;
+
+.page-container {
+  transition: background-color 0.5s, color 0.5s;
+
+  &.light-theme {
+    background-color: $light-background;
+    color: $light-text-color;
+
+    h1, p {
+      font-weight: bold;
+    }
+  }
+  
+  &.dark-theme {
+    background-color: $dark-background;
+    color: $dark-text-color;
+
+    h1, label {
+      font-weight: bold;
+    }
+  }
+}
+
+.slide-container {
+  transition: background-color 0.5s, color 0.5s;
+
+  &.light-theme {
+    background-color: $light-background;
+    color: $light-text-color;
+  }
+
+  &.dark-theme {
+    background-color: $dark-background;
+    color: $dark-text-color;
+  }
+}
+
 html {
   font-size: 14px;
 

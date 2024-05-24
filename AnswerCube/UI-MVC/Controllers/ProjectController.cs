@@ -76,10 +76,11 @@ namespace AnswerCube.UI.MVC.Controllers
                 return View("Error");
             }
         }
-
+        
         public IActionResult EditProject(int projectId)
         {
             Project project = _organizationManager.GetProjectById(projectId);
+            
             if (project == null)
             {
                 return View("Error");
@@ -87,20 +88,23 @@ namespace AnswerCube.UI.MVC.Controllers
 
             return View(project);
         }
-
+        
         public async Task<IActionResult> SaveProjectChanges(Project updatedProject, int projectId)
-        {
+        { //hier da thema meegeven
             updatedProject.Id = projectId;
+            string thema = updatedProject.Theme;
 
             if (await _organizationManager.UpdateProject(updatedProject))
             {
                 var project = _organizationManager.GetProjectById(projectId);
+                ViewBag.Theme = project.Theme == "dark" ? "dark-theme" : "light-theme";
                 return RedirectToAction("Project",
                     new { projectid = project.Id, organizationId = project.Organization.Id });
             }
 
             return View("Error");
         }
+        
 
         public IActionResult Flows(int projectId)
         {

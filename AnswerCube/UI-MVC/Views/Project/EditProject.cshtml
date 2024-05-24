@@ -5,49 +5,70 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <h1>Edit Project</h1>
+<div class="page-container d-flex justify-content-center align-items-center @ViewBag.Theme">
+    <div class="container" style="padding: 40px; background-color: @ViewBag.ThemeColor;">
+        <h1 class="mb-4">Edit Project</h1>
+        <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-4"> 
+                        <label for="title" class="form-label font-weight-bold">Title</label>
+                        <input type="text" id="title" name="title" class="form-control" value="@Model.Title" required/>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="description" class="form-label font-weight-bold">Description</label>
+                        <textarea id="description" name="description" class="form-control" required>@Model.Description</textarea>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="IsActive" class="form-label font-weight-bold">Status</label>
+                        <select id="IsActive" name="IsActive" class="form-control" required>
+                            <option value="true" selected="@(Model.IsActive ? "selected" : null)">Active</option>
+                            <option value="false" selected="@(!Model.IsActive ? "selected" : null)">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label for="themeSelector" class="form-label font-weight-bold">Project Color</label>
+                        <select id="themeSelector" class="form-control" required>
+                            <option value="light">Light Theme</option>
+                            <option value="dark">Dark Theme</option>
+                        </select>
+                    </div>
 
-    <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" class="form-control" value="@Model.Title" required/>
-        </div>
-
-        <div class="form-group">
-            <label for="description" class="form-label">Description</label>
-            <textarea id="description" name="description" class="form-control" required>@Model.Description</textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="IsActive" class="form-label">Status</label>
-            <select id="IsActive" name="IsActive" class="form-control" required>
-                <option class="form-control" value="true" selected="@(Model.IsActive ? "selected" : null)">Active</option>
-                <option class="form-control" value="false" selected="@(!Model.IsActive ? "selected" : null)">Inactive</option>
-            </select>
-        </div>
-
-        @if (Model.Flows != null && Model.Flows.Any())
-        {
-            <div class="form-group">
-                <label for="flows">Flows</label>
-                <select id="flows" name="flows" class="form-control" multiple>
-                    @foreach (var flow in Model.Flows)
+                    @if (Model.Flows != null && Model.Flows.Any())
                     {
-                        <option value="@flow.Id">@flow.Name</option>
+                        <div class="form-group mb-4">
+                            <label for="flows" class="form-label font-weight-bold">Flows</label>
+                            <div class="card p-3" style="max-height: 200px; overflow-y: auto;"> <!-- Voeg een card toe met een maximale hoogte en scrollbaarheid -->
+                                @foreach (var flow in Model.Flows.Take(4))
+                                {
+                                    <div class="card mb-2" style="background-color: #eaf0ff; border: 1px solid #ced4da; border-radius: 5px;"> <!-- Voeg een card toe met licht flashy gele achtergrond en 5px afgeronde hoeken -->
+                                        <div class="card-body p-2">
+                                            <p class="m-0">@flow.Name</p> <!-- Voeg de flow-naam toe in de card-body -->
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     }
-                </select>
+                    else
+                    {
+                        <div class="form-grou mb-4">
+                            <label for="flows" class="form-label font-weight-bold">Flows</label>
+                            <p>No flows available</p>
+                        </div>
+                    }
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label for="flows">Flows</label>
-                <p>No flows available</p>
-            </div>
-        }
-
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+            <!-- Voeg hier de verborgen input toe -->
+            <input type="hidden" id="selectedTheme" name="selectedTheme" value="@(Model.Theme ?? "light")" />
+            <!-- Einde van het formulier -->
+            <button type="submit" class="btn btn-success btn-lg mt-3">Save Changes</button>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/dist/formatProject.entry.js" defer></script>
+}

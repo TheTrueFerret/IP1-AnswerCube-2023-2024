@@ -17,6 +17,7 @@ module.exports = {
         subtheme: './src/ts/flow/slide/SubThemes.ts',
         inputhandler: './src/ts/flow/InputHandler.ts',
         slideEditor: './src/ts/flow/slide/SlideEditor.ts',
+        formatProject: './src/ts/Project/formatProject.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',
