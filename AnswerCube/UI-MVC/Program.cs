@@ -99,29 +99,27 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 services.AddSingleton<CloudStorageService>();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
+if (Environment.GetEnvironmentVariable("ENVIRONMENT")!="Development")
 {
+    services.AddSingleton<CloudStorageService>();
+}
+{ 
     string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
-var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
-services
-    .AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
-
-var redisConfigurationOptions = ConfigurationOptions.Parse(REDISCONNECT);
-
-
-builder.Services.AddStackExchangeRedisCache(redisCacheConfig =>
-{
-    redisCacheConfig.ConfigurationOptions = redisConfigurationOptions;
-    redisConfigurationOptions.ChannelPrefix = new RedisChannel("session", RedisChannel.PatternMode.Auto);
-});
-
-builder.Services.AddSession(options =>
-{
-    options.Cookie.Name = "phygital";
-    options.IdleTimeout = TimeSpan.FromMinutes(60 * 24);
-});
-
+    var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
+    services
+        .AddDataProtection()
+        .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+    var redisConfigurationOptions = ConfigurationOptions.Parse(REDISCONNECT);
+    builder.Services.AddStackExchangeRedisCache(redisCacheConfig =>
+    { 
+        redisCacheConfig.ConfigurationOptions = redisConfigurationOptions;
+        redisConfigurationOptions.ChannelPrefix = new RedisChannel("session", RedisChannel.PatternMode.Auto);
+    });
+    builder.Services.AddSession(options =>
+    {
+        options.Cookie.Name = "answerCubeSession";
+        options.IdleTimeout = TimeSpan.FromMinutes(60 * 24);
+    });
 }
 
 
