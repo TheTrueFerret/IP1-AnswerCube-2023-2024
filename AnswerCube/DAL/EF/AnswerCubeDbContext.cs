@@ -36,7 +36,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
-        AnswerCubeInitializer.Initialize(this, true);
+        AnswerCubeInitializer.Initialize(this, false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -90,19 +90,29 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
             .HasOne(sl => sl.SubTheme)
             .WithMany(st => st.SlideList);
         
-
-        builder.Entity<UserOrganization>()
-            .HasKey(uo => new { uo.UserId, uo.OrganizationId });
-
-        builder.Entity<UserOrganization>()
-            .HasOne(uo => uo.User)
-            .WithMany(u => u.UserOrganizations)
-            .HasForeignKey(uo => uo.UserId);
-
         builder.Entity<UserOrganization>()
             .HasOne(uo => uo.Organization)
             .WithMany(o => o.UserOrganizations)
-            .HasForeignKey(uo => uo.OrganizationId);
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<UserOrganization>()
+            .HasKey(uo => new { uo.UserId, uo.OrganizationId });
+        
+        builder.Entity<Organization>()
+            .HasMany(o => o.UserOrganizations)
+            .WithOne(uo => uo.Organization)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<Organization>()
+            .HasMany(o => o.Projects)
+            .WithOne(p => p.Organization)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Organization>()
+            .HasOne(o => o.Forum)
+            .WithOne(f => f.Organization)
+            .HasForeignKey<Forum>(f => f.OrganizationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Project>()
             .HasMany(p => p.Flows)

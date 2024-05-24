@@ -14,16 +14,14 @@ public class OrganizationController : BaseController
 {
     private readonly IOrganizationManager _organizationManager;
     private readonly ILogger<OrganizationController> _logger;
-    private readonly IEmailSender _emailSender;
     private readonly UserManager<AnswerCubeUser> _userManager;
 
 
-    public OrganizationController(IOrganizationManager manager, ILogger<OrganizationController> logger, IEmailSender emailSender,
+    public OrganizationController(IOrganizationManager manager, ILogger<OrganizationController> logger,
         UserManager<AnswerCubeUser> userManager)
     {
         _organizationManager = manager;
         _logger = logger;
-        _emailSender = emailSender;
         _userManager = userManager;
     }
 
@@ -54,7 +52,7 @@ public class OrganizationController : BaseController
 
             if (organizations.Count == 1)
             {
-                return View(organizations.First());
+                return View(organizations[0]);
             }
 
             return RedirectToPage("AccessDenied", new { area = "Identity" });
@@ -63,16 +61,27 @@ public class OrganizationController : BaseController
         return NotFound();
     }
 
-    public IActionResult RemoveDeelplatformbeheeder(string userId, int organisationid)
+    public async Task<IActionResult> RemoveDeelplatformbeheeder(string userId, int organizationid)
     {
-        if (_organizationManager.RemoveDpbFromOrganization(userId, organisationid))
+        var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        //If user isnt admin or not in the organizatie, kan die niet toevoegen
+        if (!User.IsInRole("Admin"))
         {
-            return RedirectToAction("Index", "Organization", new { organizationId = organisationid });
+            if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
+                User.IsInRole("DeelplatformBeheerder"))
+            {
+                if (_organizationManager.RemoveDpbFromOrganization(userId, organizationid))
+                {
+                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
+                }
+
+                return View("Error");
+            }
+
+            return Forbid(); // or return to an error page
         }
-        else
-        {
-            return View("Error");
-        }
+
+        return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
     }
 
     public IActionResult OrganizationView(int organizationid)
@@ -94,23 +103,32 @@ public class OrganizationController : BaseController
 
     public async Task<IActionResult> AddDeelplatformbeheerderToOrganization(string email, int organizationid)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!_organizationManager.IsUserInOrganization(userId, organizationid))
+        var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        //If user isnt admin or not in the organizatie, kan die niet toevoegen
+        if (!User.IsInRole("Admin"))
         {
-            return Forbid(); // or return to an error page
+            if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
+                User.IsInRole("DeelplatformBeheerder"))
+            {
+                if (_organizationManager.IsUserInOrganization(email, organizationid))
+                {
+                    // The user is already part of the organization, return an appropriate response
+                    ViewBag.Error = "User is already part of the organization";
+                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
+                }
+
+                if (_organizationManager.AddDpbToOrgByEmail(email, organizationid).Result)
+                {
+                    ViewBag.Success = $"User {email} is added to the organization";
+                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
+                }
+            }
+            else
+            {
+                return Forbid(); // or return to an error page
+            }
         }
 
-        if (_organizationManager.IsUserInOrganization(email, organizationid))
-        {
-            // The user is already part of the organization, return an appropriate response
-            return View("Error", new ErrorViewModel());
-        }
-
-        if (_organizationManager.AddDpbToOrgByEmail(email, userId, organizationid).Result)
-        {
-            return RedirectToAction("Index", "Organization",new{organizationId = organizationid});
-        }
-
-        return View("Error", new ErrorViewModel());
+        return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
     }
 }

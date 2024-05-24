@@ -40,7 +40,7 @@
                                 </button>
                                 <button class="btn btn-danger"
                                         title="Delete Project"
-                                        onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                                        onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organizationid = Model.Id })'">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -55,7 +55,7 @@
                             <p class="card-text">Voeg een nieuw project toe</p>
                             <button class="btn btn-primary"
                                     title="New Project"
-                                    onclick="location.href='@Url.Action("NewProject", "Project", new { organizationId = Model.Id })'">
+                                    onclick="location.href='@Url.Action("NewProject", "Project", new { organizationid = Model.Id })'">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -68,9 +68,12 @@
                 <h2>Deelplatformbeheerders</h2>
                 <div class="list-group scrollable-list">
                     <!-- Button trigger modal -->
+                    <h2>@ViewBag.Error</h2>
+                    <h2>@ViewBag.Success</h2>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
                         Add Deelplatformbeheerder
                     </button>
+                    
 
                     <!-- Modal -->
                     <div class="modal fade" id="addDeelplatformbeheerderModal" tabindex="-1" aria-labelledby="addDeelplatformbeheerderModalLabel" aria-hidden="true">
@@ -105,7 +108,7 @@
                                 <p class="text-capitalize">@userOrg.User.UserName</p>
                                 <button class="btn btn-danger"
                                         title="Remove Deelplatformbeheerder"
-                                        onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
+                                        onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organizationid = Model.Id })'">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
