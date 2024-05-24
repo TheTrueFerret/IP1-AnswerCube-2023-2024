@@ -12,15 +12,29 @@
         border-radius: 0.75rem;
         background-color: white;
         width: 300px;
-        height: 370px;
+        height: 222px;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),
         0 2px 4px -2px rgba(0,0,0,.1);
         margin: 10px; /* Add margin for spacing between cards */
     }
     
+    #answerlist {
+        display: flex;
+        flex-direction: column;
+        background-color: #e6dbb9;
+        border: solid black;
+        border-radius: 10px;
+        height: auto;
+    }
+    
+    
+    
+    #answerlist:not(:last-child) {
+        margin-bottom: 5px;
+    }
+    
     .info {
         border: none;
-        padding: 1.5rem;
         text-align: center;
     }
     
@@ -55,6 +69,22 @@
     }
     
     .action {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      border: none;
+      outline: none;
+      box-shadow: 0 4px 6px -1px rgba(33,150,243,.4),0 2px 4px -2px rgba(33,150,243,.4);
+      color: rgb(255 255 255);
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: .75rem;
+      padding: 0.75rem 1.5rem;
+      background-color: rgb(33 150 243);
+      border-radius: 0.5rem;
+    }
+    
+    .action1 {
       -webkit-user-select: none;
       -moz-user-select: none;
       user-select: none;
@@ -111,7 +141,7 @@
     }
     .data-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
     }
     #sessions {
         display: flex;
@@ -119,12 +149,11 @@
         flex-wrap: wrap; /* Add this line to wrap cards to the next line */
     }
     #antwoorden {
-        display: grid;
-        grid-template-columns: 4fr 6fr;
-        overflow: auto;
-        border: solid black;
         width: 100%;
-        height: 500px;
+        height: 80vh;
+    }
+    #questionButton {
+        text-align: left;
     }
     
 </style>
@@ -139,23 +168,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-    var sessionAnswers
+    var sessionAnswers;
+    var allAnswers = {};
+    var antwoordenContainer = $('#antwoorden');
         $(document).ready(function() {
             fetchAndRenderAnswers();
-            fetchSlides();
             function fetchAndRenderAnswers() {
                 $.ajax({
                     url: '/api/DataAnalyse/Answers',
                     type: 'GET',
                     success: function(answerData) {
-                        // Create a map to group answers by session.id
-                        var groupedBySession = {};
-                        answerData.forEach(function(answer) {
-                            var sessionId = answer.session.id;
+                        var groupedBySession = {}; 
+                        var lijst = {}; 
+                        answerData.forEach(function(answerWithId) {
+                            var sessionId = answerWithId.session.id;
                             if (!groupedBySession[sessionId]) {
                                 groupedBySession[sessionId] = [];
                             }
-                            groupedBySession[sessionId].push(answer);
+                            groupedBySession[sessionId].push(answerWithId);
                         });
                         renderSessions(groupedBySession);
                     },
@@ -164,16 +194,20 @@
                     }
                 });
             }
-            function fetchSlides() {
-                $.ajax({
-                    url: '/api/DataAnalyse/Slides',
-                    type: 'GET',
-                    success: function (slides) {
-                        console.log(JSON.stringify(slides));
-                    }
-                });
-            }
-
+            
+            // function fetchSlides() {
+            //     $.ajax({
+            //         url: '/api/DataAnalyse/Slides',
+            //         type: 'GET',
+            //         success: function (slides) {
+            //             console.log(JSON.stringify(slides));
+            //         }
+            //     });
+            // }
+            
+            
+            
+                        
             function renderSessions(groupedBySession) {
                 var sessionsContainer = $('#sessions');
                 var antwoordenContainer = $('#antwoorden');
@@ -182,7 +216,9 @@
                 PaginaTitel.append("Data Analyse");
                 sessionsContainer.empty();
                 antwoordenContainer.empty();
-
+                
+                
+                
                 Object.keys(groupedBySession).forEach(function(sessionId) {
                     sessionAnswers = groupedBySession[sessionId];
                     var cubeId = sessionAnswers[0].session.cubeId;
@@ -190,7 +226,7 @@
                     var endTime = new Date(sessionAnswers[0].session.endTime).toLocaleTimeString();
                     var startDate = new Date(sessionAnswers[0].session.startTime).toLocaleDateString();
                     var endDate = new Date(sessionAnswers[0].session.endTime).toLocaleDateString();
-                    console.log(sessionAnswers[0]);
+                    // console.log(sessionAnswers[0]);
                     var answerAmount = sessionAnswers.length;
 
                     var sessionHtml = '<div class="card">' +
@@ -210,13 +246,33 @@
                         '</div>';
                     sessionsContainer.append(sessionHtml);
                 });
-
+                
+                fetchAnswers()
+                function fetchAnswers() {
+                    $.ajax({
+                        url: '/api/DataAnalyse/Answers',
+                        type: 'GET',
+                        success: function (allAnswers) {
+                            allAnswers.forEach(function (answers) {
+                                console.log(answers.id);
+                                antwoordenContainer.append('<li id="items"><button type="button" class="action1" id="' + answers.id + '">Question: '+  answers.id + '</button></li>');
+                            });
+                        },
+                    });
+                }
+                
+                
                 // Add event listener to the "Get started" button
                 $('.action').click(function() {
                     var sessionId = $(this).data('sessionid');
                     KlikOpSession(sessionId);
                 });
-                renderChart();
+                
+                $('#antwoorden').on('click', '.action1', function() {
+                    var answer = $(this).attr('id'); // Change to use id attribute
+                    console.log(answer);
+                    KlikOpAnswer(answer);
+                });
             }
             
             function KlikOpSession(sessionId) {
@@ -227,6 +283,7 @@
                 PaginaTitel.empty();
                 PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
                 PaginaTitel.append('<h1>Session ID: ' + sessionId + '</h1>');
+                antwoordenContainer.empty();
                 
                 $('.goBack').click(function() {
                     fetchAndRenderAnswers();
@@ -236,24 +293,15 @@
                     url: '/api/DataAnalyse/AnswersBySessionId/' + sessionId,
                     type: 'GET',
                     success: function(sessionData) {
-                        antwoordenContainer.empty();
-                        console.log(sessionData);
-                        var sessionHtml = '';
-                        sessionData.forEach(function (answer) {
-                            var vraag = answer.slide.text;
-                            sessionHtml += '<div class="card">' +
-                                '<div class="info">' + 
-                                '<p class="title">' + vraag + '</p>' +
-                                '</div>' +
-                                '</div>'
-                                ;
-                        });
-                        antwoordenContainer.append(sessionHtml);
+                        console.log(sessionData);   
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching answers:", error);
                     }
                 });
+            }
+            
+            function KlikOpAnswer(answerId) {
             }
         });
     </script>
