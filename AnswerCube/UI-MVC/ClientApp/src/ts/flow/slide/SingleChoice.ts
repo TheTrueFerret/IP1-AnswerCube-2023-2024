@@ -26,7 +26,7 @@ function generateAnswerColumns(numberOfSessions: number) {
             const row = table.rows[rowIndex];
             for (let i = 0; i < numberOfSessions; i++) {
                 const newCell = row.insertCell(i);
-                newCell.innerHTML = `<div>User${1 + i}</div>`;
+                newCell.innerHTML = `<div id="User${i} ${rowIndex}"></div>`;
             }
         }
     }
@@ -34,7 +34,7 @@ function generateAnswerColumns(numberOfSessions: number) {
 generateAnswerColumns(2)
 
 function postAnswer(cubeId: number, action: 'submit' | 'skip') {
-    let answer = getSelectedAnswer();
+    let answer = getSelectedAnswer(cubeId);
     
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
@@ -74,7 +74,7 @@ function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     console.log(answer);
 }
 
-function getSelectedAnswer(): string[] {
+function getSelectedAnswer(cubeId: number): string[] {
     const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
     let selectedAnswers: string[] = [];
     checkboxes.forEach((checkbox: Element) => {
