@@ -106,14 +106,10 @@ if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
         options.Configuration = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
         options.InstanceName = Environment.GetEnvironmentVariable("REDIS_NAME");
     });
-    var redisConfigOptions = new StackExchange.Redis.ConfigurationOptions()
-    {
-        ClientName = Environment.GetEnvironmentVariable("REDIS_NAME"),
-        EndPoints = { new DnsEndPoint(Environment.GetEnvironmentVariable("REDIS_HOST"), int.Parse(Environment.GetEnvironmentVariable("REDIS_PORT"))) },
-    };
-var redisConnection = StackExchange.Redis.ConnectionMultiplexer.Connect(redisConfigOptions);
+    string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
+var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
 services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redisConnection, "DataProtection-Keys");
+    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
 
     services.AddSession(options =>
     {
