@@ -28,7 +28,7 @@ public interface IOrganizationManager
     bool SearchOrganizationByName(string deelplatformName);
     List<Organization> GetOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
-    Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Task<bool> AddDpbToOrgByEmail(string email, int organizationid);
     Organization GetOrganizationByName(string organizationName);
     Project GetProjectWithFlowsById(int projectId);
 }

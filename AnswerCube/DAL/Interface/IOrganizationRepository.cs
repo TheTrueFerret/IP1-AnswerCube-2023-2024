@@ -29,6 +29,6 @@ public interface IOrganizationRepository
     bool SearchOrganizationByName(string organizationName);
     List<Organization> ReadOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
-    Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Task<bool> CreateDpbToOrgByEmail(string email, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
 }

@@ -7,7 +7,7 @@
 }
 
 <h1>Deelplatform</h1>
-<div class="col-9">
+<div class="form-control col-9 m-2">
 
     <h2>Add DeelplatformBeheerder</h2>
     @if (TempData["Error"] != null)
@@ -18,7 +18,7 @@
     {
         <div class="text-info col-6">@TempData["Success"]</div>
     }
-    <form asp-controller="Admin" asp-action="AddDeelplatform" method="post" class="form-control @(TempData["Message"] != null ? "alert alert-danger" : "")">
+    <form asp-controller="Admin" asp-action="AddDeelplatform" method="post" class=" @(TempData["Message"] != null ? "alert alert-danger" : "")">
         <div class="mb-3">
             <label for="deelplatformName" class="form-label">Deelplatform Naam</label>
             <input type="text" class="form-control" id="deelplatformName" name="deelplatformName" placeholder="Deelplatform naam" required>
@@ -36,8 +36,8 @@
 
 @if (Model.Any())
 {
-    <table class="table">
-        <input type="text" id="searchQuery" placeholder="Search by email"/>
+    <table class="table m-2">
+        <input class="form-control p-2 m-2" type="text" id="searchQuery" placeholder="Search by email"/>
         <thead>
         <tr>
             <th>Email</th>

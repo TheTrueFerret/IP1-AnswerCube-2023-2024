@@ -87,9 +87,9 @@ public class OrganizationManager : IOrganizationManager
         return _repository.IsUserInOrganization(userId, organizationid);
     }
 
-    public Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid)
+    public Task<bool> AddDpbToOrgByEmail(string email, int organizationid)
     {
-        return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
+        return _repository.CreateDpbToOrgByEmail(email, organizationid);
     }
 
     public Organization GetOrganizationByName(string organizationName)
