@@ -77,6 +77,10 @@ public class OrganizationController : BaseController
 
     public IActionResult OrganizationView(int organizationid)
     {
+        // Set a cookie for the organization ID
+        CookieOptions option = new CookieOptions();
+        Response.Cookies.Append("OrganizationId", organizationid.ToString(), option);
+        
         var organization = _organizationManager.GetOrganizationById(organizationid);
         //Check if user is admin, to not check if user is in organization
         if (User.IsInRole("Admin"))

@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -31,5 +32,5 @@ public interface IOrganizationManager
     Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization GetOrganizationByName(string organizationName);
     Project GetProjectWithFlowsById(int projectId);
-    String GetProjectThemeByProjectId(int projectId);
+    Theme GetThemeByOrganisationId(int organisationId);
 }

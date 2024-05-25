@@ -6,6 +6,16 @@ html {
   }
 }
 
+
+#searchInput {
+  width: 100%;
+  max-width: 600px; 
+}
+
+.card {
+  width: 100%;
+}
+
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,

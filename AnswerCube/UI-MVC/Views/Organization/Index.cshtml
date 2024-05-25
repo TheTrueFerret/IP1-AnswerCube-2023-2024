@@ -1,12 +1,20 @@
+@using AnswerCube.BL.Domain
 @model Domain.Organization
 
 @{
     ViewBag.Title = "Project Overzicht";
     Layout = "_Layout";
+    var isLightThemeSelected = Model.Theme == Theme.LightTheme ? "selected" : "";
+    var isDarkThemeSelected = Model.Theme == Theme.DarkTheme ? "selected" : "";
 }
-<h1>Organizatie</h1>
-<input type="text" id="searchInput" class="row form-control" placeholder="Type a name to search">
+
 <div class="container">
+    <div class="row mb-3">
+        <h1>Organisatie</h1>
+        <div class="col-9">
+            <input type="text" id="searchInput" class="form-control" placeholder="Type a name to search">
+        </div>
+    </div>
     <div class="row">
         <div class="col-9">
             <h2>Projecten</h2>
@@ -63,12 +71,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-3 flex-column align-items-end">
+            <div class="card mb-1 w-100">
+                <div class="card-body">
+                    <label for="themeSelector" class="form-label font-weight-bold">Choose Theme</label>
+                    <select id="themeSelector" class="form-control" name="selectedTheme" required>
+                        @Html.Raw($"<option value=\"light\" {isLightThemeSelected}>Light Theme</option>")
+                        @Html.Raw($"<option value=\"dark\" {isDarkThemeSelected}>Dark Theme</option>")
+                    </select>
+                </div>
+            </div>
             <div class="col-12">
                 <h2>Deelplatformbeheerders</h2>
                 <div class="list-group scrollable-list">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
+                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
                         Add Deelplatformbeheerder
                     </button>
 

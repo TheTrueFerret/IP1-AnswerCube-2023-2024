@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -166,11 +167,7 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
     }
-
-    public string ReadProjectThemeByProjectId(int projectId)
-    {
-        return _context.Projects.FirstOrDefault(p => p.Id == projectId).Theme;
-    }
+    
 
     public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
@@ -306,5 +303,10 @@ public class OrganizationRepository : IOrganizationRepository
     public Organization ReadOrganizationByName(string organizationName)
     {
         return _context.Organizations.First(o => o.Name == organizationName);
-    } 
+    }
+
+    public Theme ReadThemeByOrganisationId(int organisationId)
+    {
+        return _context.Organizations.First(o => o.Id == organisationId).Theme;
+    }
 }

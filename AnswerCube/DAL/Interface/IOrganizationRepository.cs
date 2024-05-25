@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -20,7 +21,6 @@ public interface IOrganizationRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     Project ReadProjectWithFlowsById(int projectId);
-    String ReadProjectThemeByProjectId(int projectId);
     Organization CreateNewOrganization(string email, string name, string? logoUrl);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);
@@ -32,4 +32,5 @@ public interface IOrganizationRepository
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
+    Theme ReadThemeByOrganisationId(int organisationId);
 }

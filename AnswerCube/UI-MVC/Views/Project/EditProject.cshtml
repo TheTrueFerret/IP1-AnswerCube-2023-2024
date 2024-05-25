@@ -1,3 +1,4 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model AnswerCube.BL.Domain.Project.Project
 
 @{
@@ -11,7 +12,7 @@
         <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group mb-4"> 
+                    <div class="form-group mb-4">
                         <label for="title" class="form-label font-weight-bold">Title</label>
                         <input type="text" id="title" name="title" class="form-control" value="@Model.Title" required/>
                     </div>
@@ -28,24 +29,16 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group mb-4">
-                        <label for="themeSelector" class="form-label font-weight-bold">Project Color</label>
-                        <select id="themeSelector" class="form-control" required>
-                            <option value="light">Light Theme</option>
-                            <option value="dark">Dark Theme</option>
-                        </select>
-                    </div>
-
                     @if (Model.Flows != null && Model.Flows.Any())
                     {
                         <div class="form-group mb-4">
                             <label for="flows" class="form-label font-weight-bold">Flows</label>
-                            <div class="card p-3" style="max-height: 200px; overflow-y: auto;"> <!-- Voeg een card toe met een maximale hoogte en scrollbaarheid -->
+                            <div class="card p-3" style="max-height: 200px; overflow-y: auto;">
                                 @foreach (var flow in Model.Flows.Take(4))
                                 {
-                                    <div class="card mb-2" style="background-color: #eaf0ff; border: 1px solid #ced4da; border-radius: 5px;"> <!-- Voeg een card toe met licht flashy gele achtergrond en 5px afgeronde hoeken -->
+                                    <div class="card mb-2" style="background-color: #eaf0ff; border: 1px solid #ced4da; border-radius: 5px;">
                                         <div class="card-body p-2">
-                                            <p class="m-0">@flow.Name</p> <!-- Voeg de flow-naam toe in de card-body -->
+                                            <p class="m-0">@flow.Name</p>
                                         </div>
                                     </div>
                                 }
@@ -61,14 +54,8 @@
                     }
                 </div>
             </div>
-            <!-- Voeg hier de verborgen input toe -->
-             <input type="hidden" id="selectedTheme" name="selectedTheme" data-project-id="@Model.Id" value="@(Model.Theme ?? "light")" />
-            <!-- Einde van het formulier -->
             <button type="submit" class="btn btn-success btn-lg mt-3">Save Changes</button>
         </form>
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/dist/site.entry.js" defer></script>
-}

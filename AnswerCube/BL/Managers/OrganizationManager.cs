@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
@@ -137,8 +138,8 @@ public class OrganizationManager : IOrganizationManager
         return _repository.ReadProjectWithFlowsById(projectId);
     }
 
-    public string GetProjectThemeByProjectId(int projectId)
+    public Theme GetThemeByOrganisationId(int organisationId)
     {
-        return _repository.ReadProjectThemeByProjectId(projectId);
+        return _repository.ReadThemeByOrganisationId(organisationId);
     }
 }
