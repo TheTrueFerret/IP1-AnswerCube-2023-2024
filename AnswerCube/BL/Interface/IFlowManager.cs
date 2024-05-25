@@ -14,7 +14,7 @@ public interface IFlowManager
     Slide GetSlideFromFlow(int flowId, int number);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    bool CreateSlide(SlideType type, string question, string[]? options,int slideListId,string? mediaUrl);
+    bool CreateSlide(SlideType type, string question, List<string>? options,int slideListId,string? mediaUrl);
     List<Slide> GetAllSlides();
     void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
     IEnumerable<Slide> GetSlidesBySlideListId(int slideListId);

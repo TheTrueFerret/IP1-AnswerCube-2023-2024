@@ -20,4 +20,5 @@ public class Installation
     public Organization Organization { get; set; }
     public int? FlowId { get; set; }
     public Flow? Flow { get; set; }
+    public ICollection<Session>? Sessions { get; set; }
 }
