@@ -45,28 +45,28 @@ document.addEventListener('keydown', (event) => {
         }
     } else if (keysPressed.size === 1) {
         if (keysPressed.has('ArrowDown')) {
-            move(1, 'down', slideType);
+            move(0, 'down', slideType);
         }
         if (keysPressed.has('ArrowUp')) {
-            move(1, 'up', slideType);
+            move(0, 'up', slideType);
         }
         if (keysPressed.has('ArrowLeft')) {
             if (slideType === "MultipleChoice") {
-                window.selectButton(1);
+                window.selectButton(0);
             }
         }
         if (keysPressed.has('ArrowRight')) {
             if (slideType === "InfoSlide") {
                 window.skipQuestion();
             } else {
-                window.postAnswer(1, 'skip');
+                window.postAnswer(0, 'skip');
             }
         }
         if (keysPressed.has('Enter')) {
             if (slideType === "InfoSlide") {
                 window.skipQuestion();
             } else {
-                window.postAnswer(1, 'submit');
+                window.postAnswer(0, 'submit');
             }
         }
     }

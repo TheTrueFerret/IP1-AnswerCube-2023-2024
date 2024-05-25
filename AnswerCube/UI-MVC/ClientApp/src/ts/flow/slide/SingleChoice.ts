@@ -1,5 +1,7 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
+import {types} from "sass";
+import Number = types.Number;
 
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
@@ -13,13 +15,19 @@ const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | 
 
 var currentCheckedIndexPerUser: number[] = [];
 var totalQuestions: number;
+var totalActiveCubes: number;
+
+const keyboardPlayer = true;
 
 function generateAnswerColumns(numberOfSessions: number) {
+    if (keyboardPlayer) {
+        numberOfSessions++;
+    }
     if (table) {
         if (headerRow) {
             for (let i = 0; i < numberOfSessions; i++) {
                 const newHeaderCell = document.createElement("th");
-                newHeaderCell.textContent = "User" + (1 + i); // Adjust this to your needs
+                newHeaderCell.textContent = "User" + (i); // Adjust this to your needs
                 headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
                 currentCheckedIndexPerUser[i] = -1;
             }
@@ -30,7 +38,7 @@ function generateAnswerColumns(numberOfSessions: number) {
             const row = table.rows[rowIndex];
             for (let i = 0; i < numberOfSessions; i++) {
                 const newCell = row.insertCell(i);
-                newCell.innerHTML = `<div id="User${(1 + i)}_Row${rowIndex}" data-checked="false" data-user="${(1 + i)}" data-row="${rowIndex}"></div>`;
+                newCell.innerHTML = `<div id="User${(i)}_Row${rowIndex}" data-checked="false" data-user="${(i)}" data-row="${rowIndex}"></div>`;
             }
         }
         totalQuestions = table.rows.length - 1;
@@ -38,8 +46,38 @@ function generateAnswerColumns(numberOfSessions: number) {
 }
 generateAnswerColumns(2)
 
-function postAnswer(cubeId: number, action: 'submit' | 'skip') {
-    let answer = getSelectedAnswer(cubeId);
+
+function addNewCubeColumn(CubeId: number) {
+    if (CubeId == 0) {
+        
+    }
+
+    if (table) {
+        if (headerRow) {
+            for (let i = 0; i < totalActiveCubes; i++) {
+                const newHeaderCell = document.createElement("th");
+                newHeaderCell.textContent = "User" + (i); // Adjust this to your needs
+                headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
+                currentCheckedIndexPerUser[i] = -1;
+            }
+        }
+
+        // Add new cells to each existing row (excluding the header)
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            for (let i = 0; i < totalActiveCubes; i++) {
+                const newCell = row.insertCell(i);
+                newCell.innerHTML = `<div id="User${(i)}_Row${rowIndex}" data-checked="false" data-user="${(i)}" data-row="${rowIndex}"></div>`;
+            }
+        }
+        totalQuestions = table.rows.length - 1;
+    }
+}
+
+
+
+function vote(cubeId: number, action: 'submit' | 'skip') {
+    let answer = getSelectedAnswerByCubeId(cubeId)
     
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
@@ -48,10 +86,26 @@ function postAnswer(cubeId: number, action: 'submit' | 'skip') {
         return;
     }
     
+    
+    
+    
+}
+
+
+function postAnswers() {
+    let answers: any[] = []
+    
+    for (let i = 0; i < totalActiveCubes; i++) {
+        answers.push({
+            Answer: getSelectedAnswerByCubeId(i),
+            CubeId: i
+        })
+    }
+
     let requestBody = {
-        Answer: answer,
-        CubeId: cubeId
+        Answers: answers
     };
+    
     console.log(requestBody);
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
         method: "POST",
@@ -76,10 +130,10 @@ function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     }).catch(err => {
         console.log("Something went wrong: " + err);
     })
-    console.log(answer);
 }
 
-function getSelectedAnswer(cubeId: number): string[] {
+//TODO
+function getSelectedAnswerByCubeId(cubeId: number): string[] {
     const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
     let selectedAnswers: string[] = [];
     checkboxes.forEach((checkbox: Element) => {
@@ -91,34 +145,29 @@ function getSelectedAnswer(cubeId: number): string[] {
     return selectedAnswers;
 }
 
+
 function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
     if (table) {
-        for (let i = 1; i < totalQuestions; i++) {
+        for (let i = 1; i <= totalQuestions; i++) {
             let elementId = `User${CubeId}_Row${i}`;
             let element = document.getElementById(elementId);
             if (element) {
-                if (currentCheckedIndexPerUser[CubeId] === -1 && direction === 'up') {
+                if (currentCheckedIndexPerUser[CubeId] === -1) {
                     element.setAttribute('data-checked', 'true');
-                    currentCheckedIndexPerUser[CubeId] = 0;
-                    element.innerHTML = 'Selected';
-                    return;
-                }
-                if (currentCheckedIndexPerUser[CubeId] === -1 && direction === 'down') {
-                    element.setAttribute('data-checked', 'true');
-                    currentCheckedIndexPerUser[CubeId] = totalQuestions;
+                    currentCheckedIndexPerUser[CubeId] = 1;
                     element.innerHTML = 'Selected';
                     return;
                 }
 
                 let newIndex;
-                if (direction === 'up') {
-                    newIndex = i - 1;
-                    if (newIndex < 0) newIndex = totalQuestions - 1;
-                } else if (direction === 'down') {
-                    newIndex = i + 1;
-                    if (newIndex >= totalQuestions) newIndex = 0;
+                if (currentCheckedIndexPerUser[CubeId] === i && direction === 'up') {
+                    newIndex = (i - 1);
+                    if (newIndex < 1) newIndex = totalQuestions;
+                } else if (currentCheckedIndexPerUser[CubeId] === i && direction === 'down') {
+                    newIndex = (i + 1);
+                    if (newIndex >= totalQuestions) newIndex = 1;
                 } else {
-                    return; // Invalid direction
+                    continue;
                 }
                 
                 let newElementId = `User${CubeId}_Row${newIndex}`;
@@ -130,50 +179,21 @@ function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
                     newElement.innerHTML = 'Selected';
                 }
                 currentCheckedIndexPerUser[CubeId] = newIndex;
+                return;
             }
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*// Check if there's a radio button checked
-    if (currentCheckedIndex === -1) {
-        checkboxes[0].checked = true;
-        currentCheckedIndex = 0
-        return;
-    }
-    let newIndex;
-    if (direction === 'up') {
-        newIndex = currentCheckedIndex - 1;
-        if (newIndex < 0) newIndex = totalCheckboxes - 1;
-    } else if (direction === 'down') {
-        newIndex = currentCheckedIndex + 1;
-        if (newIndex >= totalCheckboxes) newIndex = 0;
-    } else {
-        return; // Invalid direction
-    }
-
-    checkboxes[currentCheckedIndex].checked = false;
-    checkboxes[newIndex].checked = true;
-    currentCheckedIndex = newIndex*/
 }
 
 declare global {
     interface Window {
         slideType: string;
         moveCheckedRadioButton: (CubeId: number, direction: 'up' | 'down') => void;
-        postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
+        postAnswers: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }
 
 window.slideType = "SingleChoice";
 window.moveCheckedRadioButton = moveCheckedRadioButton;
-window.postAnswer = postAnswer;
+window.postAnswers = postAnswers;
 
