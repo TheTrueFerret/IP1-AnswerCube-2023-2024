@@ -4,20 +4,24 @@ import {getCookie} from "../../CookieHandler";
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
-const checkboxes: any = document.querySelectorAll('input[name="answer"]')
+/*const checkboxes: any = document.querySelectorAll('input[name="answer"]')
 var currentCheckedIndex: number = -1;
-const totalCheckboxes: number = checkboxes.length;
+const totalCheckboxes: number = checkboxes.length;*/
 
+const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
+const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
+
+var currentCheckedIndexPerUser: number[] = [];
+var totalQuestions: number;
 
 function generateAnswerColumns(numberOfSessions: number) {
-    const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
     if (table) {
-        const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
         if (headerRow) {
             for (let i = 0; i < numberOfSessions; i++) {
                 const newHeaderCell = document.createElement("th");
                 newHeaderCell.textContent = "User" + (1 + i); // Adjust this to your needs
                 headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
+                currentCheckedIndexPerUser[i] = -1;
             }
         }
 
@@ -26,9 +30,10 @@ function generateAnswerColumns(numberOfSessions: number) {
             const row = table.rows[rowIndex];
             for (let i = 0; i < numberOfSessions; i++) {
                 const newCell = row.insertCell(i);
-                newCell.innerHTML = `<div id="User${i} ${rowIndex}"></div>`;
+                newCell.innerHTML = `<div id="User${(1 + i)}_Row${rowIndex}" data-checked="false" data-user="${(1 + i)}" data-row="${rowIndex}"></div>`;
             }
         }
+        totalQuestions = table.rows.length - 1;
     }
 }
 generateAnswerColumns(2)
@@ -87,7 +92,58 @@ function getSelectedAnswer(cubeId: number): string[] {
 }
 
 function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
-    // Check if there's a radio button checked
+    if (table) {
+        for (let i = 1; i < totalQuestions; i++) {
+            let elementId = `User${CubeId}_Row${i}`;
+            let element = document.getElementById(elementId);
+            if (element) {
+                if (currentCheckedIndexPerUser[CubeId] === -1 && direction === 'up') {
+                    element.setAttribute('data-checked', 'true');
+                    currentCheckedIndexPerUser[CubeId] = 0;
+                    element.innerHTML = 'Selected';
+                    return;
+                }
+                if (currentCheckedIndexPerUser[CubeId] === -1 && direction === 'down') {
+                    element.setAttribute('data-checked', 'true');
+                    currentCheckedIndexPerUser[CubeId] = totalQuestions;
+                    element.innerHTML = 'Selected';
+                    return;
+                }
+
+                let newIndex;
+                if (direction === 'up') {
+                    newIndex = i - 1;
+                    if (newIndex < 0) newIndex = totalQuestions - 1;
+                } else if (direction === 'down') {
+                    newIndex = i + 1;
+                    if (newIndex >= totalQuestions) newIndex = 0;
+                } else {
+                    return; // Invalid direction
+                }
+                
+                let newElementId = `User${CubeId}_Row${newIndex}`;
+                let newElement = document.getElementById(newElementId);
+                element.setAttribute('data-checked', 'false');
+                element.innerHTML = '';
+                if (newElement) {
+                    newElement.setAttribute('data-checked', 'true');
+                    newElement.innerHTML = 'Selected';
+                }
+                currentCheckedIndexPerUser[CubeId] = newIndex;
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*// Check if there's a radio button checked
     if (currentCheckedIndex === -1) {
         checkboxes[0].checked = true;
         currentCheckedIndex = 0
@@ -106,7 +162,7 @@ function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
 
     checkboxes[currentCheckedIndex].checked = false;
     checkboxes[newIndex].checked = true;
-    currentCheckedIndex = newIndex
+    currentCheckedIndex = newIndex*/
 }
 
 declare global {
