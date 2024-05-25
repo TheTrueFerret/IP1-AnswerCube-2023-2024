@@ -1,0 +1,13 @@
+.page-container {
+  transition: background-color 0.5s, color 0.5s;
+
+  &.light {
+    background-color: #f2f2f2;
+    color: black;
+
+    h1, p, label {
+      font-weight: bold;
+    }
+  }
+}
+

@@ -20,6 +20,7 @@ public interface IOrganizationRepository
     Task<Project> CreateProject(int organizationId, string title, string description, bool isActive);
     Task<bool> UpdateProject(Project project);
     Project ReadProjectWithFlowsById(int projectId);
+    String ReadProjectThemeByProjectId(int projectId);
     Organization CreateNewOrganization(string email, string name, string? logoUrl);
     void SaveBeheerderAndOrganization(string email, string organizationName);
     bool CreateUserOrganization(AnswerCubeUser user);

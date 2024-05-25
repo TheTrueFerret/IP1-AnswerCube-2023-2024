@@ -5,8 +5,8 @@
     Layout = "_Layout";
 }
 
-<div class="page-container d-flex justify-content-center align-items-center @ViewBag.Theme">
-    <div class="container" style="padding: 40px; background-color: @ViewBag.ThemeColor;">
+<div class="page-container d-flex justify-content-center align-items-center">
+    <div class="container" style="padding: 40px; ">
         <h1 class="mb-4">Edit Project</h1>
         <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
             <div class="row">
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <!-- Voeg hier de verborgen input toe -->
-            <input type="hidden" id="selectedTheme" name="selectedTheme" value="@(Model.Theme ?? "light")" />
+             <input type="hidden" id="selectedTheme" name="selectedTheme" data-project-id="@Model.Id" value="@(Model.Theme ?? "light")" />
             <!-- Einde van het formulier -->
             <button type="submit" class="btn btn-success btn-lg mt-3">Save Changes</button>
         </form>
@@ -70,5 +70,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/dist/formatProject.entry.js" defer></script>
+    <script src="~/dist/site.entry.js" defer></script>
 }

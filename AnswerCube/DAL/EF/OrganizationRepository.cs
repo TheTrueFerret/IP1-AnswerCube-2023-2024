@@ -167,6 +167,11 @@ public class OrganizationRepository : IOrganizationRepository
         return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
     }
 
+    public string ReadProjectThemeByProjectId(int projectId)
+    {
+        return _context.Projects.FirstOrDefault(p => p.Id == projectId).Theme;
+    }
+
     public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
         Organization organization = new Organization(name, email,logoUrl);

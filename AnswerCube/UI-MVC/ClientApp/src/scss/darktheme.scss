@@ -1,0 +1,12 @@
+.page-container {
+  transition: background-color 0.5s, color 0.5s;
+
+  &.dark {
+    background-color: black;
+    color: white;
+
+    h1, p, label {
+      font-weight: bold;
+    }
+  }
+}
