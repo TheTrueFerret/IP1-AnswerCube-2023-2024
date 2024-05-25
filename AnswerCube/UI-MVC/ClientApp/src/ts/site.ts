@@ -16,7 +16,7 @@ console.log('The \'site\' bundle has been loaded!');
 
 async function getTheme() {
     try {
-        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/api/theme", {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/api/theme/GetTheme", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ async function getTheme() {
             }
             loadTheme(scssFile);
         } else {
-            //exception? 
+            console.error('Failed to fetch theme, code NOT OK'); 
         }
     } catch (err) {
         console.log("Something went wrong: " + err);

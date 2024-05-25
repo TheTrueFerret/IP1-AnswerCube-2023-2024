@@ -32,7 +32,7 @@ namespace AnswerCube.UI.MVC.Controllers.Api
             {
                 string token = Request.Cookies["jwtToken"];
                 int installationId = _jwtService.GetInstallationIdFromToken(token);
-                theme = _organizationManager.GetThemeByOrganisationId(installationId);
+                theme = _organizationManager.GetThemeByInstallationId(installationId);
             }
             else if (controller == "Organization")
             {

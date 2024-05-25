@@ -33,4 +33,5 @@ public interface IOrganizationRepository
     Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
     Theme ReadThemeByOrganisationId(int organisationId);
+    Theme ReadThemeByInstallationId(int installationId);
 }

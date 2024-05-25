@@ -56,7 +56,7 @@ public static class AnswerCubeInitializer
             "skybloom44@gmail.com", null, Theme.DarkTheme);
         var organization2 = new Organization("AnswerCube",
             "answercubeintegratie@gmail.com", null, Theme.LightTheme);
-        Forum answerCubeForum = new Forum()
+        Forum answerCubeForum = new Forum
         {
             Organization = organization2,
             Ideas = new List<Idea>()

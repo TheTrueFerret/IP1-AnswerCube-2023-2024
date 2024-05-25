@@ -309,4 +309,20 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return _context.Organizations.First(o => o.Id == organisationId).Theme;
     }
+    
+    public Theme ReadThemeByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations
+            .Where(i => i.Id == installationId)
+            .Include(i => i.Organization) // Laad de organisatie in
+            .First(); // Voeg deze toe om de installatie op te halen
+
+        if (installation != null)
+        {
+            return installation.Organization.Theme;
+        }
+        
+        return Theme.LightTheme; 
+    }
+    
 }

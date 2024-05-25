@@ -142,4 +142,10 @@ public class OrganizationManager : IOrganizationManager
     {
         return _repository.ReadThemeByOrganisationId(organisationId);
     }
+    
+    public Theme GetThemeByInstallationId(int installationId)
+    {
+        return _repository.ReadThemeByInstallationId(installationId);
+    }
+    
 }
