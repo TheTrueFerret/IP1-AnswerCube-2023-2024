@@ -8,7 +8,7 @@ public class Project
     public string Title { get; set; }
     public string Description { get; set; }
     public bool IsActive { get; set; }
-    public string? Theme { get; set; }
+    public Theme Theme { get; set; }
     public List<Flow> Flows { get; set; } = new List<Flow>();
     public int TotalActiveInstallations { get; set; }
 

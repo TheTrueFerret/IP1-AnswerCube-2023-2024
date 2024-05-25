@@ -90,7 +90,8 @@ namespace AnswerCube.UI.MVC.Controllers
         }
         
         public async Task<IActionResult> SaveProjectChanges(Project updatedProject, int projectId)
-        { //hier da thema meegeven
+        {
+            //hier da thema meegeven
             updatedProject.Id = projectId;
 
             if (await _organizationManager.UpdateProject(updatedProject))

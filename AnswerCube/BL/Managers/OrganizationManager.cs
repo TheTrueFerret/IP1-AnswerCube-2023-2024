@@ -137,7 +137,7 @@ public class OrganizationManager : IOrganizationManager
         return _repository.ReadProjectWithFlowsById(projectId);
     }
 
-    public string GetProjectThemeByProjectId(int projectId)
+    public Theme GetProjectThemeByProjectId(int projectId)
     {
         return _repository.ReadProjectThemeByProjectId(projectId);
     }

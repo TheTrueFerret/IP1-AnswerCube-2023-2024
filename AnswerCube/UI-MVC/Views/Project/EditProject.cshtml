@@ -1,3 +1,4 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model AnswerCube.BL.Domain.Project.Project
 
 @{
@@ -11,7 +12,7 @@
         <form method="post" action="@Url.Action("SaveProjectChanges", "Project", new { projectId = Model.Id })">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group mb-4"> 
+                    <div class="form-group mb-4">
                         <label for="title" class="form-label font-weight-bold">Title</label>
                         <input type="text" id="title" name="title" class="form-control" value="@Model.Title" required/>
                     </div>
@@ -62,7 +63,7 @@
                 </div>
             </div>
             <!-- Voeg hier de verborgen input toe -->
-             <input type="hidden" id="selectedTheme" name="selectedTheme" data-project-id="@Model.Id" value="@(Model.Theme ?? "light")" />
+             <input type="hidden" id="selectedTheme" name="selectedTheme" data-project-id="@Model.Id" value="@(Model.Theme)" />
             <!-- Einde van het formulier -->
             <button type="submit" class="btn btn-success btn-lg mt-3">Save Changes</button>
         </form>

@@ -154,6 +154,7 @@ public class OrganizationRepository : IOrganizationRepository
         existingProject.Title = updatedProject.Title;
         existingProject.Description = updatedProject.Description;
         existingProject.IsActive = updatedProject.IsActive;
+        existingProject.Theme = updatedProject.Theme;
 
         // Save the changes
         _context.Projects.Update(existingProject);
@@ -167,7 +168,7 @@ public class OrganizationRepository : IOrganizationRepository
         return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
     }
 
-    public string ReadProjectThemeByProjectId(int projectId)
+    public Theme ReadProjectThemeByProjectId(int projectId)
     {
         return _context.Projects.FirstOrDefault(p => p.Id == projectId).Theme;
     }

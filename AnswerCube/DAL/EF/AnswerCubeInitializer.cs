@@ -126,7 +126,8 @@ public static class AnswerCubeInitializer
             Description = "This is a project about the cast, producers, fans and critics of the filmseries",
             IsActive = true,
             Organization = organization1,
-            Flows = new List<Flow> { circularFlow1 }
+            Flows = new List<Flow> { circularFlow1 },
+            Theme = Theme.LightTheme
         };
         Project project2 = new Project
         {
@@ -134,42 +135,48 @@ public static class AnswerCubeInitializer
             Description =
                 "This project is about the management of KdG, to see how the students think about the course Management",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Theme = Theme.LightTheme
         };
         Project project3 = new Project
         {
             Title = "Climate Change Research",
             Description = "A project dedicated to studying the impacts of climate change on local ecosystems.",
             IsActive = true,
-            Organization = organization2
+            Organization = organization2,
+            Theme = Theme.LightTheme
         };
         Project project4 = new Project
         {
             Title = "Urban Development",
             Description = "This project focuses on sustainable urban development practices.",
             IsActive = true,
-            Organization = organization2
+            Organization = organization2,
+            Theme = Theme.LightTheme
         };
         Project project5 = new Project
         {
             Title = "Educational Reform",
             Description = "A project aimed at improving the quality of education in underprivileged areas.",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Theme = Theme.LightTheme
         };
         Project project6 = new Project
         {
             Title = "Healthcare Improvement",
             Description = "This project is about improving healthcare services in rural areas.",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Theme = Theme.LightTheme
         };
         Project project7 = new Project
         {
             Title = "Renewable Energy",
             Description = "A project focused on the research and development of renewable energy sources.",
             IsActive = true,
-            Organization = organization1
+            Organization = organization1,
+            Theme = Theme.LightTheme
         };
 
 

@@ -3,15 +3,17 @@ import 'bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
+import {RemoveLastDirectoryPartOf} from "./urlDecoder";
+
 // Custom JS imports
 // ... none at the moment
 
-// Custom CSS imports
-import '../scss/site.scss';
+var url = window.location.toString();
+var scssFile: string = '';
 
 console.log('The \'site\' bundle has been loaded!');
 
-document.addEventListener('DOMContentLoaded', async () => {
+/*document.addEventListener('DOMContentLoaded', async () => {
     const projectIdElement = document.querySelector<HTMLInputElement>('input[name="selectedTheme"]');
     const projectId = projectIdElement?.getAttribute('data-project-id');
 
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Project ID not found');
         return;
     }
-
+    
     try {
         const response = await fetch(`/api/theme/${projectId}`);
         if (!response.ok) {
@@ -44,4 +46,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             projectIdElement.value = selectedTheme;
         }
     });
-});
+});*/
+
+
+function getTheme() {
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetTheme", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.text();
+        } else {
+            
+        }
+    }).then((data: any) => {
+        // hier de sccsFile instellen
+        // maybe een switch case idk
+        scssFile = data.Theme.toString()
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+    })
+}
+
+if (scssFile != '') {
+    // Custom CSS imports
+    // import scssFile;
+}
+

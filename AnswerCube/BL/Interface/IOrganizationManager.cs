@@ -31,5 +31,5 @@ public interface IOrganizationManager
     Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
     Organization GetOrganizationByName(string organizationName);
     Project GetProjectWithFlowsById(int projectId);
-    String GetProjectThemeByProjectId(int projectId);
+    Theme GetProjectThemeByProjectId(int projectId);
 }
