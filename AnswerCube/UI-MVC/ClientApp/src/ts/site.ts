@@ -26,9 +26,9 @@ async function getTheme() {
             const data = await response.json();
             const theme = data.toString().toLowerCase();
             if (theme === "lighttheme") {
-                scssFile = '../scss/lighttheme.scss';
+                scssFile = 'lighttheme.scss';
             } else if (theme === "darktheme") {
-                scssFile = '../scss/darktheme.scss';
+                scssFile = 'darktheme.scss';
             } else {
                 console.error('Unknown theme received:', theme);
             }
@@ -44,7 +44,7 @@ async function getTheme() {
 async function loadTheme(scssFile: string): Promise<void> {
     if (scssFile !== '') {
         try {
-            await import(scssFile);
+            await import(`../scss/${scssFile}`);
             console.log(`${scssFile} has been loaded`);
         } catch (err) {
             console.error(`Failed to load ${scssFile}:`, err);

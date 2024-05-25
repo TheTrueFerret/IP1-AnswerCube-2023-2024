@@ -3,8 +3,8 @@ using AnswerCube.BL.Domain;
 using AnswerCube.UI.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AnswerCube.UI.MVC.Controllers.Api
-{
+namespace AnswerCube.UI.MVC.Controllers.Api;
+
     [Route("api/[controller]")]
     [ApiController]
     public class ThemeController : ControllerBase
@@ -22,8 +22,9 @@ namespace AnswerCube.UI.MVC.Controllers.Api
         // inside site.ts an if statement or case to check in which controller we are
         // if inside CircularFlow Controller || LinearFlowController GetThemeByInstallationId
         
+        [Route("GetTheme")]
         [HttpGet]
-        public ActionResult<Theme> GetTheme()
+        public IActionResult GetTheme()
         {
             Theme? theme = null;
 
@@ -56,4 +57,3 @@ namespace AnswerCube.UI.MVC.Controllers.Api
         }
 
     }
-}
