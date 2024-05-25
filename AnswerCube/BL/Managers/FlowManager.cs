@@ -54,13 +54,13 @@ public class FlowManager : IFlowManager
         return _repository.ReadSlideFromSlideListByIndex(index, slideListId);
     }
     
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl=null)
+    public bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId, string? mediaUrl=null)
     {
         
-        if (type == SlideType.InfoSlide && options.Length == 1)
+        if (type == SlideType.InfoSlide && options.Count == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
+            return _repository.CreateSlide(type, info, null, slideListId, mediaUrl);
         }
 
         return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);

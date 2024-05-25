@@ -100,60 +100,34 @@ public class FlowRepository : IFlowRepository
         return slide;
     }
 
-    public bool CreateSlide(SlideType type, string question, string[]? options, int slideListId, string? mediaUrl)
+    public bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId, string? mediaUrl)
     {
-        if (options == null || options.Length <= 0)
+        //Adding a MultipleChoice,SingleChoice, Range or InfoSlide
+        Slide slide = new Slide
         {
-            //Adding an OpenQuestion or Info Slide
-            Slide slide = new Slide
-            {
-                SlideType = type,
-                Text = question,
-                AnswerList = null,
-                MediaUrl = mediaUrl
-            };
-            SlideList slideList =
-                _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
-            SlideConnection newSlideConnection = new SlideConnection
-            {
-                SlideId = slide.Id,
-                Slide = slide,
-                SlideList = slideList,
-                SlideListId = slideList.Id
-            };
-            slideList.ConnectedSlides!.Add(newSlideConnection);
-            _context.SlideConnections.Add(newSlideConnection);
-            _context.Slides.Add(slide);
-            _context.SaveChanges();
-            return true;
-        }
-        else
+            SlideType = type,
+            Text = question,
+            AnswerList = options,
+            MediaUrl = mediaUrl
+        };
+        _context.Slides.Add(slide);
+        
+        SlideList slideList = _context.SlideLists
+            .Include(sl => sl.ConnectedSlides)
+            .First(sl => sl.Id == slideListId);
+        
+        SlideConnection newSlideConnection = new SlideConnection
         {
-            //Adding a MultipleChoice,SingleChoice,Range or InfoSlide
-            Slide slide = new Slide
-            {
-                SlideType = type,
-                Text = question,
-                AnswerList = options.ToList(),
-                MediaUrl = mediaUrl
-            };
-            SlideList slideList =
-                _context.SlideLists.Include(sl => sl.ConnectedSlides).First(sl => sl.Id == slideListId);
-            SlideConnection newSlideConnection = new SlideConnection
-            {
-                SlideId = slide.Id,
-                Slide = slide,
-                SlideList = slideList,
-                SlideListId = slideList.Id
-            };
-            slideList.ConnectedSlides!.Add(newSlideConnection);
-            _context.SlideConnections.Add(newSlideConnection);
-            _context.Slides.Add(slide);
-            _context.SaveChanges();
-            return true;
-        }
-
-        return false;
+            SlideOrder = slideList.ConnectedSlides.Count + 1,
+            SlideId = slide.Id,
+            Slide = slide,
+            SlideList = slideList,
+            SlideListId = slideList.Id
+        };
+        
+        _context.SlideConnections.Add(newSlideConnection);
+        _context.SaveChanges();
+        return true;
     }
 
     public IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId)
