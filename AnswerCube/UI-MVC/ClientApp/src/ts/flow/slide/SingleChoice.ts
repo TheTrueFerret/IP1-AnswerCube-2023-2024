@@ -6,26 +6,26 @@ import Number = types.Number;
 var url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
-/*const checkboxes: any = document.querySelectorAll('input[name="answer"]')
-var currentCheckedIndex: number = -1;
-const totalCheckboxes: number = checkboxes.length;*/
+
 
 const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
 const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
 
 var currentCheckedIndexPerUser: number[] = [];
 var totalQuestions: number;
-var totalActiveCubes: number;
+var totalActiveCubes: number; // get active cubes
 
 const keyboardPlayer = true;
 
-function generateAnswerColumns(numberOfSessions: number) {
+var voteState: string[];
+
+function generateAnswerColumns(totalActiveCubes: number) {
     if (keyboardPlayer) {
-        numberOfSessions++;
+        totalActiveCubes++;
     }
     if (table) {
         if (headerRow) {
-            for (let i = 0; i < numberOfSessions; i++) {
+            for (let i = 0; i < totalActiveCubes; i++) {
                 const newHeaderCell = document.createElement("th");
                 newHeaderCell.textContent = "User" + (i); // Adjust this to your needs
                 headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
@@ -36,7 +36,7 @@ function generateAnswerColumns(numberOfSessions: number) {
         // Add new cells to each existing row (excluding the header)
         for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
             const row = table.rows[rowIndex];
-            for (let i = 0; i < numberOfSessions; i++) {
+            for (let i = 0; i < totalActiveCubes; i++) {
                 const newCell = row.insertCell(i);
                 newCell.innerHTML = `<div id="User${(i)}_Row${rowIndex}" data-checked="false" data-user="${(i)}" data-row="${rowIndex}"></div>`;
             }
@@ -48,27 +48,37 @@ generateAnswerColumns(2)
 
 
 function addNewCubeColumn(CubeId: number) {
-    if (CubeId == 0) {
-        
-    }
-
     if (table) {
         if (headerRow) {
-            for (let i = 0; i < totalActiveCubes; i++) {
-                const newHeaderCell = document.createElement("th");
-                newHeaderCell.textContent = "User" + (i); // Adjust this to your needs
-                headerRow.insertBefore(newHeaderCell, headerRow.children[i]);
-                currentCheckedIndexPerUser[i] = -1;
+            const newHeaderCell = document.createElement("th");
+
+            switch (CubeId) {
+                case(0):
+                    newHeaderCell.textContent = "KeyboardPlayer";
+                    break;
+                case(1):
+                    newHeaderCell.textContent = "Fret";
+                    break;
+                case(2):
+                    newHeaderCell.textContent = "Destiny";
+                    break;
+                case(3):
+                    newHeaderCell.textContent = "Rider";
+                    break;
+                case(4):
+                    newHeaderCell.textContent = "Striker";
+                    break;
             }
+            
+            headerRow.insertBefore(newHeaderCell, headerRow.children[CubeId]);
+            currentCheckedIndexPerUser[CubeId] = -1;
         }
 
         // Add new cells to each existing row (excluding the header)
         for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
             const row = table.rows[rowIndex];
-            for (let i = 0; i < totalActiveCubes; i++) {
-                const newCell = row.insertCell(i);
-                newCell.innerHTML = `<div id="User${(i)}_Row${rowIndex}" data-checked="false" data-user="${(i)}" data-row="${rowIndex}"></div>`;
-            }
+            const newCell = row.insertCell(CubeId);
+            newCell.innerHTML = `<div id="User${(CubeId)}_Row${rowIndex}" data-checked="false" data-user="${(CubeId)}" data-row="${rowIndex}"></div>`;
         }
         totalQuestions = table.rows.length - 1;
     }
