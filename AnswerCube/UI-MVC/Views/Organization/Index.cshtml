@@ -177,7 +177,7 @@
                                 {
                                     <button class="btn btn-danger"
                                             title="Remove Supervisor"
-                                            onclick="location.href='@Url.Action("RemoveSupervisor", "Organization", new { userId = user.Id, organizationid = Model.Id })'">
+                                            onclick="location.href='@Url.Action("RemoveSupervisor", "Organization", new { email = user.Email, organizationid = Model.Id })'">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 }
