@@ -17,22 +17,7 @@
         0 2px 4px -2px rgba(0,0,0,.1);
         margin: 10px; /* Add margin for spacing between cards */
     }
-    
-    #answerlist {
-        display: flex;
-        flex-direction: column;
-        background-color: #e6dbb9;
-        border: solid black;
-        border-radius: 10px;
-        height: auto;
-    }
-    
-    
-    
-    #answerlist:not(:last-child) {
-        margin-bottom: 5px;
-    }
-    
+        
     .info {
         border: none;
         text-align: center;
@@ -160,7 +145,6 @@
 <div class="data-container">
     <div id="antwoorden"></div>
     <div id="sessions"></div>
-    <div id="chart-container" style="display: flex; flex-wrap: wrap;"></div>
 </div>
 
 @section scripts {
@@ -169,7 +153,7 @@
 
     <script>
     var sessionAnswers;
-    var allAnswers = {};
+    var elkAntwoord = [];
     var antwoordenContainer = $('#antwoorden');
         $(document).ready(function() {
             fetchAndRenderAnswers();
@@ -179,7 +163,6 @@
                     type: 'GET',
                     success: function(answerData) {
                         var groupedBySession = {}; 
-                        var lijst = {}; 
                         answerData.forEach(function(answerWithId) {
                             var sessionId = answerWithId.session.id;
                             if (!groupedBySession[sessionId]) {
@@ -193,21 +176,8 @@
                         console.error("Error fetching answers:", error);
                     }
                 });
-            }
-            
-            // function fetchSlides() {
-            //     $.ajax({
-            //         url: '/api/DataAnalyse/Slides',
-            //         type: 'GET',
-            //         success: function (slides) {
-            //             console.log(JSON.stringify(slides));
-            //         }
-            //     });
-            // }
-            
-            
-            
-                        
+            }         
+                                               
             function renderSessions(groupedBySession) {
                 var sessionsContainer = $('#sessions');
                 var antwoordenContainer = $('#antwoorden');
@@ -217,8 +187,6 @@
                 sessionsContainer.empty();
                 antwoordenContainer.empty();
                 
-                
-                
                 Object.keys(groupedBySession).forEach(function(sessionId) {
                     sessionAnswers = groupedBySession[sessionId];
                     var cubeId = sessionAnswers[0].session.cubeId;
@@ -226,7 +194,6 @@
                     var endTime = new Date(sessionAnswers[0].session.endTime).toLocaleTimeString();
                     var startDate = new Date(sessionAnswers[0].session.startTime).toLocaleDateString();
                     var endDate = new Date(sessionAnswers[0].session.endTime).toLocaleDateString();
-                    // console.log(sessionAnswers[0]);
                     var answerAmount = sessionAnswers.length;
 
                     var sessionHtml = '<div class="card">' +
@@ -253,25 +220,43 @@
                         url: '/api/DataAnalyse/Answers',
                         type: 'GET',
                         success: function (allAnswers) {
-                            allAnswers.forEach(function (answers) {
-                                console.log(answers.id);
-                                antwoordenContainer.append('<li id="items"><button type="button" class="action1" id="' + answers.id + '">Question: '+  answers.id + '</button></li>');
+                            // Filter out duplicates based on slide.id
+                            var uniqueAnswers = [];
+                            var slideIdSet = new Set();
+                            
+                            allAnswers.forEach(function(answer) {
+                                elkAntwoord.push(answer);
+                                if (!slideIdSet.has(answer.slide.id)) {
+                                    slideIdSet.add(answer.slide.id);
+                                    uniqueAnswers.push(answer);
+                                }
+                            });
+                            uniqueAnswers.sort(function(a, b) {
+                                return a.slide.id - b.slide.id;
+                            });
+                            uniqueAnswers.forEach(function (answers) {
+                               uniqueAnswers.forEach(function (answers) {
+                                   antwoordenContainer.append('<li id="items"><button type="button" class="action1" data-slideId="' + answers.slide.id + '">Question: '+  answers.slide.id + '</button></li>');
+                               });
+
                             });
                         },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching answers:", error);
+                        }
                     });
                 }
                 
                 
-                // Add event listener to the "Get started" button
                 $('.action').click(function() {
                     var sessionId = $(this).data('sessionid');
                     KlikOpSession(sessionId);
                 });
                 
-                $('#antwoorden').on('click', '.action1', function() {
-                    var answer = $(this).attr('id'); // Change to use id attribute
-                    console.log(answer);
-                    KlikOpAnswer(answer);
+                $('body').off('click', '.action1').on('click', '.action1', function() {
+                    console.log("werkt wel");
+                    var slide = $(this).data('slideid');
+                    KlikOpAnswer(slide);
                 });
             }
             
@@ -300,8 +285,56 @@
                     }
                 });
             }
+       
+            function KlikOpAnswer(slideId) {
+            var sessionContainer = $('#sessions');
+            var antwoordenContainer = $('#antwoorden');
+            var PaginaTitel = $('#title');
+            sessionContainer.empty(); 
+            PaginaTitel.empty();
+            PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
+            PaginaTitel.append('<h1>Question ID: ' + slideId + '</h1>');
+            antwoordenContainer.empty();
             
-            function KlikOpAnswer(answerId) {
+            $('.goBack').click(function() {
+                fetchAndRenderAnswers();
+            });
+            
+            $.ajax({
+                url: '/api/DataAnalyse/SlideById/' + slideId,
+                type: 'GET',
+                success: function(sessionData) {
+                    console.log(sessionData);
+                    var id = sessionData.id;
+                    var slideType = sessionData.slideType;
+                    var question = sessionData.text;
+                    var answerList = [];
+                    sessionData.answerList.forEach(function (antwoord) {
+                        answerList.push(antwoord);
+                    });
+                    elkAntwoord.forEach(function (answer){
+                        if (answer.slide.id === sessionData.id) {
+                            console.log(answer);
+                        }
+                    });
+            
+                    // Create a canvas element
+                    var canvasHtml = '<canvas id="answersChart" width="400" height="400"></canvas>';
+                    antwoordenContainer.append(canvasHtml);
+                    var canvasElement = document.getElementById("answersChart");
+                    var ctx = canvasElement.getContext('2d');
+            
+                    var config = {
+                        type: "bar",
+                        data: {labels: ["Answer1", "Answer2"], datasets: [{label: 'Answers', data: [12, 19], backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1}]},
+                        options: {scales: {y: {beginAtZero: true}}}
+                    };
+                    var answersChart = new Chart(ctx, config);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching answers:", error);
+                }
+            });
             }
         });
     </script>
