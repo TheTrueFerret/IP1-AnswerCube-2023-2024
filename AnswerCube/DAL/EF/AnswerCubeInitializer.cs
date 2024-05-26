@@ -804,7 +804,7 @@ public static class AnswerCubeInitializer
         {
             Slide = rangeQuestion3,
             Session = session2,
-            AnswerText = new List<string> { "Tevreden" }
+            AnswerText = new List<string> { "Niet tevreden en niet ontevreden" }
         };
 
         Answer answer15 = new Answer()

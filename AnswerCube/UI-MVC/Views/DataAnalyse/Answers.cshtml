@@ -2,146 +2,190 @@
     ViewBag.Title = "Data Analyse";
     Layout = "_Layout";
 }
-
-<h2 id="title">@ViewBag.Title</h2>
 <style>
+    /* General Styles */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    #items {
+      list-style: none;
+    }
+    
+    .action1 {
+      width: 200px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 0px 15px;
+      background-color: rgb(66, 66, 66);
+      border-radius: 10px;
+      color: white;
+      border: none;
+      position: relative;
+      cursor: pointer;
+      transition-duration: .2s;
+    }
+    
+    .action1:hover {
+      background-color: rgb(77, 77, 77);
+      transition-duration: .2s;
+    }
+    
+    .action1:active {
+      transform: translate(1px , 1px);
+      transition-duration: .2s;
+    }
+
+    
+    /* Card Styles */
     .card {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border-radius: 0.75rem;
-        background-color: white;
-        width: 300px;
-        height: 222px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,.1),
-        0 2px 4px -2px rgba(0,0,0,.1);
-        margin: 10px; /* Add margin for spacing between cards */
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
     }
-        
-    .info {
-        border: none;
+    
+    .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card .info {
+        padding: 20px;
         text-align: center;
     }
     
-    #DateTime {
-        border: solid;
-        border-radius: 5px;
-        background-color: #888888;
-    }
-    
-    .title {
-        color: rgb(38 50 56);
-        letter-spacing: 0;
-        line-height: 1.375;
+    .card .title {
+        font-size: 1.5rem;
         font-weight: 600;
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
+        color: #333;
+        margin-bottom: 10px;
     }
     
-    .footer {
-      padding: 0.75rem;
-      border: 1px solid rgb(236 239 241);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: rgba(0, 140, 255, 0.082);
+    .card #sessionInfo {
+        color: #666;
+        margin-bottom: 10px;
     }
     
-    .tag {
-      font-weight: 300;
-      font-size: .75rem;
-      display: block;
+    .card #DateTime {
+        background-color: #f5f5f5;
+        color: #333;
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
     }
     
-    .action {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      border: none;
-      outline: none;
-      box-shadow: 0 4px 6px -1px rgba(33,150,243,.4),0 2px 4px -2px rgba(33,150,243,.4);
-      color: rgb(255 255 255);
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: .75rem;
-      padding: 0.75rem 1.5rem;
-      background-color: rgb(33 150 243);
-      border-radius: 0.5rem;
+    .card .footer {
+        padding: 15px 20px;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     
-    .action1 {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      border: none;
-      outline: none;
-      box-shadow: 0 4px 6px -1px rgba(33,150,243,.4),0 2px 4px -2px rgba(33,150,243,.4);
-      color: rgb(255 255 255);
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: .75rem;
-      padding: 0.75rem 1.5rem;
-      background-color: rgb(33 150 243);
-      border-radius: 0.5rem;
+    .card .tag {
+        font-size: 0.9rem;
+        color: #666;
     }
     
+    .card .action {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .card .action:hover {
+        background-color: #0056b3;
+    }
+    
+    /* Button Styles */
     .goBack {
-      background: #777777;
-      border: none;
-      padding: 10px 20px;
-      display: inline-block;
-      font-size: 15px;
-      font-weight: 600;
-      width: 120px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transform: skew(200deg);
-    }
-    
-    .backSpan {
-      display: inline-block;
-    }
-    
-    .goBack::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 100%;
-      left: 0;
-      background: rgb(20, 20, 20);
-      opacity: 0;
-      z-index: -1;
-      transition: all 0.5s;
+        background-color: #555;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
     }
     
     .goBack:hover {
-      color: #fff;
+        background-color: #333;
     }
     
-    .goBack:hover::before {
-      left: 0;
-      right: 0;
-      opacity: 1;
+    .goBack:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transition: width 0.3s ease, height 0.3s ease;
     }
+    
+    .goBack:hover:before {
+        width: 200%;
+        height: 200%;
+    }
+    
+    /* Container Styles */
     .data-container {
         display: flex;
         flex-direction: row;
-    }
-    #sessions {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap; /* Add this line to wrap cards to the next line */
-    }
-    #antwoorden {
-        width: 100%;
-        height: 80vh;
-    }
-    #questionButton {
-        text-align: left;
+        justify-content: space-between;
+        gap: 20px;
     }
     
+    #sessions {
+        flex-basis: 60%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    #antwoorden {
+        flex-basis: 35%;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    /* Chart Styles */
+    canvas {
+        max-width: 100%;
+        height: auto !important;
+    }   
 </style>
+<h2 id="title">@ViewBag.Title</h2>
+            
 <div class="data-container">
     <div id="antwoorden"></div>
     <div id="sessions"></div>
@@ -152,190 +196,311 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-    var sessionAnswers;
-    var elkAntwoord = [];
-    var antwoordenContainer = $('#antwoorden');
+        var sessionAnswers;
+        var elkAntwoord = [];
+        var antwoordenContainer = $('#antwoorden');
+        
         $(document).ready(function() {
             fetchAndRenderAnswers();
-            function fetchAndRenderAnswers() {
+        });
+        
+        function fetchAndRenderAnswers() {
+            fetchAnswers(renderSessions);
+        }
+        function fetchAnswers(callback) {
+            $.ajax({
+                url: '/api/DataAnalyse/Answers',
+                type: 'GET',
+                success: function(answerData) {
+                    var groupedBySession = groupBySession(answerData);
+                    callback(groupedBySession);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching answers:", error);
+                }
+            });
+        }
+            
+        function groupBySession(answerData) {
+            var groupedBySession = {};
+            answerData.forEach(function(answerWithId) {
+                var sessionId = answerWithId.session.id;
+                if (!groupedBySession[sessionId]) {
+                    groupedBySession[sessionId] = [];
+                }
+                groupedBySession[sessionId].push(answerWithId);
+            });
+            return groupedBySession;
+        }    
+                                                   
+        function renderSessions(groupedBySession) {
+            var sessionsContainer = $('#sessions');
+            var antwoordenContainer = $('#antwoorden');
+            var PaginaTitel = $('#title');
+            PaginaTitel.empty();
+            PaginaTitel.append("Data Analyse");
+            sessionsContainer.empty();
+            antwoordenContainer.empty();
+            
+            Object.keys(groupedBySession).forEach(function(sessionId) {
+                sessionAnswers = groupedBySession[sessionId];
+                var cubeId = sessionAnswers[0].session.cubeId;
+                var startTime = new Date(sessionAnswers[0].session.startTime).toLocaleTimeString();
+                var endTime = new Date(sessionAnswers[0].session.endTime).toLocaleTimeString();
+                var startDate = new Date(sessionAnswers[0].session.startTime).toLocaleDateString();
+                var endDate = new Date(sessionAnswers[0].session.endTime).toLocaleDateString();
+                var answerAmount = sessionAnswers.length;
+                var sessionHtml = '<div class="card">' +
+                    '<div class="info">' +
+                    '<p class="title">Session: ' + sessionId + '</p>' +
+                    '<p id="sessionInfo">' +
+                    '<p id="cubeId">Cube ID: ' + cubeId + '</p>' +
+                    '<section id="DateTime">' +
+                    '<p id="answers">questions answered: ' + answerAmount + '</p>' +
+                    '</section>' +
+                    '</p>' +
+                    '</div>' +
+                    '<div class="footer">' +
+                    '<p class="tag">' + startDate + ' <br>time: ' + startTime + '</br></p>' +
+                    '<button type="button" class="action" data-sessionid="' + sessionId + '">See Answers</button>' +
+                    '</div>' +
+                    '</div>';
+                sessionsContainer.append(sessionHtml);
+            });
+                
+            fetchAnswers()
+            function fetchAnswers() {
                 $.ajax({
                     url: '/api/DataAnalyse/Answers',
                     type: 'GET',
-                    success: function(answerData) {
-                        var groupedBySession = {}; 
-                        answerData.forEach(function(answerWithId) {
-                            var sessionId = answerWithId.session.id;
-                            if (!groupedBySession[sessionId]) {
-                                groupedBySession[sessionId] = [];
+                    success: function (allAnswers) {
+                        // Filter out duplicates based on slide.id
+                        var uniqueAnswers = [];
+                        var slideIdSet = new Set();
+                        elkAntwoord = [];
+                        allAnswers.forEach(function(answer) {
+                            elkAntwoord.push(answer);
+                            if (!slideIdSet.has(answer.slide.id)) {
+                                slideIdSet.add(answer.slide.id);
+                                uniqueAnswers.push(answer);
                             }
-                            groupedBySession[sessionId].push(answerWithId);
                         });
-                        renderSessions(groupedBySession);
+                        uniqueAnswers.sort(function(a, b) {
+                            return a.slide.id - b.slide.id;
+                        });
+                        uniqueAnswers.forEach(function (answers) {
+                            antwoordenContainer.append('<li id="items"><button type="button" class="action1" data-slideId="' + answers.slide.id + '">Question: '+  answers.slide.id + '</button></li>');
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching answers:", error);
                     }
                 });
-            }         
-                                               
-            function renderSessions(groupedBySession) {
-                var sessionsContainer = $('#sessions');
-                var antwoordenContainer = $('#antwoorden');
-                var PaginaTitel = $('#title');
-                PaginaTitel.empty();
-                PaginaTitel.append("Data Analyse");
-                sessionsContainer.empty();
-                antwoordenContainer.empty();
-                
-                Object.keys(groupedBySession).forEach(function(sessionId) {
-                    sessionAnswers = groupedBySession[sessionId];
-                    var cubeId = sessionAnswers[0].session.cubeId;
-                    var startTime = new Date(sessionAnswers[0].session.startTime).toLocaleTimeString();
-                    var endTime = new Date(sessionAnswers[0].session.endTime).toLocaleTimeString();
-                    var startDate = new Date(sessionAnswers[0].session.startTime).toLocaleDateString();
-                    var endDate = new Date(sessionAnswers[0].session.endTime).toLocaleDateString();
-                    var answerAmount = sessionAnswers.length;
-
-                    var sessionHtml = '<div class="card">' +
-                        '<div class="info">' +
-                        '<p class="title">Session: ' + sessionId + '</p>' +
-                        '<p id="sessionInfo">' +
-                        '<p id="cubeId">Cube ID: ' + cubeId + '</p>' +
-                        '<section id="DateTime">' +
-                        '<p id="answers">questions answered: ' + answerAmount + '</p>' +
-                        '</section>' +
-                        '</p>' +
-                        '</div>' +
-                        '<div class="footer">' +
-                        '<p class="tag">' + startDate + ' <br>time: ' + startTime + '</br></p>' +
-                        '<button type="button" class="action" data-sessionid="' + sessionId + '">See Answers</button>' +
-                        '</div>' +
-                        '</div>';
-                    sessionsContainer.append(sessionHtml);
-                });
-                
-                fetchAnswers()
-                function fetchAnswers() {
-                    $.ajax({
-                        url: '/api/DataAnalyse/Answers',
-                        type: 'GET',
-                        success: function (allAnswers) {
-                            // Filter out duplicates based on slide.id
-                            var uniqueAnswers = [];
-                            var slideIdSet = new Set();
-                            
-                            allAnswers.forEach(function(answer) {
-                                elkAntwoord.push(answer);
-                                if (!slideIdSet.has(answer.slide.id)) {
-                                    slideIdSet.add(answer.slide.id);
-                                    uniqueAnswers.push(answer);
-                                }
-                            });
-                            uniqueAnswers.sort(function(a, b) {
-                                return a.slide.id - b.slide.id;
-                            });
-                            uniqueAnswers.forEach(function (answers) {
-                               uniqueAnswers.forEach(function (answers) {
-                                   antwoordenContainer.append('<li id="items"><button type="button" class="action1" data-slideId="' + answers.slide.id + '">Question: '+  answers.slide.id + '</button></li>');
-                               });
-
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error fetching answers:", error);
-                        }
-                    });
-                }
-                
-                
-                $('.action').click(function() {
-                    var sessionId = $(this).data('sessionid');
-                    KlikOpSession(sessionId);
-                });
-                
-                $('body').off('click', '.action1').on('click', '.action1', function() {
-                    console.log("werkt wel");
-                    var slide = $(this).data('slideid');
-                    KlikOpAnswer(slide);
-                });
             }
+                
+                
+            $('.action').click(function() {
+                var sessionId = $(this).data('sessionid');
+                KlikOpSession(sessionId);
+            });
             
-            function KlikOpSession(sessionId) {
+            $('body').off('click', '.action1').on('click', '.action1', function() {
+                console.log("werkt wel");
+                var slide = $(this).data('slideid');
+                KlikOpAnswer(slide);
+            });
+        }
+            
+        var existingCharts = {};
+            
+        function KlikOpSession(sessionId) {
+            var sessionContainer = $('#sessions');
+            var antwoordenContainer = $('#antwoorden');
+            var PaginaTitel = $('#title');
+            
+            sessionContainer.empty(); 
+            PaginaTitel.empty();
+            PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
+            PaginaTitel.append('<h1>Session ID: ' + sessionId + '</h1>');
+            antwoordenContainer.empty();
+            
+            $('.goBack').click(function() {
+                fetchAndRenderAnswers();
+            });
+        
+            $.ajax({
+                url: '/api/DataAnalyse/AnswersBySessionId/' + sessionId,
+                type: 'GET',
+                success: function(sessionData) {
+                    console.log(JSON.stringify(sessionData));
+                    
+                    sessionData.forEach(function(slideData) {
+                        var slide = slideData.slide;
+                        var possibleAnswers = slide.answerList;
+                        var answerTexts = slideData.answerText;
+                        
+                        // Initialize an object to count the answers
+                        var answerCounts = Array(possibleAnswers.length).fill(0);
+        
+                        // Count the occurrences of each answer
+                        answerTexts.forEach(function(answerText) {
+                            var index = possibleAnswers.indexOf(answerText);
+                            if (index !== -1) {
+                                answerCounts[index]++;
+                            }
+                        });
+        
+                        // Create the labels and data arrays for Chart.js
+                        var labels = possibleAnswers.map((answer, index) => 'Answer ' + (index + 1)); // Corrected
+                        var data = answerCounts;
+        
+                        // Generate a unique ID for the canvas element
+                        var canvasId = 'answersChart' + slide.id;
+        
+                        // Check if a chart already exists for this canvas and destroy it if it does
+                        if (existingCharts[canvasId]) {
+                            existingCharts[canvasId].destroy();
+                        }
+        
+                        // Create a container for each chart
+                        var chartContainerId = 'chartContainer' + slide.id;
+                        antwoordenContainer.append('<div id="' + chartContainerId + '"><h3>' + slide.text + '</h3><canvas id="' + canvasId + '" width="500" height="500"></canvas></div>');
+        
+                        var ctx = document.getElementById(canvasId).getContext('2d');
+        
+                        var config = {
+                            type: "bar",
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Answers',
+                                    data: data,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        };
+        
+                        // Store the newly created chart in the existingCharts object
+                        existingCharts[canvasId] = new Chart(ctx, config);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching answers:", error);
+                }
+            });
+        }   
+            function KlikOpAnswer(slideId) {
                 var sessionContainer = $('#sessions');
                 var antwoordenContainer = $('#antwoorden');
                 var PaginaTitel = $('#title');
                 sessionContainer.empty(); 
                 PaginaTitel.empty();
                 PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
-                PaginaTitel.append('<h1>Session ID: ' + sessionId + '</h1>');
+                PaginaTitel.append('<h1>Question ID: ' + slideId + '</h1>');
                 antwoordenContainer.empty();
+                var next = '<button id="next">next</button>'
+                var previous = '<button id="previous">previous</button>'
+                antwoordenContainer.append(next);
+                antwoordenContainer.append(previous);
+               
                 
                 $('.goBack').click(function() {
                     fetchAndRenderAnswers();
                 });
-
+                
+                
+                function onNextButtonClick() {
+                    KlikOpAnswer(slideId+1);
+                }
+                
+                // Function to handle previous button click
+                function onPreviousButtonClick() {
+                    KlikOpAnswer(slideId-1);
+                }
+                
                 $.ajax({
-                    url: '/api/DataAnalyse/AnswersBySessionId/' + sessionId,
+                    url: '/api/DataAnalyse/SlideById/' + slideId,
                     type: 'GET',
                     success: function(sessionData) {
-                        console.log(sessionData);   
+                        console.log(sessionData);
+                        var id = sessionData.id;
+                        var slideType = sessionData.slideType;
+                        var question = sessionData.text;
+                        var possibleAnswers = sessionData.answerList;
+                        
+                        // Initialize an object to count the answers
+                        var count = 0;
+                        var answerCounts = {};
+                        possibleAnswers.forEach(function(answer) {
+                            answerCounts[answer] = 0;
+                            sessionContainer.append('<div class="container">answer ' + count + ':  ' + answer + '</div>');
+                            count++;
+                        });
+                        
+                        // Count the occurrences of each answer
+                        antwoordUitAnswers = []
+                        elkAntwoord.forEach(function(answer){
+                            if (answer.slide.id === sessionData.id) {
+                                antwoordUitAnswers.push(answer);
+                                if (answerCounts.hasOwnProperty(answer.answerText)) {
+                                    answerCounts[answer.answerText]++;
+                                }
+                                console.log(answer);
+                            }
+                        });
+                        
+                        // Create the labels and data arrays for Chart.js
+                        var labels = possibleAnswers.map((answer, index) => 'Answer ' + (index + 1)); // Corrected
+                        var data = Object.values(answerCounts);
+                        
+                        // Create a canvas element
+                        var canvasHtml = '<canvas id="answersChart" width="500" height="500"></canvas>';
+                        antwoordenContainer.append(canvasHtml);
+                        
+                        var canvasElement = document.getElementById("answersChart");
+                        var ctx = canvasElement.getContext('2d');
+                
+                        // Add click event handlers for the next and previous buttons
+                        $('button#next').click(onNextButtonClick);
+                        $('button#previous').click(onPreviousButtonClick);
+                        
+                        
+                        
+                        var config = {
+                            type: "bar",
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Answers',
+                                    data: data,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        };
+                        var answersChart = new Chart(ctx, config);
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching answers:", error);
                     }
                 });
             }
-       
-            function KlikOpAnswer(slideId) {
-            var sessionContainer = $('#sessions');
-            var antwoordenContainer = $('#antwoorden');
-            var PaginaTitel = $('#title');
-            sessionContainer.empty(); 
-            PaginaTitel.empty();
-            PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
-            PaginaTitel.append('<h1>Question ID: ' + slideId + '</h1>');
-            antwoordenContainer.empty();
-            
-            $('.goBack').click(function() {
-                fetchAndRenderAnswers();
-            });
-            
-            $.ajax({
-                url: '/api/DataAnalyse/SlideById/' + slideId,
-                type: 'GET',
-                success: function(sessionData) {
-                    console.log(sessionData);
-                    var id = sessionData.id;
-                    var slideType = sessionData.slideType;
-                    var question = sessionData.text;
-                    var answerList = [];
-                    sessionData.answerList.forEach(function (antwoord) {
-                        answerList.push(antwoord);
-                    });
-                    elkAntwoord.forEach(function (answer){
-                        if (answer.slide.id === sessionData.id) {
-                            console.log(answer);
-                        }
-                    });
-            
-                    // Create a canvas element
-                    var canvasHtml = '<canvas id="answersChart" width="400" height="400"></canvas>';
-                    antwoordenContainer.append(canvasHtml);
-                    var canvasElement = document.getElementById("answersChart");
-                    var ctx = canvasElement.getContext('2d');
-            
-                    var config = {
-                        type: "bar",
-                        data: {labels: ["Answer1", "Answer2"], datasets: [{label: 'Answers', data: [12, 19], backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1}]},
-                        options: {scales: {y: {beginAtZero: true}}}
-                    };
-                    var answersChart = new Chart(ctx, config);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching answers:", error);
-                }
-            });
-            }
-        });
-    </script>
+        </script>
 }
