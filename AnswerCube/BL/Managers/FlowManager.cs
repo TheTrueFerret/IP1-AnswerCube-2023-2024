@@ -81,9 +81,9 @@ public class FlowManager : IFlowManager
         return _repository.RemoveSlideFromSlideList(slideId, slidelistid);
     }
 
-    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
+    public void UpdateSlide( string text, List<string>? answersList, int slideId)
     {
-        _repository.UpdateSlide(slideType, text, answersList, slideId);
+        _repository.UpdateSlide(text, answersList, slideId);
     }
     #endregion
 

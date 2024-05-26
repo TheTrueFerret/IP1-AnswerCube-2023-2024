@@ -13,37 +13,33 @@
             {
                 <input type="hidden" name="slideListId" value="@connection.SlideListId" />
             }
-            <div class="form-group text-start">
-                <label for="slideType" class="form-label">Slide Type:</label>
-                <select id="slideType" name="slideType" class="form-control form-select mx-auto">
-                    <option value="MultipleChoice">Multiple Choice</option>
-                    <option value="RangeQuestion">Range Question</option>
-                    <option value="SingleChoice">Single Choice</option>
-                    <option value="OpenQuestion">Open Question</option>
-                    <option value="InfoSlide">Info Slide</option>
-                </select>
-            </div>
             
             <div class="form-group mt-4 text-start">
                 <label for="text" class="form-label">Text:</label>
-                <textarea id="text" name="text" class="form-control mx-auto" rows="4">@Model.Text</textarea>
+                <textarea id="text" name="text" class="form-control mx-auto" rows="6">@Model.Text</textarea>
             </div>
             
             <div class="form-group mt-4 text-start" id="answersList">
-                <label for="answersList" class="form-label">Answer List:</label>
-                @for (int i = 0; i < Model.AnswerList.Count; i++)
+                @if (Model.AnswerList != null)
                 {
-                    <div class="input-group mb-3 answer-item">
-                        <span class="input-group-text">Optie @(i + 1)</span>
-                        <input type="text" name="answersList" class="form-control" value="@Model.AnswerList[i]" />
-                        <button type="button" class="btn btn-danger delete-answer"><i class="fas fa-trash"></i></button>
-                    </div>
+                    <label for="answersList" class="form-label">Answer List:</label>
+                    @for (int i = 0; i < Model.AnswerList.Count; i++)
+                    {
+                        <div class="input-group mb-3 answer-item">
+                            <span class="input-group-text">Optie @(i + 1)</span>
+                            <input type="text" name="answersList" class="form-control" value="@Model.AnswerList[i]" />
+                            <button type="button" class="btn btn-danger delete-answer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    }
                 }
             </div>
             
-            <div class="d-flex justify-content-start mt-2">
-               <button type="button" class="btn btn-primary" id="add-answer"><i class="fas fa-plus"></i> Add Answer</button>
-           </div>
+              @if (Model.AnswerList != null)
+              {
+                  <div class="d-flex justify-content-start mt-2">
+                      <button type="button" class="btn btn-primary" id="add-answer"><i class="fas fa-plus"></i> Add Answer</button>
+                  </div>
+              }
             
             <div class="d-flex justify-content-center mt-4">
                 <button type="submit" class="btn btn-success btn-save-changes"><i class="fas fa-check"></i> Submit</button>

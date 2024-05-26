@@ -24,11 +24,11 @@ public class SlidesController : BaseController
     }
     
     
-    public IActionResult UpdateSlide(SlideType slideType, string text, List<string> answersList, int slide_id, int slideListId)
+    public IActionResult UpdateSlide(string text, List<string>? answersList, int slide_id, int slideListId)
     {
         if (ModelState.IsValid)
         {
-            _flowManager.UpdateSlide(slideType, text, answersList, slide_id);
+            _flowManager.UpdateSlide(text, answersList, slide_id);
             ViewBag.SlideListId = slideListId;
             return RedirectToAction("SlideListDetails", "SlideList",new { slidelistId = slideListId });
         }

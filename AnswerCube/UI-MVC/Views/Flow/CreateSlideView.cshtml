@@ -5,46 +5,52 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <h2>Create Slide</h2>
-
-    <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow"
-          asp-route-projectId="@Model.Id" asp-route-slideListId="@ViewBag.SlideListId" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="slideType">Slide Type:</label>
-            <select id="slideType" name="slideType" class="form-control form-select">
-                <option value="">Select a SlideType</option>
-                <option value="MultipleChoice">Multiple Choice</option>
-                <option value="RangeQuestion">Range Question</option>
-                <option value="SingleChoice">Single Choice</option>
-                <option value="OpenQuestion">Open Question</option>
-                <option value="InfoSlide">Info Slide</option>
-            </select>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-5">Create Slide</h2>
+            <form id="slideForm" method="post" asp-action="AddSlide" asp-controller="Flow"
+                  asp-route-projectId="@Model.Id" asp-route-slideListId="@ViewBag.SlideListId" enctype="multipart/form-data">
+                <div class="form-group mb-4">
+                    <label for="slideType">Slide Type:</label>
+                    <select id="slideType" name="slideType" class="form-control form-select">
+                        <option value="">Select a SlideType</option>
+                        <option value="MultipleChoice">Multiple Choice</option>
+                        <option value="RangeQuestion">Range Question</option>
+                        <option value="SingleChoice">Single Choice</option>
+                        <option value="OpenQuestion">Open Question</option>
+                        <option value="InfoSlide">Info Slide</option>
+                    </select>
+                </div>
+                @if (ViewBag.HasCredential)
+                {
+                    <div class="form-group mb-4">
+                        <dl>
+                            <dt>
+                                <label for="imageFile" class="form-label">File</label>
+                            </dt>
+                            <dd>
+                                <input id="imageFile" type="file" name="imageFile" class="form-control"/>
+                            </dd>
+                        </dl>
+                    </div>
+                }
+                else
+                {
+                    <p class="mb-4">The CloudStorageService does not have credentials.</p>
+                }
+                <div class="form-group mb-4" id="questionDiv" hidden>
+                    <label for="question" id="questionLabel">Question:</label>
+                    <input type="text" id="question" name="question" class="form-control" required>
+                </div>
+                <div id="answerOptions" class="mb-4"></div>
+                <div id="optionsButton" class="mb-4"></div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success fw-bold text-white">Submit</button>
+                </div>
+            </form>
         </div>
-        @if (ViewBag.HasCredential)
-        {  
-            <div class="form-group">
-                <dl>
-                    <dt>
-                        <label for="imageFile" class="form-label">File</label>
-                    </dt>
-                    <dd>
-                        <input id="imageFile" type="file" name="imageFile" class="form-control"/>
-                    </dd>
-                </dl>
-            </div>
-        } else {
-            <p>The CloudStorageService does not have credentials.</p>
-        }
-
-        <div class="form-group" id="questionDiv" hidden>
-            <label for="question" id="questionLabel">Question:</label>
-            <input type="text" id="question" name="question" class="form-control" required>
-        </div>
-        <div id="answerOptions"></div>
-        <div id="optionsButton" class="mb-3"></div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i>Submit</button>
-    </form>
+    </div>
 </div>
 
 @section Scripts {

@@ -161,7 +161,7 @@ public class FlowRepository : IFlowRepository
         return _context.Slides.Where(s => s.Id == slideListId).ToList();
     }
 
-    public void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId)
+    public void UpdateSlide(string text, List<string>? answers, int slideId)
     {
         Slide slide = _context.Slides.Include(sl => sl.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
             .First(sl => sl.Id == slideId);
@@ -171,9 +171,11 @@ public class FlowRepository : IFlowRepository
             throw new Exception("Slide not found in the database");
         }
 
-        slide.AnswerList = answers;
+        if (answers != null)
+        {
+            slide.AnswerList = answers;
+        }
         slide.Text = text;
-        slide.SlideType = slideType;
 
         _context.Slides.Update(slide);
         _context.SaveChanges();

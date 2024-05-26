@@ -6,96 +6,50 @@
 }
 
 <style>
-    body {
-        background-color: #f0f0f0; 
-        font-weight: 400;
-    }
-
-    .form-container {
-        width: 160%; 
-        max-width: 800px; 
-        margin: auto; 
-        padding: 20px;
-        border-radius: 5px;
-        background-color: lightgrey;    
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /*  schaduw */
-        overflow: hidden; /* floats opheffe */
-    }
-
-    .form-column {
-        float: left;
-        width: 50%; /* twe kolommen */
-        padding-right: 20px; /* space tussen kolommen */
-    }
-   
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
     .form-label {
-        display: block;
         font-weight: bold;
     }
-
-    .form-input {
-        width: calc(100% - 22px);
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .form-checkbox-label {
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .form-submit {
-        padding: 10px 20px;
-        background-color: #fff; 
-        color: #000; 
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        width: auto; 
-        font-weight: bold; 
-        margin-top: 10px; 
-    }
-
-    .form-submit.flows {
-        margin-top: calc(50% - 45px); 
-    }
+    
+    .form-group {
+            margin-bottom: 30px; /* Vergroot de afstand tussen de div-elementen */
+        }
+        
+        .form-label {
+            padding-bottom: 5px; /* Maak de labels dichterbij verticaal gezien bij de inputvelden */
+            font-weight: bold;
+        }
 </style>
 
-<div class="form-container">
-    <div class="form-column">
-        <h2>New Flow</h2>
-        <h2> Creating Flow for @Model.Title</h2>
-
-        <form method="post" asp-action="AddFlow" asp-controller="Flow">
-            <div class="form-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="name" required/>
-            </div>
-            <div class="form-group">
-                <label for="description" class="form-label">Description:</label>
-                <textarea id="description" name="desc" class="form-input"></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Flow Type:</label>
-                <div class="form-checkbox-label">
-                    <input type="radio" id="circularFlow" name="flowType" value="circular" checked/>
-                    <label for="circularFlow">Circular Flow</label>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="font-weight-bold text-center mb-4" >New flow</h2>
+            <form method="post" asp-action="AddFlow" asp-controller="Flow">
+                <div class="form-group">
+                    <label for="name" class="form-label font-weight-bold">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Name" required />
                 </div>
-                <div class="form-checkbox-label">
-                    <input type="radio" id="linearFlow" name="flowType" value="linear"/>
-                    <label for="linearFlow">Linear Flow</label>
+                <div class="form-group">
+                    <label for="description" class="form-label font-weight-bold">Description</label>
+                    <textarea id="description" name="desc" class="form-control" placeholder="Description" rows="4"></textarea>
                 </div>
-            </div>
-            <input type="number" for="projectId" name="projectId" hidden value="@Model.Id">
-            <br/>
-            <button type="submit" class="form-submit">Confirm</button>
-        </form>
+                <div class="form-group">
+                    <label class="form-label font-weight-bold">Flow Type</label>
+                    <div class="form-check">
+                        <input type="radio" id="circularFlow" name="flowType" value="circular" class="form-check-input" checked />
+                        <label for="circularFlow" class="form-check-label">Circular Flow</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" id="linearFlow" name="flowType" value="linear" class="form-check-input" />
+                        <label for="linearFlow" class="form-check-label">Linear Flow</label>
+                    </div>
+                </div>
+                <input type="number" for="projectId" name="projectId" hidden value="@Model.Id">
+                <div class="text-center">
+                    <a href="@Url.Action("Flows", "Project",new {projectId = Model.Id})" class="btn btn-danger btn-lg ml-2">Cancel</a>
+                    <button type="submit" class="btn btn-success btn-lg mr-2">Create Flow</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div style="clear:both;"></div>
 </div>

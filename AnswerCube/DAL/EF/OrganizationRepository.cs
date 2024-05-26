@@ -165,7 +165,9 @@ public class OrganizationRepository : IOrganizationRepository
 
     public Project ReadProjectWithFlowsById(int projectId)
     {
-        return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
+        return _context.Projects.Include(p => p.Flows)
+            .Include(p => p.Organization)
+            .FirstOrDefault(p => p.Id == projectId);
     }
     
 

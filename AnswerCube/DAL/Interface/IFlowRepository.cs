@@ -15,7 +15,7 @@ public interface IFlowRepository
     Slide ReadSlideById(int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
     bool CreateSlide(SlideType type, string question, string[]? options, int slideListId,string? mediaUrl);
-    void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
+    void UpdateSlide(string text, List<string>? answers, int slideId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
     #endregion

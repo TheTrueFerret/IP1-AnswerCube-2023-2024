@@ -32,6 +32,7 @@ namespace AnswerCube.UI.MVC.Controllers
                 Organization = organization
             });
         }
+        
 
         public IActionResult NewProject(int organizationId)
         {
