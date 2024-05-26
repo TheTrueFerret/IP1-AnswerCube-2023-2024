@@ -151,13 +151,14 @@ public class InstallationRepository : IInstallationRepository
         return true;
     }
 
-    public void WriteNoteToInstallation(int installationId, string note, string? identityName, DateTime now, int flowId)
+    public void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId)
     {
+        DateTime utcTime = DateTime.UtcNow;
         Note newNote = new Note
         {
             NoteText = note,
             IdentityName = identityName,
-            CreatedAt = now,
+            CreatedAt = utcTime,
             FlowId = flowId,
             InstallationId = installationId
         };

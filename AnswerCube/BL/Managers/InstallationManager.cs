@@ -62,8 +62,8 @@ public class InstallationManager : IInstallationManager
         return _repository.WriteSlideListToInstallation(slideListId, installationId);
     }
 
-    public void AddNoteToInstallation(int installationId, string note, string? identityName, DateTime now, int flowId)
+    public void AddNoteToInstallation(int installationId, string note, string? identityName, int flowId)
     {
-        _repository.WriteNoteToInstallation(installationId, note, identityName, now, flowId);
+        _repository.WriteNoteToInstallation(installationId, note, identityName, flowId);
     }
 }

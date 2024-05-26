@@ -1,8 +1,10 @@
 using AnswerCube.BL;
+using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Services.SignalR;
 using Domain;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers;
@@ -15,12 +17,15 @@ public class BegeleiderController : BaseController
     private readonly IFlowManager _flowManager;
     private readonly IInstallationManager _installationManager;
     private readonly ILogger<BegeleiderController> _logger;
+    private readonly UserManager<AnswerCubeUser> _userManager;
     
-    public BegeleiderController(IFlowManager flowManager, FlowHub flowHub, ILogger<BegeleiderController> logger)
+    public BegeleiderController(IFlowManager flowManager, FlowHub flowHub, ILogger<BegeleiderController> logger, UserManager<AnswerCubeUser> userManager, IInstallationManager installationManager)
     {
         _flowManager = flowManager;
         _flowHub = flowHub;
         _logger = logger;
+        _userManager = userManager;
+        _installationManager = installationManager;
     }
     
     public IActionResult FlowBeheer(int installationId)
@@ -47,8 +52,10 @@ public class BegeleiderController : BaseController
     
     public IActionResult AddNote(int installationId, string note)
     {
-        Flow currentFlow = _flowManager.GetFlowByInstallationId(installationId);
-        _installationManager.AddNoteToInstallation(installationId, note, User.Identity.Name, DateTime.Now,currentFlow.Id);
+        //TODO: get flowId from installation and installationId from website.
+        //Flow currentFlow = _flowManager.GetFlowByInstallationId(installationId);
+        AnswerCubeUser user = _userManager.GetUserAsync(User).Result;
+        _installationManager.AddNoteToInstallation(1, note, user.Email,1);
         return RedirectToAction("FlowBeheer");
     }
     

@@ -15,5 +15,5 @@ public interface IInstallationRepository
     Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     Session WriteNewSessionWithInstallationId(Session newSession, int installationId);
     bool WriteSlideListToInstallation(int slideListId, int installationId);
-    void WriteNoteToInstallation(int installationId, string note, string? identityName, DateTime now, int flowId);
+    void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId);
 }
