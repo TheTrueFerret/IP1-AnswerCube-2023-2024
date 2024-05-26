@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Installation;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -148,5 +149,20 @@ public class InstallationRepository : IInstallationRepository
         installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
         _context.SaveChanges();
         return true;
+    }
+
+    public void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId)
+    {
+        DateTime utcTime = DateTime.UtcNow;
+        Note newNote = new Note
+        {
+            NoteText = note,
+            IdentityName = identityName,
+            CreatedAt = utcTime,
+            FlowId = flowId,
+            InstallationId = installationId
+        };
+        _context.Notes.Add(newNote);
+        _context.SaveChanges();
     }
 }

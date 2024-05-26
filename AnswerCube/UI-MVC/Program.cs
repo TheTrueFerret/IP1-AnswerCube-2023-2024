@@ -5,6 +5,7 @@ using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Services;
+using AnswerCube.UI.MVC.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -95,11 +96,8 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 services.AddSingleton<CloudStorageService>();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")!="Development")
+if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
 {
-    services.AddSingleton<CloudStorageService>();
-}
-{ 
     string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
     //string REDISCONNECT = "10.146.248.99:6379";
     Console.WriteLine(REDISCONNECT);
@@ -133,6 +131,8 @@ services.AddLogging(logging =>
     logging.AddDebug();
 });
 
+services.AddScoped<FlowHub>();
+services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -145,9 +145,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.MapHub<FlowHub>("/flowHub");
 
 app.UseRouting();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production"){app.UseSession();}
+if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Production")
+{
+    app.UseSession();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

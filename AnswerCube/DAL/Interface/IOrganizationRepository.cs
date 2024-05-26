@@ -25,10 +25,14 @@ public interface IOrganizationRepository
     bool CreateUserOrganization(AnswerCubeUser user);
     List<UserOrganization> ReadAllDeelplatformBeheerders();
     void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
-    bool RemoveDpbFromOrganization(string userId, int organisationid);
+    Task<bool> RemoveDpbFromOrganization(string userId, int organisationid);
     bool SearchOrganizationByName(string organizationName);
     List<Organization> ReadOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
     Task<bool> CreateDpbToOrgByEmail(string email, int organizationid);
     Organization ReadOrganizationByName(string organizationName);
+    Task<bool> CreateSupervisorToOrgByEmail(string email, int organizationid);
+    Task<bool> RemoveSupervisorFromOrgByEmail(string email, int organizationid);
+    List<AnswerCubeUser> ReadSupervisorsByOrgId(int organizationId);
+    List<AnswerCubeUser> ReadDeelplatformBeheedersByOrgId(int organizationId);
 }

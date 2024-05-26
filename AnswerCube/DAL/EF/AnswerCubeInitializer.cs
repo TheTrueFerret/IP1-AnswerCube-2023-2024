@@ -50,6 +50,11 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Gebruiker").Id,
             UserId = "superUser1"
         });
+        context.UserRoles.Add(new IdentityUserRole<string>
+        {
+            RoleId = context.Roles.First(role => role.Name == "DeelplatformBeheerder").Id,
+            UserId = "superUser1"
+        });
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
