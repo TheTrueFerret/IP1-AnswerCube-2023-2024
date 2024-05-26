@@ -11,7 +11,7 @@ public class MailRepository : IMailRepository
     private readonly IEmailSender _emailSender;
     private readonly IUrlHelper _urlHelper;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private string htmlMessage;
+    private string htmlMessage = "";
 
     public MailRepository(IEmailSender emailSender, IUrlHelperFactory urlHelperFactory,
         IActionContextAccessor actionAccessor, IHttpContextAccessor httpContextAccessor)
@@ -34,7 +34,7 @@ public class MailRepository : IMailRepository
             .Replace("\\\"", "\"")
             .Replace("{loginUrl}", loginUrl);
 
-        await _emailSender.SendEmailAsync(email, $"You have been added as a DeelplatformBeheeder to ${organizationName}",
+        await _emailSender.SendEmailAsync(email, $"You have been added as a DeelplatformBeheeder to {organizationName}",
             htmlMessage);
     }
 
@@ -50,7 +50,7 @@ public class MailRepository : IMailRepository
         htmlMessage = htmlMessage.Replace("\\n", "\n")
             .Replace("\\\"", "\"")
             .Replace("{registerUrl}", registerUrl);
-        await _emailSender.SendEmailAsync(email, $"Register for DeelplatformBeheerder for ${organizationName}",
+        await _emailSender.SendEmailAsync(email, $"Register as DeelplatformBeheerder for {organizationName}",
             htmlMessage);
     }
 
@@ -67,6 +67,39 @@ public class MailRepository : IMailRepository
             .Replace("\\\"", "\"")
             .Replace("{callbackUrl}", callbackUrl);
         await _emailSender.SendEmailAsync(email, "Confirm your email",
+            htmlMessage);
+    }
+
+    public async Task SendExistingSupervisorEmail(string email, string organizationName)
+    {
+        // Generate login link with mail
+        var loginUrl = _urlHelper.Page(
+            "/Account/Login",
+            pageHandler: null,
+            values: new { area = "Identity", email = email },
+            protocol: _httpContextAccessor.HttpContext?.Request.Scheme);
+        htmlMessage = File.ReadAllText(@"Services/MailTemplates/ExistingEmail.txt");
+        htmlMessage = htmlMessage.Replace("\\n", "\n")
+            .Replace("\\\"", "\"")
+            .Replace("{loginUrl}", loginUrl);
+
+        await _emailSender.SendEmailAsync(email, $"You have been added as a Supervisor to {organizationName}",
+            htmlMessage);
+    }
+
+    public async Task SendNewSupervisorEmail(string email,string organizationName)
+    {
+        // Generate registration link with the email as a query parameter
+        var registerUrl = _urlHelper.Page(
+            "/Account/Register",
+            pageHandler: null,
+            values: new { area = "Identity", email = email },
+            protocol: _httpContextAccessor.HttpContext?.Request.Scheme);
+        htmlMessage = File.ReadAllText(@"Services/MailTemplates/NewEmail.txt");
+        htmlMessage = htmlMessage.Replace("\\n", "\n")
+            .Replace("\\\"", "\"")
+            .Replace("{registerUrl}", registerUrl);
+        await _emailSender.SendEmailAsync(email, $"Register as Supervisor for {organizationName}",
             htmlMessage);
     }
 }

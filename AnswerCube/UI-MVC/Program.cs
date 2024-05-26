@@ -5,6 +5,7 @@ using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Services;
+using AnswerCube.UI.MVC.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -78,9 +79,9 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add services to the container.
 services.AddControllersWithViews();
 services.AddControllers().AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    });
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 services.AddRazorPages().AddRazorRuntimeCompilation();
 
 services.AddTransient<IEmailSender, MailService>();
@@ -97,23 +98,27 @@ services.AddHttpContextAccessor();
 services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
-
 services.AddSingleton<CloudStorageService>();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
+if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Production")
 {
     services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
+        options.Configuration = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" +
+                                Environment.GetEnvironmentVariable("REDIS_PORT");
         options.InstanceName = Environment.GetEnvironmentVariable("REDIS_NAME");
     });
     var redisConfigOptions = new StackExchange.Redis.ConfigurationOptions()
     {
         ClientName = Environment.GetEnvironmentVariable("REDIS_NAME"),
-        EndPoints = { new DnsEndPoint(Environment.GetEnvironmentVariable("REDIS_HOST"), int.Parse(Environment.GetEnvironmentVariable("REDIS_PORT"))) },
+        EndPoints =
+        {
+            new DnsEndPoint(Environment.GetEnvironmentVariable("REDIS_HOST"),
+                int.Parse(Environment.GetEnvironmentVariable("REDIS_PORT")))
+        },
     };
-var redisConnection = StackExchange.Redis.ConnectionMultiplexer.Connect(redisConfigOptions);
-services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redisConnection, "DataProtection-Keys");
+    var redisConnection = StackExchange.Redis.ConnectionMultiplexer.Connect(redisConfigOptions);
+    services.AddDataProtection()
+        .PersistKeysToStackExchangeRedis(redisConnection, "DataProtection-Keys");
 
     services.AddSession(options =>
     {
@@ -136,6 +141,8 @@ services.AddLogging(logging =>
     logging.AddDebug();
 });
 
+services.AddScoped<FlowHub>();
+services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -148,9 +155,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.MapHub<FlowHub>("/flowHub");
 
 app.UseRouting();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production"){app.UseSession();}
+if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Production")
+{
+    app.UseSession();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

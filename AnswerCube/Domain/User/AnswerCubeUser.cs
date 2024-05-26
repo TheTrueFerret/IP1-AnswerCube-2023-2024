@@ -17,7 +17,5 @@ public class AnswerCubeUser : IdentityUser
 
     public TypeUser TypeUser { get; set; }
 
-    public ICollection<UserClaim> Claims { get; set; } = new List<UserClaim>();
-    
     public ICollection<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
 }

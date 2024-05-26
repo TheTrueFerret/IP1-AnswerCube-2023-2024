@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Installation;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -32,6 +33,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
     public DbSet<Like> Likes { get; set; }
     public DbSet<Dislike> Dislikes { get; set; }
     public DbSet<Session> Sessions { get; set; }
+    public DbSet<Note> Notes { get; set; }
 
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
