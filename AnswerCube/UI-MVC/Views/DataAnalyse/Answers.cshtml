@@ -267,7 +267,7 @@
                     '</div>';
                 sessionsContainer.append(sessionHtml);
             });
-                
+               
             fetchAnswers()
             function fetchAnswers() {
                 $.ajax({
@@ -398,109 +398,107 @@
                 }
             });
         }   
-            function KlikOpAnswer(slideId) {
-                var sessionContainer = $('#sessions');
-                var antwoordenContainer = $('#antwoorden');
-                var PaginaTitel = $('#title');
-                sessionContainer.empty(); 
-                PaginaTitel.empty();
-                PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
-                PaginaTitel.append('<h1>Question ID: ' + slideId + '</h1>');
-                antwoordenContainer.empty();
-                var next = '<button id="next">next</button>'
-                var previous = '<button id="previous">previous</button>'
-                antwoordenContainer.append(next);
-                antwoordenContainer.append(previous);
-               
-                
-                $('.goBack').click(function() {
-                    fetchAndRenderAnswers();
-                });
-                
-                
-                function onNextButtonClick() {
-                    KlikOpAnswer(slideId+1);
-                }
-                
-                // Function to handle previous button click
-                function onPreviousButtonClick() {
-                    KlikOpAnswer(slideId-1);
-                }
-                
-                $.ajax({
-                    url: '/api/DataAnalyse/SlideById/' + slideId,
-                    type: 'GET',
-                    success: function(sessionData) {
-                        console.log(sessionData);
-                        var id = sessionData.id;
-                        var slideType = sessionData.slideType;
-                        var question = sessionData.text;
-                        var possibleAnswers = sessionData.answerList;
-                        
-                        // Initialize an object to count the answers
-                        var count = 0;
-                        var answerCounts = {};
-                        possibleAnswers.forEach(function(answer) {
-                            answerCounts[answer] = 0;
-                            sessionContainer.append('<div class="container">answer ' + count + ':  ' + answer + '</div>');
-                            count++;
-                        });
-                        
-                        // Count the occurrences of each answer
-                        antwoordUitAnswers = []
-                        elkAntwoord.forEach(function(answer){
-                            if (answer.slide.id === sessionData.id) {
-                                antwoordUitAnswers.push(answer);
-                                if (answerCounts.hasOwnProperty(answer.answerText)) {
-                                    answerCounts[answer.answerText]++;
-                                }
-                                console.log(answer);
-                            }
-                        });
-                        
-                        // Create the labels and data arrays for Chart.js
-                        var labels = possibleAnswers.map((answer, index) => 'Answer ' + (index + 1)); // Corrected
-                        var data = Object.values(answerCounts);
-                        
-                        // Create a canvas element
-                        var canvasHtml = '<canvas id="answersChart" width="500" height="500"></canvas>';
-                        antwoordenContainer.append(canvasHtml);
-                        
-                        var canvasElement = document.getElementById("answersChart");
-                        var ctx = canvasElement.getContext('2d');
-                
-                        // Add click event handlers for the next and previous buttons
-                        $('button#next').click(onNextButtonClick);
-                        $('button#previous').click(onPreviousButtonClick);
-                        
-                        
-                        
-                        var config = {
-                            type: "bar",
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Answers',
-                                    data: data,
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        };
-                        var answersChart = new Chart(ctx, config);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching answers:", error);
-                    }
-                });
+        function KlikOpAnswer(slideId) {
+            var sessionContainer = $('#sessions');
+            var antwoordenContainer = $('#antwoorden');
+            var PaginaTitel = $('#title');
+            sessionContainer.empty(); 
+            PaginaTitel.empty();
+            PaginaTitel.append('<button class="goBack"><span class="backSpan">Go Back</span></button>');
+            PaginaTitel.append('<h1>Question ID: ' + slideId + '</h1>');
+            antwoordenContainer.empty();
+            var next = '<button id="next">next</button>'
+            var previous = '<button id="previous">previous</button>'
+            antwoordenContainer.append(next);
+            antwoordenContainer.append(previous);
+           
+            
+            $('.goBack').click(function() {
+                fetchAndRenderAnswers();
+            });
+            
+            
+            function onNextButtonClick() {
+                KlikOpAnswer(slideId+1);
             }
-        </script>
+            
+            // Function to handle previous button click
+            function onPreviousButtonClick() {
+                KlikOpAnswer(slideId-1);
+            }
+            
+            $.ajax({
+                url: '/api/DataAnalyse/SlideById/' + slideId,
+                type: 'GET',
+                success: function(sessionData) {
+                    console.log(sessionData);
+                    var id = sessionData.id;
+                    var slideType = sessionData.slideType;
+                    var question = sessionData.text;
+                    var possibleAnswers = sessionData.answerList;
+                    
+                    // Initialize an object to count the answers
+                    var count = 0;
+                    var answerCounts = {};
+                    possibleAnswers.forEach(function(answer) {
+                        answerCounts[answer] = 0;
+                        sessionContainer.append('<div class="container">answer ' + count + ':  ' + answer + '</div>');
+                        count++;
+                    });
+                    
+                    // Count the occurrences of each answer
+                    antwoordUitAnswers = []
+                    elkAntwoord.forEach(function(answer){
+                        if (answer.slide.id === sessionData.id) {
+                            antwoordUitAnswers.push(answer);
+                            if (answerCounts.hasOwnProperty(answer.answerText)) {
+                                answerCounts[answer.answerText]++;
+                            }
+                            console.log(answer);
+                        }
+                    });
+                    
+                    // Create the labels and data arrays for Chart.js
+                    var labels = possibleAnswers.map((answer, index) => 'Answer ' + (index + 1)); // Corrected
+                    var data = Object.values(answerCounts);
+                    
+                    // Create a canvas element
+                    var canvasHtml = '<canvas id="answersChart" width="500" height="500"></canvas>';
+                    antwoordenContainer.append(canvasHtml);
+                    
+                    var canvasElement = document.getElementById("answersChart");
+                    var ctx = canvasElement.getContext('2d');
+            
+                    // Add click event handlers for the next and previous buttons
+                    $('button#next').click(onNextButtonClick);
+                    $('button#previous').click(onPreviousButtonClick);
+                    
+                    var config = {
+                        type: "bar",
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Answers',
+                                data: data,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    };
+                    var answersChart = new Chart(ctx, config);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching answers:", error);
+                }
+            });
+        }
+    </script>
 }
