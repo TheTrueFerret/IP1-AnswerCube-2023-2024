@@ -22,20 +22,19 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
         // inside site.ts an if statement or case to check in which controller we are
         // if inside CircularFlow Controller || LinearFlowController GetThemeByInstallationId
         
-        [Route("GetTheme")]
+        [Route("GetTheme/{controllerName}")]
         [HttpGet]
-        public IActionResult GetTheme()
+        public IActionResult GetTheme(string controllerName)
         {
             Theme? theme = null;
 
-            var controller = ControllerContext.ActionDescriptor.ControllerName;
-            if (controller == "CircularFlow" || controller == "LinearFlow")
+            if (controllerName == "CircularFlow" || controllerName == "LinearFlow")
             {
                 string token = Request.Cookies["jwtToken"];
                 int installationId = _jwtService.GetInstallationIdFromToken(token);
                 theme = _organizationManager.GetThemeByInstallationId(installationId);
             }
-            else if (controller == "Organization")
+            else if (controllerName == "Organization")
             {
                 string organizationIdStr = Request.Cookies["OrganizationId"];
                 if (int.TryParse(organizationIdStr, out int organizationId))
@@ -48,10 +47,10 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
                 }
             }
     
-            if (theme == null)
+            /*if (theme == null)
             {
                 return NotFound("Theme not found");
-            }
+            }*/
 
             return Ok(theme);
         }

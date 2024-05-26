@@ -33,8 +33,7 @@ function postAnswer(cubeId: number, action: 'submit' | 'skip') {
             'Accept': 'application/json',
         },
         body: JSON.stringify(requestBody)
-    })
-        .then((response: Response) => {
+    }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json();
             } else {
