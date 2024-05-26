@@ -15,7 +15,5 @@ public class AnswerCubeUser : IdentityUser
     [StringLength(50, ErrorMessage = "First Name must be less than 50 characters")]
     public string LastName { get; set; }
 
-    public TypeUser TypeUser { get; set; }
-
     public ICollection<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
 }
