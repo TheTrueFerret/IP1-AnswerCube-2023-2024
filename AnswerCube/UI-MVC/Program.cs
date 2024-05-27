@@ -19,8 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
     {
-        //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;Username=postgres;Password=Student_1234;");
-        //optionsBuilder.UseNpgsql("Host=34.79.59.216;Username=postgres;Password=Student_1234;Database=DataBase IP1 Testssssss;");
         optionsBuilder.UseNpgsql(AnswerCubeDbContext.NewPostgreSqlTCPConnectionString().ToString());
     }
 );
@@ -96,15 +94,19 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 services.AddSingleton<CloudStorageService>();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Production")
 {
     string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
-    //string REDISCONNECT = "10.146.248.99:6379";
     Console.WriteLine(REDISCONNECT);
     var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
     services
         .AddDataProtection()
         .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+    builder.Services.AddSignalR().AddStackExchangeRedis(REDISCONNECT, options =>
+    {
+        options.Configuration.ChannelPrefix = "SignalR";
+        options.Configuration.KeepAlive = 10;
+    });
     var redisConfigurationOptions = ConfigurationOptions.Parse(REDISCONNECT);
     builder.Services.AddStackExchangeRedisCache(redisCacheConfig =>
     { 
@@ -116,6 +118,10 @@ if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
         options.Cookie.Name = "answerCubeSession";
         options.IdleTimeout = TimeSpan.FromMinutes(60 * 24);
     });
+}
+else
+{
+    services.AddSignalR();
 }
 
 
@@ -132,7 +138,7 @@ services.AddLogging(logging =>
 });
 
 services.AddScoped<FlowHub>();
-services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
