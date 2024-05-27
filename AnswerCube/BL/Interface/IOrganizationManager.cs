@@ -24,11 +24,15 @@ public interface IOrganizationManager
     void SaveBeheerderAndOrganization(string email, Organization organization);
     void CreateUserOrganization(AnswerCubeUser user, Organization organization);
     List<UserOrganization> GetDeelplatformBeheerderUsers();
-    bool RemoveDpbFromOrganization(string userId, int organisationid);
+    Task<bool> RemoveDpbFromOrganization(string userId, int organisationid);
     bool SearchOrganizationByName(string deelplatformName);
     List<Organization> GetOrganizations();
     bool IsUserInOrganization(string? userId, int organizationid);
-    Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid);
+    Task<bool> AddDpbToOrgByEmail(string email, int organizationid);
     Organization GetOrganizationByName(string organizationName);
     Project GetProjectWithFlowsById(int projectId);
+    Task<bool> AddSupervisorToOrgByEmail(string email, int organizationid);
+    Task<bool> RemoveSupervisorFromOrgByEmail(string email, int organizationid);
+    List<AnswerCubeUser> GetDeelplatformBeheerdersByOrgId(int organizationId);
+    List<AnswerCubeUser> GetSupervisorsByOrgId(int organizationId);
 }

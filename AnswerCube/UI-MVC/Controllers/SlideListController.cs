@@ -24,7 +24,6 @@ public class SlideListController : BaseController
         {
             _logger.LogInformation(cSlides.Slide.ToString());
         }
-
         return View(slideList);
     }
 

@@ -15,4 +15,8 @@ public interface IInstallationManager
     Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     Session AddNewSessionWithInstallationId(Session newSession, int installationId);
     bool AddSlideListToInstallation(int slideListId, int installationId);
+    void AddNoteToInstallation(int installationId, string note, string? identityName, int flowId);
+    void SetInstallationUrl(int installationId, string url);
+    string GetConnectionIdByInstallationId(int installationId);
+    List<Installation> GetActiveInstallationsFromOrganizations(List<Organization> organizations);
 }

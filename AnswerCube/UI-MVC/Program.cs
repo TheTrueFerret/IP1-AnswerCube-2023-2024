@@ -1,22 +1,24 @@
+using System.Net;
 using System.Text;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
 using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Services;
+using AnswerCube.UI.MVC.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 services.AddDbContext<AnswerCubeDbContext>(optionsBuilder =>
     {
-        //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;Username=postgres;Password=Student_1234;");
-        //optionsBuilder.UseNpgsql("Host=34.79.59.216;Username=postgres;Password=Student_1234;Database=DataBase IP1 Testssssss;");
         optionsBuilder.UseNpgsql(AnswerCubeDbContext.NewPostgreSqlTCPConnectionString().ToString());
     }
 );
@@ -74,10 +76,6 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 services.AddControllersWithViews();
-services.AddControllers().AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    });
 services.AddRazorPages().AddRazorRuntimeCompilation();
 
 services.AddTransient<IEmailSender, MailService>();
@@ -95,20 +93,35 @@ services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
 
-builder.Services.AddSingleton<CloudStorageService>();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
+services.AddSingleton<CloudStorageService>();
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Production")
 {
-    builder.Services.AddStackExchangeRedisCache(options =>
+    string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
+    Console.WriteLine(REDISCONNECT);
+    var redis = ConnectionMultiplexer.Connect(REDISCONNECT);
+    services
+        .AddDataProtection()
+        .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+    builder.Services.AddSignalR().AddStackExchangeRedis(REDISCONNECT, options =>
     {
-        options.Configuration = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
-        options.InstanceName = Environment.GetEnvironmentVariable("REDIS_NAME");
+        options.Configuration.ChannelPrefix = "SignalR";
+        options.Configuration.KeepAlive = 10;
     });
-    services.AddSession(options =>
+    var redisConfigurationOptions = ConfigurationOptions.Parse(REDISCONNECT);
+    builder.Services.AddStackExchangeRedisCache(redisCacheConfig =>
+    { 
+        redisCacheConfig.ConfigurationOptions = redisConfigurationOptions;
+        redisConfigurationOptions.ChannelPrefix = new RedisChannel("session", RedisChannel.PatternMode.Auto);
+    });
+    builder.Services.AddSession(options =>
     {
-        options.Cookie.HttpOnly = true;
-        options.Cookie.IsEssential = true;
-        options.IdleTimeout = TimeSpan.FromMinutes(30);
+        options.Cookie.Name = "answerCubeSession";
+        options.IdleTimeout = TimeSpan.FromMinutes(60 * 24);
     });
+}
+else
+{
+    services.AddSignalR();
 }
 
 
@@ -124,6 +137,8 @@ services.AddLogging(logging =>
     logging.AddDebug();
 });
 
+services.AddScoped<FlowHub>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -136,9 +151,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.MapHub<FlowHub>("/flowHub");
 
 app.UseRouting();
-if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production"){app.UseSession();}
+if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Production")
+{
+    app.UseSession();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

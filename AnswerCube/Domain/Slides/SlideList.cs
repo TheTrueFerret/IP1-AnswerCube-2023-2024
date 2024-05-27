@@ -17,7 +17,6 @@ public class SlideList
     // Relational Attributes:
     public Flow? Flow { get; set; }
     public SubTheme? SubTheme { get; set; }
-    [JsonIgnore]
     public List<SlideConnection>? ConnectedSlides { get; set; }
     
     public SlideList()

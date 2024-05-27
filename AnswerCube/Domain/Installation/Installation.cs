@@ -14,10 +14,12 @@ public class Installation
     public int CurrentSlideIndex { get; set; }
     public int? MaxSlideIndex { get; set; }
     public int? ActiveSlideListId { get; set; }
-    
+    public string? ConnectionId { get; set; }
+
     // Relational Attributes:
     public int OrganizationId { get; set; }
     public Organization Organization { get; set; }
     public int? FlowId { get; set; }
     public Flow? Flow { get; set; }
+    public ICollection<Session>? Sessions { get; set; }
 }

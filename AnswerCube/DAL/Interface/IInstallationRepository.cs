@@ -15,4 +15,8 @@ public interface IInstallationRepository
     Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     Session WriteNewSessionWithInstallationId(Session newSession, int installationId);
     bool WriteSlideListToInstallation(int slideListId, int installationId);
+    void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId);
+    void UpdateInstallationUrl(int installationId, string url);
+    string GetConnectionIdByInstallationId(int installationId);
+    List<Installation> ReadActiveInstallationsFromOrganizations(List<Organization> organizations);
 }

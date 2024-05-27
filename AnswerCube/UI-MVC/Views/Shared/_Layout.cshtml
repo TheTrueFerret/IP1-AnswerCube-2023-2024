@@ -15,7 +15,16 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/Images/AnswerCubeLogo.png" alt="Logo">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    @if (TempData.ContainsKey("OrganizationLogo"))
+                    {
+                        <img src="@TempData["OrganizationLogo"]" alt="Organization Logo">
+                    }
+                    else
+                    {
+                        <img src="~/Images/AnswerCubeLogo.png" alt="Logo">
+                    }
+                </a>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +58,12 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
                         </li>
                     }
                 </ul>
