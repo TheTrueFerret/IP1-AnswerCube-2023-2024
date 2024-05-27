@@ -152,7 +152,12 @@ public class FlowManager : IFlowManager
     {
         _repository.UpdateFlow(model);
     }
-    
+
+    public bool RemoveFlowFromProject(int flowId)
+    {
+        return _repository.RemoveFlowFromProject(flowId);
+    }
+
     public List<Flow> GetFlowsByUserId(string userId)
     {
         return _repository.ReadFlowsByUserId(userId);

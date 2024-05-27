@@ -38,6 +38,7 @@ public interface IFlowManager
     Flow GetFlowById(int flowId);
     Flow GetFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    bool RemoveFlowFromProject(int flowId);
     List<Flow> GetFlowsByUserId(string userId);
     Flow GetFlowByInstallationId(int installationId);
     #endregion

@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -367,6 +368,14 @@ public class FlowRepository : IFlowRepository
     {
         _context.Flows.Update(model);
         _context.SaveChanges();
+    }
+
+    public bool RemoveFlowFromProject(int flowId)
+    {
+        Flow flow = _context.Flows.First(f => f.Id == flowId);
+        _context.Flows.Remove(flow);
+        _context.SaveChanges();
+        return true;
     }
 
     public List<Flow> ReadFlowsByUserId(string userId)

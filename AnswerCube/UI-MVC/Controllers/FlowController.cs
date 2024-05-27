@@ -90,7 +90,8 @@ public class FlowController : BaseController
         var slides = _flowManager.GetAllSlides();
         return View(slides);
     }
-
+    
+    
     public IActionResult EditFlowView(int flowid)
     {
         Flow flow = _flowManager.GetFlowWithProjectById(flowid);
@@ -109,6 +110,19 @@ public class FlowController : BaseController
         return RedirectToAction("EditFlowView", new { flowid = model.Id });
     }
 
+    public IActionResult DeleteFlow(int flowId, int projectId)
+    {
+        if (_flowManager.RemoveFlowFromProject(flowId))
+        {
+            Flow flow = _flowManager.GetFlowById(flowId);
+            return RedirectToAction("Flows", "Project", new { projectId = projectId });
+        }
+        else
+        {
+            return View("Error");
+        }
+    }
+    
     public IActionResult RemoveSlideFromList(int projectId, int slidelistid, int slideId)
     {
         
@@ -143,5 +157,7 @@ public class FlowController : BaseController
         TempData["ErrorMessage"] = "Failed to remove SlideList from Flow.";
         return RedirectToAction("FlowDetails", "Flow", new { flowId = flowId });
     }
+    
+    
         
 }

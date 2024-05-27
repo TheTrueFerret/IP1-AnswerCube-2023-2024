@@ -38,6 +38,7 @@ public interface IFlowRepository
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    bool RemoveFlowFromProject(int flowId);
     List<Flow> ReadFlowsByUserId(string userId);
     Flow ReadFlowByInstallationId(int installationId);
     #endregion
