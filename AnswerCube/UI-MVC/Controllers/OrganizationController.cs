@@ -43,6 +43,7 @@ public class OrganizationController : BaseController
                 var supervisors = _organizationManager.GetSupervisorsByOrgId(organization.Id);
                 ViewBag.Deelplatformbeheeders = deelplatformbeheerders;
                 ViewBag.Supervisors = supervisors;
+                TempData["OrganizationLogo"] = organization.LogoUrl;
                 return View(organization);
             }
         }
@@ -60,6 +61,7 @@ public class OrganizationController : BaseController
                 var supervisors = _organizationManager.GetSupervisorsByOrgId(organizations[0].Id);
                 ViewBag.Deelplatformbeheeders = deelplatformbeheerders;
                 ViewBag.Supervisors = supervisors;
+                TempData["OrganizationLogo"] = organizations[0].LogoUrl;
                 return View(organizations[0]);
             }
 
@@ -79,6 +81,7 @@ public class OrganizationController : BaseController
             var supervisors = _organizationManager.GetSupervisorsByOrgId(organization.Id);
             ViewBag.Deelplatformbeheeders = deelplatformbeheerders;
             ViewBag.Supervisors = supervisors;
+            TempData["OrganizationLogo"] = organization.LogoUrl;
             return View("Index", organization);
         }
 
@@ -88,6 +91,7 @@ public class OrganizationController : BaseController
             var supervisors = _organizationManager.GetSupervisorsByOrgId(organization.Id);
             ViewBag.Deelplatformbeheeders = deelplatformbeheerders;
             ViewBag.Supervisors = supervisors;
+            TempData["OrganizationLogo"] = organization.LogoUrl;
             return View("Index", organization);
         }
 
