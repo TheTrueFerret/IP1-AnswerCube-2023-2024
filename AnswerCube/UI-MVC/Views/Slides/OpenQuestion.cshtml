@@ -5,32 +5,33 @@
     Layout = ViewData["Layout"] as string;
 }
 
-<div class="container mt-5">
-    <div class="slide-container border p-4 rounded position-relative">
-        <div class=" subtheme-container d-flex justify-content-center align-items-center bg-light p-3 mb-3 w-100">
-            <span class="font-weight-bold h3 mb-0">Subtheme - @Model.SubTheme.Name</span>
-            <p id="timer"></p>
-        </div>
-        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
-            Change Subtheme
-        </a>
-                <h1 class="question">Open Question</h1>
+
+<h1 class="question">Open Question</h1>
         <div id="slide" class="question">
-            <h3>@Model.Text</h3>
-            @if (Model.MediaUrl != null)
+            <h3>@Model.SlideModel.Text</h3>
+            @if (Model.SlideModel.MediaUrl != null)
             {
-                <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video><br>
+                // Check if mediaUrl exists
+                // Extract the filename from the media URL
+                var filename = Model.SlideModel.MediaUrl.Split('/').Last();
+                // Extract the media type from the filename
+                var mediaType = filename.Split('_')[0];
+                // Default to "image" if the media type is not "video"
+                if (mediaType == "video")
+                {
+                    <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+                    <br>
+                }
+                else if (mediaType == "image")
+                {
+                    <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
+                }
+                else
+                {
+                    <em>Unsupported media type</em>
+                }
             }
-            else if (mediaType == "image")
-            {
-                <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
-            }
-            else
-            {
-                <em>Unsupported media type</em>
-            }
-        }
-        <input type="text" id="input" value="" placeholder="Answer the question.">\
+        <input type="text" id="input" value="" placeholder="Answer the question.">
     </div>
 <button id="submitAnswer" type="button">Submit Answer</button>
 <button id="skipSlide" type="button">Skip</button>
