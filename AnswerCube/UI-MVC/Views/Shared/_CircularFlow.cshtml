@@ -1,3 +1,5 @@
+@model SlideCompositeModel
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +18,19 @@
 
 <div class="container">
     <main role="main" class="pb-3">
-        @RenderBody()
+        <div class="container mt-5">
+            <div class="slide-container border p-4 rounded position-relative">
+                <div class=" subtheme-container d-flex justify-content-center align-items-center bg-light p-3 mb-3 w-100">
+                    <span class="font-weight-bold h3 mb-0">Subtheme - @Model.CircularFlowModel.SubTheme.Name</span>
+                </div>
+                <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
+                    Change Subtheme
+                </a>
+                @RenderBody()
+                
+                <!-- TODO zet de knoppen hier en aan de hand van het slidetype ander knoppen showen -->
+            </div>
+        </div>
     </main>
 </div>
 

@@ -16,31 +16,32 @@ document.addEventListener('keydown', (event) => {
             cubeId = i.toString()
         }
     }
+    var cubeNumber: number = Number(cubeId)
 
     if (cubeId != null) {
         if (keysPressed.has('ArrowDown') && keysPressed.has(cubeId)) {
-            move(Number(cubeId), 'down', slideType);
+            move(cubeNumber, 'down', slideType);
         }
         if (keysPressed.has('ArrowUp') && keysPressed.has(cubeId)) {
-            move(Number(cubeId), 'up', slideType);
+            move(cubeNumber, 'up', slideType);
         }
         if (keysPressed.has('ArrowLeft') && keysPressed.has(cubeId)) {
             if (slideType === "MultipleChoice") {
-                window.selectButton(Number(cubeId));
+                window.selectButton(cubeNumber);
             }
         }
         if (keysPressed.has('ArrowRight') && keysPressed.has(cubeId)) {
             if (slideType === "InfoSlide") {
-                window.skipQuestion();
+                window.vote(cubeNumber, 'skip');
             } else {
-                window.postAnswer(Number(cubeId), 'skip');
+                window.vote(cubeNumber, 'skip');
             }
         }
         if (keysPressed.has('Enter') && keysPressed.has(cubeId)) {
             if (slideType === "InfoSlide") {
-                window.skipQuestion();
+                window.vote(cubeNumber, 'submit');
             } else {
-                window.postAnswer(Number(cubeId), 'submit');
+                window.vote(cubeNumber, 'submit');
             }
         }
     } else if (keysPressed.size === 1) {
@@ -57,16 +58,16 @@ document.addEventListener('keydown', (event) => {
         }
         if (keysPressed.has('ArrowRight')) {
             if (slideType === "InfoSlide") {
-                window.skipQuestion();
+                window.vote(0, 'skip');
             } else {
-                window.postAnswer(0, 'skip');
+                window.vote(0, 'skip');
             }
         }
         if (keysPressed.has('Enter')) {
             if (slideType === "InfoSlide") {
-                window.skipQuestion();
+                window.vote(0, 'submit');
             } else {
-                window.postAnswer(0, 'submit');
+                window.vote(0, 'submit');
             }
         }
     }

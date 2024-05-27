@@ -5,7 +5,7 @@ var url = window.location.toString();
 
 
 export function getSessions() {
-    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetSessions/", {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

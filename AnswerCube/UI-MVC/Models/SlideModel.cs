@@ -12,5 +12,4 @@ public class SlideModel
     public List<string>? AnswerList { get; set; }
     public string? MediaUrl { get; set; }
     public SlideList SlideList { get; set; }
-    public SubTheme SubTheme { get; set; }
 }
