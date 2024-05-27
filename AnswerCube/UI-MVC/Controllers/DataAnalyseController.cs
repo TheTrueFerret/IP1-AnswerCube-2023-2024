@@ -1,4 +1,5 @@
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.DAL;
 using Domain;
@@ -34,6 +35,13 @@ public class DataAnalyseController : BaseController
     {
         var slides = _answerManager.GetSlides();
         return slides;
+    }
+    
+    [HttpGet("Sessions")]
+    public ActionResult<List<Session>> GetSessions()
+    {
+        var sessions = _answerManager.GetSessions();
+        return sessions;
     }
 
     [HttpGet("SlideById/{id:int}")]

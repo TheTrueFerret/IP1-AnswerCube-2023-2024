@@ -9,5 +9,6 @@ public interface IAnswerManager
     List<Answer> GetAnswers();
     
     List<Slide> GetSlides();
+    List<Session> GetSessions();
     List<Answer> GetAnswersBySessionId(int sessionId);
 }

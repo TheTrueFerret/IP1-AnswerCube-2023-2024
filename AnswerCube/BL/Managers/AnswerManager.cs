@@ -27,7 +27,12 @@ public class AnswerManager : IAnswerManager
     {
         return _repository.GetSlides();
     }
-    
+
+    public List<Session> GetSessions()
+    {
+        return _repository.GetSessions();
+    }
+
     public List<Answer> GetAnswersBySessionId(int sessionId)
     {
         return _repository.GetAnswersBySessionId(sessionId);

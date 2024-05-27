@@ -52,7 +52,13 @@ public class AnswerRepository : IAnswerRepository
             .ToList();
         return slides;
     }
-    
+
+    public List<Session> GetSessions()
+    {
+        var sessions = _context.Sessions.ToList();
+        return sessions;
+    }
+
     public List<Answer> GetAnswersBySessionId(int sessionId)
     {
         var answers = _context.Answers.Where(s => s.Session.Id == sessionId)

@@ -93,7 +93,6 @@ function postAnswer(cubeId, action) {
     let answer = getTextInput();
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
-        // Show error to the user, e.g., alert or some UI indication
         alert('Please select at least one answer before submitting <3');
         return;
     }

@@ -48,7 +48,9 @@ public class FlowRepository : IFlowRepository
 
     public Slide ReadSlideById(int id)
     {
-        return _context.Slides.Include(s => s.ConnectedSlideLists).ThenInclude(cs => cs.SlideList)
+        return _context.Slides
+            .Include(s => s.ConnectedSlideLists)
+            .ThenInclude(cs => cs.SlideList)
             .First(s => s.Id == id);
     }
 
