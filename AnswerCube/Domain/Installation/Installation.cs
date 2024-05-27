@@ -14,7 +14,8 @@ public class Installation
     public int CurrentSlideIndex { get; set; }
     public int? MaxSlideIndex { get; set; }
     public int? ActiveSlideListId { get; set; }
-    
+    public string? ConnectionId { get; set; }
+
     // Relational Attributes:
     public int OrganizationId { get; set; }
     public Organization Organization { get; set; }

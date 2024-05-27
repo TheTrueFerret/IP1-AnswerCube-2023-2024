@@ -92,10 +92,8 @@ services.AddSession(options =>
 
 services.AddHttpContextAccessor();
 services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-
-
 services.AddSingleton<CloudStorageService>();
+
 if (Environment.GetEnvironmentVariable("ENVIRONMENT")=="Production")
 {
     string REDISCONNECT = Environment.GetEnvironmentVariable("REDIS_HOST") + ":" + Environment.GetEnvironmentVariable("REDIS_PORT");
@@ -131,8 +129,9 @@ services.AddLogging(logging =>
     logging.AddDebug();
 });
 
-services.AddScoped<FlowHub>();
 services.AddSignalR();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -142,6 +141,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

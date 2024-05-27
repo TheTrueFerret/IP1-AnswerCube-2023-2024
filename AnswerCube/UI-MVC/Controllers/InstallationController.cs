@@ -23,6 +23,7 @@ public class InstallationController : BaseController
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly JwtService _jwtService;
     private readonly UserManager<AnswerCubeUser> _userManager;
+    private readonly ILogger<InstallationController> _logger;
     
     public InstallationController(
         IFlowManager flowManager, 
@@ -30,7 +31,8 @@ public class InstallationController : BaseController
         IInstallationManager installationManager, 
         IHttpContextAccessor httpContextAccessor, 
         JwtService jwtService, 
-        UserManager<AnswerCubeUser> userManager)
+        UserManager<AnswerCubeUser> userManager,
+        ILogger<InstallationController> logger)
     {
         _flowManager = flowManager;
         _organizationManager = organizationManager;
@@ -38,6 +40,7 @@ public class InstallationController : BaseController
         _httpContextAccessor = httpContextAccessor;
         _jwtService = jwtService;
         _userManager = userManager;
+        _logger = logger;
     }
     
     [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
@@ -84,6 +87,16 @@ public class InstallationController : BaseController
                 });
         }
         return View(flowModels);
+    }
+
+    [HttpPost]
+    [Route("Installation/SetInstallationUrl/{url}")]
+    public IActionResult SetInstallationUrl(string url)
+    {
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        _installationManager.SetInstallationUrl(installationId, url);
+        return Ok();
     }
 
     

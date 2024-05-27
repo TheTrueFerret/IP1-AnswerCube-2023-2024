@@ -9,17 +9,21 @@ namespace AnswerCube.DAL.EF;
 public class MailRepository : IMailRepository
 {
     private readonly IEmailSender _emailSender;
-    private readonly IUrlHelper _urlHelper;
+    private readonly IUrlHelperFactory _urlHelperFactory;
+    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private string htmlMessage = "";
 
     public MailRepository(IEmailSender emailSender, IUrlHelperFactory urlHelperFactory,
         IActionContextAccessor actionAccessor, IHttpContextAccessor httpContextAccessor)
     {
-        _urlHelper = urlHelperFactory.GetUrlHelper(actionAccessor.ActionContext);
+        _urlHelperFactory = urlHelperFactory;
+        _actionContextAccessor = actionAccessor;
         _httpContextAccessor = httpContextAccessor;
         _emailSender = emailSender;
     }
+    
+    private IUrlHelper _urlHelper => _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
     public async Task SendExistingEmail(string email, string organizationName)
     {

@@ -165,4 +165,38 @@ public class InstallationRepository : IInstallationRepository
         _context.Notes.Add(newNote);
         _context.SaveChanges();
     }
+
+    public void UpdateInstallationUrl(int installationId, string url)
+    {
+        Installation installation = _context.Installations.SingleOrDefault(i => i.Id == installationId);
+        if (installation == null)
+        {
+            return;
+        }
+        installation.ConnectionId = url;
+        _context.SaveChanges();
+    }
+
+    public string GetConnectionIdByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations.SingleOrDefault(i => i.Id == installationId);
+        if (installation == null)
+        {
+            return null;
+        }
+        return installation.ConnectionId;
+    }
+
+    public List<Installation> ReadActiveInstallationsFromOrganizations(List<Organization> organizations)
+    {
+        List<Installation> installations = new List<Installation>();
+        foreach (var organization in organizations)
+        {
+            installations.AddRange(_context.Installations
+                .Where(i => i.Organization == organization)
+                .Where(i => i.Active));
+        }
+
+        return installations;
+    }
 }

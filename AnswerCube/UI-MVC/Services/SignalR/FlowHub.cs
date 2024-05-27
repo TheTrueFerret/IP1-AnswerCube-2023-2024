@@ -18,7 +18,18 @@ public class FlowHub : Hub
     
     public async Task StopFlow(string installationId)
     {
-        await Clients.All.SendAsync("FlowStopped", installationId);
+        if (Clients == null)
+        {
+            _logger.LogError("Clients is null");
+        }
+        else if (Clients.All == null)
+        {
+            _logger.LogError("Clients.All is null");
+        }
+        else
+        {
+            await Clients.All.SendAsync("FlowStopped", installationId);
+        }
     }
     
     public async Task StartFlow(string installationId)

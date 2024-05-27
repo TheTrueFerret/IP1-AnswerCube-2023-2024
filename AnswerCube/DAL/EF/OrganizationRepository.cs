@@ -189,8 +189,17 @@ public class OrganizationRepository : IOrganizationRepository
 
     public bool CreateUserOrganization(AnswerCubeUser user)
     {
-        Organization organization = _context.Organizations.First(o => o.Name == _context.DeelplatformbeheerderEmails
-            .First(d => d.Email == user.Email && d.IsDeelplatformBeheerder).DeelplatformNaam);
+        Organization? organization = _context.Organizations.FirstOrDefault(o => o.Name == _context
+            .DeelplatformbeheerderEmails
+            .First(d => d.Email == user.Email).DeelplatformNaam);
+        if (_context.DeelplatformbeheerderEmails.First(d => d.Email == user.Email).IsDeelplatformBeheerder)
+        {
+            _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+        }
+        else
+        {
+            _userManager.AddToRoleAsync(user, "Supervisor");
+        }
 
         if (organization != null)
         {

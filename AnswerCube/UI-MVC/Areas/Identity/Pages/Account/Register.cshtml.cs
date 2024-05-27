@@ -154,10 +154,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     if (IsDeelplatformBeheerder(user))
                     {
                         role = await _roleManager.FindByNameAsync("DeelplatformBeheerder");
-                        if (role != null)
-                        {
-                            if (role.Name != null) await _userManager.AddToRoleAsync(user, role.Name);
-                        }
+                        if (role is { Name: not null }) await _userManager.AddToRoleAsync(user, role.Name);
 
                         _organizationManager.AddUserToOrganization(user);
                     }
