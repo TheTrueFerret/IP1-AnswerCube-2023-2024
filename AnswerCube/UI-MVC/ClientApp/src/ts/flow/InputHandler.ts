@@ -1,83 +1,124 @@
+import {max} from "@popperjs/core/lib/utils/math";
+
 const keysPressed = new Set();
+const skipBtn: HTMLElement | null = document.getElementById("skipSlide");
+const submitBtn: HTMLElement | null = document.getElementById("submitAnswer");
+const MAX_USERS: number = 4;
+let cubeId: string | null = null;
 
 document.addEventListener('keydown', (event) => {
     keysPressed.add(event.key);
     const slideType: string = window.slideType;
+    cubeId = null;
+    
+    for (let i: number = 0; i <= MAX_USERS; i++) {
+        if (keysPressed.has(i.toString())) {
+            cubeId = i.toString()
+        }
+    }
+    var cubeNumber: number = Number(cubeId)
 
-    if (keysPressed.has('ArrowDown') && keysPressed.has('1') || keysPressed.has('ArrowDown')) {
-        console.log('ArrowDown + CubeId: 1');
-        if (slideType == "MultipleChoice" && typeof window.moveSelectedButton === 'function') {
-            window.moveSelectedButton('down');
+    if (cubeId != null) {
+        if (keysPressed.has('ArrowDown') && keysPressed.has(cubeId)) {
+            move(cubeNumber, 'down', slideType);
         }
-        if (slideType == "SingleChoice" && typeof window.moveCheckedRadioButton === 'function') {
-            window.moveCheckedRadioButton('down');
+        if (keysPressed.has('ArrowUp') && keysPressed.has(cubeId)) {
+            move(cubeNumber, 'up', slideType);
         }
-        if (slideType == "RangeQuestion" && typeof window.moveRangeButton === 'function') {
-            window.moveRangeButton('down');
+        if (keysPressed.has('ArrowLeft') && keysPressed.has(cubeId)) {
+            if (slideType === "MultipleChoice") {
+                window.selectButton(cubeNumber);
+            }
         }
-    } 
-    if (keysPressed.has('ArrowUp') && keysPressed.has('1') || keysPressed.has('ArrowUp')) {
-        console.log('ArrowUp + CubeId: 1');
-        if (slideType == "MultipleChoice" && typeof window.moveSelectedButton === 'function') {
-            window.moveSelectedButton('up');
+        if (keysPressed.has('ArrowRight') && keysPressed.has(cubeId)) {
+            if (slideType === "InfoSlide") {
+                window.vote(cubeNumber, 'skip');
+            } else {
+                window.vote(cubeNumber, 'skip');
+            }
         }
-        if (slideType == "SingleChoice" && typeof window.moveCheckedRadioButton === 'function') {
-            window.moveCheckedRadioButton('up');
+        if (keysPressed.has('Enter') && keysPressed.has(cubeId)) {
+            if (slideType === "InfoSlide") {
+                window.vote(cubeNumber, 'submit');
+            } else {
+                window.vote(cubeNumber, 'submit');
+            }
         }
-        if (slideType == "RangeQuestion" && typeof window.moveRangeButton === 'function') {
-            window.moveRangeButton('up');
+    } else if (keysPressed.size === 1) {
+        if (keysPressed.has('ArrowDown')) {
+            move(0, 'down', slideType);
+        }
+        if (keysPressed.has('ArrowUp')) {
+            move(0, 'up', slideType);
+        }
+        if (keysPressed.has('ArrowLeft')) {
+            if (slideType === "MultipleChoice") {
+                window.selectButton(0);
+            }
+        }
+        if (keysPressed.has('ArrowRight')) {
+            if (slideType === "InfoSlide") {
+                window.vote(0, 'skip');
+            } else {
+                window.vote(0, 'skip');
+            }
+        }
+        if (keysPressed.has('Enter')) {
+            if (slideType === "InfoSlide") {
+                window.vote(0, 'submit');
+            } else {
+                window.vote(0, 'submit');
+            }
         }
     }
-    if (keysPressed.has('ArrowLeft') && keysPressed.has('1') || keysPressed.has('ArrowLeft')) {
-        if (slideType == "MultipleChoice" && typeof window.selectButton === 'function') {
-            window.selectButton();
-        }
-    }
-    if (keysPressed.has('ArrowRight') && keysPressed.has('1') || keysPressed.has('ArrowRight')) {
-        if (slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
-            window.skipQuestion();
-        } else {
-            window.postAnswer(1, 'skip');
-        }
-    }
-    if (keysPressed.has('Enter') && keysPressed.has('1') || keysPressed.has('Enter')) {
-        console.log('Enter + CubeId: 1')
-        if (slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
-            window.skipQuestion();
-        } else {
-            window.postAnswer(1, 'submit');
-        }
-    }
-    switch (event.key) {
-        default:
-            console.log(event.key, event.keyCode);
-            return;
-    }
+    
 });
 
-document.addEventListener('keyup', (event) => {
-    keysPressed.delete(event.key);
-});
+
+function move(cubeId: number, direction: 'up' | 'down', slideType: string) {
+    console.log(direction + ' + CubeId: ' + cubeId);
+    if (slideType == "MultipleChoice" && typeof window.moveSelectedButton === 'function') {
+        window.moveSelectedButton(cubeId, direction);
+    }
+    if (slideType == "SingleChoice" && typeof window.moveCheckedRadioButton === 'function') {
+        window.moveCheckedRadioButton(cubeId, direction);
+    }
+    if (slideType == "RangeQuestion" && typeof window.moveRangeButton === 'function') {
+        window.moveRangeButton(cubeId, direction);
+    }
+}
 
 
-const submitBtn: HTMLElement | null = document.getElementById("submitAnswer");
+
 if (submitBtn) {
     submitBtn.addEventListener('click', function () {
         if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
             window.skipQuestion();
         } else {
-            window.postAnswer(1, 'submit');
+            if (cubeId != null) {
+                window.postAnswer(Number(cubeId), 'submit');
+            } else {
+                window.postAnswer(1, 'submit');
+            }
         }
     });
 }
 
-const skipBtn: HTMLElement | null = document.getElementById("skipSlide");
 if (skipBtn) {
-    skipBtn.addEventListener('click', function() {
+    skipBtn.addEventListener('click', function () {
         if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
             window.skipQuestion();
         } else {
-            window.postAnswer(1, 'skip');
+            if (cubeId != null) {
+                window.postAnswer(Number(cubeId), 'submit');
+            } else {
+                window.postAnswer(1, 'submit');
+            }
         }
     });
 }
+
+document.addEventListener('keyup', (event) => {
+    keysPressed.delete(event.key);
+});
+

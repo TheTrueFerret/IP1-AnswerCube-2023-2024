@@ -61,7 +61,7 @@ function getRangeAnswer(): string[] {
     return selectedAnswers;
 }
 
-function moveRangeButton(direction: 'up' | 'down') {
+function moveRangeButton(cubeId: number, direction: 'up' | 'down') {
     rangeInput.focus()
     if (direction == "up") {
         if (rangeInput.valueAsNumber < max) {
@@ -79,7 +79,7 @@ function moveRangeButton(direction: 'up' | 'down') {
 declare global {
     interface Window {
         slideType: string;
-        moveRangeButton: (direction: 'up' | 'down') => void;
+        moveRangeButton: (cubeId: number, direction: 'up' | 'down') => void;
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }

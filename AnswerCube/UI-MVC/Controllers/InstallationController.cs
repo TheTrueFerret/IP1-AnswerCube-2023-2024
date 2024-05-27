@@ -98,7 +98,7 @@ public class InstallationController : BaseController
         _installationManager.SetInstallationUrl(installationId, url);
         return Ok();
     }
-
+    
     
     [HttpPost]
     public IActionResult SetInstallationToActive([FromBody] InstallationModel installationModel)
