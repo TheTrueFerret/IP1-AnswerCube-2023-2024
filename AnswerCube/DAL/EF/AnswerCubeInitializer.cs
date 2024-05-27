@@ -690,6 +690,15 @@ public static class AnswerCubeInitializer
             EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
         };
         session4.Answers = new List<Answer>();
+        
+        Session session5 = new Session()
+        {
+            CubeId = 2,
+            Installation = installation,
+            StartTime = DateTime.Now.AddDays(-2).AddMinutes(10.00).ToUniversalTime(),
+            EndTime = DateTime.Now.AddMinutes(10.00).ToUniversalTime()
+        };
+        session5.Answers = new List<Answer>();
 
         Answer answer = new Answer()
         {
@@ -846,7 +855,7 @@ public static class AnswerCubeInitializer
         {
             Slide = singleChoice2,
             Session = session4,
-            AnswerText = new List<string> { "Oneens" }
+            AnswerText = new List<string> { "Eens" }
         };
         
         Answer answer21 = new Answer()
