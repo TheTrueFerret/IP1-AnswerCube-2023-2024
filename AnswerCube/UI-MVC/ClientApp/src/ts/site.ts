@@ -28,10 +28,14 @@ async function getTheme() {
         if (response.ok) {
             const data = await response.text();
             const theme = data.toString().toLowerCase();
-            if (theme === "lighttheme") {
+            if (theme === "light") {
                 scssFile = 'lighttheme.scss';
-            } else if (theme === "darktheme") {
+            } else if (theme === "dark") {
                 scssFile = 'darktheme.scss';
+            } else if (theme === "darkgradation") {
+                scssFile = 'darkgradation.scss';
+            } else if (theme === "blue") {
+                scssFile = 'blue.scss';
             } else {
                 console.error('Unknown theme received:', theme);
             }

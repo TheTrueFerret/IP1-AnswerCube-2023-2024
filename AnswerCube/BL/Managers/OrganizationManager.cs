@@ -147,5 +147,9 @@ public class OrganizationManager : IOrganizationManager
     {
         return _repository.ReadThemeByInstallationId(installationId);
     }
-    
+
+    public bool UpdateOrganization(int organizationId, Theme theme)
+    {
+        return _repository.UpdateOrganization(organizationId, theme);
+    }
 }

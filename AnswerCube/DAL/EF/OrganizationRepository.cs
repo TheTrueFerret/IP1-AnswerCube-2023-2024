@@ -324,7 +324,17 @@ public class OrganizationRepository : IOrganizationRepository
             return installation.Organization.Theme;
         }
         
-        return Theme.LightTheme; 
+        return Theme.Light; 
     }
-    
+
+    public bool UpdateOrganization(int organizationId, Theme theme)
+    {
+        Organization organization = _context.Organizations
+            .Single(o => o.Id == organizationId);
+
+        organization.Theme = theme;
+        _context.Organizations.Update(organization);
+        _context.SaveChanges();
+        return true;
+    }
 }

@@ -34,4 +34,5 @@ public interface IOrganizationRepository
     Organization ReadOrganizationByName(string organizationName);
     Theme ReadThemeByOrganisationId(int organisationId);
     Theme ReadThemeByInstallationId(int installationId);
+    bool UpdateOrganization(int organizationId, Theme theme);
 }

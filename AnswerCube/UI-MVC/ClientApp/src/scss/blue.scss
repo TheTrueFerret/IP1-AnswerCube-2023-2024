@@ -1,0 +1,13 @@
+.page-container {
+  background-color: #0077FF; // Professioneel glanzend blauw
+  color: black; // Tekstkleur instellen op zwart
+
+  // Optioneel: overgangseffect toevoegen voor soepele overgangen
+  transition: background-color 0.5s, color 0.5s;
+
+  // Stijlen voor specifieke elementen binnen de paginacontainer
+  h1, p, label {
+    font-weight: bold;
+  }
+}
+

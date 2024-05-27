@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -116,5 +117,17 @@ public class OrganizationController : BaseController
         }
 
         return View("Error", new ErrorViewModel());
+    }
+    
+    public IActionResult UpdateTheme(int organizationId, Theme theme)
+    {
+        bool result = _organizationManager.UpdateOrganization(organizationId, theme);
+        if (result)
+        {
+            return Ok(new { message = "Theme updated successfully", theme = theme.ToString() });
+        } 
+        return StatusCode(500, new { message = "Failed to update theme" });
+        
+            
     }
 }

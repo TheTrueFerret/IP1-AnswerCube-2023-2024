@@ -11,7 +11,7 @@ public class Organization
     public string Name { get; set; }
     public string Email { get; set; }
     public Theme Theme { get; set; }
-    public string logoUrl { get; set; }
+    public string? logoUrl { get; set; }
     public List<Project> Projects { get; set; } = new List<Project>();
     public List<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
     public List<Installation>? Installations { get; set; }

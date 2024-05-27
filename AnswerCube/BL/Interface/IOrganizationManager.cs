@@ -34,4 +34,5 @@ public interface IOrganizationManager
     Project GetProjectWithFlowsById(int projectId);
     Theme GetThemeByOrganisationId(int organisationId);
     Theme GetThemeByInstallationId(int installationId);
+    bool UpdateOrganization(int organizationId, Theme theme);
 }

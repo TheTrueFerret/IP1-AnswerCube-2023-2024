@@ -4,8 +4,10 @@
 @{
     ViewBag.Title = "Project Overzicht";
     Layout = "_Layout";
-    var isLightThemeSelected = Model.Theme == Theme.LightTheme ? "selected" : "";
-    var isDarkThemeSelected = Model.Theme == Theme.DarkTheme ? "selected" : "";
+    var isLightSelected = Model.Theme == Theme.Light ? "selected" : "";
+    var isDarkSelected = Model.Theme == Theme.Dark ? "selected" : "";
+    var isDarkGradationSelected = Model.Theme == Theme.DarkGradation ? "selected" : "";
+    var isBlueSelected = Model.Theme == Theme.Blue ? "selected" : "";
 }
 
 <div class="container">
@@ -14,124 +16,124 @@
             <h1>Organisatie</h1>
             <input type="text" id="searchInput" class="form-control mt-2" placeholder="Type a name to search">
         </div>
-            <div class="col-6 d-flex align-items-end">
-                <div class="card mb-1" style="width: 47%; background-color: #f8f9fa;">
+        <div class="col-6 d-flex align-items-end">
+            <div class="card mb-1" style="width: 47%; background-color: #f8f9fa;">
                 <div class="card-body">
                     <label for="themeSelector" class="form-label font-weight-bold fw-bold">Choose Theme</label>
-                    <select id="themeSelector" class="form-control" name="selectedTheme" required>
-                        @Html.Raw($"<option value=\"light\" {isLightThemeSelected}>Light Theme</option>")
-                        @Html.Raw($"<option value=\"dark\" {isDarkThemeSelected}>Dark Theme</option>")
-                    </select>
+                    <form method="post" asp-action="UpdateTheme" asp-controller="Organization">
+                        <input type="hidden" id="organizationId" name="organizationId" value="@Model.Id"/>
+                        <select id="themeSelector" class="form-control" id="theme" name="theme" required onchange="this.form.submit()">
+                            @Html.Raw($"<option value=\"light\" {isLightSelected}>Light</option>")
+                            @Html.Raw($"<option value=\"dark\" {isDarkSelected}>Dark</option>")
+                            @Html.Raw($"<option value=\"darkgradation\" {isDarkGradationSelected}>Dark Gradation</option>")
+                            @Html.Raw($"<option value=\"blue\" {isBlueSelected}>Blue</option>")
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-9">
-            <h2>Projecten</h2>
-            <div id="infoDiv"></div>
-            <div class="row">
-                @foreach (var project in Model.Projects)
-                {
-                    <div class="col-sm-6 mb-3 project-div" data-project-id="@project.Id"
-                         data-organization-id="@Model.Id"
-                         data-project-name="@project.Title">
-                        <div class="card h-auto">
-                            <div class="card-body">
-                                <h2 class="card-title">@project.Title</h2>
-                                <strong>Description:</strong>
-                                <p class="card-text">@project.Description</p>
+        <div class="row">
+            <div class="col-9">
+                <h2>Projecten</h2>
+                <div id="infoDiv"></div>
+                <div class="row">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <div class="col-sm-6 mb-3 project-div" data-project-id="@project.Id"
+                             data-organization-id="@Model.Id"
+                             data-project-name="@project.Title">
+                            <div class="card h-auto">
+                                <div class="card-body">
+                                    <h2 class="card-title">@project.Title</h2>
+                                    <strong>Description:</strong>
+                                    <p class="card-text">@project.Description</p>
 
-                                <p>
-                                    <strong>Status:</strong> @(project.IsActive ? "Actief" : "Niet actief")
-                                </p>
-                                <p>
-                                    <strong>Totaal aantal flows:</strong> @project.Flows.Count
-                                </p>
-                                <p>
-                                    <strong>Totaal actieve installaties:</strong> @project.TotalActiveInstallations
-                                </p>
+                                    <p>
+                                        <strong>Status:</strong> @(project.IsActive ? "Actief" : "Niet actief")
+                                    </p>
+                                    <p>
+                                        <strong>Totaal aantal flows:</strong> @project.Flows.Count
+                                    </p>
+                                    <p>
+                                        <strong>Totaal actieve installaties:</strong> @project.TotalActiveInstallations
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary"
+                                            onclick="location.href='@Url.Action("EditProject", "Project", new { projectId = project.Id })'" title="Edit Project">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger"
+                                            title="Delete Project"
+                                            onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-footer">
+                        </div>
+                    }
+
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="card-title">New Project</h2>
+                                <p class="card-text">Voeg een nieuw project toe</p>
                                 <button class="btn btn-primary"
-                                        onclick="location.href='@Url.Action("EditProject", "Project", new { projectId = project.Id })'" title="Edit Project">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                                        title="New Project"
+                                        onclick="location.href='@Url.Action("NewProject", "Project", new { organizationId = Model.Id })'">
+                                    <i class="fas fa-plus"></i>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <h2>Deelplatformbeheerders</h2>
+                <div class="list-group scrollable-list">
+                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
+                        Add Deelplatformbeheerder
+                    </button>
+                    <div class="modal fade" id="addDeelplatformbeheerderModal" tabindex="-1" aria-labelledby="addDeelplatformbeheerderModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addDeelplatformbeheerderModalLabel">Add Deelplatformbeheerder</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" asp-action="AddDeelplatformbeheerderToOrganization" asp-controller="Organization">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                            <input type="hidden" id="organizationid" name="organizationid" value="@Model.Id">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.UserOrganizations.Count == 0)
+                    {
+                        <p>Er zijn geen deelplatformbeheerders</p>
+                    }
+                    else
+                    {
+                        @foreach (var userOrg in Model.UserOrganizations)
+                        {
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-capitalize">@userOrg.User.UserName</p>
                                 <button class="btn btn-danger"
-                                        title="Delete Project"
-                                        onclick="location.href='@Url.Action("DeleteProject", "Project", new { projectId = project.Id, organisationId = Model.Id })'">
+                                        title="Remove Deelplatformbeheerder"
+                                        onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                }
-
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title">New Project</h2>
-                            <p class="card-text">Voeg een nieuw project toe</p>
-                            <button class="btn btn-primary"
-                                    title="New Project"
-                                    onclick="location.href='@Url.Action("NewProject", "Project", new { organizationId = Model.Id })'">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <h2>Deelplatformbeheerders</h2>
-            <div class="list-group scrollable-list">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
-                    Add Deelplatformbeheerder
-                </button>
-                <div class="modal fade" id="addDeelplatformbeheerderModal" tabindex="-1" aria-labelledby="addDeelplatformbeheerderModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addDeelplatformbeheerderModalLabel">Add Deelplatformbeheerder</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="post" asp-action="AddDeelplatformbeheerderToOrganization" asp-controller="Organization">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                        <input type="hidden" id="organizationid" name="organizationid" value="@Model.Id">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Add</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @if (Model.UserOrganizations.Count == 0)
-                {
-                    <p>Er zijn geen deelplatformbeheerders</p>
-                }
-                else
-                {
-                    @foreach (var userOrg in Model.UserOrganizations)
-                    {
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="text-capitalize">@userOrg.User.UserName</p>
-                            <button class="btn btn-danger"
-                                    title="Remove Deelplatformbeheerder"
-                                    onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script src="~/dist/project.entry.js"></script>
-    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
-}
