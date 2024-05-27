@@ -6,78 +6,33 @@
     Layout = "_Layout";
 }
 
-<style>
-    .flow-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background-color: #f8f9fa; /* Lichte achtergrondkleur voor aanklikbaarheid */
-        border: 1px solid #e9ecef;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        transition: background-color 0.3s;
-    }
-
-    .flow-item a {
-        font-weight: bold;
-        color:  black;
-        font-size: 22px;
-        text-decoration: none;
-        flex-grow: 1;
-    }
-    
-    .create-flow a {
-    font-weight: bold;
-     font-size: 22px;
-     text-decoration: none;
-     }
-
-    .flow-item a:hover {
-        color: #0056b3;
-        background-color: #e9ecef;
-    }
-
-    .btn-danger {
-        font-size: 18px; /* Kleinere trash can */
-    }
-
-    .flow-card {
-        width: 65%; /* Stel de gewenste breedte in */
-        margin: 0 auto; /* Centreer de kaart */
-    }
-
-    .card-footer {
-        text-align: center;
-    }
-   
-</style>
-
-<div class="container mt-5">
-    <div class="card flow-card">
+<div class="container mt-5 flow-card">
+    <div class="card mx-auto">
         <div class="card-header bg-dark text-white text-center">
             <h4 class="font-weight-bold">FLOWS</h4>
         </div>
         <div class="card-body">
             @if (Model.Flows.Count == 0)
             {
-                <p class="card-text">No Flows</p>
+                <div class="flow-item justify-content-between align-items-center text-dark fw-bold mb-3 p-2 mb-2 fs-4 flex-grow-1">
+                    No flows yet!
+                </div>
             }
             else
             {
                 @foreach (var flow in Model.Flows)
                 {
-                    <div class="flow-item mb-3">
-                        <a asp-action="FlowDetails" asp-controller="Flow" asp-route-flowId="@flow.Id" data-flowid="@flow.Id">@flow.Name</a>
+                    <a asp-action="FlowDetails" asp-controller="Flow" asp-route-flowId="@flow.Id" data-flowid="@flow.Id" class="flow-item d-flex justify-content-between align-items-center fw-bold mb-3 p-2 mb-2 fs-4 flex-grow-1 text-decoration-none">
+                        @flow.Name
                         <button class="btn btn-primary btn-danger" onclick="location.href='@Url.Action("DeleteFlow", "Flow", new { flowId = flow.Id, projectId = Model.Id })'">
                             <i class="fa-solid fa-trash"></i>
                         </button>
-                    </div>
+                    </a>
                 }
             }
         </div>
-        <div class="card-footer bg-success create-flow">
-            <a asp-action="NewFlowView" asp-controller="Project" asp-route-projectId="@Model.Id" class="create-new-flow-link text-white d-block text-center">
+        <div class="card-footer text-center bg-success create-flow fw-bold">
+            <a asp-action="NewFlowView" asp-controller="Project" asp-route-projectId="@Model.Id" class="create-new-flow-link text-white d-block text-center fs-4 text-decoration-none">
                 Create New Flow
             </a>
         </div>
