@@ -91,50 +91,7 @@ async function GetAllSlides() {
         }
     });
 }
-
-async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slideid: number) {
-    // Register necessary components
-    Chart.register(...registerables);
-    if (onderaan) {
-        onderaan.innerHTML = ""
-    }
-    // Get canvas element
-    const ctx = canvas?.getContext('2d');
-    if (canvas) {
-        // Destroy existing chart if it exists
-        if (currentChart) {
-            currentChart.destroy();
-        }
-
-        // Clear the canvas innerHTML in case it contains spinner
-        canvas.innerHTML = '';
-
-        // Create new chart
-        currentChart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: labelSet,
-                datasets: [{
-                    label: vraag,
-                    data: dataSet,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    } else {
-        console.error('Failed to get 2d context for canvas element.');
-    }
-}
-
+//
 async function GetSlideById(slideId: number) {
     var url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
@@ -164,49 +121,6 @@ async function GetSlideById(slideId: number) {
         }
     });
 }
-
-async function GetAllSessions() {
-    const url = window.location.toString();
-    try {
-        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Sessions", {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            },
-        });
-
-        if (response.status !== 200) {
-            if (left) {
-                left.innerHTML = "<em>problem!!!</em>";
-            }
-            return;
-        }
-
-        const data = await response.json();
-        if (data && data.length > 0) {
-            console.log("all sessions checked");
-            console.log(data.length);
-            aantalSessions = data.length;
-
-            // Sort sessions by session ID in descending order
-            data.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
-
-            // Fetch and display each session in sorted order
-            for (let i = 0; i < aantalSessions; i++) {
-                await GetSession(data[i].id);
-                console.log("session: " + data[i].id);
-            }
-        } else {
-            console.log("No data received from the API Sessions.");
-        }
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        if (left) {
-            left.innerHTML = "<em>Error fetching data!</em>";
-        }
-    }
-}
-
 async function GetAllAnswers(slideid: number) {
     var url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
@@ -259,10 +173,54 @@ async function GetAllAnswers(slideid: number) {
         });
 }
 
-async function GetSession(sessionId: number) {
+async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slideid: number) {
+    // Register necessary components
+    Chart.register(...registerables);
+    if (onderaan) {
+        onderaan.innerHTML = ""
+    }
+    // Get canvas element
+    const ctx = canvas?.getContext('2d');
+    if (canvas) {
+        // Destroy existing chart if it exists
+        if (currentChart) {
+            currentChart.destroy();
+        }
+
+        // Clear the canvas innerHTML in case it contains spinner
+        canvas.innerHTML = '';
+
+        // Create new chart
+        currentChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labelSet,
+                datasets: [{
+                    label: vraag,
+                    data: dataSet,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        console.error('Failed to get 2d context for canvas element.');
+    }
+}
+
+
+async function GetAllSessions() {
     const url = window.location.toString();
     try {
-        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Sessions", {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -270,36 +228,42 @@ async function GetSession(sessionId: number) {
         });
 
         if (response.status !== 200) {
-            if (sessions) {
-                sessions.innerHTML = "<em>problem!!!</em>";
+            if (left) {
+                left.innerHTML = "<em>problem!!!</em>";
             }
             return;
         }
 
         const data = await response.json();
         if (data && data.length > 0) {
-            console.log("by session id");
-            console.log(data);
+            console.log("all sessions checked");
+            console.log(data.length);
+            aantalSessions = data.length;
 
-            let sessionTitle: HTMLElement = document.createElement('div');
-            sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${sessionId}'>session: ${sessionId}</button>`;
-            if (sessions) {
-                console.log("appending to sessions");
-                sessions.appendChild(sessionTitle);
+            // Sort sessions by session ID in descending order
+            data.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
+
+            // Fetch and display each session in sorted order
+            for (let i = 1; i < aantalSessions+1; i++) {
+                let sessionTitle: HTMLElement = document.createElement('div');
+                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${i}'>session: ${i}</button>`;
+                if (sessions) {
+                    console.log("appending to sessions");
+                    sessions.appendChild(sessionTitle);
+                }
+                console.log("session: " + data[i]);
             }
-
             attachSessionEventListeners();
         } else {
-            console.log("No data received from the API GetSession.");
+            console.log("No data received from the API Sessions.");
         }
     } catch (error) {
         console.error("Error fetching data:", error);
-        if (sessions) {
-            sessions.innerHTML = "<em>Error fetching data!</em>";
+        if (left) {
+            left.innerHTML = "<em>Error fetching data!</em>";
         }
     }
 }
-
 function GetSessionById(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
@@ -325,10 +289,12 @@ function GetSessionById(sessionId: number) {
                 console.log("haha werkt lolhaha");
                 let itemDiv: HTMLElement = document.createElement('div');
                 let id = data[i].slide.id;
-                itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
-                    + "<h1>answer: " + data[i].answerText + "</h1>" +
-                    "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
-                infoKader.appendChild(itemDiv);
+                if (data[i].answerText.length > 0) {
+                    itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
+                        + "<h1>answer: " + data[i].answerText + "</h1>" +
+                        "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
+                    infoKader.appendChild(itemDiv);
+                }
             }
             console.log("appending");
             display.appendChild(infoKader);
@@ -358,7 +324,7 @@ function attachSessionEventListeners() {
             if (sessionIdString) {
                 const sessionId = parseInt(sessionIdString, 10);
                 console.log('Session button clicked, session ID:', sessionId);
-                GetSessionById(sessionId);
+                GetSessionById(sessionId);   
 
                 // Highlight the clicked button and remove highlight from others
                 sessionButtons.forEach(btn => btn.classList.remove('active'));
