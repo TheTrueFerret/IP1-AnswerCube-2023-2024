@@ -1,6 +1,9 @@
 using AnswerCube.BL;
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Services;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnswerCube.UI.MVC.Controllers.Api;
@@ -10,11 +13,13 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
     public class ThemeController : ControllerBase
     {
         private readonly IOrganizationManager _organizationManager;
+        private readonly UserManager<AnswerCubeUser> _userManager;
         private readonly JwtService _jwtService;
         
-        public ThemeController(IOrganizationManager manager, JwtService jwtService)
+        public ThemeController(IOrganizationManager manager, UserManager<AnswerCubeUser> userManager, JwtService jwtService)
         {
             _organizationManager = manager;
+            _userManager = userManager;
             _jwtService = jwtService;
         }
         
@@ -22,7 +27,7 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
         // inside site.ts an if statement or case to check in which controller we are
         // if inside CircularFlow Controller || LinearFlowController GetThemeByInstallationId
         
-        [Route("GetTheme/{controllerName}")]
+        [Route("/api/[controller]/GetTheme/{controllerName}")]
         [HttpGet]
         public IActionResult GetTheme(string controllerName)
         {
@@ -46,13 +51,13 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
                     return BadRequest("Invalid OrganizationId cookie value");
                 }
             }
-    
-            /*if (theme == null)
+            else
             {
-                return NotFound("Theme not found");
-            }*/
-
-            return Ok(theme);
+                Organization organization = _organizationManager.GetOrganizationByUserId(_userManager.GetUserId(User)).First();
+                theme = _organizationManager.GetThemeByOrganisationId(organization.Id);
+            }
+            
+            return Ok(theme.ToString());
         }
 
     }

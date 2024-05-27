@@ -44,8 +44,8 @@ GET http://localhost:5104/CircularFlow/GetNextSlide/
 Accept: application/json
 
 ###
-GET http://localhost:5104/api/Theme/GetTheme/
-Accept: application/json
+GET http://localhost:5104/api/Theme/GetTheme/CircularFlow
+Accept: application/json 
 
 ###
 POST http://localhost:5104/Account/Login/

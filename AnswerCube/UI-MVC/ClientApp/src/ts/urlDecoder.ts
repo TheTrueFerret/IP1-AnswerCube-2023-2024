@@ -14,12 +14,7 @@ export function getDomainFromUrl(the_url: string): string
 }
 
 export function getControllerNameFromUrl(the_url: string): string | null {
-    const urlParts = the_url.split('/');
-    // Check if the URL has at least two segments
-    if (urlParts.length < 2) {
-        return null;
-    }
-    // Extract domain (first segment) and controller (second segment)
-    const controller = urlParts[1];
-    return controller;
+    var the_arr = the_url.split('/');
+    the_arr.pop();
+    return( the_arr[3] );
 }

@@ -19,14 +19,14 @@ async function getTheme() {
     try {
         const domain = getDomainFromUrl(url);
         const controllerName = getControllerNameFromUrl(url);
-        const response = await fetch(`${domain}/api/theme/GetTheme/${controllerName}`, {
+        const response = await fetch(`${domain}/api/Theme/GetTheme/${controllerName}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
             },
         });
         if (response.ok) {
-            const data = await response.json();
+            const data = await response.text();
             const theme = data.toString().toLowerCase();
             if (theme === "lighttheme") {
                 scssFile = 'lighttheme.scss';
