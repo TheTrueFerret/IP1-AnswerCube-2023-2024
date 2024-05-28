@@ -1,193 +1,162 @@
-@model dynamic
-
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Data Analyse";
     Layout = "_Layout";
 }
-
-<h2>@ViewBag.Title</h2>
 <style>
-    table {
-        border-collapse: collapse;
+    body {
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    .AnswerFromSession > div{
+    display: flex;
+    flex-direction: column;
+    border: solid black;
+    height: fit-content;
+    }
+    
+    #data-container{
+        display: flex;
+        flex-direction: row;
+        z-index: -1;
+        max-width: 100%; /* Ensure it doesn't overflow the viewport */
+    }
+    
+    #barChart {
+        border: solid black;
+        max-width: calc(100% - 250px); /* Adjust according to the width of #left and #right */
+        flex-grow: 1;
+    }
+
+    #onderaan {
+        position: absolute;
+        top: 40vh;
+        height: 50px;
         width: 100%;
     }
-    th, td {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+
+    #left {
+        border: solid;
+        border-radius: 10px;
+        background-color: #ffa405;
+        min-width: 200px;
+        max-width: 200px; /* Ensure it has a fixed width */
+        overflow: auto;
     }
-    th {
-        background-color: #f2f2f2;
+
+    #sessions {
+    display: flex;
+    flex-direction: row;
+        min-width: 50px;
+        max-width: 100vw; /* Ensure it has a fixed width */
+    }
+    .sessionButton.active {
+        background-color: #4CAF50; /* Green */
+        color: white;
+    }
+    .sessionButton {
+    
+    }
+    #sessions > div:nth-of-type(1) > button {
+        background-color : red;
+        border: solid black;
+        border-radius: 5px;
+    }
+    
+    #display {
+    height: 100vh;
+    }
+
+    .slideButton {
+        position: relative;
+        width: 200px;
+    }
+
+    h1 {
+        /*height: 100px;*/
+        text-align: center;
+    }
+    
+    /* Loading symbol */
+    .loader {
+        position: absolute;
+        left: 28vw;
+        top: 100px;
+        font-size: 50px;
+    }
+
+    .spinner {
+        position: absolute;
+        left: 30%;
+        width: 70.4px;
+        height: 70.4px;
+        animation: spinner 1.6s infinite ease;
+        transform-style: preserve-3d;
+    }
+        
+    .spinner > div {
+        background-color: rgba(247, 197, 159, 0.1);
+        height: 100%;
+        position: absolute;
+        width: 100%;
+        border: 3.5px solid rgb(247, 197, 159);
+    }
+
+    .spinner div:nth-of-type(1) {
+        transform: translateZ(-35.2px) rotateY(180deg);
+    }
+
+    .spinner div:nth-of-type(2) {
+        transform: rotateY(-270deg) translateX(50%);
+        transform-origin: top right;
+    }
+
+    .spinner div:nth-of-type(3) {
+        transform: rotateY(270deg) translateX(-50%);
+        transform-origin: center left;
+    }
+
+    .spinner div:nth-of-type(4) {
+        transform: rotateX(90deg) translateY(-50%);
+        transform-origin: top center;
+    }
+
+    .spinner div:nth-of-type(5) {
+        transform: rotateX(-90deg) translateY(50%);
+        transform-origin: bottom center;
+    }
+
+    .spinner div:nth-of-type(6) {
+        transform: translateZ(35.2px);
+    }
+
+    @@keyframes spinner {
+        0% {
+            transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+        }
+
+        50% {
+            transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+        }
+
+        100% {
+            transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+        }
     }
 </style>
-<div id="chart-container" style="display: flex; flex-wrap: wrap;">
+
+<h2 id="title">@ViewBag.Title</h2>
+<div id="onderaan"></div>
+<div id="session-container">
+    <p>Most recent session (red)</p>
+    <div id="sessions"></div>
 </div>
-
-<div id="antwoorden">
-
+<div id="data-container">
+    <div id="left"></div>
+    <canvas id="barChart"></canvas>
 </div>
-<table>
-    <thead>
-    <tr>
-        <th>Person</th>
-        <th>Answers</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Person 1 -->
-    <tr>
-        <td>Person 1</td>
-        <td>
-            <a href="#" class="answer-link" data-answer-id="1">Answer 1</a><br>
-            <a href="#" class="answer-link" data-answer-id="2">Answer 2</a><br>
-            <a href="#" class="answer-link" data-answer-id="3">Answer 3</a>
-        </td>
-    </tr>
-    <!-- Person 2 -->
-    <tr>
-        <td>Person 2</td>
-        <td>
-            <a href="#" class="answer-link" data-answer-id="4">Answer 1</a><br>
-            <a href="#" class="answer-link" data-answer-id="5">Answer 2</a><br>
-            <a href="#" class="answer-link" data-answer-id="6">Answer 3</a><br>
-            <a href="#" class="answer-link" data-answer-id="7">Answer 4</a>
-        </td>
-    </tr>
-    <!-- Person 3 -->
-    <tr>
-        <td>Person 3</td>
-        <td>
-            <a href="#" class="answer-link" data-answer-id="8">Answer 1</a><br>
-            <a href="#" class="answer-link" data-answer-id="9">Answer 2</a>
-        </td>
-    </tr>
-    <!-- Person 4 -->
-    <tr>
-        <td>Person 4</td>
-        <td>
-            <a href="#" class="answer-link" data-answer-id="10">Answer 1</a><br>
-            <a href="#" class="answer-link" data-answer-id="11">Answer 2</a><br>
-            <a href="#" class="answer-link" data-answer-id="12">Answer 3</a><br>
-            <a href="#" class="answer-link" data-answer-id="13">Answer 4</a><br>
-            <a href="#" class="answer-link" data-answer-id="14">Answer 5</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div id="display"></div>
 
-@section scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js library -->
-
-    <script>
-        // Fetch data using AJAX
-        $.ajax({
-            url: '/api/DataAnalyse/Answers',
-            type: 'GET',
-            success: function(answerData) {
-                console.log(answerData); 
-                answerData.forEach(function (antwoord) {
-                    console.log(antwoord.answerText);
-                    console.log(antwoord.slide.text);
-                });
-                createCircleDiagrams(answerData); // Call createCircleDiagrams function to create pie charts for each slideType
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching answers:", error);
-            }
-        });
-                
-        // Function to create separate circle diagrams for each slideType using Chart.js
-        function createCircleDiagrams(answerData) {
-            // Group answerData by slideType
-            var groupedData = {};
-            answerData.forEach(function(answer) {
-                var slideType = answer.slide.slideType;
-                if (!groupedData[slideType]) {
-                    groupedData[slideType] = [];
-                }
-                groupedData[slideType].push(answer);
-            });
-
-            // Create a pie chart for each slideType
-            Object.keys(groupedData).forEach(function(slideType) {
-                var typenr = slideType;
-                var slideData = groupedData[slideType];
-                var numQuestions = slideData.length;
-                var chartContainerId = 'chart-' + slideType;
-                var chartCanvas = '<canvas id="' + chartContainerId + '"></canvas>';
-                var chartLabel = '<h3>' + getSlideTypeName(typenr) + '</h3>'; // Add label indicating the slide type
-                var chartContainer = '<div style="width: 50%;">' + chartLabel + chartCanvas + '</div>'; // Set width to 50% for 2 by 2 grid
-                $('#chart-container').append(chartContainer);
-
-                var ctx = document.getElementById(chartContainerId).getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ["Answered", "Unanswered"],
-                        datasets: [{
-                            label: 'Questions',
-                            data: [numQuestions, 10 - numQuestions],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        maintainAspectRatio: false,
-                        onClick: function(event, chartElement) {
-                            if (chartElement && chartElement.length > 0) {
-                                var index = chartElement[0]._index;
-                                var label = myChart.data.labels[index];
-                                var value = myChart.data.datasets[0].data[index];
-                                console.log("Clicked on:", label, "Value:", value);
-                                // Perform actions based on the clicked segment
-                            }
-                        }
-                    }
-                });
-            });
-        }
-
-        // Function to get the slide type name based on its ID
-        function getSlideTypeName(type) {
-            switch (parseInt(type)) {
-                case 1:
-                    return "Multiple Choice";
-                case 2:
-                    return "Range Question";
-                case 3:
-                    return "Single Choice";
-                case 4:
-                    return "Open Question";
-                default:
-                    return "Unknown Type";
-            }
-        }
-
-        // Attach click event to answer links
-        $(document).on('click', '.answer-link', function(e) {
-            e.preventDefault();
-            var answerId = $(this).data('answer-id');
-            // Fetch question and answer details using AJAX
-            $.ajax({
-                url: '/api/DataAnalyse/AnswerDetails/' + answerId,
-                type: 'GET',
-                success: function(data) {
-                    // Display question and answer details
-                    $('#antwoorden').html('<p>Question: ' + data.question + '</p><p>Answer: ' + data.answer + '</p>');
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching answer details:", error);
-                }
-            });
-        });
-    </script>
+@section scripts
+{
+    <script src="~/dist/answers.entry.js" defer></script>
 }

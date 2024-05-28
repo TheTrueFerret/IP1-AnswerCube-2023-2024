@@ -1,11 +1,12 @@
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace AnswerCube.UI.MVC.Controllers;
+namespace AnswerCube.UI.MVC.Controllers.Api;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -28,11 +29,38 @@ public class DataAnalyseController : BaseController
         var answers = _answerManager.GetAnswers();
         return answers;
     }
+    
+    [HttpGet("Slides")]
+    public ActionResult<List<Slide>> GetSlides()
+    {
+        var slides = _answerManager.GetSlides();
+        return slides;
+    }
+    
+    [HttpGet("Sessions")]
+    public ActionResult<List<Session>> GetSessions()
+    {
+        var sessions = _answerManager.GetSessions();
+        return sessions;
+    }
 
     [HttpGet("SlideById/{id:int}")]
     public Slide GetSlideById(int id)
     {
         return _flowManager.GetSlideById(id);
+    }
+    
+    [HttpGet("SessionById/{id:int}")]
+    public Session GetSessionById(int id)
+    {
+        return _answerManager.GetSessionById(id);
+    }
+    
+    [HttpGet("AnswersBySessionId/{sessionId:int}")]
+    public ActionResult<List<Answer>> GetAnswersBySessionId(int sessionId)
+    {
+        var answers = _answerManager.GetAnswersBySessionId(sessionId);
+        return answers;
     }
 
     public IActionResult Answers()
