@@ -12,11 +12,13 @@ public interface IInstallationRepository
     List<Installation> ReadInstallationsByUserId(string userId);
     bool UpdateInstallationToActive(int installationId);
     bool CreateNewInstallation(string name, string location, int organizationId);
-    Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    Session? ReadActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     Session WriteNewSessionWithInstallationId(Session newSession, int installationId);
     bool WriteSlideListToInstallation(int slideListId, int installationId);
     void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId);
     void UpdateInstallationUrl(int installationId, string url);
     string GetConnectionIdByInstallationId(int installationId);
     List<Installation> ReadActiveInstallationsFromOrganizations(List<Organization> organizations);
+    List<Session>? ReadActiveSessionsByInstallationId(int installationId);
+    bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId);
 }

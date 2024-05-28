@@ -18,7 +18,7 @@ document.addEventListener('keydown', (event) => {
     }
     var cubeNumber: number = Number(cubeId)
 
-    if (cubeId != null) {
+    if (cubeId != null && keysPressed.size != 1) {
         if (keysPressed.has('ArrowDown') && keysPressed.has(cubeId)) {
             move(cubeNumber, 'down', slideType);
         }
@@ -42,6 +42,13 @@ document.addEventListener('keydown', (event) => {
                 window.vote(cubeNumber, 'submit');
             } else {
                 window.vote(cubeNumber, 'submit');
+            }
+        }
+        if (keysPressed.has('a') && keysPressed.has(cubeId)) {
+            if (slideType === "InfoSlide") {
+                window.addNewOrDeleteCubeUser(cubeNumber)
+            } else {
+                window.addNewOrDeleteCubeUser(cubeNumber)
             }
         }
     } else if (keysPressed.size === 1) {
@@ -70,10 +77,11 @@ document.addEventListener('keydown', (event) => {
                 window.vote(0, 'submit');
             }
         }
+        if (keysPressed.has('a')) {
+            window.addNewOrDeleteCubeUser(0)
+        }
     }
-    
 });
-
 
 function move(cubeId: number, direction: 'up' | 'down', slideType: string) {
     console.log(direction + ' + CubeId: ' + cubeId);
@@ -89,17 +97,17 @@ function move(cubeId: number, direction: 'up' | 'down', slideType: string) {
 }
 
 
+document.addEventListener('keyup', (event) => {
+    keysPressed.delete(event.key);
+});
+
 
 if (submitBtn) {
     submitBtn.addEventListener('click', function () {
         if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
             window.skipQuestion();
         } else {
-            if (cubeId != null) {
-                window.postAnswer(Number(cubeId), 'submit');
-            } else {
-                window.postAnswer(1, 'submit');
-            }
+            window.vote(0, 'submit');
         }
     });
 }
@@ -109,16 +117,8 @@ if (skipBtn) {
         if (window.slideType == "InfoSlide" && typeof window.skipQuestion === 'function') {
             window.skipQuestion();
         } else {
-            if (cubeId != null) {
-                window.postAnswer(Number(cubeId), 'submit');
-            } else {
-                window.postAnswer(1, 'submit');
-            }
+            window.vote(0, 'skip');
         }
     });
 }
-
-document.addEventListener('keyup', (event) => {
-    keysPressed.delete(event.key);
-});
 

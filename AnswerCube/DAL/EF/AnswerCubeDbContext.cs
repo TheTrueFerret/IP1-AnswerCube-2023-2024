@@ -38,7 +38,7 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
-        AnswerCubeInitializer.Initialize(this, false);
+        AnswerCubeInitializer.Initialize(this, true);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

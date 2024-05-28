@@ -16,6 +16,7 @@ module.exports = {
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
         subtheme: './src/ts/flow/slide/SubThemes.ts',
         inputhandler: './src/ts/flow/InputHandler.ts',
+        votetablehandler: './src/ts/flow/VoteTableHandler.ts',
         slideEditor: './src/ts/flow/slide/SlideEditor.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',

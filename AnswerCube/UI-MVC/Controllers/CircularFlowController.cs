@@ -204,7 +204,7 @@ public class CircularFlowController : BaseController
 
         for (int i = 0; i < answers.Answers.Count; i++)
         {
-            Session? session = _installationManager.GetSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
+            Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
             if (session == null)
             {
                 Session newSession = new Session()
@@ -231,6 +231,45 @@ public class CircularFlowController : BaseController
         
         return new JsonResult(new BadRequestResult());
     }
+    
+    [HttpGet]
+    public IActionResult GetActiveSessionsFromInstallation()
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        List<Session> sessions = _installationManager.GetActiveSessionsByInstallationId(installationId);
+        if (sessions.Count != 0)
+        {
+            int[] CubeIds = new int[sessions.Count];
+            for (int i = 0; i < sessions.Count; i++)
+            {
+                CubeIds[i] = sessions[i].CubeId;
+            }
+            return new JsonResult(CubeIds);
+        }
+        else
+        {
+            return Empty;
+        }
+    }
+    
+    
+    [HttpPost]
+    public IActionResult EndSession([FromBody] int cubeId)
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        _installationManager.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
+        if (session == null)
+        {
+            return Error();
+        }
+        return Ok();
+    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
