@@ -104,6 +104,7 @@ function formatTime(dateTimeString: string): string {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 function displayFilteredAnswers(filteredAnswers: Answer[]) {
+    window.scrollTo({top: 100})
     if (display) {
         display.innerHTML = '';
 
@@ -264,6 +265,7 @@ function processAnswers(slideid: number) {
 }
 
 async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slideid: number) {
+    window.scrollTo({top: 0})
     Chart.register(...registerables);
     if (onderaan) {
         onderaan.innerHTML = ""
