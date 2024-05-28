@@ -50,6 +50,12 @@ public class DataAnalyseController : BaseController
         return _flowManager.GetSlideById(id);
     }
     
+    [HttpGet("SessionById/{id:int}")]
+    public Session GetSessionById(int id)
+    {
+        return _answerManager.GetSessionById(id);
+    }
+    
     [HttpGet("AnswersBySessionId/{sessionId:int}")]
     public ActionResult<List<Answer>> GetAnswersBySessionId(int sessionId)
     {

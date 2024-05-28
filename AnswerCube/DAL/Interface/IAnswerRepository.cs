@@ -11,4 +11,5 @@ public interface IAnswerRepository
     List<Slide> GetSlides();
     List<Session> GetSessions();
     List<Answer> GetAnswersBySessionId(int sessionId);
+    Session GetSessionById(int id);
 }

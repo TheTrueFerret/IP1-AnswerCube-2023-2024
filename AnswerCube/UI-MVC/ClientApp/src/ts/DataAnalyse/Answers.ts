@@ -1,5 +1,5 @@
-import { Chart, registerables } from 'chart.js';
-import { RemoveLastDirectoryPartOf } from "../urlDecoder";
+import {Chart, registerables} from 'chart.js';
+import {RemoveLastDirectoryPartOf} from "../urlDecoder";
 
 interface Answer {
     id: number;
@@ -8,6 +8,11 @@ interface Answer {
         text: string;
     };
     answerText: string[];
+}
+
+interface Session {
+    id: number;
+    // Add other properties of the session object if necessary
 }
 
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
@@ -44,7 +49,7 @@ let allAnswers: Answer[] = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (titel) {
-        titel.innerHTML = "<h1>select a slide</h1>";
+        titel.innerHTML = "<h1>select a session</h1>";
     }
     if (onderaan) {
         onderaan.innerHTML = spinnerHTML;
@@ -57,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function startView() {
-    await GetAllSlides();
+    // await GetAllSlides();
     await GetAllSessions();
     await GetAllAnswers(0); // Load all answers initially without specific slide ID
 }
@@ -90,9 +95,6 @@ async function GetAllSlides() {
             attachSlideEventListeners();
         } else {
             console.log("No data received from the API Slides.");
-        }
-        if (onderaan) {
-            onderaan.innerHTML = "";
         }
     }).catch((error) => {
         console.error("Error fetching data:", error);
@@ -159,6 +161,9 @@ async function GetAllAnswers(slideid: number) {
                     }
                 } else {
                     console.log("No data received from the API Answers.");
+                }
+                if (onderaan) {
+                    onderaan.innerHTML = "";
                 }
             })
             .catch((error) => {
@@ -246,23 +251,25 @@ async function GetAllSessions() {
             return;
         }
 
-        const data = await response.json();
+        const data: Session[] = await response.json();
         if (data && data.length > 0) {
             console.log("all sessions checked");
             console.log(data.length);
             aantalSessions = data.length;
 
-            data.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
+            // Sort in descending order
+            data.sort((a: Session, b: Session) => b.id - a.id);
 
-            for (let i = 1; i < aantalSessions+1; i++) {
+            // Display the sessions in sorted order
+            data.forEach((session: Session) => {
                 let sessionTitle: HTMLElement = document.createElement('div');
-                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${i}'>session: ${i}</button>`;
+                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
                 if (sessions) {
                     console.log("appending to sessions");
                     sessions.appendChild(sessionTitle);
                 }
-                console.log("session: " + data[i]);
-            }
+                console.log("session: " + session.id);
+            });
             attachSessionEventListeners();
         } else {
             console.log("No data received from the API Sessions.");
@@ -275,7 +282,7 @@ async function GetAllSessions() {
     }
 }
 
-function GetSessionById(sessionId: number) {
+function AnswersBySessionId(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
         method: 'GET',
@@ -296,6 +303,8 @@ function GetSessionById(sessionId: number) {
             let infoKader: HTMLElement = document.createElement('div');
             infoKader.classList.add('AnswerFromSession');
             console.log(data.length);
+            const firstAnswer = data[0];
+            const firstSlideId = firstAnswer.slide.id;
             for (let i = 0; i < data.length; i++) {
                 console.log("haha werkt lolhaha");
                 let itemDiv: HTMLElement = document.createElement('div');
@@ -307,16 +316,46 @@ function GetSessionById(sessionId: number) {
                     infoKader.appendChild(itemDiv);
                 }
             }
+            processAnswers(firstSlideId);
             console.log("appending");
             display.appendChild(infoKader);
             attachSlideEventListeners();
         } else {
-            console.log("No data received from the API GetSessionById.");
+            console.log("No data received from the API AnswersBySessionId.");
         }
+
     }).catch((error) => {
         console.error("Error fetching data:", error);
         if (sessions) {
             sessions.innerHTML = "<em>Error fetching data!</em>";
+        }
+    });
+}
+
+function getSessionById(sessionId: number) {
+    const url = window.location.toString();
+    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (sessions) {
+                sessions.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).then((data) => {
+        console.log(data);
+        let session: HTMLElement = document.createElement('div');
+        session.innerHTML = "<h1>cube: " + data.cubeId + "</h1>" +
+            "<h1>startTime: <p>" + data.startTime + "</p></h1>" +
+            "<h1>installation: " + data.installation + "</h1>";
+        if (left) {
+            left.innerHTML = "";
+            left.appendChild(session);
         }
     });
 }
@@ -333,8 +372,8 @@ function attachSessionEventListeners() {
             if (sessionIdString) {
                 const sessionId = parseInt(sessionIdString, 10);
                 console.log('Session button clicked, session ID:', sessionId);
-                GetSessionById(sessionId);
-
+                AnswersBySessionId(sessionId);
+                getSessionById(sessionId);
                 sessionButtons.forEach(btn => btn.classList.remove('active'));
                 target.classList.add('active');
             } else {

@@ -68,4 +68,11 @@ public class AnswerRepository : IAnswerRepository
             .ToList();
         return answers;
     }
+
+    public Session GetSessionById(int id)
+    {
+        var session = _context.Sessions
+            .FirstOrDefault(s => s.Id == id);
+        return session;
+    }
 }

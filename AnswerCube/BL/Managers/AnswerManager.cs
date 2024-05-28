@@ -37,6 +37,9 @@ public class AnswerManager : IAnswerManager
     {
         return _repository.GetAnswersBySessionId(sessionId);
     }
-    
-    
+
+    public Session GetSessionById(int id)
+    {
+        return _repository.GetSessionById(id);
+    }
 }
