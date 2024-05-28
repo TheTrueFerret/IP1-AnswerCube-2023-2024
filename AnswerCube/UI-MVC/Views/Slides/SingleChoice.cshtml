@@ -33,37 +33,39 @@
             <em>Unsupported media type</em>
         }
     }
-   @if (Model.SlideModel.AnswerList != null)
-       {
-       <table id="AnswerTable">
-       <tr id="HeaderRow">
-           <td></td>
-       </tr>
-       @foreach (var answer in Model.SlideModel.AnswerList)
-       {
-           <tr>
-               <td id="AnswerRow @answerCounter">@answer</td>
-           </tr>
-           answerCounter++;
-       }
-       </table>
-   }
-   else
-   {
-       <p>no Answers Found</p>
-   }
+    @if (Model.SlideModel.AnswerList != null)
+    {
+        <table id="AnswerTable">
+            <tr id="HeaderRow">
+                <td></td>
+            </tr>
+            @foreach (var answer in Model.SlideModel.AnswerList)
+            {
+                <tr>
+                    <td id="AnswerRow @answerCounter">@answer</td>
+                </tr>
+                answerCounter++;
+            }
+        </table>
+    }
+    else
+    {
+        <p>no Answers Found</p>
+    }
 </div>
-<div id="SubmitBox">
-    <table id="SubmitTable">
-        
-    </table>
-    <button id="submitAnswer" type="button">Submit Answer</button>
-</div>
-<div id="SkipBox">
-    <table id="SkipTable">
-        
-    </table>
-    <button id="skipSlide" type="button">Skip</button>
+<div>
+    <div id="SubmitBox">
+        <table id="SubmitTable">
+            
+        </table>
+        <button id="submitAnswer" type="button">Submit Answer</button>
+    </div>
+    <div id="SkipBox">
+        <table id="SkipTable">
+            
+        </table>
+        <button id="skipSlide" type="button">Skip</button>
+    </div>
 </div>
 
 

@@ -122,7 +122,7 @@ public class InstallationRepository : IInstallationRepository
         return false;
     }
 
-    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    public Session? ReadActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
         Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId && s.EndTime == null);
         if (session != null)
@@ -199,4 +199,20 @@ public class InstallationRepository : IInstallationRepository
 
         return installations;
     }
+
+    public List<Session>? ReadActiveSessionsByInstallationId(int installationId)
+    {
+        return _context.Sessions.Where(s => s.Installation.Id == installationId && s.EndTime == null).ToList();
+    }
+
+    public bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        Session? session = ReadActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        session.EndTime = DateTime.Now.ToUniversalTime();
+        _context.Sessions.Update(session);
+        _context.SaveChanges();
+        return true;
+    }
+
+
 }

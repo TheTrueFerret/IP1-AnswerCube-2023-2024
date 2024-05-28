@@ -7,34 +7,47 @@
 
 
 <h1 class="question">Open Question</h1>
-        <div id="slide" class="question">
-            <h3>@Model.SlideModel.Text</h3>
-            @if (Model.SlideModel.MediaUrl != null)
-            {
-                // Check if mediaUrl exists
-                // Extract the filename from the media URL
-                var filename = Model.SlideModel.MediaUrl.Split('/').Last();
-                // Extract the media type from the filename
-                var mediaType = filename.Split('_')[0];
-                // Default to "image" if the media type is not "video"
-                if (mediaType == "video")
-                {
-                    <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
-                    <br>
-                }
-                else if (mediaType == "image")
-                {
-                    <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
-                }
-                else
-                {
-                    <em>Unsupported media type</em>
-                }
-            }
-        <input type="text" id="input" value="" placeholder="Answer the question.">
+<div id="slide" class="question">
+    <h3>@Model.SlideModel.Text</h3>
+    @if (Model.SlideModel.MediaUrl != null)
+    {
+        // Check if mediaUrl exists
+        // Extract the filename from the media URL
+        var filename = Model.SlideModel.MediaUrl.Split('/').Last();
+        // Extract the media type from the filename
+        var mediaType = filename.Split('_')[0];
+        // Default to "image" if the media type is not "video"
+        if (mediaType == "video")
+        {
+            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+            <br>
+        }
+        else if (mediaType == "image")
+        {
+            <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
+        }
+        else
+        {
+            <em>Unsupported media type</em>
+        }
+    }
+    <!-- WTF IS DIT HIERONDER??? -->
+    <input type="text" id="input" value="" placeholder="Answer the question.">
+</div>
+<div>
+    <div id="SubmitBox">
+        <table id="SubmitTable">
+            
+        </table>
+        <button id="submitAnswer" type="button">Submit Answer</button>
     </div>
-<button id="submitAnswer" type="button">Submit Answer</button>
-<button id="skipSlide" type="button">Skip</button>
+    <div id="SkipBox">
+        <table id="SkipTable">
+            
+        </table>
+        <button id="skipSlide" type="button">Skip</button>
+    </div>
+</div>
 
 
 @section Scripts

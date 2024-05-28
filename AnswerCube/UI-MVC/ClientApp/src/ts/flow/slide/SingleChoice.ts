@@ -1,36 +1,100 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
-import {getCookie} from "../../CookieHandler";
-import {types} from "sass";
-import Number = types.Number;
-import {Tab} from "bootstrap";
+import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
+import {getCubeNameByCubeId, postAnswers, stopSession} from "../CircularFlow";
 
-var url = window.location.toString()
+let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
 const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
 const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
 
-var currentCheckedIndexPerUser: number[] = [];
-var totalQuestions: number;
-var activeCubes: number[]; // get active cubes
-var voteStatePerCubeId: string[] = [];
+export let currentCheckedIndexPerUser: number[] = [];
+export let totalQuestions: number;
+export let activeCubes: number[] = []; // get active cubes
+export let sessionCube: boolean[] = [];
+
+export let voteStatePerCubeId: string[] = [];
 
 
 document.addEventListener("DOMContentLoaded", function (){
-    activeCubes = [2,1];
-    generateAnswerColumns(activeCubes);
-    generateVoteTables(activeCubes);
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        if (data.length > 0) {
+            for (let i: number = 0; i < data.length; i++) {
+                activeCubes[i] = data[i]
+                sessionCube[i] = true
+            }
+            console.log(data);
+            generateAnswerColumns();
+            generateVoteTables();
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+        return err; // Return an empty array in case of error
+    });
 })
 
-function generateAnswerColumns(cubeIdList: number[]) {
-    cubeIdList.sort((a, b) => b - a);
+
+function generateAnswerColumns() {
+    activeCubes.sort((a, b) => a - b);
     activeCubes.forEach(CubeId => {
-        addNewCubeColumn(CubeId);
+        addNewCubeAnswerColumn(CubeId);
     });
 }
 
 
-function addNewCubeColumn(cubeId: number) {
+function addNewOrDeleteCubeUser(cubeId: number) {
+    const index = activeCubes.indexOf(cubeId);
+    if (index !== -1) {
+        activeCubes.splice(index, 1);
+        deleteAnswerCubeColumn(cubeId);
+        generateVoteTables();
+        if (sessionCube[cubeId]) {
+            sessionCube[cubeId] = false
+            stopSession(cubeId);
+        }
+    } else {
+        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
+        activeCubes.sort((a, b) => a - b);
+        addNewCubeAnswerColumn(cubeId);
+        generateVoteTables();
+    }
+}
+
+function deleteAnswerCubeColumn(cubeId: number) {
+    if (table && headerRow) {
+        // Remove the header cell corresponding to cubeId
+        const headerCells = headerRow.getElementsByTagName("th");
+        for (let i = 0; i < headerCells.length; i++) {
+            if (headerCells[i].innerHTML === getCubeNameByCubeId(cubeId)) {
+                headerRow.deleteCell(i);
+                break;
+            }
+        }
+
+        // Remove the cell corresponding to cubeId from each row (excluding header row)
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            row.deleteCell(0);
+        }
+
+        // Update totalQuestions count
+        totalQuestions = table.rows.length - 1;
+    }
+}
+
+
+function addNewCubeAnswerColumn(cubeId: number) {
     if (table) {
         if (headerRow) {
             const newHeaderCell = document.createElement("th");
@@ -49,56 +113,11 @@ function addNewCubeColumn(cubeId: number) {
 }
 
 
-function generateVoteTables(activeCubes: number[]) {
-    if (activeCubes.length <= 3){
-        createVoteTable(1, 'SubmitTable');
-        createVoteTable(1, 'SkipTable');
-    } else {
-        createVoteTable(2, 'SubmitTable');
-        createVoteTable(2, 'SkipTable');
-    }
-    for (let i = 0; i < activeCubes.length; i++) {
-        voteStatePerCubeId[i] = "none";
-    }
-}
-
-
-// Function to create a table with a specified number of rows and columns
-function createVoteTable(rows: number, tableId: string) {
-    const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
-    for (let i = 1; i <= rows; i++) {
-        const row = document.createElement('tr');
-        for (let i = 1; i <= 3; i++) {
-            const cell = document.createElement('td');
-            cell.setAttribute("data-cube", (i).toString());
-            cell.setAttribute("data-active", "false");
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-    }
-}
-
-
-function getCubeNameByCubeId(CubeId: number): string {
-    switch (CubeId) {
-        case(0):
-            return "Keyboard";
-        case(1):
-            return "Fret";
-        case(2):
-            return "Destiny";
-        case(3):
-            return "Rider";
-        case(4):
-            return "Striker";
-    }
-    return "null"
-}
 
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer = getSelectedAnswerByCubeId(cubeId)
-    
+
     // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
@@ -107,84 +126,48 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         return;
     }
 
-    // make it so you can only vote on one!!!
-    // for example when you press skip and your already pressed submit (and voted submit)
-    // your vote changes to submit
-    if (voteStatePerCubeId[cubeId-1] == "none") {
-        voteStatePerCubeId[cubeId-1] = action;
+
+    for (let i = 0; i <= activeCubes.length; i++) {
+        if (activeCubes[i] == cubeId) {
+            if (voteStatePerCubeId[i] == "none") {
+                voteStatePerCubeId[i] = action;
+            } else {
+                if (voteStatePerCubeId[i] != action) {
+                    voteStatePerCubeId[i] = action
+                }
+            }
+        }
     }
-    
+    updateVoteUi(cubeId, "SubmitTable", false)
+    updateVoteUi(cubeId, "SkipTable", false)
+    updateVoteUi(cubeId, "", false)
+
     switch (action) {
         case "submit":
-            updateVoteUi(cubeId, "SubmitTable")
+            updateVoteUi(cubeId, "SubmitTable", true)
             break;
         case "skip":
-            updateVoteUi(cubeId, "SkipTable")
+            updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "")
+            updateVoteUi(cubeId, "", true)
             break;
     }
-    
+
     const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
     if (allAnswered) {
-        postAnswers()
+        let answers: any[] = [];
+        for (let i = 0; i < activeCubes.length; i++) {
+            answers.push({
+                Answer: getSelectedAnswerByCubeId(activeCubes[i]),
+                CubeId: activeCubes[i]
+            })
+        }
+        postAnswers(answers)
         console.log("Everyone voted!");
     } else {
         console.log("Not Everyone Voted Yet");
     }
-}
-
-
-function updateVoteUi(cubeId: number, tableId: 'SubmitTable' | 'SkipTable' | '') {
-    if (!tableId) return;
-    const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
-    const cells = table.querySelectorAll(`td[data-cube='${cubeId}']`);
-    cells.forEach(cell => {
-        cell.setAttribute('data-active', 'true');
-        cell.innerHTML = getCubeNameByCubeId(cubeId);
-    });
-}
-
-
-function postAnswers() {
-    let answers: any[] = []
-    
-    for (let i = 0; i < activeCubes.length; i++) {
-        answers.push({
-            Answer: getSelectedAnswerByCubeId(activeCubes[i]),
-            CubeId: activeCubes[i]
-        })
-    }
-
-    let requestBody = {
-        Answers: answers
-    };
-    
-    console.log(requestBody);
-    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer/", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (slideElement) {
-                slideElement.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((nextSlideData: any) => {
-        if (nextSlideData.url) {
-            // Redirect to the URL of the next slide
-            window.location.href = nextSlideData.url;
-        }
-    }).catch(err => {
-        console.log("Something went wrong: " + err);
-    })
 }
 
 function getSelectedAnswerByCubeId(cubeId: number): string[] {
@@ -200,7 +183,6 @@ function getSelectedAnswerByCubeId(cubeId: number): string[] {
     }
     return selectedAnswers;
 }
-
 
 function moveCheckedRadioButton(CubeId: number, direction: 'up' | 'down') {
     if (table) {
@@ -247,10 +229,13 @@ declare global {
         slideType: string;
         moveCheckedRadioButton: (CubeId: number, direction: 'up' | 'down') => void;
         vote: (cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') => void;
+        addNewOrDeleteCubeUser: (cubeId: number) => void;
+        generateVoteTables: () => void;
     }
 }
 
 window.slideType = "SingleChoice";
 window.moveCheckedRadioButton = moveCheckedRadioButton;
 window.vote = vote;
-
+window.addNewOrDeleteCubeUser = addNewOrDeleteCubeUser
+window.generateVoteTables = generateVoteTables

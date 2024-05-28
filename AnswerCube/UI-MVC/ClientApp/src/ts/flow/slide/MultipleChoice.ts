@@ -1,6 +1,7 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
-import {getCookie} from "../../CookieHandler";
-import {getSessions} from "../CircularFlow";
+import {updateVoteUi} from "../VoteTableHandler";
+import {postAnswers} from "../CircularFlow";
+import {activeCubes, voteStatePerCubeId} from "./SingleChoice";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url: string = window.location.toString();
@@ -10,6 +11,61 @@ const checkboxes: any = document.querySelectorAll('input[name="answer"]')
 var currentCheckedIndex: number = -1;
 const totalCheckboxes: number = checkboxes.length;
 
+
+function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
+    let answer = getSelectedAnswers()
+
+    // verander deze naar iets deftig
+    if (action === 'submit' && answer.length === 0) {
+        console.log('No answers selected');
+        // Show error to the user, e.g., alert or some UI indication
+        alert('Please select at least one answer before submitting <3');
+        return;
+    }
+
+
+    for (let i = 0; i <= activeCubes.length; i++) {
+        if (activeCubes[i] == cubeId) {
+            if (voteStatePerCubeId[i] == "none") {
+                voteStatePerCubeId[i] = action;
+            } else {
+                if (voteStatePerCubeId[i] != action) {
+                    voteStatePerCubeId[i] = action
+                }
+            }
+        }
+    }
+    updateVoteUi(cubeId, "SubmitTable", false)
+    updateVoteUi(cubeId, "SkipTable", false)
+    updateVoteUi(cubeId, "", false)
+
+    switch (action) {
+        case "submit":
+            updateVoteUi(cubeId, "SubmitTable", true)
+            break;
+        case "skip":
+            updateVoteUi(cubeId, "SkipTable", true)
+            break;
+        case "changeSubTheme":
+            updateVoteUi(cubeId, "", true)
+            break;
+    }
+
+    const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
+    if (allAnswered) {
+        let answers: any[] = [];
+        for (let i = 0; i < activeCubes.length; i++) {
+            answers.push({
+                Answer: getSelectedAnswers(),
+                CubeId: activeCubes[i]
+            })
+        }
+        postAnswers(answers)
+        console.log("Everyone voted!");
+    } else {
+        console.log("Not Everyone Voted Yet");
+    }
+}
 
 function postAnswer(cubeId: number, action: 'submit' | 'skip') {
     let answer: string[] = getSelectedAnswers();
@@ -94,12 +150,14 @@ function selectButton(cubeId: number) {
 declare global {
     interface Window {
         slideType: string;
+        vote: (cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') => void;
         moveSelectedButton: (cubeId: number, direction: 'up' | 'down') => void;
         selectButton: (cubeId: number) => void;
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }
 window.slideType = "MultipleChoice";
+window.vote = vote;
 window.moveSelectedButton = moveSelectedButton;
 window.selectButton = selectButton;
 window.postAnswer = postAnswer;
