@@ -65,6 +65,11 @@ async function startView() {
     // await GetAllSlides();
     await GetAllSessions();
     await GetAllAnswers(0); // Load all answers initially without specific slide ID
+    /*
+    * toon eerste slide
+    * */
+    await processAnswers(1)
+    await getSessionById(1);
 }
 
 async function GetAllSlides() {
@@ -162,9 +167,6 @@ async function GetAllAnswers(slideid: number) {
                 } else {
                     console.log("No data received from the API Answers.");
                 }
-                if (onderaan) {
-                    onderaan.innerHTML = "";
-                }
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -195,6 +197,9 @@ function processAnswers(slideid: number) {
     const labels = Array.from(answerCounts.keys());
     const counts = Array.from(answerCounts.values());
     answersFetched = true;
+    if (onderaan) {
+        onderaan.innerHTML = "";
+    }
     showGraph(counts, labels, slideid);
 }
 
