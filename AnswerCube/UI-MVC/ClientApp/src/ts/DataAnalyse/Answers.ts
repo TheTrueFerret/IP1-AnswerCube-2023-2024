@@ -1,5 +1,5 @@
-import {Chart, registerables} from 'chart.js';
 import {RemoveLastDirectoryPartOf} from "../urlDecoder";
+import {Chart, registerables} from "chart.js";
 
 interface Answer {
     id: number;
