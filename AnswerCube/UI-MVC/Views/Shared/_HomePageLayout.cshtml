@@ -1,0 +1,25 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - AnswerCube</title>
+    <script src="~/dist/site.entry.js" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <link rel="stylesheet" href="~/dist/site.css">
+</head>
+<body class="bg-light">
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+<footer class="border-top footer text-muted justify-content-center align-items-center">
+    <div class="container text-center">
+        &copy; @DateTime.Now.Year - AnswerCube - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+</body>
+</html>
