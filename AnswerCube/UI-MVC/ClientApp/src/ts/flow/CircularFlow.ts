@@ -5,15 +5,15 @@ const slideElement: HTMLElement | null = document.getElementById("slide");
 export function getCubeNameByCubeId(CubeId: number): string {
     switch (CubeId) {
         case(0):
-            return "Cuber1";
+            return "Cuber0";
         case(1):
-            return "Cuber2";
+            return "Cuber1";
         case(2):
-            return "Cuber3";
+            return "Cuber2";
         case(3):
-            return "Cuber4";
+            return "Cuber3";
         case(4):
-            return "Cuber5";
+            return "Cuber4";
     }
     return "null"
 }
@@ -23,6 +23,30 @@ export function stopSession(cubeId: number) {
     let url: string = window.location.toString()
 
     fetch(RemoveLastDirectoryPartOf(url) + "/EndSession/", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(cubeId)
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (slideElement) {
+                slideElement.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+    })
+}
+
+
+export function startSession(cubeId: number) {
+    let url: string = window.location.toString()
+
+    fetch(RemoveLastDirectoryPartOf(url) + "/StartSession/", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

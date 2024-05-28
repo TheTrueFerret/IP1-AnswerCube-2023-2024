@@ -7,10 +7,10 @@
 
 <div class="slide-container">
     <h1 class="question">Subthemes</h1>
-    <div class="row">
+    <div id="AllSlideLists" class="row">
         @foreach (var slideList in Model.SlideLists)
         {
-            <div class="col-md-4">
+            <div id="SlideList @slideList.Id" class="col-md-4" data-info="@slideList.Id">
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">@slideList.Title</h5>
@@ -18,15 +18,27 @@
                         <p class="card-text">@slideList.SubTheme.Description</p>
                         <a class="ChooseSlideList btn btn-primary" data-info="@slideList.Id">Select</a>
                     </div>
+                    <div>
+                        <table id="SlideListUserAnswer @slideList.Id">
+                            
+                        </table>
+                    </div>
                 </div>
             </div>
         }
     </div>
-    <button id="submitAnswer" type="button">Choose Theme</button>
+    <div id="SubmitBox">
+        <table id="SubmitTable">
+            
+        </table>
+        <button id="submitAnswer" type="button">Choose SubTheme</button>
+    </div>
 </div>
+
 
 @section Scripts
 {
+    <script src="~/dist/inputhandler.entry.js" defer></script>
     <script src="~/dist/subtheme.entry.js" defer></script>
     <script src="~/dist/flowBeheer.entry.js"></script>
 }
