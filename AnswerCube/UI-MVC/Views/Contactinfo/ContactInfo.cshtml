@@ -23,12 +23,6 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<div>
-    <p>Scan de QR code voor je contactinfo achter te laten.</p>
-    <div id="qrCode"></div>
-    <div id="qrCodeData" data-url="@Url.Action("ContactInfo", "Contactinfo", null, Context.Request.Scheme)"></div>
-</div>
-
 @section Scripts {
     <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
     <script type="text/javascript" src="~/dist/qr.entry.js"></script>

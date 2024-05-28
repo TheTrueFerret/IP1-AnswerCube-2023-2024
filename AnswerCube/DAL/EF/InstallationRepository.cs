@@ -214,5 +214,13 @@ public class InstallationRepository : IInstallationRepository
         return true;
     }
 
-
+    public int ReadForumIdByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations.Include(i => i.Organization).ThenInclude(o =>o.Forum).SingleOrDefault(i => i.Id == installationId);
+        if (installation == null)
+        {
+            return 0;
+        }
+        return installation.Organization.Forum.Id;
+    }
 }

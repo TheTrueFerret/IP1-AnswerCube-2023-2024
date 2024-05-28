@@ -38,14 +38,13 @@ public class AnswerCubeDbContext : IdentityDbContext<AnswerCubeUser>
 
     public AnswerCubeDbContext(DbContextOptions options) : base(options)
     {
-        AnswerCubeInitializer.Initialize(this, true);
+        AnswerCubeInitializer.Initialize(this, false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
-            //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=DataBase IP1 Testssssss;User Id=postgres;Password=Student_1234;");
             optionsBuilder.UseNpgsql(NewPostgreSqlTCPConnectionString().ToString());
         }
 

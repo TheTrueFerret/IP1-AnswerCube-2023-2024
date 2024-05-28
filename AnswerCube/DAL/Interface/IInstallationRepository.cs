@@ -21,4 +21,5 @@ public interface IInstallationRepository
     List<Installation> ReadActiveInstallationsFromOrganizations(List<Organization> organizations);
     List<Session>? ReadActiveSessionsByInstallationId(int installationId);
     bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId);
+    int ReadForumIdByInstallationId(int installationId);
 }

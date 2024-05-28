@@ -20,7 +20,8 @@
         // Default to "image" if the media type is not "video"
         if (mediaType == "video")
         {
-            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video><br>
+            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+            <br>
         }
         else if (mediaType == "image")
         {
@@ -32,16 +33,30 @@
         }
     }
 </div>
-    <div id="SkipBox">
-        <table id="SkipTable">
-            
-        </table>
-        <button id="skipSlide" type="button">Next</button>
-    </div>
+<div id="SkipBox">
+    <table id="SkipTable">
 
+    </table>
+    <button id="skipSlide" type="button">Next</button>
+</div>
+
+@if (Model.forumId == 0)
+{
+    <p>Error loading the forum.</p>
+}
+else
+{
+    <div>
+        <p>Scan de QR code om jou mening achter te laten op het forum.</p>
+        <div id="qrCode"></div>
+        <div id="qrCodeData" data-url="@Url.Action("ShowForum", "Forum", new { forumId = Model.forumId })"></div>
+    </div>
+}
 
 @section Scripts
 {
     <script src="~/dist/infoslide.entry.js" defer></script>
-<script src="~/dist/flowBeheer.entry.js" defer></script>
+    <script src="~/dist/flowBeheer.entry.js" defer></script>
+    <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+    <script type="text/javascript" src="~/dist/qr.entry.js"></script>
 }

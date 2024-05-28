@@ -44,25 +44,27 @@
                     <img src="~/Images/AnswerCubeLogoNoBackground.png" alt="Answercube logo"/>
                 </div>
                 <div class="face bottom"></div>
-            </div></div>
+            </div>
+        </div>
     </div>
-    @if(!User.Identity.IsAuthenticated){
-    <div class="container mt-10">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        Welkom bij AnswerCube!
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Inloggen vereist</h5>
-                        <p class="card-text">Om gebruik te maken van de AnswerCube tool, moet je inloggen.</p>
-                        <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="container mt-10">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Welkom bij AnswerCube!
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Inloggen vereist</h5>
+                            <p class="card-text">Om gebruik te maken van de AnswerCube tool, moet je inloggen.</p>
+                            <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     }
     else
     {
@@ -76,22 +78,22 @@
                         <div class="card-body">
                             <h5 class="card-title">Gebruik de navigatiebalk bovenaan of klik hier onder:</h5>
                             <p class="card-text">Om gebruik te maken van de AnswerCube tool.</p>
-                            
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Forum" asp-action="Forums">Forums</a>
+                            <a class="btn btn-primary m-1" asp-area="" asp-controller="Forum" asp-action="Forums">Forums</a>
                             @if (User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
                             }
                             @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Beheer Installation</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Analyse</a>
                             }
                             @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
                             }
                         </div>
                     </div>
@@ -100,6 +102,7 @@
         </div>
     }
 </div>
+
 @section Scripts
 {
     <script src="~/dist/index.entry.js" defer></script>

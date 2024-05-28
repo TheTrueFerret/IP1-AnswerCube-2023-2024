@@ -24,7 +24,8 @@ module.exports = {
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts',
-        flowBeheer: './src/ts/flow/FlowBeheer.ts'
+        flowBeheer: './src/ts/flow/FlowBeheer.ts',
+        contactRedirect: './src/ts/ContactInfo/contactInfoRedirect.ts'
     },
     output: {
         filename: '[name].entry.js',
