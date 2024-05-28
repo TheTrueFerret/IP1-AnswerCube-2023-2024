@@ -42,7 +42,7 @@ public class FlowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AddSlide(string slideType, string question, string[]? options, int projectId, int slideListId,IFormFile imageFile)
+    public IActionResult AddSlide(string slideType, string question, List<string>? options, int projectId, int slideListId,IFormFile imageFile)
     {
         SlideType type = (SlideType)Enum.Parse(typeof(SlideType), slideType);
         if (imageFile != null)
