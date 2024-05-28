@@ -1,13 +1,107 @@
-﻿@{
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_HomePageLayout.cshtml";
 }
-
+<div class="homeBody d-flex justify-content-center align-items-start">
+    <div class="container d-flex justify-content-center align-items-start">
+        <div class="scene">
+            <div class="cube">
+                <div class="face front">AnswerCube</div>
+                <div class="face back">AnswerCube</div>
+                <div class="grid-face left">
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item icon-div">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item select-div">Select</div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item ok-div">Ok</div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item icon-div">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="grid-item empty-div"></div>
+                </div>
+                <div class="grid-face right">
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item icon-div">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item select-div">Select</div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item ok-div">Ok</div>
+                    <div class="grid-item empty-div"></div>
+                    <div class="grid-item icon-div">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="grid-item empty-div"></div>
+                </div>
+                <div class="face top">
+                    <img src="~/Images/AnswerCubeLogoNoBackground.png" alt="Answercube logo"/>
+                </div>
+                <div class="face bottom"></div>
+            </div></div>
+    </div>
+    @if(!User.Identity.IsAuthenticated){
+    <div class="container mt-10">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Welkom bij AnswerCube!
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Inloggen vereist</h5>
+                        <p class="card-text">Om gebruik te maken van de AnswerCube tool, moet je inloggen.</p>
+                        <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="container mt-10">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Welkom bij AnswerCube!
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Gebruik de navigatiebalk bovenaan of klik hier onder:</h5>
+                            <p class="card-text">Om gebruik te maken van de AnswerCube tool.</p>
+                            
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Forum" asp-action="Forums">Forums</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
+                            }
+                            @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Beheer Installation</a>
+                            }
+                            @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-primary m-2" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 @section Scripts
 {
     <script src="~/dist/index.entry.js" defer></script>
+    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>

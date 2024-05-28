@@ -8,7 +8,6 @@
 
 <h2>@Model.Organization.Name</h2>
 
-<a href="@Url.Action("Forums", "Forum")" class="btn btn-primary">Back to Forums</a>
 <div class="row mt-4">
     <div class="col-md-12">
         @if (User.IsInRole("Gebruiker"))
@@ -32,7 +31,7 @@
         }
         @if (Model.Ideas.Any())
         {
-            <h3>Ideas</h3>
+            <h3 class="mt-4">Ideas</h3>
             <div class="row">
                 @foreach (var idea in Model.Ideas)
                 {

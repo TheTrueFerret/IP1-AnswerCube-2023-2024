@@ -164,7 +164,6 @@
     <ItemGroup>
         <Folder Include="Areas\"/>
         <Folder Include="Pages\" />
-        <Folder Include="wwwroot\dist\" />
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>
 

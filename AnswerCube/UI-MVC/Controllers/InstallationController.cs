@@ -15,6 +15,7 @@ using UI_MVC.Controllers;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
+[Authorize(Roles = "Admin,DeelplatformBeheerder,Supervisor")]
 public class InstallationController : BaseController
 {
     private readonly IFlowManager _flowManager;
@@ -43,7 +44,6 @@ public class InstallationController : BaseController
         _logger = logger;
     }
     
-    [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
     public IActionResult ChooseInstallation()
     {
         List<InstallationModel> installationModels = new List<InstallationModel>();
@@ -68,7 +68,6 @@ public class InstallationController : BaseController
         return View(installationViewModel);
     }
     
-    [Authorize(Roles = "Admin,DeelplatformManager,Supervisor")]
     public IActionResult ChooseFlowForInstallation()
     {
         List<FlowModel> flowModels = new List<FlowModel>();
