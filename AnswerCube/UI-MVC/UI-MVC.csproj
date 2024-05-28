@@ -32,7 +32,6 @@
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.5" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
         <PackageReference Include="SendGrid" Version="9.29.3"/>
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -164,7 +163,6 @@
     <ItemGroup>
         <Folder Include="Areas\"/>
         <Folder Include="Pages\" />
-        <Folder Include="wwwroot\dist\" />
         <UpToDateCheckInput Remove="Views\Slide\MultipleChoice.cshtml"/>
     </ItemGroup>
 
