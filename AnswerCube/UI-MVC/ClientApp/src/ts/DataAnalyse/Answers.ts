@@ -1,5 +1,14 @@
-import {Chart, registerables} from 'chart.js';
-import {RemoveLastDirectoryPartOf} from "../urlDecoder";
+import { Chart, registerables } from 'chart.js';
+import { RemoveLastDirectoryPartOf } from "../urlDecoder";
+
+interface Answer {
+    id: number;
+    slide: {
+        id: number;
+        text: string;
+    };
+    answerText: string[];
+}
 
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
 const titel: HTMLElement | null = document.getElementById("title");
@@ -9,27 +18,29 @@ const sessions: HTMLElement | null = document.getElementById("sessions");
 const onderaan: HTMLElement | null = document.getElementById("onderaan");
 const display: HTMLElement | null = document.getElementById("display")
 const spinnerHTML = `
-                <p class="loader">loading...</p>
-                <div class="spinner">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <p>Answer Cube</p>
-                </div>
-            `;
+    <p class="loader">loading...</p>
+    <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <p>Answer Cube</p>
+    </div>
+`;
+
 let answerText: string[] = [];
 let possAnswerText: string[] = [];
 let slideId: number = 0;
 let sessionId: number = 0;
 let vraag: string = "";
 let slideType: number = 0;
-let answersFetched: boolean = false; // Flag to track whether answers have been fetched
+let answersFetched: boolean = false;
 let aantalSessions: number = 0;
 
-let currentChart: Chart | null = null; // Keep track of the current chart
+let currentChart: Chart | null = null;
+let allAnswers: Answer[] = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (titel) {
@@ -37,10 +48,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (onderaan) {
         onderaan.innerHTML = spinnerHTML;
-        console.log("brrrrr thinking")
-        console.log(onderaan)
+        console.log("Loading data...");
     } else {
-        console.log("hmm");
+        console.log("Spinner element not found");
     }
 
     await startView();
@@ -49,6 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function startView() {
     await GetAllSlides();
     await GetAllSessions();
+    await GetAllAnswers(0); // Load all answers initially without specific slide ID
 }
 
 async function GetAllSlides() {
@@ -68,7 +79,7 @@ async function GetAllSlides() {
         }
     }).then((data) => {
         if (data && data.length > 0) {
-            console.log("by slide id");
+            console.log("Loaded slides");
             for (let i = 0; i < data.length; i++) {
                 let slide: HTMLElement = document.createElement('div');
                 slide.innerHTML = "<button class='slideButton' data-slide-id='" + data[i].id + "'>slide: " + data[i].id + "</button>";
@@ -81,7 +92,6 @@ async function GetAllSlides() {
             console.log("No data received from the API Slides.");
         }
         if (onderaan) {
-            console.log("emptying")
             onderaan.innerHTML = "";
         }
     }).catch((error) => {
@@ -91,7 +101,7 @@ async function GetAllSlides() {
         }
     });
 }
-//
+
 async function GetSlideById(slideId: number) {
     var url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
@@ -112,8 +122,8 @@ async function GetSlideById(slideId: number) {
         slideType = data.slideType;
         vraag = data.text;
         slideId = data.id;
-        possAnswerText = data.answerList; // Corrected assignment
-        GetAllAnswers(data.id); // Fetch answers and show graph
+        possAnswerText = data.answerList;
+        GetAllAnswers(data.id);
     }).catch((error) => {
         console.error("Error fetching data:", error);
         if (left) {
@@ -121,76 +131,79 @@ async function GetSlideById(slideId: number) {
         }
     });
 }
+
 async function GetAllAnswers(slideid: number) {
     var url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    })
-        .then((response: Response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                if (onderaan) {
-                    onderaan.innerHTML = "<em>problem!!!</em>";
-                }
-                throw new Error("Failed to fetch data");
-            }
+    if (allAnswers.length === 0) {
+        await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
         })
-        .then((data) => {
-            if (data && data.length > 0) {
-                console.log("All answers")
-                let answerCounts = new Map<string, number>(); // Map to store answer counts
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].slide.id === slideid) {
-                        const answer = data[i].answerText.join(', '); // Convert array to string
-                        if (answerCounts.has(answer)) {
-                            answerCounts.set(answer, answerCounts.get(answer)! + 1); // Increment count if answer exists
-                            console.log("checked answercounts");
-                        } else {
-                            answerCounts.set(answer, 1); // Initialize count if answer doesn't exist
-                        }
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    if (onderaan) {
+                        onderaan.innerHTML = "<em>problem!!!</em>";
                     }
+                    throw new Error("Failed to fetch data");
                 }
-                // Extract labels and counts for the chart dataset
-                const labels = Array.from(answerCounts.keys());
-                const counts = Array.from(answerCounts.values());
-                // Set the flag to indicate answers have been fetched
-                answersFetched = true;
-                // Check if the slide ID matches the current slide being displayed
-                showGraph(counts, labels, slideid); // Pass counts and labels to showGraph function
+            })
+            .then((data: Answer[]) => {
+                if (data && data.length > 0) {
+                    allAnswers = data;
+                    if (slideid !== 0) {
+                        processAnswers(slideid);
+                    }
+                } else {
+                    console.log("No data received from the API Answers.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                if (onderaan) {
+                    onderaan.innerHTML = "<em>Error fetching data!</em>";
+                }
+            });
+    } else {
+        if (slideid !== 0) {
+            processAnswers(slideid);
+        }
+    }
+}
+
+function processAnswers(slideid: number) {
+    let answerCounts = new Map<string, number>();
+    for (let i = 0; i < allAnswers.length; i++) {
+        if (allAnswers[i].slide.id === slideid) {
+            const answer = allAnswers[i].answerText.join(', ');
+            if (answerCounts.has(answer)) {
+                answerCounts.set(answer, answerCounts.get(answer)! + 1);
+                console.log("checked answercounts");
             } else {
-                console.log("No data received from the API Answers.");
+                answerCounts.set(answer, 1);
             }
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-            if (onderaan) {
-                onderaan.innerHTML = "<em>Error fetching data!</em>";
-            }
-        });
+        }
+    }
+    const labels = Array.from(answerCounts.keys());
+    const counts = Array.from(answerCounts.values());
+    answersFetched = true;
+    showGraph(counts, labels, slideid);
 }
 
 async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slideid: number) {
-    // Register necessary components
     Chart.register(...registerables);
     if (onderaan) {
         onderaan.innerHTML = ""
     }
-    // Get canvas element
     const ctx = canvas?.getContext('2d');
     if (canvas) {
-        // Destroy existing chart if it exists
         if (currentChart) {
             currentChart.destroy();
         }
-
-        // Clear the canvas innerHTML in case it contains spinner
         canvas.innerHTML = '';
-
-        // Create new chart
         currentChart = new Chart(canvas, {
             type: 'bar',
             data: {
@@ -216,7 +229,6 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
     }
 }
 
-
 async function GetAllSessions() {
     const url = window.location.toString();
     try {
@@ -240,10 +252,8 @@ async function GetAllSessions() {
             console.log(data.length);
             aantalSessions = data.length;
 
-            // Sort sessions by session ID in descending order
             data.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
 
-            // Fetch and display each session in sorted order
             for (let i = 1; i < aantalSessions+1; i++) {
                 let sessionTitle: HTMLElement = document.createElement('div');
                 sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${i}'>session: ${i}</button>`;
@@ -264,6 +274,7 @@ async function GetAllSessions() {
         }
     }
 }
+
 function GetSessionById(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
@@ -310,8 +321,6 @@ function GetSessionById(sessionId: number) {
     });
 }
 
-
-// EVENT LISTENERS
 function attachSessionEventListeners() {
     const sessionButtons = document.querySelectorAll('.sessionButton');
     sessionButtons.forEach(button => {
@@ -324,9 +333,8 @@ function attachSessionEventListeners() {
             if (sessionIdString) {
                 const sessionId = parseInt(sessionIdString, 10);
                 console.log('Session button clicked, session ID:', sessionId);
-                GetSessionById(sessionId);   
+                GetSessionById(sessionId);
 
-                // Highlight the clicked button and remove highlight from others
                 sessionButtons.forEach(btn => btn.classList.remove('active'));
                 target.classList.add('active');
             } else {
