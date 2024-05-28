@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Installation;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -121,7 +122,7 @@ public class InstallationRepository : IInstallationRepository
         return false;
     }
 
-    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    public Session? ReadActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
         Session? session = _context.Sessions.SingleOrDefault(s => s.Installation.Id == installationId && s.CubeId == cubeId && s.EndTime == null);
         if (session != null)
@@ -149,4 +150,69 @@ public class InstallationRepository : IInstallationRepository
         _context.SaveChanges();
         return true;
     }
+
+    public void WriteNoteToInstallation(int installationId, string note, string? identityName, int flowId)
+    {
+        DateTime utcTime = DateTime.UtcNow;
+        Note newNote = new Note
+        {
+            NoteText = note,
+            IdentityName = identityName,
+            CreatedAt = utcTime,
+            FlowId = flowId,
+            InstallationId = installationId
+        };
+        _context.Notes.Add(newNote);
+        _context.SaveChanges();
+    }
+
+    public void UpdateInstallationUrl(int installationId, string url)
+    {
+        Installation installation = _context.Installations.SingleOrDefault(i => i.Id == installationId);
+        if (installation == null)
+        {
+            return;
+        }
+        installation.ConnectionId = url;
+        _context.SaveChanges();
+    }
+
+    public string GetConnectionIdByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations.SingleOrDefault(i => i.Id == installationId);
+        if (installation == null)
+        {
+            return null;
+        }
+        return installation.ConnectionId;
+    }
+
+    public List<Installation> ReadActiveInstallationsFromOrganizations(List<Organization> organizations)
+    {
+        List<Installation> installations = new List<Installation>();
+        foreach (var organization in organizations)
+        {
+            installations.AddRange(_context.Installations
+                .Where(i => i.Organization == organization)
+                .Where(i => i.Active));
+        }
+
+        return installations;
+    }
+
+    public List<Session>? ReadActiveSessionsByInstallationId(int installationId)
+    {
+        return _context.Sessions.Where(s => s.Installation.Id == installationId && s.EndTime == null).ToList();
+    }
+
+    public bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        Session? session = ReadActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        session.EndTime = DateTime.Now.ToUniversalTime();
+        _context.Sessions.Update(session);
+        _context.SaveChanges();
+        return true;
+    }
+
+
 }

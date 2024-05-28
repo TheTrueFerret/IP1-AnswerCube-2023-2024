@@ -1,73 +1,76 @@
-@model SlideModel
+@model SlideCompositeModel
 
 @{
     ViewBag.Title = "RangeQuestion";
     Layout = ViewData["Layout"] as string;
 }
 
-<body class="body-container">
-<div class="container mt-5">
-    <div class="slide-container border p-4 rounded position-relative page-container">
-        <div class=" subtheme-container d-flex justify-content-center align-items-center p-3 mb-3 w-100">
-            <span class="font-weight-bold h3 mb-0">Subtheme - @Model.SubTheme.Name</span>
+
+
+<h1 class="question">Range Question</h1>
+<div id="slide" class="card-body">
+    <h3>@Model.SlideModel.Text</h3>
+    @if (Model.SlideModel.MediaUrl != null)
+    {
+        // Check if mediaUrl exists
+        // Extract the filename from the media URL
+        var filename = Model.SlideModel.MediaUrl.Split('/').Last();
+        // Extract the media type from the filename
+        var mediaType = filename.Split('_')[0];
+        // Default to "image" if the media type is not "video"
+        if (mediaType == "video")
+        {
+            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+            <br>
+        }
+        else if (mediaType == "image")
+        {
+            <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
+        }
+        else
+        {
+            <em>Unsupported media type</em>
+        }
+    }
+</div>
+<div class="modal-footer">
+    <div class="slider-container">
+        <div id="AllRanges">
+            
         </div>
-        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
-            Change Subtheme
-        </a>
-        <h1 class="question">Range Question</h1>
-        <div id="slide" class="card-body">
-            <h3>@Model.Text</h3>
-            @if (Model.MediaUrl != null)
+        <datalist id="tickmarks">
+            @foreach (var option in Model.SlideModel.AnswerList)
             {
-                // Check if mediaUrl exists
-                // Extract the filename from the media URL
-                var filename = Model.MediaUrl.Split('/').Last();
-                // Extract the media type from the filename
-                var mediaType = filename.Split('_')[0];
-                // Default to "image" if the media type is not "video"
-                if (mediaType == "video")
-                {
-                    <video width="320" height="240" controls><source src="@Model.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video><br>
-                }
-                else if (mediaType == "image")
-                {
-                    <img src="@Model.MediaUrl" alt="Slide Image">
-                }
-                else
-                {
-                    <em>Unsupported media type</em>
-                }
+                <option>@option</option>
+            }
+        </datalist>
+        <div class="tickmark-labels">
+            @foreach (var option in Model.SlideModel.AnswerList)
+            {
+                <div class="tickmark-label">@option</div>
             }
         </div>
-        <div class="modal-footer">
-            <div class="centered-content">
-                <div class="answers-container">
-                    
-                </div>
-            </div>
-            <div class="slider-container">
-                <input type="range" id="slider" class="slider custom-slider" list="tickmarks" step="1" min="0" max="100"/>
-                <datalist id="tickmarks">
-                    @foreach (var option in Model.AnswerList)
-                    {
-                        <option>@option</option>
-                    }
-                </datalist>
-                <div class="tickmark-labels">
-                    @foreach (var option in Model.AnswerList)
-                    {
-                        <div class="tickmark-label">@option</div>
-                    }
-                </div>
-            </div>
-        </div>
+    </div>
+</div>
+<div>
+    <div id="SubmitBox">
+        <table id="SubmitTable">
+            
+        </table>
         <button id="submitAnswer" type="button">Submit Answer</button>
+    </div>
+    <div id="SkipBox">
+        <table id="SkipTable">
+            
+        </table>
         <button id="skipSlide" type="button">Skip</button>
     </div>
 </div>
 </body>
 
+
 @section Scripts
 {
     <script src="~/dist/rangequestion.entry.js" defer></script>
+<script src="~/dist/flowBeheer.entry.js" defer></script>
 }

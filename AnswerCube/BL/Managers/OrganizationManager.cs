@@ -88,9 +88,9 @@ public class OrganizationManager : IOrganizationManager
         return _repository.IsUserInOrganization(userId, organizationid);
     }
 
-    public Task<bool> AddDpbToOrgByEmail(string email, string? userId, int organizationid)
+    public Task<bool> AddDpbToOrgByEmail(string email, int organizationid)
     {
-        return _repository.CreateDpbToOrgByEmail(email, userId, organizationid);
+        return _repository.CreateDpbToOrgByEmail(email, organizationid);
     }
 
     public Organization GetOrganizationByName(string organizationName)
@@ -123,7 +123,7 @@ public class OrganizationManager : IOrganizationManager
         return _repository.ReadAllDeelplatformBeheerders();
     }
 
-    public bool RemoveDpbFromOrganization(string userId, int organisationid)
+    public Task<bool> RemoveDpbFromOrganization(string userId, int organisationid)
     {
         return _repository.RemoveDpbFromOrganization(userId, organisationid);
     }
@@ -151,5 +151,24 @@ public class OrganizationManager : IOrganizationManager
     public bool UpdateOrganization(int organizationId, Theme theme)
     {
         return _repository.UpdateOrganization(organizationId, theme);
+
+    public Task<bool> AddSupervisorToOrgByEmail(string email, int organizationid)
+    {
+        return _repository.CreateSupervisorToOrgByEmail(email, organizationid);
+    }
+
+    public Task<bool> RemoveSupervisorFromOrgByEmail(string email, int organizationid)
+    {
+        return _repository.RemoveSupervisorFromOrgByEmail(email, organizationid);
+    }
+
+    public List<AnswerCubeUser> GetDeelplatformBeheerdersByOrgId(int organizationId)
+    {
+        return _repository.ReadDeelplatformBeheedersByOrgId(organizationId);
+    }
+
+    public List<AnswerCubeUser> GetSupervisorsByOrgId(int organizationId)
+    {
+        return _repository.ReadSupervisorsByOrgId(organizationId);
     }
 }

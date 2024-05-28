@@ -23,7 +23,11 @@ public class Organization
         Email = email;
         if(logoUrl == null)
         {
-            this.logoUrl = "UI-MVC/wwwroot/Images/AnswerCubeLogo.png";
+            LogoUrl = "UI-MVC/wwwroot/Images/AnswerCubeLogo.png";
+        }
+        else
+        {
+            LogoUrl = logoUrl;
         }
     }
     

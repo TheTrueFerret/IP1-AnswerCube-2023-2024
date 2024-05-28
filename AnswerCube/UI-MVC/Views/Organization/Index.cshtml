@@ -107,6 +107,62 @@
                                     <form method="post" asp-action="AddDeelplatformbeheerderToOrganization" asp-controller="Organization">
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="Email" name="email" required>
+                                            <input type="hidden" id="organizationid" name="organizationid" value="@Model.Id">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.DeelplatformBeheeders == null || ViewBag.DeelplatformBeheeders.Count == 0)
+                    {
+                        <p>Er zijn geen deelplatformbeheerders</p>
+                    }
+                    else
+                    {
+                        @foreach (AnswerCubeUser user in ViewBag.DeelplatformBeheeders)
+                        {
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-capitalize">@user.UserName</p>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                                {
+                                    <button class="btn btn-danger"
+                                            title="Remove Deelplatformbeheerder"
+                                            onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = user.Id, organizationid = Model.Id })'">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-12">
+                <h2>Supervisors</h2>
+                <div class="list-group scrollable-list">
+                    <!-- Button trigger modal -->
+                    <h2>@ViewBag.SupervisorError</h2>
+                    <h2>@ViewBag.SupervisorSuccess</h2>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                    {
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSupervisorModal">
+                            Add Supervisor
+                        </button>
+                    }
+                    <!-- Modal -->
+                    <div class="modal fade" id="addSupervisorModal" tabindex="-1" aria-labelledby="addSupervisorModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addSupervisorModalLabel">Add Supervisor</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" asp-action="AddSupervisor" asp-controller="Organization">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
                                             <input type="email" class="form-control" id="email" name="email" required>
                                             <input type="hidden" id="organizationid" name="organizationid" value="@Model.Id">
                                         </div>
@@ -116,21 +172,24 @@
                             </div>
                         </div>
                     </div>
-                    @if (Model.UserOrganizations.Count == 0)
+                    @if (ViewBag.Supervisors == null || ViewBag.Supervisors.Count == 0)
                     {
-                        <p>Er zijn geen deelplatformbeheerders</p>
+                        <p>Er zijn geen supervisors</p>
                     }
                     else
                     {
-                        @foreach (var userOrg in Model.UserOrganizations)
+                        @foreach (AnswerCubeUser user in ViewBag.Supervisors)
                         {
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-capitalize">@userOrg.User.UserName</p>
-                                <button class="btn btn-danger"
-                                        title="Remove Deelplatformbeheerder"
-                                        onclick="location.href='@Url.Action("RemoveDeelplatformbeheeder", "Organization", new { userId = userOrg.User.Id, organisationId = Model.Id })'">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                                <p class="text-capitalize">@user.UserName</p>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                                {
+                                    <button class="btn btn-danger"
+                                            title="Remove Supervisor"
+                                            onclick="location.href='@Url.Action("RemoveSupervisor", "Organization", new { email = user.Email, organizationid = Model.Id })'">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                }
                             </div>
                         }
                     }

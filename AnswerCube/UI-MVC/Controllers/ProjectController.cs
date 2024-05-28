@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.UI.MVC.Models.Dto;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AnswerCube.UI.MVC.Controllers
 {
+    [Authorize(Roles = "Admin,DeelplatformBeheerder")]
     public class ProjectController : Controller
     {
         private readonly IOrganizationManager _organizationManager;

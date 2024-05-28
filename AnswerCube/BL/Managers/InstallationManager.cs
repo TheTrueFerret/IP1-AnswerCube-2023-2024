@@ -27,9 +27,9 @@ public class InstallationManager : IInstallationManager
         return _repository.CreateNewInstallation(name, location, organizationId);
     }
 
-    public Session? GetSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    public Session? GetActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId)
     {
-        return _repository.GetSessionByInstallationIdAndCubeId(installationId, cubeId);
+        return _repository.ReadActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
     }
 
     public Session AddNewSessionWithInstallationId(Session newSession, int installationId)
@@ -61,4 +61,35 @@ public class InstallationManager : IInstallationManager
     {
         return _repository.WriteSlideListToInstallation(slideListId, installationId);
     }
+
+    public void AddNoteToInstallation(int installationId, string note, string? identityName, int flowId)
+    {
+        _repository.WriteNoteToInstallation(installationId, note, identityName, flowId);
+    }
+
+    public void SetInstallationUrl(int installationId, string url)
+    {
+        _repository.UpdateInstallationUrl(installationId, url);
+    }
+
+    public string GetConnectionIdByInstallationId(int installationId)
+    {
+        return _repository.GetConnectionIdByInstallationId(installationId);
+    }
+
+    public List<Installation> GetActiveInstallationsFromOrganizations(List<Organization> organizations)
+    {
+        return _repository.ReadActiveInstallationsFromOrganizations(organizations);
+    }
+
+    public List<Session>? GetActiveSessionsByInstallationId(int installationId)
+    {
+        return _repository.ReadActiveSessionsByInstallationId(installationId);
+    }
+
+    public bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId)
+    {
+        return _repository.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
+    }
+
 }

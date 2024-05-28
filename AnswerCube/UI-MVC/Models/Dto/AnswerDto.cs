@@ -1,7 +1,7 @@
-namespace AnswerCube.UI.MVC.Models;
+namespace AnswerCube.UI.MVC.Models.Dto;
 
-public class AnswerModel
-{ 
+public class AnswerDto
+{
     public List<string> Answer { get; set; }
     public int CubeId { get; set; }
 }

@@ -16,12 +16,14 @@ module.exports = {
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
         subtheme: './src/ts/flow/slide/SubThemes.ts',
         inputhandler: './src/ts/flow/InputHandler.ts',
+        votetablehandler: './src/ts/flow/VoteTableHandler.ts',
         slideEditor: './src/ts/flow/slide/SlideEditor.ts',
         formatProject: './src/ts/Project/formatProject.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',
-        createSlide: './src/ts/Slide/CreateSlide.ts'
+        createSlide: './src/ts/Slide/CreateSlide.ts',
+        flowBeheer: './src/ts/flow/FlowBeheer.ts'
     },
     output: {
         filename: '[name].entry.js',

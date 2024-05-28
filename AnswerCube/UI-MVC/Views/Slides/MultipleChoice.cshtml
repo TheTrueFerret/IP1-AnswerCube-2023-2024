@@ -1,63 +1,77 @@
-@model SlideModel
+@model SlideCompositeModel
 
 @{
     ViewBag.Title = "MultipleChoice";
     Layout = ViewData["Layout"] as string;
+    int answerCounter = 1;
 }
 
-<body class="body-container">
-<div class="container mt-5">
-    <div class="slide-container border p-4 rounded position-relative page-container">
-        <div class=" subtheme-container d-flex justify-content-center align-items-center p-3 mb-3 w-100">
-            <span class="font-weight-bold h3 mb-0">Subtheme - @Model.SubTheme.Name</span>
-        </div>
-        <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
-            Change Subtheme
-        </a>
-        <h1 class="question">Multiple Choice</h1>
-        <div id="slide">
-            <h3>@Model.Text</h3>
-            @if (Model.MediaUrl != null)
-            {
-                // Check if mediaUrl exists
-                // Extract the filename from the media URL
-                var filename = Model.MediaUrl.Split('/').Last();
-                // Extract the media type from the filename
-                var mediaType = filename.Split('_')[0];
-                // Default to "image" if the media type is not "video"
-                if (mediaType == "video")
+
+<h1 class="question">Multiple Choice</h1>
+<div id="slide">
+    <h3>@Model.SlideModel.Text</h3>
+    @if (Model.SlideModel.MediaUrl != null)
+    {
+        // Check if mediaUrl exists
+        // Extract the filename from the media URL
+        var filename = Model.SlideModel.MediaUrl.Split('/').Last();
+        // Extract the media type from the filename
+        var mediaType = filename.Split('_')[0];
+        // Default to "image" if the media type is not "video"
+        if (mediaType == "video")
+        {
+            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+            <br>
+        }
+        else if (mediaType == "image")
+        {
+            <img src="@Model.SlideModel.MediaUrl" alt="Slide Image">
+        }
+        else
+        {
+            <em>Unsupported media type</em>
+        }
+    }
+    @if (Model.SlideModel.AnswerList != null)
+        {
+            <table id="AnswerTable">
+                <tr id="HeaderRow">
+                    <td></td>
+                </tr>
+                @foreach (var answer in Model.SlideModel.AnswerList)
                 {
-                    <video width="320" height="240" controls><source src="@Model.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video><br>
+                    <tr>
+                        <td id="AnswerRow @answerCounter">@answer</td>
+                    </tr>
+                    answerCounter++;
                 }
-                else if (mediaType == "image")
-                {
-                    <img src="@Model.MediaUrl" alt="Slide Image">
-                }
-                else
-                {
-                    <em>Unsupported media type</em>
-                }
-            }
-            @if (Model.AnswerList != null)
-            {
-                @foreach (var answer in Model.AnswerList)
-                {
-                    <input type="checkbox" id="input" value="@answer" name="answer">@answer<br>
-                }
-            }
-            else
-            {
-                <p>no Answers Found</p>
-            }
-        </div>
+            </table>
+        }
+        else
+        {
+            <p>no Answers Found</p>
+        }
+    </div>
+<div>
+    <div id="SubmitBox">
+        <table id="SubmitTable">
+            
+        </table>
         <button id="submitAnswer" type="button">Submit Answer</button>
+    </div>
+    <div id="SkipBox">
+        <table id="SkipTable">
+            
+        </table>
         <button id="skipSlide" type="button">Skip</button>
     </div>
     </div>
 </body>
 
+
+
 @section Scripts
 {
     <script src="~/dist/multiplechoice.entry.js" defer></script>
+    <script src="~/dist/flowBeheer.entry.js" defer></script>
 }
-

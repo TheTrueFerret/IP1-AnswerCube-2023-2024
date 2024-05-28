@@ -11,14 +11,17 @@ public class OrganizationRepository : IOrganizationRepository
 {
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
-    
-    public OrganizationRepository(AnswerCubeDbContext context, UserManager<AnswerCubeUser> userManager)
+    private readonly IMailRepository _mailRepository;
+
+    public OrganizationRepository(AnswerCubeDbContext context, UserManager<AnswerCubeUser> userManager,
+        IMailRepository mailRepository)
     {
         _context = context;
         _userManager = userManager;
+        _mailRepository = mailRepository;
     }
-    
-   public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
+
+    public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
     {
         // Filter de rollen op basis van de rollen die de user al heeft
         var availableRoles = _context.Roles
@@ -40,7 +43,8 @@ public class OrganizationRepository : IOrganizationRepository
 
     public bool CreateDeelplatformBeheerderByEmail(string userEmail)
     {
-        DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail { Email = userEmail };
+        DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail
+            { Email = userEmail, IsDeelplatformBeheerder = true };
         _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
         _context.SaveChanges();
         return true;
@@ -140,10 +144,10 @@ public class OrganizationRepository : IOrganizationRepository
         return project;
     }
 
-    public async Task<bool> UpdateProject(Project updatedProject)
+    public async Task<bool> UpdateProject(Project project)
     {
         // Fetch the existing project from the database
-        var existingProject = _context.Projects.FirstOrDefault(p => p.Id == updatedProject.Id);
+        var existingProject = _context.Projects.FirstOrDefault(p => p.Id == project.Id);
 
         if (existingProject == null)
         {
@@ -152,9 +156,9 @@ public class OrganizationRepository : IOrganizationRepository
         }
 
         // Update the specific properties
-        existingProject.Title = updatedProject.Title;
-        existingProject.Description = updatedProject.Description;
-        existingProject.IsActive = updatedProject.IsActive;
+        existingProject.Title = project.Title;
+        existingProject.Description = project.Description;
+        existingProject.IsActive = project.IsActive;
 
         // Save the changes
         _context.Projects.Update(existingProject);
@@ -173,7 +177,7 @@ public class OrganizationRepository : IOrganizationRepository
 
     public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
-        Organization organization = new Organization(name, email,logoUrl);
+        Organization organization = new Organization(name, email, logoUrl);
         _context.Organizations.Add(organization);
         _context.SaveChanges();
         return organization;
@@ -182,14 +186,24 @@ public class OrganizationRepository : IOrganizationRepository
     public void SaveBeheerderAndOrganization(string email, string organizationName)
     {
         _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
-            { Email = email, DeelplatformNaam = organizationName });
+            { Email = email, DeelplatformNaam = organizationName, IsDeelplatformBeheerder = true });
         _context.SaveChanges();
+        _mailRepository.SendNewEmail(email, organizationName);
     }
 
     public bool CreateUserOrganization(AnswerCubeUser user)
     {
-        Organization organization = _context.Organizations.First(o => o.Name == _context.DeelplatformbeheerderEmails
+        Organization? organization = _context.Organizations.FirstOrDefault(o => o.Name == _context
+            .DeelplatformbeheerderEmails
             .First(d => d.Email == user.Email).DeelplatformNaam);
+        if (_context.DeelplatformbeheerderEmails.First(d => d.Email == user.Email).IsDeelplatformBeheerder)
+        {
+            _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+        }
+        else
+        {
+            _userManager.AddToRoleAsync(user, "Supervisor");
+        }
 
         if (organization != null)
         {
@@ -226,18 +240,57 @@ public class OrganizationRepository : IOrganizationRepository
         _context.SaveChanges();
     }
 
-    public bool RemoveDpbFromOrganization(string userId, int organisationid)
+    public async Task<bool> RemoveDpbFromOrganization(string userId, int organizationid)
     {
-        UserOrganization userOrganization = _context.UserOrganizations.Include(uo => uo.User)
-            .Include(uo => uo.Organization)
-            .First(uo => uo.UserId == userId && uo.OrganizationId == organisationid);
+        //remove the UserOrganization from the user, than remove him from beheerderEmails
+        var userOrganization =
+            _context.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == organizationid);
         if (userOrganization == null)
         {
             return false;
         }
 
-        DeleteDeelplatformBeheerderByEmail(userOrganization.User.Email, userOrganization.Organization.Name);
+        _context.UserOrganizations.Remove(userOrganization);
+        var user = _context.Users.SingleOrDefault(u => u.Id == userId);
+        if (user != null)
+        {
+            _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
+        }
+
+        await _context.SaveChangesAsync();
+
+        //Check if any other deelplatformbeheerders are assigned to the organization, if not delete the organization.
+        var org = _context.Organizations.Include(o => o.UserOrganizations).Include(o => o.Projects)
+            .ThenInclude(p => p.Flows).Single(organization => organization.Id == organizationid);
+        if (org.UserOrganizations.Count == 0)
+        {
+            RemoveEmptyOrganization(org);
+        }
+
         return true;
+    }
+
+    public void RemoveEmptyOrganization(Organization organization)
+    {
+        if (organization == null)
+        {
+            // Handle the case where the organization does not exist
+            return;
+        }
+
+        // Remove all related Flows
+        foreach (var project in organization.Projects)
+        {
+            _context.Flows.RemoveRange(project.Flows);
+        }
+
+        // Remove all related Projects
+        _context.Projects.RemoveRange(organization.Projects);
+
+        // Remove the Organization
+        _context.Organizations.Remove(organization);
+
+        _context.SaveChangesAsync();
     }
 
     public bool SearchOrganizationByName(string organizationName)
@@ -256,26 +309,9 @@ public class OrganizationRepository : IOrganizationRepository
         return _context.UserOrganizations.Any(uo => uo.UserId == userId && uo.OrganizationId == organizationid);
     }
 
-    public async Task<bool> CreateDpbToOrgByEmail(string email, string? userId, int organizationid)
+    public async Task<bool> CreateDpbToOrgByEmail(string email, int organizationid)
     {
-        var organization = _context.Organizations.Single(o => o.Id == organizationid);
-        if (userId == null)
-        {
-            //Normally never null cause user needs role when on this page.
-            return false;
-        }
-
-        // Check if the user is already part of the organization
-        if (_context.UserOrganizations
-            .Include(uo => uo.User)
-            .Include(uo => uo.Organization)
-            .Any(uo => uo.User.Email == email && uo.OrganizationId == organizationid))
-        {
-            return false;
-        }
-
-        AnswerCubeUser user = _context.Users.FirstOrDefault(u => u.Email == email);
-
+        AnswerCubeUser user = _context.Users.SingleOrDefault(u => u.Email == email);
         if (user != null)
         {
             // Check if a UserOrganization record already exists for this user and organization
@@ -292,6 +328,8 @@ public class OrganizationRepository : IOrganizationRepository
                 });
                 await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
                 _context.SaveChanges();
+                await _mailRepository.SendExistingEmail(email,
+                    _context.Organizations.Single(o => o.Id == organizationid).Name);
             }
 
             return true;
@@ -336,5 +374,83 @@ public class OrganizationRepository : IOrganizationRepository
         _context.Organizations.Update(organization);
         _context.SaveChanges();
         return true;
+    }
+
+    public async Task<bool> CreateSupervisorToOrgByEmail(string email, int organizationid)
+    {
+        AnswerCubeUser user = _context.Users.SingleOrDefault(u => u.Email == email);
+        if (user != null)
+        {
+            // Check if a UserOrganization record already exists for this user and organization
+            var existingUserOrganization = _context.UserOrganizations
+                .FirstOrDefault(uo => uo.UserId == user.Id && uo.OrganizationId == organizationid);
+
+            if (existingUserOrganization == null)
+            {
+                // If not, create a new UserOrganization record
+                _context.UserOrganizations.Add(new UserOrganization
+                {
+                    UserId = user.Id,
+                    OrganizationId = organizationid
+                });
+                await _userManager.AddToRoleAsync(user, "Supervisor");
+                _context.SaveChangesAsync();
+                await _mailRepository.SendExistingSupervisorEmail(email,
+                    _context.Organizations.Single(o => o.Id == organizationid).Name);
+            }
+
+            return true;
+        }
+
+        //The user doesnt exist so we need to send email to register.
+        SaveSupervisorAndOrganization(email, _context.Organizations.Single(o => o.Id == organizationid).Name);
+        return true;
+    }
+
+    public async Task<bool> RemoveSupervisorFromOrgByEmail(string email, int organizationid)
+    {
+        var user = _context.Users.SingleOrDefault(u => u.Email == email);
+        //remove the UserOrganization from the user, than remove him from beheerderEmails
+        var userOrganization =
+            _context.UserOrganizations.FirstOrDefault(uo =>
+                uo.UserId == user.Id && uo.OrganizationId == organizationid);
+        if (userOrganization == null)
+        {
+            return false;
+        }
+
+        _context.UserOrganizations.Remove(userOrganization);
+        await _userManager.RemoveFromRoleAsync(_context.Users.Single(u => u.Id == user.Id), "Supervisor");
+        _context.SaveChanges();
+
+        return true;
+    }
+
+    public List<AnswerCubeUser> ReadSupervisorsByOrgId(int organizationId)
+    {
+        var usersInOrg = _context.UserOrganizations.Include(uo => uo.User)
+            .Where(uo => uo.OrganizationId == organizationId)
+            .Select(uo => uo.User)
+            .ToList();
+
+        return usersInOrg.FindAll(u => _userManager.IsInRoleAsync(u, "Supervisor").Result);
+    }
+
+    public List<AnswerCubeUser> ReadDeelplatformBeheedersByOrgId(int organizationId)
+    {
+        var usersInOrg = _context.UserOrganizations.Include(uo => uo.User)
+            .Where(uo => uo.OrganizationId == organizationId)
+            .Select(uo => uo.User)
+            .ToList();
+
+        return usersInOrg.FindAll(u => _userManager.IsInRoleAsync(u, "DeelplatformBeheerder").Result);
+    }
+
+    private void SaveSupervisorAndOrganization(string email, string name)
+    {
+        _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
+            { Email = email, DeelplatformNaam = name, IsDeelplatformBeheerder = false });
+        _context.SaveChanges();
+        _mailRepository.SendNewSupervisorEmail(email, name);
     }
 }
