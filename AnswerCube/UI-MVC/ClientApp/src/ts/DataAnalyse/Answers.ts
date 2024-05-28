@@ -15,6 +15,7 @@ interface Session {
     // Add other properties of the session object if necessary
 }
 
+
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
 const titel: HTMLElement | null = document.getElementById("title");
 const dataContainer: HTMLElement | null = document.getElementById("data-container");
@@ -59,6 +60,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await startView();
+
+    const searchButton: HTMLElement | null = document.getElementById("search-button");
+    const searchInput: HTMLInputElement | null = document.getElementById("search-input") as HTMLInputElement;
+
+    if (searchButton && searchInput) {
+        searchButton.addEventListener("click", () => {
+            const query = searchInput.value.trim().toLowerCase();
+            if (query) {
+                searchAnswers(query);
+            }
+        });
+
+        searchInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                const query = searchInput.value.trim().toLowerCase();
+                if (query) {
+                    searchAnswers(query);
+                }
+            }
+        });
+    }
 });
 
 async function startView() {
@@ -70,6 +92,44 @@ async function startView() {
     * */
     await processAnswers(1)
     await getSessionById(1);
+}
+
+function searchAnswers(query: string) {
+    const filteredAnswers = allAnswers.filter(answer => answer.slide.text.toLowerCase().includes(query));
+    displayFilteredAnswers(filteredAnswers);
+}
+
+function formatTime(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+function displayFilteredAnswers(filteredAnswers: Answer[]) {
+    if (display) {
+        display.innerHTML = '';
+
+        if (filteredAnswers.length === 0) {
+            display.innerHTML = "<p>No answers found for the given query.</p>";
+            return;
+        }
+
+        let infoKader: HTMLElement = document.createElement('div');
+        infoKader.classList.add('AnswerFromSession');
+
+        filteredAnswers.forEach(answer => {
+            let itemDiv: HTMLElement = document.createElement('div');
+            const slideId = answer.slide.id;
+            const question = answer.slide.text;
+            itemDiv.innerHTML = `<h1>Question: ${question}</h1>
+                                 <h1>Answer: ${answer.answerText.join(', ')}</h1>
+                                 <button class='slideButton' data-slide-id='${slideId}'>slide ${slideId}</button>`;
+            infoKader.appendChild(itemDiv);
+        });
+        display.appendChild(infoKader);
+
+        attachSlideEventListeners();
+    } else {
+        console.error("Display element not found.");
+    }
 }
 
 async function GetAllSlides() {
@@ -214,6 +274,39 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
             currentChart.destroy();
         }
         canvas.innerHTML = '';
+
+        // Define an array of colors for the bars
+        const backgroundColors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(199, 199, 199, 0.2)',
+            'rgba(83, 102, 255, 0.2)',
+            'rgba(255, 159, 255, 0.2)',
+            'rgba(132, 255, 132, 0.2)'
+        ];
+
+        const borderColors = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)',
+            'rgba(83, 102, 255, 1)',
+            'rgba(255, 159, 255, 1)',
+            'rgba(132, 255, 132, 1)'
+        ];
+
+        // Ensure the number of colors matches the number of data points
+        const colorsCount = dataSet.length;
+        const backgroundColorsArray = backgroundColors.slice(0, colorsCount);
+        const borderColorsArray = borderColors.slice(0, colorsCount);
+
         currentChart = new Chart(canvas, {
             type: 'bar',
             data: {
@@ -221,8 +314,8 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
                 datasets: [{
                     label: vraag,
                     data: dataSet,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: backgroundColorsArray,
+                    borderColor: borderColorsArray,
                     borderWidth: 1
                 }]
             },
@@ -238,6 +331,7 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         console.error('Failed to get 2d context for canvas element.');
     }
 }
+
 
 async function GetAllSessions() {
     const url = window.location.toString();
@@ -354,17 +448,23 @@ function getSessionById(sessionId: number) {
         }
     }).then((data) => {
         console.log(data);
+        const formattedStartTime = formatTime(data.startTime);
+        const formattedEndTime = formatTime(data.endTime);
         let session: HTMLElement = document.createElement('div');
-        session.innerHTML = "<h1>cube: " + data.cubeId + "</h1>" +
-            "<h1>startTime: <p>" + data.startTime + "</p></h1>" +
-            "<h1>installation: " + data.installation + "</h1>";
+        session.innerHTML = "<p>cube: " + data.cubeId + "</p>" +
+            "<p>startTime: <p>" + formattedStartTime + "</p></p>" +
+            "<p>endTime: <p>" + formattedEndTime + "</p></p>";
         if (left) {
             left.innerHTML = "";
             left.appendChild(session);
         }
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+        if (sessions) {
+            sessions.innerHTML = "<em>Error fetching data!</em>";
+        }
     });
 }
-
 function attachSessionEventListeners() {
     const sessionButtons = document.querySelectorAll('.sessionButton');
     sessionButtons.forEach(button => {
