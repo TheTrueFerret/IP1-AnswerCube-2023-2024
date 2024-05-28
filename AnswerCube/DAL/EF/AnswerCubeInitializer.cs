@@ -50,6 +50,11 @@ public static class AnswerCubeInitializer
             RoleId = context.Roles.First(role => role.Name == "Gebruiker").Id,
             UserId = "superUser1"
         });
+        context.UserRoles.Add(new IdentityUserRole<string>
+        {
+            RoleId = context.Roles.First(role => role.Name == "DeelplatformBeheerder").Id,
+            UserId = "superUser1"
+        });
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
@@ -264,6 +269,9 @@ public static class AnswerCubeInitializer
                 "This theme discusses the career of the actors, have fun!"),
             ConnectedSlides = new List<SlideConnection>()
         };
+        
+        context.SlideLists.AddRange(slideList1, slideList1punt2);
+        
 
         //SingleChoice
         Slide singleChoice1 = new Slide
@@ -279,8 +287,7 @@ public static class AnswerCubeInitializer
             ConnectedSlideLists = new List<SlideConnection>(),
             MediaUrl = "https://storage.googleapis.com/answer-cube-bucket/video_202405161407339529.mp4"
         };
-
-        context.SlideLists.AddRange(slideList1, slideList1punt2);
+        
 
         SlideConnection slideConnection1 = new SlideConnection
         {

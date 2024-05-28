@@ -4,6 +4,7 @@ using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
+using AnswerCube.UI.MVC.Models.Dto;
 using AnswerCube.UI.MVC.Services;
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -108,7 +109,7 @@ public class CircularFlowController : BaseController
     }
     
     
-    public SlideModel GetNextSlide()
+    public SlideCompositeModel GetNextSlide()
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
@@ -123,10 +124,33 @@ public class CircularFlowController : BaseController
             SlideType = slide.SlideType,
             AnswerList = slide.AnswerList,
             MediaUrl = slide.MediaUrl,
-            SlideList = slideList,
-            SubTheme = slideList.SubTheme
+            SlideList = slideList
         };
-        return slideModel;
+        
+        Flow flow = _flowManager.GetFlowByInstallationId(installationId);
+        
+        SlideCompositeModel slideCompositeModel = new SlideCompositeModel
+        {
+            SlideModel = slideModel
+        };
+
+        if (flow.CircularFlow)
+        {
+            CircularFlowModel circularFlowModel = new CircularFlowModel
+            {
+                SubTheme = slideList.SubTheme
+            };
+            slideCompositeModel.CircularFlowModel = circularFlowModel;
+        }
+        else
+        {
+            LinearFlowModel linearFlowModel = new LinearFlowModel()
+            {
+                SubTheme = slideList.SubTheme
+            };
+            slideCompositeModel.LinearFlowModel = linearFlowModel;
+        }
+        return slideCompositeModel;
     }
     
     [HttpGet]
@@ -167,30 +191,85 @@ public class CircularFlowController : BaseController
     
     
     [HttpPost]
-    public IActionResult PostAnswer([FromBody] AnswerModel answer)
+    public IActionResult PostAnswer([FromBody] AnswersDto answers)
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-
-        Session? session = _installationManager.GetSessionByInstallationIdAndCubeId(installationId, answer.CubeId);
-        if (session == null)
-        {
-            Session newSession = new Session()
-            {
-                CubeId = answer.CubeId
-            };
-            session = _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
-        }
+        
+        bool[] allAnswersAdded = new bool[answers.Answers.Count];
         
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
-        List<string> answerText = answer.Answer;
-        if (_answerManager.AddAnswer(answerText, slide.Id, session))
+        
+
+        for (int i = 0; i < answers.Answers.Count; i++)
+        {
+            Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
+            if (session == null)
+            {
+                Session newSession = new Session()
+                {
+                    CubeId = answers.Answers[i].CubeId
+                };
+                session = _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
+            }
+            List<string> answerText = answers.Answers[i].Answer;
+            if (_answerManager.AddAnswer(answerText, slide.Id, session))
+            {
+                allAnswersAdded[i] = true;
+            }
+            else
+            {
+                allAnswersAdded[i] = false;
+            }
+        }
+        
+        if (allAnswersAdded.All(answer => answer))
         {
             return UpdatePage();
         }
+        
         return new JsonResult(new BadRequestResult());
     }
+    
+    [HttpGet]
+    public IActionResult GetActiveSessionsFromInstallation()
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        List<Session> sessions = _installationManager.GetActiveSessionsByInstallationId(installationId);
+        if (sessions.Count != 0)
+        {
+            int[] CubeIds = new int[sessions.Count];
+            for (int i = 0; i < sessions.Count; i++)
+            {
+                CubeIds[i] = sessions[i].CubeId;
+            }
+            return new JsonResult(CubeIds);
+        }
+        else
+        {
+            return Empty;
+        }
+    }
+    
+    
+    [HttpPost]
+    public IActionResult EndSession([FromBody] int cubeId)
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        _installationManager.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
+        if (session == null)
+        {
+            return Error();
+        }
+        return Ok();
+    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

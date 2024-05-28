@@ -1,98 +1,242 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
-import {getCookie} from "../../CookieHandler";
+import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
+import {getCubeNameByCubeId, postAnswers, stopSession} from "../CircularFlow";
 
-var url = window.location.toString()
+let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
-const checkboxes: any = document.querySelectorAll('input[name="answer"]')
-var currentCheckedIndex: number = -1;
-const totalCheckboxes: number = checkboxes.length;
+const table = document.getElementById("AnswerTable") as HTMLTableElement | null;
+const headerRow = document.getElementById("HeaderRow") as HTMLTableRowElement | null;
 
-function postAnswer(cubeId: number, action: 'submit' | 'skip') {
-    let answer = getSelectedAnswer();
+let currentCheckedIndexPerUser: number[] = [];
+let totalQuestions: number;
+let activeCubes: number[] = []; // get active cubes
+let sessionCube: boolean[] = [];
+let voteStatePerCubeId: string[] = [];
+
+
+
+document.addEventListener("DOMContentLoaded", function (){
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        if (data.length > 0) {
+            for (let i: number = 0; i < data.length; i++) {
+                activeCubes[i] = data[i]
+                sessionCube[i] = true
+            }
+            console.log(data);
+            generateAnswerColumns();
+            generateVoteTables(activeCubes, voteStatePerCubeId);
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+        return err; // Return an empty array in case of error
+    });
+})
+
+
+function generateAnswerColumns() {
+    activeCubes.sort((a, b) => a - b);
+    activeCubes.forEach(CubeId => {
+        addNewCubeAnswerColumn(CubeId);
+    });
+}
+
+
+function addNewOrDeleteCubeUser(cubeId: number) {
+    const index = activeCubes.indexOf(cubeId);
+    if (index !== -1) {
+        activeCubes.splice(index, 1);
+        deleteAnswerCubeColumn(cubeId);
+        generateVoteTables(activeCubes, voteStatePerCubeId);
+        if (sessionCube[cubeId]) {
+            sessionCube[cubeId] = false
+            stopSession(cubeId);
+        }
+    } else {
+        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
+        activeCubes.sort((a, b) => a - b);
+        addNewCubeAnswerColumn(cubeId);
+        generateVoteTables(activeCubes, voteStatePerCubeId);
+    }
+}
+
+function deleteAnswerCubeColumn(cubeId: number) {
+    if (table && headerRow) {
+        // Remove the header cell corresponding to cubeId
+        const headerCells = headerRow.getElementsByTagName("th");
+        for (let i = 0; i < headerCells.length; i++) {
+            if (headerCells[i].innerHTML === getCubeNameByCubeId(cubeId)) {
+                headerRow.deleteCell(i);
+                break;
+            }
+        }
+
+        // Remove the cell corresponding to cubeId from each row (excluding header row)
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            row.deleteCell(0);
+        }
+
+        // Update totalQuestions count
+        totalQuestions = table.rows.length - 1;
+    }
+}
+
+
+function addNewCubeAnswerColumn(cubeId: number) {
+    if (table) {
+        if (headerRow) {
+            const newHeaderCell = document.createElement("th");
+            newHeaderCell.innerHTML = getCubeNameByCubeId(cubeId);
+            headerRow.insertBefore(newHeaderCell, headerRow.firstChild);
+            currentCheckedIndexPerUser[cubeId] = -1;
+        }
+        // Add new cells to each existing row (excluding the header)
+        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+            const row = table.rows[rowIndex];
+            const newCell = row.insertCell(0);
+            newCell.innerHTML = `<div id="Cube${(cubeId)}_Row${rowIndex}" data-checked="false" data-cube="${(cubeId)}" data-row="${rowIndex}"></div>`;
+        }
+        totalQuestions = table.rows.length - 1;
+    }
+}
+
+
+
+function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
+    let answer: string[] = getSelectedAnswerByCubeId(cubeId)
+
+    // idk make this some kind of method
     
+    // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
         alert('Please select at least one answer before submitting <3');
         return;
     }
-    
-    let requestBody = {
-        Answer: answer,
-        CubeId: cubeId
-    };
-    console.log(requestBody);
-    fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (slideElement) {
-                slideElement.innerHTML = "<em>problem!!!</em>";
+
+
+    for (let i = 0; i <= activeCubes.length; i++) {
+        if (activeCubes[i] == cubeId) {
+            if (voteStatePerCubeId[i] == "none") {
+                voteStatePerCubeId[i] = action;
+            } else {
+                if (voteStatePerCubeId[i] != action) {
+                    voteStatePerCubeId[i] = action
+                }
             }
         }
-    }).then((nextSlideData: any) => {
-        if (nextSlideData.url) {
-            // Redirect to the URL of the next slide
-            window.location.href = nextSlideData.url;
+    }
+    updateVoteUi(cubeId, "SubmitTable", false)
+    updateVoteUi(cubeId, "SkipTable", false)
+    updateVoteUi(cubeId, "", false)
+
+    switch (action) {
+        case "submit":
+            updateVoteUi(cubeId, "SubmitTable", true)
+            break;
+        case "skip":
+            updateVoteUi(cubeId, "SkipTable", true)
+            break;
+        case "changeSubTheme":
+            updateVoteUi(cubeId, "", true)
+            break;
+    }
+
+    const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
+    if (allAnswered) {
+        let answers: any[] = [];
+        for (let i = 0; i < activeCubes.length; i++) {
+            answers.push({
+                Answer: answer,
+                CubeId: activeCubes[i]
+            })
         }
-    }).catch(err => {
-        console.log("Something went wrong: " + err);
-    })
-    console.log(answer);
+        postAnswers(answers)
+        console.log("Everyone voted!");
+    } else {
+        console.log("Not Everyone Voted Yet");
+    }
 }
 
-function getSelectedAnswer(): string[] {
-    const checkboxes = document.querySelectorAll('input[name="answer"]:checked');
+function getSelectedAnswerByCubeId(cubeId: number): string[] {
     let selectedAnswers: string[] = [];
-    checkboxes.forEach((checkbox: Element) => {
-        const inputElement = checkbox as HTMLInputElement;
-        if (inputElement.value) {
-            selectedAnswers.push(inputElement.value);
+    for (let i: number = 1; i <= totalQuestions; i++) {
+        const elementId = `Cube${cubeId}_Row${i}`;
+        const element = document.getElementById(elementId);
+        if (element && element.getAttribute('data-checked') === 'true') {
+            const answerColumn = document.getElementById(`AnswerRow ${i}`);
+            if (answerColumn)
+            selectedAnswers.push(answerColumn.innerHTML);
         }
-    });
+    }
     return selectedAnswers;
 }
 
-function moveCheckedRadioButton(direction: 'up' | 'down') {
-    // Check if there's a radio button checked
-    if (currentCheckedIndex === -1) {
-        checkboxes[0].checked = true;
-        currentCheckedIndex = 0
-        return;
-    }
-    let newIndex;
-    if (direction === 'up') {
-        newIndex = currentCheckedIndex - 1;
-        if (newIndex < 0) newIndex = totalCheckboxes - 1;
-    } else if (direction === 'down') {
-        newIndex = currentCheckedIndex + 1;
-        if (newIndex >= totalCheckboxes) newIndex = 0;
-    } else {
-        return; // Invalid direction
-    }
+function moveCheckedRadioButton(cubeId: number, direction: 'up' | 'down') {
+    if (table) {
+        for (let i = 1; i <= totalQuestions; i++) {
+            let elementId = `Cube${cubeId}_Row${i}`;
+            let element = document.getElementById(elementId);
+            if (element) {
+                if (currentCheckedIndexPerUser[cubeId] === -1) {
+                    element.setAttribute('data-checked', 'true');
+                    currentCheckedIndexPerUser[cubeId] = 1;
+                    element.innerHTML = 'Selected';
+                    return;
+                }
 
-    checkboxes[currentCheckedIndex].checked = false;
-    checkboxes[newIndex].checked = true;
-    currentCheckedIndex = newIndex
+                let newIndex;
+                if (currentCheckedIndexPerUser[cubeId] === i && direction === 'up') {
+                    newIndex = (i - 1);
+                    if (newIndex < 1) newIndex = totalQuestions;
+                } else if (currentCheckedIndexPerUser[cubeId] === i && direction === 'down') {
+                    newIndex = (i + 1);
+                    if (newIndex > totalQuestions) newIndex = 1;
+                } else {
+                    continue;
+                }
+
+                let newElementId = `Cube${cubeId}_Row${newIndex}`;
+                let newElement = document.getElementById(newElementId);
+                element.setAttribute('data-checked', 'false');
+                element.innerHTML = '';
+                if (newElement) {
+                    newElement.setAttribute('data-checked', 'true');
+                    newElement.innerHTML = 'Selected';
+                }
+                currentCheckedIndexPerUser[cubeId] = newIndex;
+                return;
+            }
+        }
+    }
 }
+
 
 declare global {
     interface Window {
         slideType: string;
-        moveCheckedRadioButton: (direction: 'up' | 'down') => void;
-        postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
+        moveCheckedRadioButton: (CubeId: number, direction: 'up' | 'down') => void;
+        vote: (cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') => void;
+        addNewOrDeleteCubeUser: (cubeId: number) => void;
+        generateVoteTables: (activeCubes: number[], voteStatePerCubeId: string[]) => void;
     }
 }
 
 window.slideType = "SingleChoice";
 window.moveCheckedRadioButton = moveCheckedRadioButton;
-window.postAnswer = postAnswer;
-
+window.vote = vote;
+window.addNewOrDeleteCubeUser = addNewOrDeleteCubeUser
+window.generateVoteTables = generateVoteTables

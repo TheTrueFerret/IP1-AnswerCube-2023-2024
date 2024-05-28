@@ -1,0 +1,26 @@
+@model System.Collections.Generic.List<Domain.Installation>
+
+@{
+    ViewBag.Title = "Select Active Installation";
+    Layout = "_Layout";
+}
+
+<h2>Select Active Installation</h2>
+
+<div class="row">
+    @foreach (var installation in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">@installation.Name</h5>
+                    <p class="card-text">@installation.Location</p>
+                    <form asp-controller="Begeleider" asp-action="FlowBeheer" method="post">
+                        <input type="hidden" for="installationId" name="installationId" value="@installation.Id"/>
+                        <input type="submit" value="Select" class="btn btn-primary"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

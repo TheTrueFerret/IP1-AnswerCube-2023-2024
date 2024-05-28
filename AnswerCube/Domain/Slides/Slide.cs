@@ -15,7 +15,6 @@ public class Slide
     public string? MediaUrl { get; set; } // deze url word gebruikt voor een afbeelding/video
     
     // Relational Attributes:
-    [JsonIgnore]
     public ICollection<SlideConnection>? ConnectedSlideLists { get; set; }
     [JsonIgnore]
     public ICollection<Answer>? Answers { get; set; }

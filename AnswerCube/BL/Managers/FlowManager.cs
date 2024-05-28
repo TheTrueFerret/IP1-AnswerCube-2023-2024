@@ -59,7 +59,7 @@ public class FlowManager : IFlowManager
         if (type == SlideType.InfoSlide && options.Count == 1)
         {
             string info = question + "\n" + options[0];
-            return _repository.CreateSlide(type, info, null!, slideListId, mediaUrl);
+            return _repository.CreateSlide(type, info, null, slideListId, mediaUrl);
         }
 
         return _repository.CreateSlide(type, question, options, slideListId, mediaUrl);

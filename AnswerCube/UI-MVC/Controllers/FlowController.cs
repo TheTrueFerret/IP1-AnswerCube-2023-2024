@@ -48,7 +48,7 @@ public class FlowController : BaseController
         if (imageFile != null)
         {
             var url = _cloudStorageService.UploadFileToBucket(imageFile);
-            if (_flowManager.CreateSlide(type, question, options, slideListId,url))
+            if (_flowManager.CreateSlide(type, question, options, slideListId, url))
             {
                 return RedirectToAction("SlideListDetails", "SlideList", new { slideListId });
             }

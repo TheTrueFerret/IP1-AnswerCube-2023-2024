@@ -14,5 +14,4 @@ public class SlideModel
     public string? MediaUrl { get; set; }
     public string? Theme { get; set; }
     public SlideList SlideList { get; set; }
-    public SubTheme SubTheme { get; set; }
 }

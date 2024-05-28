@@ -2,6 +2,7 @@ import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
 var url: string = window.location.toString()
 
+
 function chooseSlideList(slideListId: number) {
     let requestBody = {
         Id: slideListId
@@ -33,3 +34,7 @@ document.querySelectorAll('.ChooseSlideList').forEach((btnSubmit: Element) => {
         chooseSlideList(Number((btnSubmit as HTMLElement).getAttribute('data-info')));
     });
 });
+
+
+
+
