@@ -46,7 +46,7 @@ document.addEventListener('keydown', (event) => {
         }
         if (keysPressed.has('a') && keysPressed.has(cubeId)) {
             if (slideType === "InfoSlide") {
-                window.generateVoteTables()
+                window.addNewOrDeleteCubeUser(cubeNumber)
             } else {
                 window.addNewOrDeleteCubeUser(cubeNumber)
             }

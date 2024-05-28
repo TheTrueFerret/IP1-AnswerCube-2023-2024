@@ -1,8 +1,7 @@
-import {activeCubes, voteStatePerCubeId} from "./slide/SingleChoice";
 import {getCubeNameByCubeId} from "./CircularFlow";
 
 
-export function generateVoteTables() {
+export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: string[]) {
     const tableIds = ['SubmitTable', 'SkipTable'];
     tableIds.forEach(tableId => {
         const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;

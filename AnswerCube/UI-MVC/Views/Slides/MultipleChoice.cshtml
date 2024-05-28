@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "MultipleChoice";
     Layout = ViewData["Layout"] as string;
+    int answerCounter = 1;
 }
 
 
@@ -32,16 +33,24 @@
         }
     }
     @if (Model.SlideModel.AnswerList != null)
-    {
-        @foreach (var answer in Model.SlideModel.AnswerList)
         {
-            <input type="checkbox" id="input" value="@answer" name="answer">@answer<br>
+            <table id="AnswerTable">
+                <tr id="HeaderRow">
+                    <td></td>
+                </tr>
+                @foreach (var answer in Model.SlideModel.AnswerList)
+                {
+                    <tr>
+                        <td id="AnswerRow @answerCounter">@answer</td>
+                    </tr>
+                    answerCounter++;
+                }
+            </table>
         }
-    }
-    else
-    {
-        <p>no Answers Found</p>
-    }
+        else
+        {
+            <p>no Answers Found</p>
+        }
     </div>
 <div>
     <div id="SubmitBox">

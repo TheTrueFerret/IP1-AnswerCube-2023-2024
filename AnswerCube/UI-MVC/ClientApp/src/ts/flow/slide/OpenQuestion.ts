@@ -2,15 +2,20 @@ import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
 import {updateVoteUi} from "../VoteTableHandler";
 import {postAnswers} from "../CircularFlow";
-import {activeCubes, voteStatePerCubeId} from "./SingleChoice";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
+let currentCheckedIndexPerUser: number[] = [];
+let totalQuestions: number;
+let activeCubes: number[] = []; // get active cubes
+let sessionCube: boolean[] = [];
+let voteStatePerCubeId: string[] = [];
+
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
-    let answer = getTextInput()
+    let answer: string[] = getTextInput()
 
     // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {

@@ -34,13 +34,10 @@
     }
 </div>
 <div class="modal-footer">
-    <div class="centered-content">
-        <div class="answers-container">
+    <div class="slider-container">
+        <div id="AllRanges">
             
         </div>
-    </div>
-    <div class="slider-container">
-        <input type="range" id="slider" class="slider custom-slider" list="tickmarks" step="1" min="0" max="100"/>
         <datalist id="tickmarks">
             @foreach (var option in Model.SlideModel.AnswerList)
             {

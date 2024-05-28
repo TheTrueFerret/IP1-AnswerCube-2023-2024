@@ -1,7 +1,5 @@
 import {RemoveLastDirectoryPartOf} from "../urlDecoder";
-import {activeCubes} from "./slide/SingleChoice";
 
-let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
 
 export function getCubeNameByCubeId(CubeId: number): string {
@@ -22,6 +20,8 @@ export function getCubeNameByCubeId(CubeId: number): string {
 
 
 export function stopSession(cubeId: number) {
+    let url: string = window.location.toString()
+
     fetch(RemoveLastDirectoryPartOf(url) + "/EndSession/", {
         method: "POST",
         headers: {
@@ -49,6 +49,7 @@ export function postAnswers(answers: any[]) {
     };
 
     console.log(requestBody);
+    let url: string = window.location.toString()
     fetch(RemoveLastDirectoryPartOf(url) + "/PostAnswer/", {
         method: "POST",
         headers: {
