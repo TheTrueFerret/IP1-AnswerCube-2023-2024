@@ -9,12 +9,11 @@
 - Ilyasse Jmida
 - Jarno Fret
 - Nemo Van den Eynde
-Yannick Vandenbulcke
+- Yannick Vandenbulcke
 
 ## Korte omschrijving van het project
 Het project houdt een phygital tool in dat kan worden gebruikt om de meningen en perspectieven van verschillende doelgroepen te verkrijgen. De tool is zodanig in elkaar gestoken dat er meerdere gebruikers tegelijk kunnen deelnemen. In eerste instantie hebben we het nu gemaakt voor de komende verkiezingen. Gebruikers kunnen zelfs hun mening geven om het forum rond bepaalde ideeen en onderwerpen dat gekoppeld is aan de flow die ze hebben doorlopen.
 
 
 ## Aanvullende informatie
-  compileren, runnen, credentials van testgebruikers, command line
-  options,.
+Admin login: vandenbulckeyannick@gmail.com password: Student_1234
