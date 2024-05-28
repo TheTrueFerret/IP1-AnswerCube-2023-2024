@@ -10,12 +10,17 @@ interface Answer {
     answerText: string[];
 }
 
+interface Slide {
+    id: number;
+    text: string;
+    slideType: number;
+}
 interface Session {
     id: number;
-    // Add other properties of the session object if necessary
 }
 
 
+const downloadCSVButton: HTMLElement | null = document.getElementById("download-csv-button");
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
 const titel: HTMLElement | null = document.getElementById("title");
 const dataContainer: HTMLElement | null = document.getElementById("data-container");
@@ -81,12 +86,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     }
+    if (downloadCSVButton) {
+        downloadCSVButton.addEventListener("click", () => {
+            downloadCSV();
+        });
+    }
 });
 
 async function startView() {
-    // await GetAllSlides();
     await GetAllSessions();
-    await GetAllAnswers(0); // Load all answers initially without specific slide ID
+    await GetAllAnswers(0); 
     /*
     * toon eerste slide
     * */
@@ -133,42 +142,74 @@ function displayFilteredAnswers(filteredAnswers: Answer[]) {
     }
 }
 
-async function GetAllSlides() {
-    var url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Slides", {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
+async function GetAllSlides(): Promise<Slide[]> {
+    const url = window.location.toString();
+    try {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Slides", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (response.status !== 200) {
             if (left) {
                 left.innerHTML = "<em>problem!!!</em>";
             }
+            return []; // Return an empty array or handle the error condition appropriately
         }
-    }).then((data) => {
+
+        const data: Slide[] = await response.json();
         if (data && data.length > 0) {
             console.log("Loaded slides");
-            for (let i = 0; i < data.length; i++) {
-                let slide: HTMLElement = document.createElement('div');
-                slide.innerHTML = "<button class='slideButton' data-slide-id='" + data[i].id + "'>slide: " + data[i].id + "</button>";
-                if (left) {
-                    left.appendChild(slide);
-                }
-            }
-            attachSlideEventListeners();
+            return data;
         } else {
             console.log("No data received from the API Slides.");
+            return []; // Return an empty array or handle the absence of data appropriately
         }
-    }).catch((error) => {
+    } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-    });
+        return []; // Return an empty array or handle the error condition appropriately
+    }
 }
+
+async function downloadCSV() {
+    const encodedUri = await generateCSV(); // Await the result of generateCSV
+
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "data.csv");
+    document.body.appendChild(link);
+
+    link.click();
+}
+
+async function generateCSV() {
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    // Fetch all slides
+    const allSlides: Slide[] = await GetAllSlides();
+
+    // Headers for slides CSV
+    csvContent += "Slide ID,Slide Text,Slide Type\n";
+    allSlides.forEach((slide: Slide) => {
+        csvContent += `${slide.id},${slide.text},${slide.slideType}\n`;
+    });
+
+    // Headers for answers CSV
+    csvContent += "\n\n\nAnswer ID,Slide ID,Answer Text\n";
+    allAnswers.forEach(answer => {
+        csvContent += `${answer.id},${answer.slide.id},${answer.answerText.join('|')}\n`;
+    });
+
+    // Encode CSV content
+    const encodedUri = encodeURI(csvContent);
+    return encodedUri;
+}
+
 
 async function GetSlideById(slideId: number) {
     var url = window.location.toString();
@@ -277,7 +318,6 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         }
         canvas.innerHTML = '';
 
-        // Define an array of colors for the bars
         const backgroundColors = [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -304,7 +344,6 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
             'rgba(132, 255, 132, 1)'
         ];
 
-        // Ensure the number of colors matches the number of data points
         const colorsCount = dataSet.length;
         const backgroundColorsArray = backgroundColors.slice(0, colorsCount);
         const borderColorsArray = borderColors.slice(0, colorsCount);
@@ -358,10 +397,10 @@ async function GetAllSessions() {
             console.log(data.length);
             aantalSessions = data.length;
 
-            // Sort in descending order
+            // Sort descending
             data.sort((a: Session, b: Session) => b.id - a.id);
 
-            // Display the sessions in sorted order
+            // Display
             data.forEach((session: Session) => {
                 let sessionTitle: HTMLElement = document.createElement('div');
                 sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
