@@ -94,6 +94,9 @@ function move(cubeId: number, direction: 'up' | 'down', slideType: string) {
     if (slideType == "RangeQuestion" && typeof window.moveRangeButton === 'function') {
         window.moveRangeButton(cubeId, direction);
     }
+    if (slideType == "SubThemes" && typeof window.moveBetweenSlideLists === 'function') {
+        window.moveBetweenSlideLists(cubeId, direction);
+    }
 }
 
 

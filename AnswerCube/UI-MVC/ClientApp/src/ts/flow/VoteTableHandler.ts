@@ -16,7 +16,9 @@ export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: st
         createVoteTable(2, 'SkipTable');
     }
     for (let i = 0; i < activeCubes.length; i++) {
-        voteStatePerCubeId[i] = "none";
+        if (voteStatePerCubeId[i] != "none") {
+            updateVoteUi(activeCubes[i], voteStatePerCubeId[i], true);
+        }
     }
 }
 
@@ -37,7 +39,7 @@ export function createVoteTable(rows: number, tableId: string) {
 }
 
 
-export function updateVoteUi(cubeId: number, tableId: 'SubmitTable' | 'SkipTable' | '', vote: boolean) {
+export function updateVoteUi(cubeId: number, tableId: string, vote: boolean) {
     if (!tableId) return;
     const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
     const cells = table.querySelectorAll(`td[data-cube='${cubeId}']`);

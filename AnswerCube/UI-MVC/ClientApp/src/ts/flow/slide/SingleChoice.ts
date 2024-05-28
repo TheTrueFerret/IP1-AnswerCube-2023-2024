@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, postAnswers, stopSession} from "../CircularFlow";
+import {getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
 let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
@@ -37,11 +37,15 @@ document.addEventListener("DOMContentLoaded", function (){
             console.log(data);
             generateAnswerColumns();
             generateVoteTables(activeCubes, voteStatePerCubeId);
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[i] = "none";
+            }
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
         return err; // Return an empty array in case of error
     });
+    
 })
 
 
@@ -64,10 +68,17 @@ function addNewOrDeleteCubeUser(cubeId: number) {
             stopSession(cubeId);
         }
     } else {
+        voteStatePerCubeId[cubeId] = "none";
+        
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
         addNewCubeAnswerColumn(cubeId);
         generateVoteTables(activeCubes, voteStatePerCubeId);
+        
+        if (!sessionCube[cubeId]) {
+            sessionCube[cubeId] = true
+            startSession(cubeId);
+        }
     }
 }
 
