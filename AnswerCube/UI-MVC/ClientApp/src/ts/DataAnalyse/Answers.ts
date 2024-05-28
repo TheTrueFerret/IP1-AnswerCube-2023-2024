@@ -188,21 +188,21 @@ async function downloadCSV() {
 }
 
 async function generateCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
+    let csvContent = "data:text/csv;charset=utf-8";
 
     // Fetch all slides
-    const allSlides: Slide[] = await GetAllSlides();
+    const allSlides = await GetAllSlides();
 
     // Headers for slides CSV
-    csvContent += "Slide ID,Slide Text,Slide Type\n";
-    allSlides.forEach((slide: Slide) => {
-        csvContent += `${slide.id},${slide.text},${slide.slideType}\n`;
+    csvContent += "Slide ID;Slide Text;Slide Type\n";
+    allSlides.forEach(slide => {
+        csvContent += `${slide.id};${slide.text};${slide.slideType}\n`;
     });
 
     // Headers for answers CSV
-    csvContent += "\n\n\nAnswer ID,Slide ID,Answer Text\n";
+    csvContent += "\n\n\nAnswer ID;Slide ID;Answer Text\n";
     allAnswers.forEach(answer => {
-        csvContent += `${answer.id},${answer.slide.id},${answer.answerText.join('|')}\n`;
+        csvContent += `${answer.id};${answer.slide.id};${answer.answerText.join('|')}\n`;
     });
 
     // Encode CSV content
