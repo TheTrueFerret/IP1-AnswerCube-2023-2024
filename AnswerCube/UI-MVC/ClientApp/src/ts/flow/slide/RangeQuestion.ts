@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", function (){
             console.log(data);
             generateAnswerColumns();
             generateVoteTables(activeCubes, voteStatePerCubeId);
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[i] = "none";
+            }
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
