@@ -32,19 +32,6 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Contactinfo" asp-action="ContactInfo">Leave Contact Info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
-                    </li>
-
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
@@ -53,11 +40,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
+                        </li>
                     }
                     @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Beheer Installation</a>
                         </li>
                     }
                     @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
@@ -78,7 +71,7 @@
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<footer class="border-top footer text-muted justify-content-center align-items-center">
     <div class="container">
         &copy; @DateTime.Now.Year - AnswerCube - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
