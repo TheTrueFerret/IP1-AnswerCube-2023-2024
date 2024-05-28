@@ -151,6 +151,7 @@ public class OrganizationManager : IOrganizationManager
     public bool UpdateOrganization(int organizationId, Theme theme)
     {
         return _repository.UpdateOrganization(organizationId, theme);
+    }
 
     public Task<bool> AddSupervisorToOrgByEmail(string email, int organizationid)
     {

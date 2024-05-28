@@ -11,7 +11,7 @@ public class Organization
     public string Name { get; set; }
     public string Email { get; set; }
     public Theme Theme { get; set; }
-    public string? logoUrl { get; set; }
+    public string? LogoUrl { get; set; }
     public List<Project> Projects { get; set; } = new List<Project>();
     public List<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
     public List<Installation>? Installations { get; set; }
@@ -38,7 +38,7 @@ public class Organization
         Theme = theme;
         if(logoUrl == null)
         {
-            this.logoUrl = "UI-MVC/wwwroot/Images/AnswerCubeLogo.png";
+            LogoUrl = "UI-MVC/wwwroot/Images/AnswerCubeLogo.png";
         }
     }
 }
