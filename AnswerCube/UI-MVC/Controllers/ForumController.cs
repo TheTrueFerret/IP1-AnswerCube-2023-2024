@@ -29,6 +29,8 @@ public class ForumController : BaseController
     [Route("[action]/{forumId:int}")]
     public IActionResult ShowForum(int forumId)
     {
+        //TODO cookie instellen zodat een thema van de organization op het forum word geladen (kijk naar organization Controller voor cookie in the stellen)
+        
         //This will show the forum with the given id
         return View(_forumManager.GetForum(forumId));
     }

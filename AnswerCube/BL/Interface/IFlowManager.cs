@@ -14,9 +14,9 @@ public interface IFlowManager
     Slide GetSlideFromFlow(int flowId, int number);
     Slide GetSlideById(int id);
     Slide GetSlideFromSlideListByIndex(int index, int slideListId);
-    bool CreateSlide(SlideType type, string question, List<string>? options,int slideListId,string? mediaUrl);
+    bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId, string? mediaUrl = null);
     List<Slide> GetAllSlides();
-    void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
+    void UpdateSlide(string text, List<string>? answers, int slideId);
     IEnumerable<Slide> GetSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
     #endregion
@@ -38,6 +38,7 @@ public interface IFlowManager
     Flow GetFlowById(int flowId);
     Flow GetFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    bool RemoveFlowFromProject(int flowId);
     List<Flow> GetFlowsByUserId(string userId);
     Flow GetFlowByInstallationId(int installationId);
     #endregion

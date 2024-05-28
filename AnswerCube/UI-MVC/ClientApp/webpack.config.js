@@ -18,6 +18,7 @@ module.exports = {
         inputhandler: './src/ts/flow/InputHandler.ts',
         votetablehandler: './src/ts/flow/VoteTableHandler.ts',
         slideEditor: './src/ts/flow/slide/SlideEditor.ts',
+        formatProject: './src/ts/Project/formatProject.ts',
         qr : './src/ts/qr/qr.ts',
         searchBar : './src/ts/users/searchbar.ts',
         project :'./src/ts/Project/Project.ts',

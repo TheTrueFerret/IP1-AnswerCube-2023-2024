@@ -14,8 +14,8 @@ public interface IFlowRepository
     Slide GetSlideFromFlow(int flowId, int number);
     Slide ReadSlideById(int id);
     Slide ReadSlideFromSlideListByIndex(int index, int slideListId);
-    bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId,string? mediaUrl);
-    void UpdateSlide(SlideType slideType, string text, List<string> answers, int slideId);
+    bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId, string? mediaUrl);
+    void UpdateSlide(string text, List<string>? answers, int slideId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
     #endregion
@@ -38,6 +38,7 @@ public interface IFlowRepository
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
     void UpdateFlow(Flow model);
+    bool RemoveFlowFromProject(int flowId);
     List<Flow> ReadFlowsByUserId(string userId);
     Flow ReadFlowByInstallationId(int installationId);
     #endregion

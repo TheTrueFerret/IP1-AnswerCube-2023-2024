@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AnswerCube.BL;
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +74,10 @@ public class OrganizationController : BaseController
 
     public IActionResult OrganizationView(int organizationid)
     {
+        // Set a cookie for the organization ID
+        CookieOptions option = new CookieOptions();
+        Response.Cookies.Append("OrganizationId", organizationid.ToString(), option);
+        
         var organization = _organizationManager.GetOrganizationById(organizationid);
         //Check if user is admin, to not check if user is in organization
         if (User.IsInRole("Admin"))
@@ -195,5 +200,18 @@ public class OrganizationController : BaseController
         }
 
         return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
+    }
+    
+    public IActionResult UpdateTheme(int organizationId, Theme theme)
+    {
+        bool result = _organizationManager.UpdateOrganization(organizationId, theme);
+        if (result)
+        { 
+            var organization = _organizationManager.GetOrganizationById(organizationId);
+            return View("Index", organization);
+        } 
+        var organizationWithError = _organizationManager.GetOrganizationById(organizationId);
+        ViewBag.ErrorMessage = "Failed to update theme";
+        return View("Index", organizationWithError);
     }
 }

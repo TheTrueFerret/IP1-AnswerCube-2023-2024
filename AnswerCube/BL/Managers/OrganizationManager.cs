@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using AnswerCube.DAL;
@@ -136,6 +137,20 @@ public class OrganizationManager : IOrganizationManager
     {
         return _repository.ReadProjectWithFlowsById(projectId);
     }
+
+    public Theme GetThemeByOrganisationId(int organisationId)
+    {
+        return _repository.ReadThemeByOrganisationId(organisationId);
+    }
+    
+    public Theme GetThemeByInstallationId(int installationId)
+    {
+        return _repository.ReadThemeByInstallationId(installationId);
+    }
+
+    public bool UpdateOrganization(int organizationId, Theme theme)
+    {
+        return _repository.UpdateOrganization(organizationId, theme);
 
     public Task<bool> AddSupervisorToOrgByEmail(string email, int organizationid)
     {

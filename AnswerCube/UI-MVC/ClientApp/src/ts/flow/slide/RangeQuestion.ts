@@ -101,6 +101,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         return;
     }
     
+
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
             if (voteStatePerCubeId[i] == "none") {

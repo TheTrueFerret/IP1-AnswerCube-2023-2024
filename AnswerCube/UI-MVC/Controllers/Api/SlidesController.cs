@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using UI_MVC.Models.Dto;
 
-namespace UI_MVC.Controllers.Api;
+namespace AnswerCube.UI.MVC.Controllers.Api;
 
 [ApiController]
 [Route("/api/[controller]")]
@@ -17,7 +17,6 @@ public class SlidesController : ControllerBase
     {
         _flowManager = manager;
     }
-    
     
     [Route("GetSlideData/{id}")]
     [HttpGet]

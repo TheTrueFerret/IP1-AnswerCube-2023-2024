@@ -12,7 +12,7 @@
 </head>
 <body class="bg-light">
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-black navbar-dark border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
@@ -33,31 +33,31 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Contactinfo" asp-action="ContactInfo">Leave Contact Info</a>
+                        <a class="nav-link text-light" asp-area="" asp-controller="Contactinfo" asp-action="ContactInfo">Leave Contact Info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
+                        <a class="nav-link text-light" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
+                        <a class="nav-link text-light" asp-area="" asp-controller="CircularFlow" asp-action="CircularFlow">CircularFlow</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
+                        <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
                     </li>
 
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
                         </li>
                     }
                     @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
                         </li>
                     }
                     @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))

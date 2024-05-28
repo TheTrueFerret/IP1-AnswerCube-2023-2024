@@ -44,6 +44,10 @@ GET http://localhost:5104/CircularFlow/GetNextSlide/
 Accept: application/json
 
 ###
+GET http://localhost:5104/api/Theme/GetTheme/CircularFlow
+Accept: application/json 
+
+###
 POST http://localhost:5104/Account/Login/
 Accept: application/json
 Content-Type: application/json
@@ -57,3 +61,12 @@ Content-Type: application/json
   "__RequestVerificationToken": "CfDJ8OhoHIok9HJGhj0tBAL15qH53Sk5XmBf2qwIgfKGDqVYtAagOFv2vKRP032Hu58wjdDNE2T9uXOSohlPD-OeQ_1cJ7vvnebElT-JwR7Wq_25-x5k7M12xBHV9UytQkgzXHTsz7Z8C_D4V42G7O1ZZb4"
 }
 
+###
+POST http://localhost:5104/api/Theme/UpdateTheme
+Accept: application/json
+Content-Type: application/json
+
+{
+  "theme" : "blue",
+  "organizationId" : 2
+}

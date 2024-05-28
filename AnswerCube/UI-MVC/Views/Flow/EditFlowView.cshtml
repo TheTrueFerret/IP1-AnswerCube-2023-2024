@@ -5,33 +5,36 @@ ViewBag.Title = "Edit Flow";
 Layout = "_Layout";
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="container py-4 text-center bg-light">
+     <h2 class="subtheme">@ViewBag.Title: <span class="title fst-italic">@Model.Name</span></h2>
+    <div class="mt-4 d-flex justify-content-center">
+        <form asp-action="EditFlow" asp-controller="Flow" method="post"  class="w-50">
+            <input type="hidden" asp-for="Id"/>
 
-<div class="container">
-    <form asp-action="EditFlow" asp-controller="Flow" method="post">
-        <input type="hidden" asp-for="Id" />
+            <div class="form-group text-start">
+                <label class="form-label" asp-for="Name"></label>
+                <input asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label class="form-label" asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+            <div class="form-group text-start  mt-4">
+                <label class="form-label" asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label class="form-label" asp-for="Description"></label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" asp-for="CircularFlow">Flow Type</label>
-            <select asp-for="CircularFlow" class="form-control">
-                <option value="true">Circular</option>
-                <option value="false">Linear</option>
-            </select>
-            <span asp-validation-for="CircularFlow" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
+            <div class="form-group text-start  mt-4">
+                <label class="form-label" asp-for="CircularFlow">Flow Type</label>
+                <select asp-for="CircularFlow" class="form-control">
+                    <option value="true">Circular</option>
+                    <option value="false">Linear</option>
+                </select>
+                <span asp-validation-for="CircularFlow" class="text-danger"></span>
+            </div>
+            
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-success btn-save-changes">Save Changes</button>
+            </div>
+        </form>
+    </div>
 </div>

@@ -56,14 +56,13 @@ public class FlowManager : IFlowManager
     
     public bool CreateSlide(SlideType type, string question, List<string>? options, int slideListId, string? mediaUrl=null)
     {
-        
         if (type == SlideType.InfoSlide && options.Count == 1)
         {
             string info = question + "\n" + options[0];
             return _repository.CreateSlide(type, info, null, slideListId, mediaUrl);
         }
 
-        return _repository.CreateSlide(type, question, options, slideListId,mediaUrl);
+        return _repository.CreateSlide(type, question, options, slideListId, mediaUrl);
     }
 
     public List<Slide> GetAllSlides()
@@ -81,9 +80,9 @@ public class FlowManager : IFlowManager
         return _repository.RemoveSlideFromSlideList(slideId, slidelistid);
     }
 
-    public void UpdateSlide(SlideType slideType, string text, List<string> answersList, int slideId)
+    public void UpdateSlide( string text, List<string>? answersList, int slideId)
     {
-        _repository.UpdateSlide(slideType, text, answersList, slideId);
+        _repository.UpdateSlide(text, answersList, slideId);
     }
     #endregion
 
@@ -152,7 +151,12 @@ public class FlowManager : IFlowManager
     {
         _repository.UpdateFlow(model);
     }
-    
+
+    public bool RemoveFlowFromProject(int flowId)
+    {
+        return _repository.RemoveFlowFromProject(flowId);
+    }
+
     public List<Flow> GetFlowsByUserId(string userId)
     {
         return _repository.ReadFlowsByUserId(userId);

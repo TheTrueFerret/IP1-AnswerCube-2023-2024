@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.User;
 using Domain;
@@ -168,8 +169,11 @@ public class OrganizationRepository : IOrganizationRepository
 
     public Project ReadProjectWithFlowsById(int projectId)
     {
-        return _context.Projects.Include(p => p.Flows).FirstOrDefault(p => p.Id == projectId);
+        return _context.Projects.Include(p => p.Flows)
+            .Include(p => p.Organization)
+            .FirstOrDefault(p => p.Id == projectId);
     }
+    
 
     public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
@@ -339,6 +343,37 @@ public class OrganizationRepository : IOrganizationRepository
     public Organization ReadOrganizationByName(string organizationName)
     {
         return _context.Organizations.First(o => o.Name == organizationName);
+    }
+
+    public Theme ReadThemeByOrganisationId(int organisationId)
+    {
+        return _context.Organizations.First(o => o.Id == organisationId).Theme;
+    }
+    
+    public Theme ReadThemeByInstallationId(int installationId)
+    {
+        Installation installation = _context.Installations
+            .Where(i => i.Id == installationId)
+            .Include(i => i.Organization) // Laad de organisatie in
+            .First(); // Voeg deze toe om de installatie op te halen
+
+        if (installation != null)
+        {
+            return installation.Organization.Theme;
+        }
+        
+        return Theme.Light; 
+    }
+
+    public bool UpdateOrganization(int organizationId, Theme theme)
+    {
+        Organization organization = _context.Organizations
+            .Single(o => o.Id == organizationId);
+
+        organization.Theme = theme;
+        _context.Organizations.Update(organization);
+        _context.SaveChanges();
+        return true;
     }
 
     public async Task<bool> CreateSupervisorToOrgByEmail(string email, int organizationid)
