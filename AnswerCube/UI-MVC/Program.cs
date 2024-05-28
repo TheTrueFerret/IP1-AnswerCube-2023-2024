@@ -60,6 +60,7 @@ services.AddScoped<IForumRepository, ForumRepository>();
 services.AddScoped<IMailRepository, MailRepository>();
 services.AddScoped<IAnswerRepository, AnswerRepository>();
 services.AddScoped<JwtService>();
+services.AddScoped<UnitOfWork>();
 
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

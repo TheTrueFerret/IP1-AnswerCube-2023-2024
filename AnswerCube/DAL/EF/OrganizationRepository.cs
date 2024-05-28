@@ -46,7 +46,6 @@ public class OrganizationRepository : IOrganizationRepository
         DeelplatformbeheerderEmail deelplatformbeheerderEmail = new DeelplatformbeheerderEmail
             { Email = userEmail, IsDeelplatformBeheerder = true };
         _context.DeelplatformbeheerderEmails.Add(deelplatformbeheerderEmail);
-        _context.SaveChanges();
         return true;
     }
 
@@ -71,7 +70,6 @@ public class OrganizationRepository : IOrganizationRepository
         _context.DeelplatformbeheerderEmails.Remove(deelplatformbeheerderEmail);
         var uo = _context.UserOrganizations.Single(uo => uo.UserId == user.Id && uo.OrganizationId == organization.Id);
         _context.UserOrganizations.Remove(uo);
-        _context.SaveChanges();
         //Check if any other deelplatformbeheerders are assigned to the organization, if not delete the organization.
         if (_context.Organizations.Single(organization => organization.Id == uo.OrganizationId).UserOrganizations
                 .Count == 0)
@@ -79,9 +77,6 @@ public class OrganizationRepository : IOrganizationRepository
             _context.Organizations.Remove(organization);
             _context.Forums.Remove(_context.Forums.First(f => f.OrganizationId == organization.Id));
         }
-
-
-        _context.SaveChanges();
         return true;
     }
 
@@ -114,11 +109,7 @@ public class OrganizationRepository : IOrganizationRepository
                 _context.Flows.Remove(flow);
             }
         }
-
-
         _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
-        _context.SaveChanges();
-
         return true;
     }
 
@@ -140,7 +131,6 @@ public class OrganizationRepository : IOrganizationRepository
             IsActive = isActive
         };
         _context.Projects.Add(project);
-        await _context.SaveChangesAsync();
         return project;
     }
 
@@ -162,7 +152,6 @@ public class OrganizationRepository : IOrganizationRepository
 
         // Save the changes
         _context.Projects.Update(existingProject);
-        await _context.SaveChangesAsync();
 
         return true;
     }
@@ -179,7 +168,6 @@ public class OrganizationRepository : IOrganizationRepository
     {
         Organization organization = new Organization(name, email, logoUrl);
         _context.Organizations.Add(organization);
-        _context.SaveChanges();
         return organization;
     }
 
@@ -187,7 +175,6 @@ public class OrganizationRepository : IOrganizationRepository
     {
         _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
             { Email = email, DeelplatformNaam = organizationName, IsDeelplatformBeheerder = true });
-        _context.SaveChanges();
         _mailRepository.SendNewEmail(email, organizationName);
     }
 
@@ -214,7 +201,6 @@ public class OrganizationRepository : IOrganizationRepository
                 User = user,
                 UserId = user.Id
             });
-            _context.SaveChanges();
             return true;
         }
         else
@@ -237,7 +223,6 @@ public class OrganizationRepository : IOrganizationRepository
             User = user,
             UserId = user.Id
         });
-        _context.SaveChanges();
     }
 
     public async Task<bool> RemoveDpbFromOrganization(string userId, int organizationid)
@@ -256,9 +241,7 @@ public class OrganizationRepository : IOrganizationRepository
         {
             _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
         }
-
-        await _context.SaveChangesAsync();
-
+        
         //Check if any other deelplatformbeheerders are assigned to the organization, if not delete the organization.
         var org = _context.Organizations.Include(o => o.UserOrganizations).Include(o => o.Projects)
             .ThenInclude(p => p.Flows).Single(organization => organization.Id == organizationid);
@@ -289,8 +272,6 @@ public class OrganizationRepository : IOrganizationRepository
 
         // Remove the Organization
         _context.Organizations.Remove(organization);
-
-        _context.SaveChangesAsync();
     }
 
     public bool SearchOrganizationByName(string organizationName)
@@ -327,11 +308,9 @@ public class OrganizationRepository : IOrganizationRepository
                     OrganizationId = organizationid
                 });
                 await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-                _context.SaveChanges();
                 await _mailRepository.SendExistingEmail(email,
                     _context.Organizations.Single(o => o.Id == organizationid).Name);
             }
-
             return true;
         }
 
@@ -372,7 +351,6 @@ public class OrganizationRepository : IOrganizationRepository
 
         organization.Theme = theme;
         _context.Organizations.Update(organization);
-        _context.SaveChanges();
         return true;
     }
 
@@ -394,11 +372,9 @@ public class OrganizationRepository : IOrganizationRepository
                     OrganizationId = organizationid
                 });
                 await _userManager.AddToRoleAsync(user, "Supervisor");
-                _context.SaveChangesAsync();
                 await _mailRepository.SendExistingSupervisorEmail(email,
                     _context.Organizations.Single(o => o.Id == organizationid).Name);
             }
-
             return true;
         }
 
@@ -421,7 +397,6 @@ public class OrganizationRepository : IOrganizationRepository
 
         _context.UserOrganizations.Remove(userOrganization);
         await _userManager.RemoveFromRoleAsync(_context.Users.Single(u => u.Id == user.Id), "Supervisor");
-        _context.SaveChanges();
 
         return true;
     }
@@ -450,7 +425,6 @@ public class OrganizationRepository : IOrganizationRepository
     {
         _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
             { Email = email, DeelplatformNaam = name, IsDeelplatformBeheerder = false });
-        _context.SaveChanges();
         _mailRepository.SendNewSupervisorEmail(email, name);
     }
 }

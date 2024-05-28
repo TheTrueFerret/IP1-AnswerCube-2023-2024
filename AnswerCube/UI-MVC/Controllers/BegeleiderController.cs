@@ -1,5 +1,6 @@
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Services.SignalR;
 using Domain;
@@ -15,15 +16,15 @@ namespace AnswerCube.UI.MVC.Controllers;
 [Authorize(Roles = "Supervisor,Admin")]
 public class BegeleiderController : BaseController
 {
-    
     private readonly IHubContext<FlowHub> _flowHub;
     private readonly IFlowManager _flowManager;
     private readonly IOrganizationManager _organizationManager;
     private readonly IInstallationManager _installationManager;
     private readonly ILogger<BegeleiderController> _logger;
     private readonly UserManager<AnswerCubeUser> _userManager;
+    private readonly UnitOfWork _uow;
     
-    public BegeleiderController(IOrganizationManager organizationManager, IHubContext<FlowHub> flowHub, ILogger<BegeleiderController> logger, UserManager<AnswerCubeUser> userManager, IInstallationManager installationManager, IFlowManager flowManager)
+    public BegeleiderController(IOrganizationManager organizationManager, IHubContext<FlowHub> flowHub, ILogger<BegeleiderController> logger, UserManager<AnswerCubeUser> userManager, IInstallationManager installationManager, IFlowManager flowManager, UnitOfWork uow)
     {
         _organizationManager = organizationManager;
         _flowHub = flowHub;
@@ -31,6 +32,7 @@ public class BegeleiderController : BaseController
         _userManager = userManager;
         _installationManager = installationManager;
         _flowManager = flowManager;
+        _uow = uow;
     }
     
     public IActionResult SelectActiveInstallation()
@@ -72,7 +74,10 @@ public class BegeleiderController : BaseController
     {
         Flow currentFlow = _flowManager.GetFlowByInstallationId(installationId);
         AnswerCubeUser user = _userManager.GetUserAsync(User).Result;
+        _uow.BeginTransaction();
         _installationManager.AddNoteToInstallation(installationId, note, user.Email,currentFlow.Id);
+        _uow.Commit();
+
         return RedirectToAction("FlowBeheer", new { installationId = installationId});
     }
     

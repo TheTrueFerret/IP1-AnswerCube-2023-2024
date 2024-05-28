@@ -128,7 +128,6 @@ public class FlowRepository : IFlowRepository
         };
         
         _context.SlideConnections.Add(newSlideConnection);
-        _context.SaveChanges();
         return true;
     }
 
@@ -155,7 +154,6 @@ public class FlowRepository : IFlowRepository
         slide.Text = text;
 
         _context.Slides.Update(slide);
-        _context.SaveChanges();
     }
 
     public bool RemoveSlideFromSlideList(int slideId, int slidelistid)
@@ -171,7 +169,6 @@ public class FlowRepository : IFlowRepository
         }
 
         _context.SlideConnections.Remove(slideConnection);
-        _context.SaveChanges();
         return true;
     }
 
@@ -213,13 +210,11 @@ public class FlowRepository : IFlowRepository
             Title = title
         };
         _context.SlideLists.Add(slideList);
-        _context.SaveChanges();
 
         var flow = _context.Flows.FirstOrDefault(f => f.Id == flowId);
         if (flow != null)
         {
             flow.SlideLists.Add(slideList);
-            _context.SaveChanges();
             return true;
         }
 
@@ -234,7 +229,6 @@ public class FlowRepository : IFlowRepository
         if (slideList != null || flow != null)
         {
             _context.SlideLists.Remove(slideList);
-            _context.SaveChanges();
             return true;
         }
 
@@ -269,13 +263,6 @@ public class FlowRepository : IFlowRepository
             .Where(sl => sl.Flow.Id == flowId).ToList();
     }
 
-    /*public void UpdateSlideList(SlideList slideList)
-    {
-       _context.SlideLists.Include(sl =>sl.Flow).Include(sl => sl.ConnectedSlides).Include(Sl => slideList.SubTheme);
-       _context.SlideLists.Update(slideList);
-       _context.SaveChanges();
-    }*/
-
     public void UpdateSlideList(string title, string description, int slideListId)
     {
         SlideList slideList = _context.SlideLists
@@ -296,7 +283,6 @@ public class FlowRepository : IFlowRepository
         slideList.Title = title;
 
         _context.SlideLists.Update(slideList);
-        _context.SaveChanges();
     }
     
     public SlideList ReadSlideListByInstallationId(int installationId)
@@ -325,7 +311,6 @@ public class FlowRepository : IFlowRepository
             Project = _context.Projects.First(p => p.Id == projectId)
         };
         _context.Projects.First(p => p.Id == projectId).Flows.Add(flow);
-        _context.SaveChanges();
         return true;
     }
 
@@ -343,14 +328,12 @@ public class FlowRepository : IFlowRepository
     public void UpdateFlow(Flow model)
     {
         _context.Flows.Update(model);
-        _context.SaveChanges();
     }
 
     public bool RemoveFlowFromProject(int flowId)
     {
         Flow flow = _context.Flows.First(f => f.Id == flowId);
         _context.Flows.Remove(flow);
-        _context.SaveChanges();
         return true;
     }
 
