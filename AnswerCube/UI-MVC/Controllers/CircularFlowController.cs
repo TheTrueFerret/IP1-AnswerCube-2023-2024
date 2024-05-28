@@ -150,6 +150,15 @@ public class CircularFlowController : BaseController
             };
             slideCompositeModel.LinearFlowModel = linearFlowModel;
         }
+        int forumId = _installationManager.GetForumIdByInstallationId(installationId);
+        if (forumId != 0)
+        {
+            slideCompositeModel.forumId = forumId;
+        }
+        else
+        {
+            slideCompositeModel.forumId = 0;
+        }
         return slideCompositeModel;
     }
     
@@ -169,7 +178,7 @@ public class CircularFlowController : BaseController
             url = Url.Action(actionName);
             return Json(new { url });
         }
-        url = Url.Action("Subthemes");
+        url = Url.Action("LeaveContactInfoQrCode");
         return Json(new { url });
     }
     
@@ -295,5 +304,10 @@ public class CircularFlowController : BaseController
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public IActionResult LeaveContactInfoQrCode()
+    {
+        return View("/Views/Contactinfo/LeaveContactInfoQrCode.cshtml");
     }
 }

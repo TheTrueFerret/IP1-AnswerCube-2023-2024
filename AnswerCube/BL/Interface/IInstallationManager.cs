@@ -22,4 +22,5 @@ public interface IInstallationManager
     List<Session>? GetActiveSessionsByInstallationId(int installationId);
     bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId);
 
+    int GetForumIdByInstallationId(int installationId);
 }

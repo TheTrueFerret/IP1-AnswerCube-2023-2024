@@ -92,4 +92,8 @@ public class InstallationManager : IInstallationManager
         return _repository.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
     }
 
+    public int GetForumIdByInstallationId(int installationId)
+    {
+        return _repository.ReadForumIdByInstallationId(installationId);
+    }
 }
