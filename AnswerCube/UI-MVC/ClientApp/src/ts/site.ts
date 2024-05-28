@@ -36,6 +36,8 @@ async function getTheme() {
                 scssFile = 'darkgradation.scss';
             } else if (theme === "blue") {
                 scssFile = 'blue.scss';
+            } else if (theme === "instagram") {
+                scssFile = 'instagram.scss';
             } else {
                 console.error('Unknown theme received:', theme);
             }

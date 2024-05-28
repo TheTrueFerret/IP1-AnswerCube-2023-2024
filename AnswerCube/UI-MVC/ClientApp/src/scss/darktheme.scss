@@ -1,13 +1,16 @@
 .page-container {
-  background-color: black; // Achtergrondkleur instellen op zwart
-  color: white; // Tekstkleur instellen op wit
+  background-color: black; 
+  color: white; 
 
-  // Optioneel: overgangseffect toevoegen voor soepele overgangen
   transition: background-color 0.5s, color 0.5s;
-
-  // Optioneel: stijlen voor specifieke elementen binnen de paginacontainer
-  h1, p, label {
+  
+  h1, h3, p, label {
     font-weight: bold;
   }
 }
+
+.body-container {
+  background: black;
+}
+
 

@@ -123,11 +123,12 @@ public class OrganizationController : BaseController
     {
         bool result = _organizationManager.UpdateOrganization(organizationId, theme);
         if (result)
-        {
-            return Ok(new { message = "Theme updated successfully", theme = theme.ToString() });
+        { 
+            var organization = _organizationManager.GetOrganizationById(organizationId);
+            return View("Index", organization);
         } 
-        return StatusCode(500, new { message = "Failed to update theme" });
-        
-            
+        var organizationWithError = _organizationManager.GetOrganizationById(organizationId);
+        ViewBag.ErrorMessage = "Failed to update theme";
+        return View("Index", organizationWithError);
     }
 }

@@ -8,6 +8,7 @@
     var isDarkSelected = Model.Theme == Theme.Dark ? "selected" : "";
     var isDarkGradationSelected = Model.Theme == Theme.DarkGradation ? "selected" : "";
     var isBlueSelected = Model.Theme == Theme.Blue ? "selected" : "";
+    var isInstagramSelected = Model.Theme == Theme.Instagram ? "selected" : "";
 }
 
 <div class="container">
@@ -27,6 +28,7 @@
                             @Html.Raw($"<option value=\"dark\" {isDarkSelected}>Dark</option>")
                             @Html.Raw($"<option value=\"darkgradation\" {isDarkGradationSelected}>Dark Gradation</option>")
                             @Html.Raw($"<option value=\"blue\" {isBlueSelected}>Blue</option>")
+                            @Html.Raw($"<option value=\"instagram\" {isInstagramSelected}>Instagram</option>")
                         </select>
                     </form>
                 </div>
@@ -137,3 +139,8 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/dist/project.entry.js"></script>
+    <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
+}

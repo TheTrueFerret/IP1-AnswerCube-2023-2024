@@ -1,13 +1,14 @@
 .page-container {
-  background-color: #0077FF; // Professioneel glanzend blauw
-  color: black; // Tekstkleur instellen op zwart
+  background:  #000033;
+  color: white; 
 
-  // Optioneel: overgangseffect toevoegen voor soepele overgangen
   transition: background-color 0.5s, color 0.5s;
-
-  // Stijlen voor specifieke elementen binnen de paginacontainer
-  h1, p, label {
-    font-weight: bold;
+  
+  h1, h3, p, label {
+    font-family: Verdana, serif; 
   }
 }
 
+.body-container {
+  background: linear-gradient(to bottom, #000033, #00008B);
+}

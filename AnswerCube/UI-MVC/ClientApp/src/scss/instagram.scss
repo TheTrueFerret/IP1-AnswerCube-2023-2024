@@ -1,0 +1,15 @@
+.page-container {
+  background-color: white;;
+  color: black;
+
+  transition: background-color 0.5s, color 0.5s;
+
+  h1, h3, p, label {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+  }
+}
+
+.body-container {
+  background: linear-gradient(to top, #ff69b4, #800080, #FEBE10);
+}
