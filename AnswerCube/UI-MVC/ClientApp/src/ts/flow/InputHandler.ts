@@ -18,7 +18,7 @@ document.addEventListener('keydown', (event) => {
     }
     var cubeNumber: number = Number(cubeId)
 
-    if (cubeId != null && keysPressed.size != 1) {
+    if (cubeId != null && keysPressed.size !== 1) {
         if (keysPressed.has('ArrowDown') && keysPressed.has(cubeId)) {
             move(cubeNumber, 'down', slideType);
         }
@@ -46,9 +46,9 @@ document.addEventListener('keydown', (event) => {
         }
         if (keysPressed.has('a') && keysPressed.has(cubeId)) {
             if (slideType === "InfoSlide") {
-                window.addNewOrDeleteCubeUser(cubeNumber)
+                window.addNewOrDeleteCubeUser(cubeNumber);
             } else {
-                window.addNewOrDeleteCubeUser(cubeNumber)
+                window.addNewOrDeleteCubeUser(cubeNumber);
             }
         }
     } else if (keysPressed.size === 1) {
@@ -78,7 +78,7 @@ document.addEventListener('keydown', (event) => {
             }
         }
         if (keysPressed.has('a')) {
-            window.addNewOrDeleteCubeUser(0)
+            window.addNewOrDeleteCubeUser(0);
         }
     }
 });

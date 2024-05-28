@@ -69,7 +69,6 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         }
     } else {
         voteStatePerCubeId[cubeId] = "none";
-        
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
         addNewCubeAnswerColumn(cubeId);
@@ -124,7 +123,6 @@ function addNewCubeAnswerColumn(cubeId: number) {
 }
 
 
-
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getSelectedAnswerByCubeId(cubeId)
 
@@ -137,8 +135,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         alert('Please select at least one answer before submitting <3');
         return;
     }
-
-
+    
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
             if (voteStatePerCubeId[i] == "none") {
@@ -169,7 +166,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
     if (allAnswered) {
         let answers: any[] = [];
-        for (let i = 0; i < activeCubes.length; i++) {
+        for (let i: number = 0; i < activeCubes.length; i++) {
             answers.push({
                 Answer: answer,
                 CubeId: activeCubes[i]

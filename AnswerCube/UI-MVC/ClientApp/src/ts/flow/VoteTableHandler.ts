@@ -7,14 +7,9 @@ export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: st
         const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
         table.innerHTML = ''; // Clear all content inside the table
     });
-
-    if (activeCubes.length <= 3){
-        createVoteTable(1, 'SubmitTable');
-        createVoteTable(1, 'SkipTable');
-    } else {
-        createVoteTable(2, 'SubmitTable');
-        createVoteTable(2, 'SkipTable');
-    }
+    createVoteTable(2, 'SubmitTable');
+    createVoteTable(2, 'SkipTable');
+    
     for (let i = 0; i < activeCubes.length; i++) {
         if (voteStatePerCubeId[i] != "none") {
             updateVoteUi(activeCubes[i], voteStatePerCubeId[i], true);
@@ -26,12 +21,16 @@ export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: st
 // Function to create a table with a specified number of rows and columns
 export function createVoteTable(rows: number, tableId: string) {
     const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
+
+    let cubeCounter = 1;
     for (let i = 1; i <= rows; i++) {
         const row = document.createElement('tr');
-        for (let i = 1; i <= 3; i++) {
+        for (let j = 1; j <= 3; j++) {
             const cell = document.createElement('td');
-            cell.setAttribute("data-cube", (i).toString());
+            cell.setAttribute("data-cube", cubeCounter.toString());
             cell.setAttribute("data-active", "false");
+            cubeCounter++;
+            
             row.appendChild(cell);
         }
         table.appendChild(row);
