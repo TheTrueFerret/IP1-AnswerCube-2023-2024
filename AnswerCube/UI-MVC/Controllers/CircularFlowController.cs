@@ -2,6 +2,7 @@ using System.Diagnostics;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.Slide;
+using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Controllers;
 using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Models.Dto;
@@ -25,15 +26,17 @@ public class CircularFlowController : BaseController
     private readonly IFlowManager _flowManager;
     private readonly IInstallationManager _installationManager;
     private readonly JwtService _jwtService;
+    private readonly UnitOfWork _uow;
     private readonly int _counter = 0;
     
-    public CircularFlowController(ILogger<HomeController> logger, IAnswerManager answerManager, IFlowManager flowManager, IInstallationManager installationManager, JwtService jwtService)
+    public CircularFlowController(ILogger<HomeController> logger, IAnswerManager answerManager, IFlowManager flowManager, IInstallationManager installationManager, JwtService jwtService, UnitOfWork uow)
     {
         _logger = logger;
         _answerManager = answerManager;
         _flowManager = flowManager;
         _installationManager = installationManager;
         _jwtService = jwtService;
+        _uow = uow;
     }
     
     public IActionResult CircularFlow(int? id)
@@ -48,7 +51,9 @@ public class CircularFlowController : BaseController
         else
         {
             installationId = (int)id;
+            _uow.BeginTransaction();
             installationUpdated = _installationManager.UpdateInstallation(installationId);
+            _uow.Commit();
         }
         if (installationUpdated)
         {
@@ -169,7 +174,10 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
+        _uow.BeginTransaction();
         bool installationUpdated = _installationManager.UpdateInstallation(installationId);
+        _uow.Commit();
+        
         string url;
         if (installationUpdated)
         {
@@ -220,7 +228,10 @@ public class CircularFlowController : BaseController
                 {
                     CubeId = answers.Answers[i].CubeId
                 };
-                session = _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
+                _uow.BeginTransaction();
+                _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
+                _uow.Commit();
+                session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
             }
             List<string> answerText = answers.Answers[i].Answer;
             if (_answerManager.AddAnswer(answerText, slide.Id, session))
@@ -271,7 +282,9 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        _uow.BeginTransaction();
         _installationManager.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
+        _uow.Commit();
         if (session == null)
         {
             return Error();
@@ -294,7 +307,10 @@ public class CircularFlowController : BaseController
             {
                 CubeId = cubeId
             };
+            _uow.BeginTransaction();
             _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
+            _uow.Commit();
+            _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
         }
         return Ok();
     }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Areas.Identity.Data;
 using AnswerCube.UI.MVC.Services;
 using Domain;
@@ -21,6 +22,7 @@ public class AdminController : BaseController
     private readonly IMailManager _mailManager;
     private readonly IOrganizationManager _organizationManager;
     private readonly CloudStorageService _cloudStorageService;
+    private readonly UnitOfWork _uow; 
     
     public AdminController(
         ILogger<AdminController> logger, 
@@ -28,7 +30,8 @@ public class AdminController : BaseController
         SignInManager<AnswerCubeUser> signInManager, 
         IMailManager mailManager, 
         IOrganizationManager organizationManager,
-        CloudStorageService cloudStorageService)
+        CloudStorageService cloudStorageService,
+        UnitOfWork uow)
     {
         _logger = logger;
         _userManager = userManager;
@@ -36,6 +39,7 @@ public class AdminController : BaseController
         _mailManager = mailManager;
         _organizationManager = organizationManager;
         _cloudStorageService = cloudStorageService;
+        _uow = uow;
     }
 
     public async Task<IActionResult> DeelplatformOverview()
@@ -93,12 +97,9 @@ public class AdminController : BaseController
                         AllAvailableIdentityRoles = allAvailableRoles,
                     };
                 }
-
-
                 return View(newUser);
             }
         }
-
         return RedirectToPage("User");
     }
 
@@ -141,7 +142,6 @@ public class AdminController : BaseController
         {
             ModelState.AddModelError(string.Empty, "Unable to remove role.");
         }
-
         await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(User).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }
@@ -185,8 +185,12 @@ public class AdminController : BaseController
         {
             logoUrl = null;
         }
+        _uow.BeginTransaction();
         Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName,logoUrl);
+        _uow.Commit();
+        _uow.BeginTransaction();
         _organizationManager.SaveBeheerderAndOrganization(email, organization);
+        _uow.Commit();
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {

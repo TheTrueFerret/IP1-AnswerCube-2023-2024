@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +17,16 @@ public class OrganizationController : BaseController
     private readonly IOrganizationManager _organizationManager;
     private readonly ILogger<OrganizationController> _logger;
     private readonly UserManager<AnswerCubeUser> _userManager;
+    private readonly UnitOfWork _uow;
 
 
     public OrganizationController(IOrganizationManager manager, ILogger<OrganizationController> logger,
-        UserManager<AnswerCubeUser> userManager)
+        UserManager<AnswerCubeUser> userManager, UnitOfWork uow)
     {
         _organizationManager = manager;
         _logger = logger;
         _userManager = userManager;
+        _uow = uow;
     }
 
     public IActionResult Index(string? userId, int? organizationId)
@@ -116,9 +119,10 @@ public class OrganizationController : BaseController
                     TempData["Error"] = $"User {email} is already part of the organization";
                     return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
                 }
-
+                _uow.BeginTransaction();
                 if (_organizationManager.AddDpbToOrgByEmail(email, organizationid).Result)
                 {
+                    _uow.Commit();
                     TempData["Succes"] = $"User {email} is added to the organization";
                     return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
                 }
@@ -134,12 +138,14 @@ public class OrganizationController : BaseController
     public async Task<IActionResult> RemoveDeelplatformbeheeder(string userId, int organizationid)
     {
         var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        //If user isnt in the organizatie, kan die niet toevoegen
+        // If user isnt in the organizatie, kan die niet toevoegen
             if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
                 User.IsInRole("DeelplatformBeheerder"))
             {
+                _uow.BeginTransaction();
                 if (_organizationManager.RemoveDpbFromOrganization(userId, organizationid).Result)
                 {
+                    _uow.Commit();
                     return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
                 }
 
@@ -161,9 +167,10 @@ public class OrganizationController : BaseController
                     TempData["SupervisorError"] = $"User {email} is already part of the organization";
                     return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
                 }
-
+                _uow.BeginTransaction();
                 if (_organizationManager.AddSupervisorToOrgByEmail(email, organizationid).Result)
                 {
+                    _uow.Commit();
                     TempData["SupervisorSuccess"] = $"User {email} is added to the organization";
                     return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
                 }
@@ -187,9 +194,10 @@ public class OrganizationController : BaseController
                 ViewBag.Error = $"User {email} is already part of the organization";
                 return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
-
+            _uow.BeginTransaction();
             if (_organizationManager.RemoveSupervisorFromOrgByEmail(email, organizationid).Result)
             {
+                _uow.Commit();
                 ViewBag.Success = $"User {email} is added to the organization";
                 return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
@@ -204,7 +212,9 @@ public class OrganizationController : BaseController
     
     public IActionResult UpdateTheme(int organizationId, Theme theme)
     {
+        _uow.BeginTransaction();
         bool result = _organizationManager.UpdateOrganization(organizationId, theme);
+        _uow.Commit();
         if (result)
         { 
             var organization = _organizationManager.GetOrganizationById(organizationId);

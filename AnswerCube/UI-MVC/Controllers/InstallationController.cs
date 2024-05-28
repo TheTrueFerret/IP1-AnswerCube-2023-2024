@@ -3,6 +3,7 @@ using System.Security.Claims;
 using AnswerCube.BL;
 using AnswerCube.BL.Domain;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.DAL.EF;
 using AnswerCube.UI.MVC.Models;
 using AnswerCube.UI.MVC.Models.Dto;
 using AnswerCube.UI.MVC.Services;
@@ -25,6 +26,8 @@ public class InstallationController : BaseController
     private readonly JwtService _jwtService;
     private readonly UserManager<AnswerCubeUser> _userManager;
     private readonly ILogger<InstallationController> _logger;
+    private readonly UnitOfWork _uow;
+
     
     public InstallationController(
         IFlowManager flowManager, 
@@ -33,7 +36,8 @@ public class InstallationController : BaseController
         IHttpContextAccessor httpContextAccessor, 
         JwtService jwtService, 
         UserManager<AnswerCubeUser> userManager,
-        ILogger<InstallationController> logger)
+        ILogger<InstallationController> logger,
+        UnitOfWork uow)
     {
         _flowManager = flowManager;
         _organizationManager = organizationManager;
@@ -42,6 +46,7 @@ public class InstallationController : BaseController
         _jwtService = jwtService;
         _userManager = userManager;
         _logger = logger;
+        _uow = uow;
     }
     
     public IActionResult ChooseInstallation()
@@ -94,7 +99,9 @@ public class InstallationController : BaseController
     {
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
+        _uow.BeginTransaction();
         _installationManager.SetInstallationUrl(installationId, url);
+        _uow.Commit();
         return Ok();
     }
     
@@ -102,7 +109,9 @@ public class InstallationController : BaseController
     [HttpPost]
     public IActionResult SetInstallationToActive([FromBody] InstallationModel installationModel)
     {
+        _uow.BeginTransaction();
         _installationManager.SetInstallationToActive(installationModel.Id);
+        _uow.Commit();
         string token = _jwtService.GenerateToken(installationModel.Id); // Use JwtService to generate token
         string url = Url.Action("ChooseFlowForInstallation");
         return new JsonResult(new { token, url });
@@ -112,7 +121,9 @@ public class InstallationController : BaseController
     [HttpPost]
     public IActionResult CreateInstallation([FromBody] InstallationModel installationModel)
     {
+        _uow.BeginTransaction();
         _installationManager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
+        _uow.Commit();
         return Ok(new { success = true, id = installationModel.Id, name = installationModel.Name, location = installationModel.Location });
     }
     
@@ -123,7 +134,10 @@ public class InstallationController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         
+        _uow.BeginTransaction();
         Installation installation = _installationManager.StartInstallationWithFlow(installationId, flowModel.Id);
+        _uow.Commit();
+
         if (installation.Flow.CircularFlow)
         {
             return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });

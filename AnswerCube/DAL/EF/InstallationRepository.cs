@@ -26,7 +26,6 @@ public class InstallationRepository : IInstallationRepository
         installation.ActiveSlideListId = null;
         installation.CurrentSlideIndex = 0;
         installation.MaxSlideIndex = null;
-        _context.SaveChanges();
         return installation;
     }
 
@@ -36,7 +35,6 @@ public class InstallationRepository : IInstallationRepository
         if (installation.CurrentSlideIndex < installation.MaxSlideIndex)
         {
             installation.CurrentSlideIndex++;
-            _context.SaveChanges();
             return true;
         }
 
@@ -98,7 +96,6 @@ public class InstallationRepository : IInstallationRepository
         Installation installation = _context.Installations.Where(i => i.Id == installationId).First();
         installation.Active = true;
         _context.Installations.Update(installation);
-        _context.SaveChanges();
         return installation.Active;
     }
 
@@ -117,8 +114,6 @@ public class InstallationRepository : IInstallationRepository
             Organization = organization
         };
         _context.Installations.Add(installation);
-        _context.SaveChanges();
-
         return false;
     }
 
@@ -132,12 +127,11 @@ public class InstallationRepository : IInstallationRepository
         return null;
     }
 
-    public Session WriteNewSessionWithInstallationId(Session newSession, int installationId)
+    public bool WriteNewSessionWithInstallationId(Session newSession, int installationId)
     {
         newSession.Installation = _context.Installations.Single(i => i.Id == installationId);
         _context.Sessions.Add(newSession);
-        _context.SaveChanges();
-        return _context.Sessions.Single(s => s.Installation.Id == installationId && s.CubeId == newSession.CubeId && s.StartTime == newSession.StartTime);
+        return true;
     }
 
     public bool WriteSlideListToInstallation(int slideListId, int installationId)
@@ -147,7 +141,6 @@ public class InstallationRepository : IInstallationRepository
         installation.CurrentSlideIndex = 0;
         SlideList slideList = _context.SlideLists.Include(sl => sl.ConnectedSlides).Single(sl => sl.Id == slideListId);
         installation.MaxSlideIndex = slideList.ConnectedSlides.Count;
-        _context.SaveChanges();
         return true;
     }
 
@@ -163,7 +156,6 @@ public class InstallationRepository : IInstallationRepository
             InstallationId = installationId
         };
         _context.Notes.Add(newNote);
-        _context.SaveChanges();
     }
 
     public void UpdateInstallationUrl(int installationId, string url)
@@ -174,7 +166,6 @@ public class InstallationRepository : IInstallationRepository
             return;
         }
         installation.ConnectionId = url;
-        _context.SaveChanges();
     }
 
     public string GetConnectionIdByInstallationId(int installationId)
@@ -210,7 +201,6 @@ public class InstallationRepository : IInstallationRepository
         Session? session = ReadActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
         session.EndTime = DateTime.Now.ToUniversalTime();
         _context.Sessions.Update(session);
-        _context.SaveChanges();
         return true;
     }
 

@@ -1,4 +1,5 @@
 using AnswerCube.BL;
+using AnswerCube.DAL.EF;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,13 @@ public class SlideListController : BaseController
 {
     private readonly IFlowManager _flowManager;
     private readonly ILogger<FlowController> _logger;
+    private readonly UnitOfWork _uow;
 
-    public SlideListController(IFlowManager flowManager, ILogger<FlowController> logger)
+    public SlideListController(IFlowManager flowManager, ILogger<FlowController> logger, UnitOfWork uow)
     {
         _flowManager = flowManager;
         _logger = logger;
+        _uow = uow;
     }
 
 
@@ -31,7 +34,9 @@ public class SlideListController : BaseController
     {
         if (ModelState.IsValid)
         {
+            _uow.BeginTransaction();
             _flowManager.UpdateSlideList(title, description, slideListId);
+            _uow.Commit();
             return RedirectToAction("SlideListDetails", new { slidelistId = slideListId });
         }
 
