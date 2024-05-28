@@ -60,6 +60,7 @@ function generateAnswerColumns() {
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
     if (index !== -1) {
+        voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
         deleteAnswerCubeColumn(cubeId);
         generateVoteTables(activeCubes, voteStatePerCubeId);

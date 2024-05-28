@@ -36,22 +36,36 @@
 <div>
     <div id="SubmitBox">
         <table id="SubmitTable">
-            
+
         </table>
         <button id="submitAnswer" type="button">Submit Answer</button>
     </div>
     <div id="SkipBox">
         <table id="SkipTable">
-            
+
         </table>
         <button id="skipSlide" type="button">Skip</button>
     </div>
 </div>
 
-
+@if (Model.forumId == 0)
+{
+    <p>Error loading the forum.</p>
+}
+else
+{
+    <div>
+        <p>Scan de QR code om jou mening achter te laten op het forum.</p>
+        <div id="qrCode"></div>
+        <div id="qrCodeData" data-url="@Url.Action("ShowForum", "Forum", new { forumId = Model.forumId })"></div>
+    </div>
+}
 
 
 @section Scripts
 {
     <script src="~/dist/openquestion.entry.js" defer></script>
+    <script src="~/dist/flowBeheer.entry.js" defer></script>
+    <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+    <script type="text/javascript" src="~/dist/qr.entry.js"></script>
 }

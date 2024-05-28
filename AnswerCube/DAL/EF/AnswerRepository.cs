@@ -30,7 +30,6 @@ public class AnswerRepository : IAnswerRepository
             Session = session
         };
         _context.Answers.Add(newAnswer);
-        _context.SaveChanges();
         return true;
     }
 

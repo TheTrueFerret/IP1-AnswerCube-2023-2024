@@ -32,7 +32,7 @@ public class InstallationManager : IInstallationManager
         return _repository.ReadActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
     }
 
-    public Session AddNewSessionWithInstallationId(Session newSession, int installationId)
+    public bool AddNewSessionWithInstallationId(Session newSession, int installationId)
     {
         return _repository.WriteNewSessionWithInstallationId(newSession, installationId);
     }
@@ -92,4 +92,8 @@ public class InstallationManager : IInstallationManager
         return _repository.EndSessionByInstallationIdAndCubeId(installationId, cubeId);
     }
 
+    public int GetForumIdByInstallationId(int installationId)
+    {
+        return _repository.ReadForumIdByInstallationId(installationId);
+    }
 }

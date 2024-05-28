@@ -48,10 +48,13 @@
                     @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Beheer Installation</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Analyse</a>
                         </li>
                     }
                     @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))

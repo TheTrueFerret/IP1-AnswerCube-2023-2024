@@ -13,7 +13,7 @@ public interface IInstallationManager
     bool SetInstallationToActive(int installationId);
     bool AddNewInstallation(string name, string location, int organizationId);
     Session? GetActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId);
-    Session AddNewSessionWithInstallationId(Session newSession, int installationId);
+    bool AddNewSessionWithInstallationId(Session newSession, int installationId);
     bool AddSlideListToInstallation(int slideListId, int installationId);
     void AddNoteToInstallation(int installationId, string note, string? identityName, int flowId);
     void SetInstallationUrl(int installationId, string url);
@@ -22,4 +22,5 @@ public interface IInstallationManager
     List<Session>? GetActiveSessionsByInstallationId(int installationId);
     bool EndSessionByInstallationIdAndCubeId(int installationId, int cubeId);
 
+    int GetForumIdByInstallationId(int installationId);
 }

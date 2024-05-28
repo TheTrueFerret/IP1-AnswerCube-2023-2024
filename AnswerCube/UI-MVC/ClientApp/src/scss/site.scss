@@ -67,23 +67,23 @@ $tile-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .front {
-  transform: translateZ(90px);
+  transform: translateZ(89px);
 }
 
 .back {
-  transform: rotateY(180deg) translateZ(90px);
+  transform: rotateY(180deg) translateZ(89px);
 }
 
 .left {
-  transform: rotateY(-90deg) translateZ(90px);
+  transform: rotateY(-90deg) translateZ(89px);
 }
 
 .right {
-  transform: rotateY(90deg) translateZ(90px);
+  transform: rotateY(90deg) translateZ(89px);
 }
 
 .top {
-  transform: rotateX(90deg) translateZ(90px);
+  transform: rotateX(90deg) translateZ(89px);
 
   img {
     width: 100%;
@@ -91,7 +91,7 @@ $tile-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .bottom {
-  transform: rotateX(-90deg) translateZ(90px);
+  transform: rotateX(-90deg) translateZ(89px);
 }
 
 @keyframes rotate {

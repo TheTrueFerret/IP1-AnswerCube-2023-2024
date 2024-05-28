@@ -49,7 +49,6 @@ public class ForumRepository : IForumRepository
                 Date = DateTime.UtcNow,
                 User = user
             });
-            _context.SaveChanges();
             return true;
         }
         else
@@ -61,7 +60,6 @@ public class ForumRepository : IForumRepository
                 Idea = idea,
                 Date = DateTime.UtcNow,
             });
-            _context.SaveChanges();
             return true;
         }
     }
@@ -80,8 +78,7 @@ public class ForumRepository : IForumRepository
         };
 
         _context.Ideas.Add(newIdea);
-        _context.SaveChanges();
-        return true;
+            return true;
     }
 
     public int ReadForumByReactionId(int reactionId)
@@ -107,7 +104,6 @@ public class ForumRepository : IForumRepository
         }
 
         reaction.Likes.Add(newLike);
-        _context.SaveChanges();
         return true;
     }
 
@@ -129,7 +125,6 @@ public class ForumRepository : IForumRepository
         }
 
         reaction.Dislikes.Add(newDislike);
-        _context.SaveChanges();
         return true;
     }
 
@@ -149,9 +144,7 @@ public class ForumRepository : IForumRepository
         {
             _context.Dislikes.Remove(dislike);
         }
-
         idea.Likes.Add(newLike);
-        _context.SaveChanges();
         return true;
     }
 
@@ -173,7 +166,6 @@ public class ForumRepository : IForumRepository
         }
 
         idea.Dislikes.Add(newDislike);
-        _context.SaveChanges();
         return true;
     }
 
