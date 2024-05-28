@@ -279,6 +279,26 @@ public class CircularFlowController : BaseController
         return Ok();
     }
     
+    
+    [HttpPost]
+    public IActionResult StartSession([FromBody] int cubeId)
+    {
+        // Retrieve installation ID from token
+        string token = Request.Cookies["jwtToken"];
+        int installationId = _jwtService.GetInstallationIdFromToken(token);
+        Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
+        
+        if (session == null)
+        {
+            Session newSession = new Session()
+            {
+                CubeId = cubeId
+            };
+            _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
+        }
+        return Ok();
+    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

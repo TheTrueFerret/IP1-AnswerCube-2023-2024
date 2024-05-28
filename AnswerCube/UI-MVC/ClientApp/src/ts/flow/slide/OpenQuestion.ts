@@ -1,18 +1,64 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
-import {updateVoteUi} from "../VoteTableHandler";
-import {postAnswers} from "../CircularFlow";
+import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
+import {postAnswers, stopSession} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
 const baseUrl = "https://storage.cloud.google.com/answer-cube-bucket/";
 
-let currentCheckedIndexPerUser: number[] = [];
-let totalQuestions: number;
+let chosenSlideList: number[] = [];
 let activeCubes: number[] = []; // get active cubes
 let sessionCube: boolean[] = [];
 let voteStatePerCubeId: string[] = [];
 
+
+document.addEventListener("DOMContentLoaded", function (){
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        if (data.length > 0) {
+            for (let i: number = 0; i < data.length; i++) {
+                activeCubes[i] = data[i]
+                sessionCube[i] = true
+            }
+            console.log(data);
+            generateVoteTables(activeCubes, voteStatePerCubeId);
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[i] = "none";
+            }
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+        return err; // Return an empty array in case of error
+    });
+})
+
+
+function addNewOrDeleteCubeUser(cubeId: number) {
+    const index = activeCubes.indexOf(cubeId);
+    if (index !== -1) {
+        activeCubes.splice(index, 1);
+        generateVoteTables(activeCubes, voteStatePerCubeId);
+        if (sessionCube[cubeId]) {
+            sessionCube[cubeId] = false
+            stopSession(cubeId);
+        }
+    } else {
+        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
+        activeCubes.sort((a, b) => a - b);
+        generateVoteTables(activeCubes, voteStatePerCubeId);
+    }
+}
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getTextInput()
@@ -24,7 +70,6 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         alert('Please select at least one answer before submitting <3');
         return;
     }
-
 
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
@@ -125,11 +170,14 @@ function getTextInput() {
 declare global {
     interface Window {
         slideType: string;
+        addNewOrDeleteCubeUser: (cubeId: number) => void;
         vote: (cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') => void;
         postAnswer: (CubeId: number, action: 'submit' | 'skip') => void;
     }
 }
+
 window.slideType = "OpenQuestion";
+window.addNewOrDeleteCubeUser = addNewOrDeleteCubeUser;
 window.vote = vote;
 window.postAnswer = postAnswer;
 
