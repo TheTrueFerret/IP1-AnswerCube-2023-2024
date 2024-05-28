@@ -165,19 +165,19 @@ async function GetAllSlides(): Promise<Slide[]> {
             return data;
         } else {
             console.log("No data received from the API Slides.");
-            return []; // Return an empty array or handle the absence of data appropriately
+            return []; 
         }
     } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-        return []; // Return an empty array or handle the error condition appropriately
+        return []; 
     }
 }
 
 async function downloadCSV() {
-    const encodedUri = await generateCSV(); // Await the result of generateCSV
+    const encodedUri = await generateCSV(); 
 
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -189,27 +189,15 @@ async function downloadCSV() {
 
 async function generateCSV() {
     let csvContent = "data:text/csv;charset=utf-8";
-
-    // Fetch all slides
     const allSlides = await GetAllSlides();
-
-    // Headers for slides CSV
-    csvContent += "Slide ID;Slide Text;Slide Type\n";
-    allSlides.forEach(slide => {
-        csvContent += `${slide.id};${slide.text};${slide.slideType}\n`;
-    });
-
-    // Headers for answers CSV
     csvContent += "\n\n\nAnswer ID;Slide ID;Answer Text\n";
+    const allAnswers = await GetAllAnswers(0);
     allAnswers.forEach(answer => {
         csvContent += `${answer.id};${answer.slide.id};${answer.answerText.join('|')}\n`;
     });
-
-    // Encode CSV content
     const encodedUri = encodeURI(csvContent);
     return encodedUri;
 }
-
 
 async function GetSlideById(slideId: number) {
     var url = window.location.toString();
@@ -241,45 +229,39 @@ async function GetSlideById(slideId: number) {
     });
 }
 
-async function GetAllAnswers(slideid: number) {
-    var url = window.location.toString();
-    if (allAnswers.length === 0) {
-        await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
+async function GetAllAnswers(slideid: number): Promise<Answer[]> {
+    const url = window.location.toString();
+    try {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
             },
-        })
-            .then((response: Response) => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    if (onderaan) {
-                        onderaan.innerHTML = "<em>problem!!!</em>";
-                    }
-                    throw new Error("Failed to fetch data");
-                }
-            })
-            .then((data: Answer[]) => {
-                if (data && data.length > 0) {
-                    allAnswers = data;
-                    if (slideid !== 0) {
-                        processAnswers(slideid);
-                    }
-                } else {
-                    console.log("No data received from the API Answers.");
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-                if (onderaan) {
-                    onderaan.innerHTML = "<em>Error fetching data!</em>";
-                }
-            });
-    } else {
-        if (slideid !== 0) {
-            processAnswers(slideid);
+        });
+
+        if (response.status !== 200) {
+            if (onderaan) {
+                onderaan.innerHTML = "<em>problem!!!</em>";
+            }
+            throw new Error("Failed to fetch data");
         }
+
+        const data: Answer[] = await response.json();
+        if (data && data.length > 0) {
+            if (slideid !== 0) {
+                processAnswers(slideid);
+            }
+            return data;
+        } else {
+            console.log("No data received from the API Answers.");
+            return [];
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        if (onderaan) {
+            onderaan.innerHTML = "<em>Error fetching data!</em>";
+        }
+        return [];
     }
 }
 
@@ -397,10 +379,7 @@ async function GetAllSessions() {
             console.log(data.length);
             aantalSessions = data.length;
 
-            // Sort descending
             data.sort((a: Session, b: Session) => b.id - a.id);
-
-            // Display
             data.forEach((session: Session) => {
                 let sessionTitle: HTMLElement = document.createElement('div');
                 sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
