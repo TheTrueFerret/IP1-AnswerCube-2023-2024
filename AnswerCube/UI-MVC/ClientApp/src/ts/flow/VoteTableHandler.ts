@@ -1,20 +1,15 @@
 import {getCubeNameByCubeId} from "./CircularFlow";
 
-
-export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: string[]) {
+export function generateVoteTables() {
     const tableIds = ['SubmitTable', 'SkipTable'];
     tableIds.forEach(tableId => {
         const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
-        table.innerHTML = ''; // Clear all content inside the table
+        if (table) {
+            table.innerHTML = ''; // Clear all content inside the table
+        }
     });
     createVoteTable(2, 'SubmitTable');
     createVoteTable(2, 'SkipTable');
-    
-    for (let i = 0; i < activeCubes.length; i++) {
-        if (voteStatePerCubeId[i] != "none") {
-            updateVoteUi(activeCubes[i], voteStatePerCubeId[i], true);
-        }
-    }
 }
 
 

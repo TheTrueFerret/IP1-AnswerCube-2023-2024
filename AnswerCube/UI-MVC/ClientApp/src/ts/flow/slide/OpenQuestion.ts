@@ -1,7 +1,7 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {getCookie} from "../../CookieHandler";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {postAnswers, stopSession} from "../CircularFlow";
+import {postAnswers, startSession, stopSession} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url = window.location.toString();
@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", function (){
                 sessionCube[i] = true
             }
             console.log(data);
-            generateVoteTables(activeCubes, voteStatePerCubeId);
+            generateVoteTables();
             for (let i: number = 0; i < activeCubes.length; i++) {
-                voteStatePerCubeId[i] = "none";
+                voteStatePerCubeId[activeCubes[i]] = "none";
             }
         }
     }).catch(err => {
@@ -47,37 +47,41 @@ document.addEventListener("DOMContentLoaded", function (){
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
     if (index !== -1) {
+        voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        updateVoteUi(cubeId, "SubmitTable", false)
+        updateVoteUi(cubeId, "SkipTable", false)
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
         }
     } else {
+        voteStatePerCubeId[cubeId] = "none";
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        if (!sessionCube[cubeId]) {
+            sessionCube[cubeId] = true
+            startSession(cubeId);
+        }
     }
 }
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getTextInput()
 
-    // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
         return;
     }
 
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }

@@ -15,7 +15,6 @@ let sessionCube: boolean[] = [];
 let voteStatePerCubeId: string[] = [];
 
 
-
 document.addEventListener("DOMContentLoaded", function (){
     fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
         method: "GET",
@@ -36,9 +35,9 @@ document.addEventListener("DOMContentLoaded", function (){
             }
             console.log(data);
             generateAnswerColumns();
-            generateVoteTables(activeCubes, voteStatePerCubeId);
+            generateVoteTables();
             for (let i: number = 0; i < activeCubes.length; i++) {
-                voteStatePerCubeId[i] = "none";
+                voteStatePerCubeId[activeCubes[i]] = "none";
             }
         }
     }).catch(err => {
@@ -53,6 +52,7 @@ function generateAnswerColumns() {
     activeCubes.sort((a, b) => a - b);
     activeCubes.forEach(CubeId => {
         addNewCubeAnswerColumn(CubeId);
+        moveCheckedRadioButton(CubeId, "down");
     });
 }
 
@@ -63,7 +63,8 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
         deleteAnswerCubeColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        updateVoteUi(cubeId, "SubmitTable", false)
+        updateVoteUi(cubeId, "SkipTable", false)
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
@@ -73,12 +74,11 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
         addNewCubeAnswerColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
-        
         if (!sessionCube[cubeId]) {
             sessionCube[cubeId] = true
             startSession(cubeId);
         }
+        moveCheckedRadioButton(cubeId, "down");
     }
 }
 
@@ -126,31 +126,27 @@ function addNewCubeAnswerColumn(cubeId: number) {
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getSelectedAnswerByCubeId(cubeId)
-
-    // idk make this some kind of method
     
-    // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
         return;
     }
     
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }
     }
     updateVoteUi(cubeId, "SubmitTable", false)
     updateVoteUi(cubeId, "SkipTable", false)
-    updateVoteUi(cubeId, "", false)
+    updateVoteUi(cubeId, "SubthemeTable", false)
 
     switch (action) {
         case "submit":
@@ -179,6 +175,11 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         console.log("Not Everyone Voted Yet");
     }
 }
+
+function Check() {
+    
+}
+
 
 function getSelectedAnswerByCubeId(cubeId: number): string[] {
     let selectedAnswers: string[] = [];

@@ -6,7 +6,16 @@
 }
 
 <div class="slide-container">
-    <h1 class="question">Subthemes</h1>
+    
+    <div>
+        <h1 class="question">Subthemes</h1>
+    </div>
+    <div>
+        <table id="UserTable">
+            
+        </table>
+    </div>
+
     <div id="AllSlideLists" class="row">
         @foreach (var slideList in Model.SlideLists)
         {
@@ -20,7 +29,7 @@
                     </div>
                     <div>
                         <table id="SlideListUserAnswer @slideList.Id">
-                            
+
                         </table>
                     </div>
                 </div>
@@ -29,7 +38,7 @@
     </div>
     <div id="SubmitBox">
         <table id="SubmitTable">
-            
+
         </table>
         <button id="submitAnswer" type="button">Choose SubTheme</button>
     </div>
