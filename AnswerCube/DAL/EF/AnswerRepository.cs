@@ -44,8 +44,6 @@ public class AnswerRepository : IAnswerRepository
     public List<Slide> GetSlides()
     {
         var slides = _context.Slides
-            .Include(s => s.Answers)
-            .ThenInclude(s => s.Session)
             .ToList();
         return slides;
     }
@@ -53,6 +51,7 @@ public class AnswerRepository : IAnswerRepository
     public List<Session> GetSessions()
     {
         var sessions = _context.Sessions
+            .Include(s => s.Answers)
             .ToList();
         return sessions;
     }
@@ -61,16 +60,16 @@ public class AnswerRepository : IAnswerRepository
     {
         var answers = _context.Answers.Where(s => s.Session.Id == sessionId)
             .Include(q => q.Session)
+            .Include(s => s.Slide)
             .ToList();
         return answers;
     }
-
+    
     public Session GetSessionById(int id)
     {
         var session = _context.Sessions
             .Include(s => s.Answers)
-            .ThenInclude(a => a.Slide)
-            .FirstOrDefault(s => s.Id == id);
+            .First(s => s.Id == id);
         return session;
     }
 }
