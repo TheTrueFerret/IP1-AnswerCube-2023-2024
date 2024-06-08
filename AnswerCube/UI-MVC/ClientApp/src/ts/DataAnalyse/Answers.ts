@@ -1,5 +1,5 @@
-import {RemoveLastDirectoryPartOf} from "../urlDecoder";
-import {Chart, registerables} from "chart.js";
+import { RemoveLastDirectoryPartOf } from "../urlDecoder";
+import { Chart, registerables } from "chart.js";
 
 interface Answer {
     id: number;
@@ -15,10 +15,10 @@ interface Slide {
     text: string;
     slideType: number;
 }
+
 interface Session {
     id: number;
 }
-
 
 const downloadCSVButton: HTMLElement | null = document.getElementById("download-csv-button");
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
@@ -27,7 +27,8 @@ const dataContainer: HTMLElement | null = document.getElementById("data-containe
 const left: HTMLElement | null = document.getElementById("left");
 const sessions: HTMLElement | null = document.getElementById("sessions");
 const onderaan: HTMLElement | null = document.getElementById("onderaan");
-const display: HTMLElement | null = document.getElementById("display")
+const display: HTMLElement | null = document.getElementById("display");
+
 const spinnerHTML = `
     <p class="loader">loading...</p>
     <div class="spinner">
@@ -55,7 +56,7 @@ let allAnswers: Answer[] = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (titel) {
-        titel.innerHTML = "<h1>select a session</h1>";
+        titel.innerHTML = "<h1>Select a session</h1>";
     }
     if (onderaan) {
         onderaan.innerHTML = spinnerHTML;
@@ -70,6 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchInput: HTMLInputElement | null = document.getElementById("search-input") as HTMLInputElement;
 
     if (searchButton && searchInput) {
+        console.log("Search button and input found");
         searchButton.addEventListener("click", () => {
             const query = searchInput.value.trim().toLowerCase();
             if (query) {
@@ -87,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     if (downloadCSVButton) {
+        console.log("Download CSV button found");
         downloadCSVButton.addEventListener("click", () => {
             downloadCSV();
         });
@@ -94,12 +97,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function startView() {
+    console.log("Start view");
     await GetAllSessions();
-    await GetAllAnswers(0); 
-    /*
-    * toon eerste slide
-    * */
-    await processAnswers(1)
+    await GetAllAnswers(0);
+    await processAnswers(1);
     await getSessionById(1);
 }
 
@@ -112,8 +113,9 @@ function formatTime(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
+
 function displayFilteredAnswers(filteredAnswers: Answer[]) {
-    window.scrollTo({top: 100})
+    window.scrollTo({ top: 100 });
     if (display) {
         display.innerHTML = '';
 
@@ -131,7 +133,7 @@ function displayFilteredAnswers(filteredAnswers: Answer[]) {
             const question = answer.slide.text;
             itemDiv.innerHTML = `<h1>Question: ${question}</h1>
                                  <h1>Answer: ${answer.answerText.join(', ')}</h1>
-                                 <button class='slideButton' data-slide-id='${slideId}'>slide ${slideId}</button>`;
+                                 <button class='slideButton' data-slide-id='${slideId}'>Slide ${slideId}</button>`;
             infoKader.appendChild(itemDiv);
         });
         display.appendChild(infoKader);
@@ -143,6 +145,7 @@ function displayFilteredAnswers(filteredAnswers: Answer[]) {
 }
 
 async function GetAllSlides(): Promise<Slide[]> {
+    console.log("Get all slides");
     const url = window.location.toString();
     try {
         const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Slides", {
@@ -154,9 +157,9 @@ async function GetAllSlides(): Promise<Slide[]> {
 
         if (response.status !== 200) {
             if (left) {
-                left.innerHTML = "<em>problem!!!</em>";
+                left.innerHTML = "<em>Problem!!!</em>";
             }
-            return []; // Return an empty array or handle the error condition appropriately
+            return [];
         }
 
         const data: Slide[] = await response.json();
@@ -165,19 +168,19 @@ async function GetAllSlides(): Promise<Slide[]> {
             return data;
         } else {
             console.log("No data received from the API Slides.");
-            return []; 
+            return [];
         }
     } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-        return []; 
+        return [];
     }
 }
 
 async function downloadCSV() {
-    const encodedUri = await generateCSV(); 
+    const encodedUri = await generateCSV();
 
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -200,36 +203,37 @@ async function generateCSV() {
 }
 
 async function GetSlideById(slideId: number) {
-    var url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
+    console.log("Get slide by ID");
+    const url = window.location.toString();
+    try {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
         if (response.status === 200) {
-            return response.json();
+            const data = await response.json();
+            slideType = data.slideType;
+            vraag = data.text;
+            possAnswerText = data.answerList;
+            await GetAllAnswers(data.id);
         } else {
             if (left) {
-                left.innerHTML = "<em>problem!!!</em>";
+                left.innerHTML = "<em>Problem!!!</em>";
             }
         }
-    }).then((data) => {
-        console.log(data);
-        slideType = data.slideType;
-        vraag = data.text;
-        slideId = data.id;
-        possAnswerText = data.answerList;
-        GetAllAnswers(data.id);
-    }).catch((error) => {
+    } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-    });
+    }
 }
 
 async function GetAllAnswers(slideid: number): Promise<Answer[]> {
+    console.log("Get all answers");
     const url = window.location.toString();
     try {
         const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/Answers", {
@@ -241,13 +245,14 @@ async function GetAllAnswers(slideid: number): Promise<Answer[]> {
 
         if (response.status !== 200) {
             if (onderaan) {
-                onderaan.innerHTML = "<em>problem!!!</em>";
+                onderaan.innerHTML = "<em>Problem!!!</em>";
             }
             throw new Error("Failed to fetch data");
         }
 
         const data: Answer[] = await response.json();
         if (data && data.length > 0) {
+            allAnswers = data; // Save the answers to allAnswers
             if (slideid !== 0) {
                 processAnswers(slideid);
             }
@@ -266,95 +271,77 @@ async function GetAllAnswers(slideid: number): Promise<Answer[]> {
 }
 
 function processAnswers(slideid: number) {
+    console.log("Process answers");
     let answerCounts = new Map<string, number>();
     for (let i = 0; i < allAnswers.length; i++) {
         if (allAnswers[i].slide.id === slideid) {
-            const answer = allAnswers[i].answerText.join(', ');
-            if (answerCounts.has(answer)) {
-                answerCounts.set(answer, answerCounts.get(answer)! + 1);
-                console.log("checked answercounts");
-            } else {
-                answerCounts.set(answer, 1);
+            for (let j = 0; j < allAnswers[i].answerText.length; j++) {
+                let answer = allAnswers[i].answerText[j];
+                answerCounts.set(answer, (answerCounts.get(answer) || 0) + 1);
             }
         }
     }
-    const labels = Array.from(answerCounts.keys());
-    const counts = Array.from(answerCounts.values());
-    answersFetched = true;
-    if (onderaan) {
-        onderaan.innerHTML = "";
-    }
-    showGraph(counts, labels, slideid);
-}
 
-async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slideid: number) {
-    window.scrollTo({top: 0})
-    Chart.register(...registerables);
-    if (onderaan) {
-        onderaan.innerHTML = ""
-    }
-    const ctx = canvas?.getContext('2d');
+    let labels = Array.from(answerCounts.keys());
+    let counts = Array.from(answerCounts.values());
+
     if (canvas) {
-        if (currentChart) {
-            currentChart.destroy();
-        }
-        canvas.innerHTML = '';
-
-        const backgroundColors = [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(199, 199, 199, 0.2)',
-            'rgba(83, 102, 255, 0.2)',
-            'rgba(255, 159, 255, 0.2)',
-            'rgba(132, 255, 132, 0.2)'
-        ];
-
-        const borderColors = [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(199, 199, 199, 1)',
-            'rgba(83, 102, 255, 1)',
-            'rgba(255, 159, 255, 1)',
-            'rgba(132, 255, 132, 1)'
-        ];
-
-        const colorsCount = dataSet.length;
-        const backgroundColorsArray = backgroundColors.slice(0, colorsCount);
-        const borderColorsArray = borderColors.slice(0, colorsCount);
-
-        currentChart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: labelSet,
-                datasets: [{
-                    label: vraag,
-                    data: dataSet,
-                    backgroundColor: backgroundColorsArray,
-                    borderColor: borderColorsArray,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            if (currentChart) {
+                currentChart.destroy();
             }
-        });
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Answers',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        }
     } else {
-        console.error('Failed to get 2d context for canvas element.');
+        console.error("Canvas element not found.");
     }
 }
 
+async function getSessionById(sessionId: number) {
+    const url = window.location.toString();
+    try {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            answerText = data.answerList;
+        } else {
+            if (left) {
+                left.innerHTML = "<em>Problem!!!</em>";
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        if (left) {
+            left.innerHTML = "<em>Error fetching data!</em>";
+        }
+    }
+}
 
 async function GetAllSessions() {
     const url = window.location.toString();
@@ -368,26 +355,22 @@ async function GetAllSessions() {
 
         if (response.status !== 200) {
             if (left) {
-                left.innerHTML = "<em>problem!!!</em>";
+                left.innerHTML = "<em>Problem!!!</em>";
             }
             return;
         }
 
         const data: Session[] = await response.json();
         if (data && data.length > 0) {
-            console.log("all sessions checked");
-            console.log(data.length);
             aantalSessions = data.length;
-
-            data.sort((a: Session, b: Session) => b.id - a.id);
-            data.forEach((session: Session) => {
-                let sessionTitle: HTMLElement = document.createElement('div');
-                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
+            data.forEach(session => {
+                let button = document.createElement('button');
+                button.textContent = `Session ${session.id}`;
+                button.setAttribute('data-session-id', session.id.toString());
+                button.classList.add('session-button');
                 if (sessions) {
-                    console.log("appending to sessions");
-                    sessions.appendChild(sessionTitle);
+                    sessions.appendChild(button);
                 }
-                console.log("session: " + session.id);
             });
             attachSessionEventListeners();
         } else {
@@ -401,108 +384,14 @@ async function GetAllSessions() {
     }
 }
 
-function AnswersBySessionId(sessionId: number) {
-    const url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (sessions) {
-                sessions.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((data) => {
-        console.log(data);
-        if (display) {
-            let infoKader: HTMLElement = document.createElement('div');
-            infoKader.classList.add('AnswerFromSession');
-            console.log(data.length);
-            const firstAnswer = data[0];
-            const firstSlideId = firstAnswer.slide.id;
-            for (let i = 0; i < data.length; i++) {
-                console.log("haha werkt lolhaha");
-                let itemDiv: HTMLElement = document.createElement('div');
-                let id = data[i].slide.id;
-                if (data[i].answerText.length > 0) {
-                    itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
-                        + "<h1>answer: " + data[i].answerText + "</h1>" +
-                        "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
-                    infoKader.appendChild(itemDiv);
-                }
-            }
-            processAnswers(firstSlideId);
-            console.log("appending");
-            display.appendChild(infoKader);
-            attachSlideEventListeners();
-        } else {
-            console.log("No data received from the API AnswersBySessionId.");
-        }
-
-    }).catch((error) => {
-        console.error("Error fetching data:", error);
-        if (sessions) {
-            sessions.innerHTML = "<em>Error fetching data!</em>";
-        }
-    });
-}
-
-function getSessionById(sessionId: number) {
-    const url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (sessions) {
-                sessions.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((data) => {
-        console.log(data);
-        const formattedStartTime = formatTime(data.startTime);
-        const formattedEndTime = formatTime(data.endTime);
-        let session: HTMLElement = document.createElement('div');
-        session.innerHTML = "<p>cube: " + data.cubeId + "</p>" +
-            "<p>startTime: <p>" + formattedStartTime + "</p></p>" +
-            "<p>endTime: <p>" + formattedEndTime + "</p></p>";
-        if (left) {
-            left.innerHTML = "";
-            left.appendChild(session);
-        }
-    }).catch((error) => {
-        console.error("Error fetching data:", error);
-        if (sessions) {
-            sessions.innerHTML = "<em>Error fetching data!</em>";
-        }
-    });
-}
 function attachSessionEventListeners() {
-    const sessionButtons = document.querySelectorAll('.sessionButton');
+    const sessionButtons = document.querySelectorAll('.session-button');
     sessionButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
+        button.addEventListener('click', async (event) => {
             const target = event.target as HTMLElement;
-            const sessionIdString = target.getAttribute('data-session-id');
-            if (display) {
-                display.innerHTML = '';
-            }
-            if (sessionIdString) {
-                const sessionId = parseInt(sessionIdString, 10);
-                console.log('Session button clicked, session ID:', sessionId);
-                AnswersBySessionId(sessionId);
-                getSessionById(sessionId);
-                sessionButtons.forEach(btn => btn.classList.remove('active'));
-                target.classList.add('active');
-            } else {
-                console.error('Invalid session ID');
+            const sessionId = parseInt(target.getAttribute('data-session-id') || '0');
+            if (sessionId) {
+                await GetSlideById(sessionId);
             }
         });
     });
@@ -511,18 +400,11 @@ function attachSessionEventListeners() {
 function attachSlideEventListeners() {
     const slideButtons = document.querySelectorAll('.slideButton');
     slideButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            if (onderaan) {
-                onderaan.innerHTML = spinnerHTML;
-            }
+        button.addEventListener('click', async (event) => {
             const target = event.target as HTMLElement;
-            const slideIdString = target.getAttribute('data-slide-id');
-            if (slideIdString) {
-                const slideId = parseInt(slideIdString, 10);
-                console.log('Slide button clicked, slide ID:', slideId);
-                GetSlideById(slideId);
-            } else {
-                console.error('Invalid slide ID');
+            const slideId = parseInt(target.getAttribute('data-slide-id') || '0');
+            if (slideId) {
+                await GetSlideById(slideId);
             }
         });
     });
