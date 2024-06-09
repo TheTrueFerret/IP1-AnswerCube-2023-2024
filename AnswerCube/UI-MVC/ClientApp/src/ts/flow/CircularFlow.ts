@@ -5,15 +5,32 @@ const slideElement: HTMLElement | null = document.getElementById("slide");
 export function getCubeNameByCubeId(CubeId: number): string {
     switch (CubeId) {
         case(0):
-            return "Cuber0";
+            return "Tester";
         case(1):
-            return "Cuber1";
+            return "Square ";
         case(2):
-            return "Cuber2";
+            return "Circle ";
         case(3):
-            return "Cuber3";
+            return "Star ";
         case(4):
-            return "Cuber4";
+            return "Triangle ";
+    }
+    return "null"
+}
+
+
+export function getCubeIconByCubeId(CubeId: number): string {
+    switch (CubeId) {
+        case(0):
+            return "../Images/SquareIcon.png";
+        case(1):
+            return "../Images/SquareIcon.png";
+        case(2):
+            return "../Images/CircleIcon.png";
+        case(3):
+            return "../Images/StarIcon.png";
+        case(4):
+            return "../Images/TriangleIcon.png";
     }
     return "null"
 }

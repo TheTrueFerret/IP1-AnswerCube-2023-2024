@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
+import {getCubeIconByCubeId, getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url: string = window.location.toString();
@@ -201,7 +201,7 @@ function moveSelectedButton(cubeId: number, direction: 'up' | 'down') {
                 if (currentCheckedIndexPerUser[cubeId] === -1) {
                     currentCheckedIndexPerUser[cubeId] = 1;
                     element.setAttribute('data-highlighted', 'true')
-                    element.innerHTML = 'Highlighted';
+                    element.innerHTML = '<img src="../Images/UnselectedIcon.png" width="50" height="50"/>';
                     return;
                 }
 
@@ -215,21 +215,21 @@ function moveSelectedButton(cubeId: number, direction: 'up' | 'down') {
                 } else {
                     continue;
                 }
-
                
                 if (element.getAttribute('data-checked') == 'false') {
                     element.setAttribute('data-highlighted', 'false')
                     element.innerHTML = '';
                 } else {
                     element.setAttribute('data-highlighted', 'false')
-                    element.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 }
                 
                 let newElementId = `Cube${cubeId}_Row${newIndex}`;
                 let newElement = document.getElementById(newElementId);
                 if (newElement) {
                     newElement.setAttribute('data-highlighted', 'true')
-                    newElement.innerHTML = 'Highlighted';
+                    newElement.innerHTML = '<img src="../Images/UnselectedIcon.png" width="50" height="50"/>';
                 }
                 currentCheckedIndexPerUser[cubeId] = newIndex;
                 return;
@@ -267,11 +267,13 @@ function selectButton(cubeId: number) {
                 if (element.getAttribute('data-highlighted') == 'true') {
                     if (element.getAttribute('data-checked') == 'false') {
                         element.setAttribute('data-checked', 'true');
-                        element.innerHTML = 'Selected';
+                        let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                        element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                         return;
                     } else if (element.getAttribute('data-checked') == 'true') {
                         element.setAttribute('data-checked', 'false');
-                        element.innerHTML = 'Highlighted';
+                        element.innerHTML = `<img src="../Images/UnselectedIcon.png" width="50" height="50"/>`;
+
                         return;
                     }
                 }

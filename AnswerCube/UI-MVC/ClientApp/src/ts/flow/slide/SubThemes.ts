@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {createVoteTable, generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, startSession, stopSession} from "../CircularFlow";
+import {getCubeIconByCubeId, getCubeNameByCubeId, startSession, stopSession} from "../CircularFlow";
 var url: string = window.location.toString()
 
 
@@ -219,7 +219,8 @@ function moveBetweenSlideLists(cubeId: number, direction: 'up' | 'down') {
                                 let newCells = newElement.querySelectorAll(`td[data-cube="${cubeId}"]`);
                                 newCells.forEach(newCell => {
                                     newCell.setAttribute('data-active', 'true');
-                                    newCell.innerHTML = cubeName;
+                                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                                    newCell.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                                 });
                             }
                             currentChosenSlideListPerUser[cubeId] = newIndex;
@@ -232,7 +233,8 @@ function moveBetweenSlideLists(cubeId: number, direction: 'up' | 'down') {
             if (currentChosenSlideListPerUser[cubeId] === -1) {
                 cells.forEach(cell => {
                     cell.setAttribute('data-active', 'true');
-                    cell.innerHTML = cubeName;
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    cell.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 });
                 currentChosenSlideListPerUser[cubeId] = 1;
                 moved = true;
