@@ -44,31 +44,32 @@ public class AnswerRepository : IAnswerRepository
     public List<Slide> GetSlides()
     {
         var slides = _context.Slides
-            .Include(s => s.Answers)
-            .ThenInclude(s => s.Session)
             .ToList();
         return slides;
     }
 
     public List<Session> GetSessions()
     {
-        var sessions = _context.Sessions.ToList();
+        var sessions = _context.Sessions
+            .Include(s => s.Answers)
+            .ToList();
         return sessions;
     }
 
     public List<Answer> GetAnswersBySessionId(int sessionId)
     {
         var answers = _context.Answers.Where(s => s.Session.Id == sessionId)
-            .Include(a => a.Slide)
+            .Include(q => q.Session)
+            .Include(s => s.Slide)
             .ToList();
         return answers;
     }
-
+    
     public Session GetSessionById(int id)
     {
         var session = _context.Sessions
-            // .Include()
-            .FirstOrDefault(s => s.Id == id);
+            .Include(s => s.Answers)
+            .First(s => s.Id == id);
         return session;
     }
 }
