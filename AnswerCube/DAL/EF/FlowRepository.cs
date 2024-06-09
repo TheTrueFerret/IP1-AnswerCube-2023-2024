@@ -356,5 +356,14 @@ public class FlowRepository : IFlowRepository
             .Single(f => f.Id == installation.FlowId);
     }
 
+    public void DeactivateFlow(int installationId)
+    {
+        Installation installation = _context.Installations.Single(i => i.Id == installationId);
+        installation.ActiveSlideListId = 0;
+        installation.CurrentSlideIndex = 0;
+        installation.Active = false;
+        _context.Installations.Update(installation);
+    }
+
     #endregion
 }

@@ -29,18 +29,20 @@
         </div>
         @if (ViewBag.HasCredential)
         {
-        <div class="form-group">
-            <dl>
-                <dt>
-                    <label for="logo" class="form-label">logo</label>
-                </dt>
-                <dd>
-                    <input id="logo" for="logo" type="file" name="logo" class="form-control" accept="image/*"/>
-                </dd>
-            </dl>
-        </div>
-        } else {
-        <p>The CloudStorageService does not have credentials.</p>
+            <div class="form-group">
+                <dl>
+                    <dt>
+                        <label for="logo" class="form-label">logo</label>
+                    </dt>
+                    <dd>
+                        <input id="logo" for="logo" type="file" name="logo" class="form-control" accept="image/*"/>
+                    </dd>
+                </dl>
+            </div>
+        }
+        else
+        {
+            <p>The CloudStorageService does not have credentials.</p>
         }
         <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-paper-plane"></i>
@@ -90,5 +92,6 @@ else
 
 @section Scripts
 {
+    <script src="~/dist/searchBar.entry.js" defer></script>
     <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
 }
