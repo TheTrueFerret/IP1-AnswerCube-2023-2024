@@ -19,7 +19,7 @@ interface Session {
     id: number;
 }
 
-
+const body: HTMLElement | null = document.querySelector("body");
 const downloadCSVButton: HTMLElement | null = document.getElementById("download-csv-button");
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
 const titel: HTMLElement | null = document.getElementById("title");
@@ -63,10 +63,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
         console.log("Spinner element not found");
     }
-
+    if (body) {
+        body.classList.remove("bg-light");
+        body.classList.add("achtergrondkleur");
+    }
+    
     await startView();
     await createSlideButtons(); // Create slide buttons after loading data
-
+    
     const searchButton: HTMLElement | null = document.getElementById("search-button");
     const searchInput: HTMLInputElement | null = document.getElementById("search-input") as HTMLInputElement;
 
