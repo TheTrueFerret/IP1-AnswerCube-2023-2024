@@ -58,7 +58,7 @@ public static class AnswerCubeInitializer
         yannick.PasswordHash = hasher.HashPassword(yannick, "Student_1234");
         //Add Organizations and add user and projects to organization
         var organization1 = new Organization("KdG",
-            "skybloom44@gmail.com", null, Theme.Dark);
+            "skybloom44@gmail.com", null, Theme.Light);
         var organization2 = new Organization("AnswerCube",
             "answercubeintegratie@gmail.com", null);
         Forum answerCubeForum = new Forum

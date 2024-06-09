@@ -1,6 +1,6 @@
 import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
+import {getCubeIconByCubeId, getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
 let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
@@ -44,9 +44,7 @@ document.addEventListener("DOMContentLoaded", function (){
         console.log("Something went wrong: " + err);
         return err; // Return an empty array in case of error
     });
-    
 })
-
 
 function generateAnswerColumns() {
     activeCubes.sort((a, b) => a - b);
@@ -55,7 +53,6 @@ function generateAnswerColumns() {
         moveCheckedRadioButton(CubeId, "down");
     });
 }
-
 
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
@@ -181,10 +178,6 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     }
 }
 
-function Check() {
-    
-}
-
 
 function getSelectedAnswerByCubeId(cubeId: number): string[] {
     let selectedAnswers: string[] = [];
@@ -209,7 +202,8 @@ function moveCheckedRadioButton(cubeId: number, direction: 'up' | 'down') {
                 if (currentCheckedIndexPerUser[cubeId] === -1) {
                     element.setAttribute('data-checked', 'true');
                     currentCheckedIndexPerUser[cubeId] = 1;
-                    element.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                     return;
                 }
 
@@ -230,7 +224,8 @@ function moveCheckedRadioButton(cubeId: number, direction: 'up' | 'down') {
                 element.innerHTML = '';
                 if (newElement) {
                     newElement.setAttribute('data-checked', 'true');
-                    newElement.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    newElement.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 }
                 currentCheckedIndexPerUser[cubeId] = newIndex;
                 return;
