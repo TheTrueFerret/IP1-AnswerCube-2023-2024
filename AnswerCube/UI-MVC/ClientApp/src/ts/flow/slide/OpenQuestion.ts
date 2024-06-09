@@ -49,8 +49,9 @@ function addNewOrDeleteCubeUser(cubeId: number) {
     if (index !== -1) {
         voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
-        updateVoteUi(cubeId, "SubmitTable", false)
-        updateVoteUi(cubeId, "SkipTable", false)
+        updateVoteUi(cubeId, "SubmitTable", false);
+        updateVoteUi(cubeId, "SkipTable", false);
+        updateVoteUi(cubeId, "SubthemeTable", false);
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
@@ -88,7 +89,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     }
     updateVoteUi(cubeId, "SubmitTable", false)
     updateVoteUi(cubeId, "SkipTable", false)
-    updateVoteUi(cubeId, "", false)
+    updateVoteUi(cubeId, "SubthemeTable", false)
 
     switch (action) {
         case "submit":
@@ -98,7 +99,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "", true)
+            updateVoteUi(cubeId, "SubthemeTable", true)
             break;
     }
 

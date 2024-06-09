@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
 import {getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
@@ -63,8 +63,9 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
         deleteAnswerCubeColumn(cubeId);
-        updateVoteUi(cubeId, "SubmitTable", false)
-        updateVoteUi(cubeId, "SkipTable", false)
+        updateVoteUi(cubeId, "SubmitTable", false);
+        updateVoteUi(cubeId, "SkipTable", false);
+        updateVoteUi(cubeId, "SubthemeTable", false);
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
@@ -156,23 +157,27 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "", true)
+            updateVoteUi(cubeId, "SubthemeTable", true)
             break;
     }
 
-    const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
-    if (allAnswered) {
-        let answers: any[] = [];
-        for (let i: number = 0; i < activeCubes.length; i++) {
-            answers.push({
-                Answer: answer,
-                CubeId: activeCubes[i]
-            })
-        }
-        postAnswers(answers)
-        console.log("Everyone voted!");
+    if (action == "changeSubTheme") {
+        window.location.href = getDomainFromUrl(window.location.toString()) + "/CircularFlow/Subthemes"
     } else {
-        console.log("Not Everyone Voted Yet");
+        const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
+        if (allAnswered) {
+            let answers: any[] = [];
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                answers.push({
+                    Answer: answer,
+                    CubeId: activeCubes[i]
+                })
+            }
+            postAnswers(answers)
+            console.log("Everyone voted!");
+        } else {
+            console.log("Not Everyone Voted Yet");
+        }
     }
 }
 
