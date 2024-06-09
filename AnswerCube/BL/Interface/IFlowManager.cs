@@ -41,5 +41,8 @@ public interface IFlowManager
     bool RemoveFlowFromProject(int flowId);
     List<Flow> GetFlowsByUserId(string userId);
     Flow GetFlowByInstallationId(int installationId);
+    void DeactivateFlow(int installationId);
     #endregion
+
+    
 }

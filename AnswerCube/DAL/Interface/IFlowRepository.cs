@@ -6,6 +6,7 @@ namespace AnswerCube.DAL;
 public interface IFlowRepository
 {
     #region Slide
+
     List<Slide> GetOpenSlides();
     List<Slide> GetListSlides();
     List<Slide> GetSingleChoiceSlides();
@@ -18,9 +19,11 @@ public interface IFlowRepository
     void UpdateSlide(string text, List<string>? answers, int slideId);
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
+
     #endregion
 
     #region SlideList
+
     SlideList getSlideList();
     SlideList ReadSlideListById(int id);
     bool CreateSlideList(string title, string description, int flowId);
@@ -31,9 +34,11 @@ public interface IFlowRepository
     IEnumerable<SlideList> GetSlideListsByFlowId(int flowId);
     void UpdateSlideList(string title, string description, int slideListId);
     SlideList ReadSlideListByInstallationId(int installationId);
+
     #endregion
 
     #region Flow
+
     bool CreateFlow(string name, string desc, bool circularFlow, int projectId);
     Flow ReadFlowById(int flowId);
     Flow ReadFlowWithProjectById(int flowId);
@@ -41,5 +46,7 @@ public interface IFlowRepository
     bool RemoveFlowFromProject(int flowId);
     List<Flow> ReadFlowsByUserId(string userId);
     Flow ReadFlowByInstallationId(int installationId);
+    void DeactivateFlow(int installationId);
+
     #endregion
 }

@@ -20,7 +20,7 @@ public class UnitOfWork
         _dbContext.Database.CommitTransaction();
     }
 
-    public async void CommitAsync()
+    public async Task CommitAsync()
     {
         await _dbContext.SaveChangesAsync();
         await _dbContext.Database.CommitTransactionAsync();
