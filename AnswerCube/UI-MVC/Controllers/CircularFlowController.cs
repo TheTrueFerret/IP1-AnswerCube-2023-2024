@@ -156,14 +156,13 @@ public class CircularFlowController : BaseController
             slideCompositeModel.LinearFlowModel = linearFlowModel;
         }
         int forumId = _installationManager.GetForumIdByInstallationId(installationId);
-        string baseUrl = Url.Action("ShowForum", "Forum", new { forumId }, Request.Scheme);
         if (forumId != 0)
         {
-            slideCompositeModel.forumUrl = baseUrl;
+            slideCompositeModel.forumId = forumId;
         }
         else
         {
-            slideCompositeModel.forumUrl = null;
+            slideCompositeModel.forumId = 0;
         }
         return slideCompositeModel;
     }
@@ -187,7 +186,6 @@ public class CircularFlowController : BaseController
             url = Url.Action(actionName);
             return Json(new { url });
         }
-        
         url = Url.Action("LeaveContactInfoQrCode");
         return Json(new { url });
     }

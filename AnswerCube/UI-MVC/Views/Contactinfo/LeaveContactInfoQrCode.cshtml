@@ -3,12 +3,11 @@
     Layout = "_GeneralLayout";
 }
 
-
 <h2>Thank you for going through the flow. If you want to leave your information, please scan the QR code below:</h2>
 
 <div class="align-items-center align-self-center align-content-center">
     <div id="qrCode"></div>
-    <div id="qrCodeData"></div>
+    <div id="qrCodeData" data-url="@Url.Action("ContactInfo", "Contactinfo")"></div>
 </div>
 
 @section Scripts
@@ -16,5 +15,4 @@
     <script src="~/dist/contactRedirect.entry.js" defer></script>
     <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
     <script type="text/javascript" src="~/dist/qr.entry.js"></script>
-    <script src="~/dist/generateContactInfoUrl.entry.js"></script>
 }
