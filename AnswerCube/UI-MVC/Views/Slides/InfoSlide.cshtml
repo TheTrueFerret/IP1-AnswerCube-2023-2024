@@ -38,7 +38,7 @@
     <button id="skipSlide" type="button">Next</button>
 </div>
 
-@if (Model.forumId == 0)
+@if (Model.forumUrl == null)
 {
     <p>Error loading the forum.</p>
 }
@@ -47,7 +47,7 @@ else
     <div>
         <p>Scan de QR code om jou mening achter te laten op het forum.</p>
         <div id="qrCode"></div>
-        <div id="qrCodeData" data-url="@Url.Action("ShowForum", "Forum", new { forumId = Model.forumId })"></div>
+        <div id="qrCodeData" data-url="@Model.forumUrl"></div>
     </div>
 }
 
