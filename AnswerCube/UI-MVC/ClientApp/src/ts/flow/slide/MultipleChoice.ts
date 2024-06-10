@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, postAnswers, stopSession} from "../CircularFlow";
+import {getCubeIconByCubeId, getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 var url: string = window.location.toString();
@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", function (){
             }
             console.log(data);
             generateAnswerColumns();
-            generateVoteTables(activeCubes, voteStatePerCubeId);
+            generateVoteTables();
             for (let i: number = 0; i < activeCubes.length; i++) {
-                voteStatePerCubeId[i] = "none";
+                voteStatePerCubeId[activeCubes[i]] = "none";
             }
         }
     }).catch(err => {
@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function (){
 })
 
 
-
 function generateAnswerColumns() {
     activeCubes.sort((a, b) => a - b);
     activeCubes.forEach(CubeId => {
         addNewCubeAnswerColumn(CubeId);
+        moveSelectedButton(CubeId, "down");
     });
 }
 
@@ -60,18 +60,26 @@ function generateAnswerColumns() {
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
     if (index !== -1) {
+        voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
+        updateVoteUi(cubeId, "SubmitTable", false);
+        updateVoteUi(cubeId, "SkipTable", false);
+        updateVoteUi(cubeId, "SubthemeTable", false);
         deleteAnswerCubeColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
         }
     } else {
+        voteStatePerCubeId[cubeId] = "none";
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
         addNewCubeAnswerColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        if (!sessionCube[cubeId]) {
+            sessionCube[cubeId] = true
+            startSession(cubeId);
+        }
+        moveSelectedButton(cubeId, "down");
     }
 }
 
@@ -120,29 +128,26 @@ function addNewCubeAnswerColumn(cubeId: number) {
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getSelectedAnswers(cubeId)
 
-    // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
         return;
     }
-
-
+    
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }
     }
     updateVoteUi(cubeId, "SubmitTable", false)
     updateVoteUi(cubeId, "SkipTable", false)
-    updateVoteUi(cubeId, "", false)
+    updateVoteUi(cubeId, "SubthemeTable", false)
 
     switch (action) {
         case "submit":
@@ -152,7 +157,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "", true)
+            updateVoteUi(cubeId, "SubthemeTable", true)
             break;
     }
 
@@ -196,7 +201,7 @@ function moveSelectedButton(cubeId: number, direction: 'up' | 'down') {
                 if (currentCheckedIndexPerUser[cubeId] === -1) {
                     currentCheckedIndexPerUser[cubeId] = 1;
                     element.setAttribute('data-highlighted', 'true')
-                    element.innerHTML = 'Highlighted';
+                    element.innerHTML = '<img src="../Images/UnselectedIcon.png" width="50" height="50"/>';
                     return;
                 }
 
@@ -210,21 +215,21 @@ function moveSelectedButton(cubeId: number, direction: 'up' | 'down') {
                 } else {
                     continue;
                 }
-
                
                 if (element.getAttribute('data-checked') == 'false') {
                     element.setAttribute('data-highlighted', 'false')
                     element.innerHTML = '';
                 } else {
                     element.setAttribute('data-highlighted', 'false')
-                    element.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 }
                 
                 let newElementId = `Cube${cubeId}_Row${newIndex}`;
                 let newElement = document.getElementById(newElementId);
                 if (newElement) {
                     newElement.setAttribute('data-highlighted', 'true')
-                    newElement.innerHTML = 'Highlighted';
+                    newElement.innerHTML = '<img src="../Images/UnselectedIcon.png" width="50" height="50"/>';
                 }
                 currentCheckedIndexPerUser[cubeId] = newIndex;
                 return;
@@ -262,11 +267,13 @@ function selectButton(cubeId: number) {
                 if (element.getAttribute('data-highlighted') == 'true') {
                     if (element.getAttribute('data-checked') == 'false') {
                         element.setAttribute('data-checked', 'true');
-                        element.innerHTML = 'Selected';
+                        let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                        element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                         return;
                     } else if (element.getAttribute('data-checked') == 'true') {
                         element.setAttribute('data-checked', 'false');
-                        element.innerHTML = 'Highlighted';
+                        element.innerHTML = `<img src="../Images/UnselectedIcon.png" width="50" height="50"/>`;
+
                         return;
                     }
                 }

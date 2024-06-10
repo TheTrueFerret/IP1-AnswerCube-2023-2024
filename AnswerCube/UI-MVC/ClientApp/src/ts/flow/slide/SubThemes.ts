@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
-import {createVoteTable, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, startSession, stopSession} from "../CircularFlow";
+import {createVoteTable, generateVoteTables, updateVoteUi} from "../VoteTableHandler";
+import {getCubeIconByCubeId, getCubeNameByCubeId, startSession, stopSession} from "../CircularFlow";
 var url: string = window.location.toString()
 
 
@@ -11,21 +11,24 @@ let sessionCube: boolean[] = [];
 let voteStatePerCubeId: string[] = [];
 
 
-document.addEventListener("DOMContentLoaded", async function () {
-    await getActiveSessionsFromInstallation();
-    for (let i = 0; i < activeCubes.length; i++) {
-        voteStatePerCubeId[i] = "none";
-    }
-    const allSlideLists = document.querySelectorAll("#AllSlideLists .card");
+document.addEventListener("DOMContentLoaded", function () {
+    getActiveSessions();
+    
     for (let i = 0; i < activeCubes.length; i++) {
         currentChosenSlideListPerUser[i] = -1;
     }
+    for (let i = 0; i < activeCubes.length; i++) {
+        voteStatePerCubeId[activeCubes[i]] = "none";
+    }
+
+    const allSlideLists = document.querySelectorAll("#AllSlideLists .card");
     totalSlideLists = allSlideLists.length;
+
     generateSlideListVoteTables();
-    generateVoteTables(activeCubes, voteStatePerCubeId);
+    generateVoteTables();
 });
 
-async function getActiveSessionsFromInstallation() {
+function getActiveSessions() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
         method: "GET",
         headers: {
@@ -44,6 +47,7 @@ async function getActiveSessionsFromInstallation() {
                 sessionCube[i] = true
             }
             console.log(data);
+
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
@@ -61,37 +65,25 @@ document.querySelectorAll('.ChooseSlideList').forEach((btnSubmit: Element) => {
 
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
-    if (index == -1) {
-        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
-        activeCubes.sort((a, b) => a - b);
-        currentChosenSlideListPerUser[cubeId] = -1;
-        generateVoteTables(activeCubes, voteStatePerCubeId);
-        if (!sessionCube[cubeId]) {
-            sessionCube[cubeId] = true
-            startSession(cubeId);
-        }
-    } else {
+    if (index !== -1) {
+        voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        updateVoteUi(cubeId, "SubmitTable", false)
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
         }
-    }
-}
-
-
-function generateVoteTables(activeCubes: number[], voteStatePerCubeId: string[]) {
-    const tableId: string = 'SubmitTable';
-    const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
-    table.innerHTML = ''; // Clear all content inside the table
-    if (activeCubes.length <= 3){
-        createVoteTable(1, 'SubmitTable');
+        moveBetweenSlideLists(cubeId, 'down');
     } else {
-        createVoteTable(2, 'SubmitTable');
-    }
-    for (let i = 0; i < activeCubes.length; i++) {
-        voteStatePerCubeId[i] = "none";
+        voteStatePerCubeId[cubeId] = "none";
+        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
+        activeCubes.sort((a, b) => a - b);
+        currentChosenSlideListPerUser[cubeId] = -1;
+        if (!sessionCube[cubeId]) {
+            sessionCube[cubeId] = true
+            startSession(cubeId);
+        }
+        moveBetweenSlideLists(cubeId, "down");
     }
 }
 
@@ -105,21 +97,14 @@ function generateSlideListVoteTables() {
 
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
-    let answer: number = getSelectedAnswerByCubeId(cubeId)
-    // verander deze naar iets deftig
-    if (action === 'submit' && answer === 0) {
-        console.log('No answers selected');
-        // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
-        return;
-    }
+    
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }
@@ -210,38 +195,46 @@ function moveBetweenSlideLists(cubeId: number, direction: 'up' | 'down') {
             if (currentChosenSlideListPerUser[cubeId] == i) {
                 cells.forEach(cell => {
                     if (cell.getAttribute('data-active') === 'true') {
-                        let newIndex: number = 0;
-                        if (direction === 'up') {
-                            newIndex = (i - 1);
-                            if (newIndex < 1) newIndex = totalSlideLists;
-                        } else if (direction === 'down') {
-                            newIndex = (i + 1);
-                            if (newIndex > totalSlideLists) newIndex = 1;
+                        if (voteStatePerCubeId[cubeId] == "removed"){
+                            cell.setAttribute('data-active', 'false');
+                            cell.innerHTML = '';
+                            moved = true;
+                        } else {
+                            let newIndex: number = 0;
+                            if (direction === 'up') {
+                                newIndex = (i - 1);
+                                if (newIndex < 1) newIndex = totalSlideLists;
+                            } else if (direction === 'down') {
+                                newIndex = (i + 1);
+                                if (newIndex > totalSlideLists) newIndex = 1;
+                            }
+
+                            let newElementId = `SlideListUserAnswer ${newIndex}`;
+                            let newElement = document.getElementById(newElementId);
+
+                            cell.setAttribute('data-active', 'false');
+                            cell.innerHTML = '';
+
+                            if (newElement) {
+                                let newCells = newElement.querySelectorAll(`td[data-cube="${cubeId}"]`);
+                                newCells.forEach(newCell => {
+                                    newCell.setAttribute('data-active', 'true');
+                                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                                    newCell.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
+                                });
+                            }
+                            currentChosenSlideListPerUser[cubeId] = newIndex;
+
+                            moved = true;
                         }
-
-                        let newElementId = `SlideListUserAnswer ${newIndex}`;
-                        let newElement = document.getElementById(newElementId);
-
-                        cell.setAttribute('data-active', 'false');
-                        cell.innerHTML = '';
-
-                        if (newElement) {
-                            let newCells = newElement.querySelectorAll(`td[data-cube="${cubeId}"]`);
-                            newCells.forEach(newCell => {
-                                newCell.setAttribute('data-active', 'true');
-                                newCell.innerHTML = cubeName;
-                            });
-                        }
-                        currentChosenSlideListPerUser[cubeId] = newIndex;
-                        
-                        moved = true;
                     }
                 });
             }
             if (currentChosenSlideListPerUser[cubeId] === -1) {
                 cells.forEach(cell => {
                     cell.setAttribute('data-active', 'true');
-                    cell.innerHTML = cubeName;
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    cell.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 });
                 currentChosenSlideListPerUser[cubeId] = 1;
                 moved = true;

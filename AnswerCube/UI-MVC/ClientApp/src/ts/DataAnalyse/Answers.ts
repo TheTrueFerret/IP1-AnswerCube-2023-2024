@@ -19,7 +19,7 @@ interface Session {
     id: number;
 }
 
-
+const body: HTMLElement | null = document.querySelector("body");
 const downloadCSVButton: HTMLElement | null = document.getElementById("download-csv-button");
 const canvas: HTMLCanvasElement | null = document.getElementById('barChart') as HTMLCanvasElement;
 const titel: HTMLElement | null = document.getElementById("title");
@@ -63,9 +63,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
         console.log("Spinner element not found");
     }
-
+    if (body) {
+        body.classList.remove("bg-light");
+        body.classList.add("achtergrondkleur");
+    }
+    
     await startView();
-
+    await createSlideButtons(); // Create slide buttons after loading data
+    
     const searchButton: HTMLElement | null = document.getElementById("search-button");
     const searchInput: HTMLInputElement | null = document.getElementById("search-input") as HTMLInputElement;
 
@@ -93,9 +98,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+
 async function startView() {
     await GetAllSessions();
-    await GetAllAnswers(0); 
+    await GetAllAnswers(0);
     /*
     * toon eerste slide
     * */
@@ -104,19 +110,22 @@ async function startView() {
 }
 
 function searchAnswers(query: string) {
+    console.log("Searching answers with query:", query);
     const filteredAnswers = allAnswers.filter(answer => answer.slide.text.toLowerCase().includes(query));
+    console.log("Filtered answers:", filteredAnswers);
     displayFilteredAnswers(filteredAnswers);
 }
+
 
 function formatTime(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 function displayFilteredAnswers(filteredAnswers: Answer[]) {
-    window.scrollTo({top: 100})
+    console.log("Displaying filtered answers:", filteredAnswers);
+    window.scrollTo({ top: 100 })
     if (display) {
         display.innerHTML = '';
-
         if (filteredAnswers.length === 0) {
             display.innerHTML = "<p>No answers found for the given query.</p>";
             return;
@@ -165,19 +174,19 @@ async function GetAllSlides(): Promise<Slide[]> {
             return data;
         } else {
             console.log("No data received from the API Slides.");
-            return []; 
+            return [];
         }
     } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-        return []; 
+        return [];
     }
 }
 
 async function downloadCSV() {
-    const encodedUri = await generateCSV(); 
+    const encodedUri = await generateCSV();
 
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -200,33 +209,38 @@ async function generateCSV() {
 }
 
 async function GetSlideById(slideId: number) {
-    var url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
+    const url = window.location.toString();
+    try {
+        const response = await fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SlideById/" + slideId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (response.status !== 200) {
             if (left) {
                 left.innerHTML = "<em>problem!!!</em>";
             }
+            throw new Error("Failed to fetch slide data");
         }
-    }).then((data) => {
+
+        const data = await response.json();
         console.log(data);
         slideType = data.slideType;
         vraag = data.text;
         slideId = data.id;
         possAnswerText = data.answerList;
-        GetAllAnswers(data.id);
-    }).catch((error) => {
+
+        // Fetch and process answers for the selected slide
+        const answers = await GetAllAnswers(slideId);
+        processAnswers(slideId);
+    } catch (error) {
         console.error("Error fetching data:", error);
         if (left) {
             left.innerHTML = "<em>Error fetching data!</em>";
         }
-    });
+    }
 }
 
 async function GetAllAnswers(slideid: number): Promise<Answer[]> {
@@ -248,6 +262,8 @@ async function GetAllAnswers(slideid: number): Promise<Answer[]> {
 
         const data: Answer[] = await response.json();
         if (data && data.length > 0) {
+            allAnswers = data; // Ensure allAnswers is populated
+            console.log("Fetched answers:", allAnswers);
             if (slideid !== 0) {
                 processAnswers(slideid);
             }
@@ -421,7 +437,7 @@ function AnswersBySessionId(sessionId: number) {
         if (display) {
             let infoKader: HTMLElement = document.createElement('div');
             infoKader.classList.add('AnswerFromSession');
-            console.log(data.length);
+            console.log(data);
             const firstAnswer = data[0];
             const firstSlideId = firstAnswer.slide.id;
             for (let i = 0; i < data.length; i++) {
@@ -485,6 +501,46 @@ function getSessionById(sessionId: number) {
         }
     });
 }
+
+async function createSlideButtons() {
+    const slides = await GetAllSlides();
+    const slidesContainer: HTMLElement | null = document.getElementById("slides-container");
+
+    if (slidesContainer) {
+        slidesContainer.innerHTML = ''; // Clear previous buttons if any
+        slides.forEach(slide => {
+            const slideButton: HTMLElement = document.createElement('button');
+            slideButton.className = 'slideButton';
+            slideButton.innerText = `Slide ${slide.id}`;
+            slideButton.setAttribute('data-slide-id', slide.id.toString());
+            slidesContainer.appendChild(slideButton);
+        });
+
+        // Attach event listeners after creating buttons
+        attachSlideButtonEventListeners();
+    } else {
+        console.error("Slides container not found.");
+    }
+}
+
+function attachSlideButtonEventListeners() {
+    const slideButtons = document.querySelectorAll('.slideButton');
+    slideButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            const slideIdString = target.getAttribute('data-slide-id');
+            if (slideIdString) {
+                const slideId = parseInt(slideIdString, 10);
+                console.log('Slide button clicked, slide ID:', slideId);
+                GetSlideById(slideId); // Fetch and display slide data
+                processAnswers(slideId); // Process answers for the selected slide
+            } else {
+                console.error('Invalid slide ID');
+            }
+        });
+    });
+}
+
 function attachSessionEventListeners() {
     const sessionButtons = document.querySelectorAll('.sessionButton');
     sessionButtons.forEach(button => {

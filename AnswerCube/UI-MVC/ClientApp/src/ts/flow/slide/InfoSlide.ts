@@ -1,6 +1,6 @@
 import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {postAnswers} from "../CircularFlow";
+import {postAnswers, startSession, stopSession} from "../CircularFlow";
 
 const slideElement: HTMLElement | null = document.getElementById("slide");
 let url = window.location.toString()
@@ -31,7 +31,10 @@ document.addEventListener("DOMContentLoaded", function (){
                 sessionCube[i] = true
             }
             console.log(data);
-            generateVoteTables(activeCubes, voteStatePerCubeId);
+            generateVoteTables();
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[activeCubes[i]] = "none";
+            }
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
@@ -40,21 +43,43 @@ document.addEventListener("DOMContentLoaded", function (){
 })
 
 
+function addNewOrDeleteCubeUser(cubeId: number) {
+    const index = activeCubes.indexOf(cubeId);
+    if (index !== -1) {
+        voteStatePerCubeId[cubeId] = "removed";
+        activeCubes.splice(index, 1);
+        updateVoteUi(cubeId, "SkipTable", false);
+        updateVoteUi(cubeId, "SubthemeTable", false);
+        if (sessionCube[cubeId]) {
+            sessionCube[cubeId] = false
+            stopSession(cubeId);
+        }
+    } else {
+        voteStatePerCubeId[cubeId] = "none";
+        activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
+        activeCubes.sort((a, b) => a - b);
+        if (!sessionCube[cubeId]) {
+            sessionCube[cubeId] = true
+            startSession(cubeId);
+        }
+    }
+}
+
+
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
-    
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }
     }
     updateVoteUi(cubeId, "SkipTable", false)
-    updateVoteUi(cubeId, "", false)
+    updateVoteUi(cubeId, "SubthemeTable", false)
 
     switch (action) {
         case "submit":
@@ -64,7 +89,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "", true)
+            updateVoteUi(cubeId, "SubthemeTable", true)
             break;
     }
 
@@ -115,11 +140,13 @@ declare global {
     interface Window {
         slideType: string;
         vote: (cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') => void;
+        addNewOrDeleteCubeUser: (cubeId: number) => void;
         skipQuestion: () => void;
     }
 }
 
 window.slideType = "InfoSlide";
 window.vote = vote;
+window.addNewOrDeleteCubeUser = addNewOrDeleteCubeUser;
 window.skipQuestion = skipQuestion;
 

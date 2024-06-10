@@ -1,55 +1,127 @@
-import * as signalR from "@microsoft/signalr";
+import * as signalR from '@microsoft/signalr';
+import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../urlDecoder";
+import * as url from "node:url";
 
-document.addEventListener('DOMContentLoaded', function () {
+let connectionStarted = false;
 
-    console.log('FlowBeheer loaded')
+class CountdownTimer {
+    private countdown: number;
+    private timeoutId: ReturnType<typeof setTimeout> | null;
+    private timerElement: HTMLElement | null;
 
-    let countdown: number = 20;
-    let intervalId: ReturnType<typeof setInterval> | null = null;
-    const timerElement = document.getElementById('timer');
+    constructor() {
+        this.countdown = 45;
+        this.timeoutId = null;
+        this.timerElement = null;
+    }
 
-    const countdownFunction = () => {
+    private countdownFunction = () => {
         try {
-            if (countdown >= 0) {
-                if (timerElement) {
-                    timerElement.innerText = countdown.toString();
+            if (this.countdown >= 0) {
+                if (this.timerElement) {
+                    this.timerElement.innerText = this.countdown.toString();
                 }
-                countdown--;
+                this.countdown--;
+                this.timeoutId = setTimeout(this.countdownFunction, 1000); // Call the function again after 1 second
             } else {
-                if (intervalId !== null) {
-                    clearInterval(intervalId);
-                    intervalId = null;
-                }
-                // Reset the countdown and start again
-                countdown = 20;
-                intervalId = setInterval(countdownFunction, 1000);
+                // Go To Next Page
+                console.log(RemoveLastDirectoryPartOf(window.location.toString()) + "/UpdatePage/")
+                fetch(RemoveLastDirectoryPartOf(window.location.toString()) + "/UpdatePage/", {
+                    method: "GET",
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                }).then((response: Response) => {
+                    if (response.status === 200) {
+                        console.log('Network response was ok');
+                        return response.json();
+                    } else {
+                        console.error('Network response was not ok');
+                    }
+                }).then((url: any) => {
+                    if (url.url) {
+                        window.location.href = getDomainFromUrl(window.location.toString()) + url.url;
+                    }
+                }).catch(err => {
+                    console.log("Something went wrong: " + err);
+                })
             }
         } catch (error) {
             console.error('Error in countdownFunction:', error); // Log any errors in countdownFunction
         }
     };
 
+    public startCountdown = () => {
+        if (this.timeoutId === null) {
+            console.log('Starting countdown for:', this.timeoutId);
+            this.countdownFunction(); // Start the countdown immediately
+            console.log('Timeout ID after start:', this.timeoutId);
+        } else {
+            console.log('Countdown already running with Timeout ID:', this.timeoutId);
+        }
+    };
+
+    public pauseCountdown = () => {
+        if (this.timeoutId !== null) {
+            console.log('Pausing countdown');
+            clearTimeout(this.timeoutId); // Pause the countdown by clearing the timeout
+            console.log('Clearing timeout ID:', this.timeoutId);
+            this.timeoutId = null;
+            console.log('Timeout ID after pause:', this.timeoutId);
+        } else {
+            console.log('No active countdown to pause');
+        }
+    };
+
+    public resetCountdown = () => {
+        console.log('Resetting countdown');
+        this.pauseCountdown(); // Pause the countdown before resetting
+        this.countdown = 20;
+        this.startCountdown(); // Start the countdown again after resetting
+    };
+
+    public setTimerElement(element: HTMLElement | null) {
+        this.timerElement = element;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('FlowBeheer loaded');
+    const timerElement = document.getElementById('timer');
+    const countdownTimer = new CountdownTimer();
+    countdownTimer.setTimerElement(timerElement);
+
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/flowHub")
         .build();
 
     connection.on("StartFlow", function () {
-        if (intervalId === null) {
-            intervalId = setInterval(countdownFunction, 1000);
-            console.log('Flow started')
-        }
+        console.log('Flow resumed');
+        countdownTimer.startCountdown();
     });
 
     connection.on("StopFlow", function () {
-        if (intervalId !== null) {
-            clearInterval(intervalId);
-            intervalId = null;
-            console.log('Flow stopped')
-        }
+        console.log('Flow paused');
+        countdownTimer.pauseCountdown();
+    });
+
+    connection.on("StopInstallation", function () {
+        console.log('Installation stopped');
+        window.location.href = getDomainFromUrl(window.location.toString()) + "/Installation/ChooseInstallation";
     });
 
     connection.onreconnected(connectionId => {
         console.log(`Connection reestablished. Connected with connectionId "${connectionId}".`);
+        const connectionUrl = connection.connectionId;
+        console.log('ConnectionId: ' + connectionUrl);
+        fetch(`/Installation/SetInstallationUrl/${connectionUrl}`, {
+            method: 'POST',
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Failed to start flow');
+            }
+            console.log('ConnectionId sent to server after reconnecting');
+        });
     });
 
     connection.onreconnecting(error => {
@@ -62,22 +134,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     connection.start()
         .then(() => {
+            if (!connectionStarted) {
                 console.log('Connection started');
-                const connectionUrl = connection.connectionId
-                console.log('ConnectionId: ' + connectionUrl)
+                const connectionUrl = connection.connectionId;
+                console.log('ConnectionId: ' + connectionUrl);
                 fetch(`/Installation/SetInstallationUrl/${connectionUrl}`, {
                     method: 'POST',
                 }).then(response => {
                     if (!response.ok) {
                         console.error('Failed to start flow');
                     }
-                    console.log('ConnectionId sent to server')
+                    console.log('ConnectionId sent to server after starting connection');
                 });
+                console.log('Starting countdown after connection is established');
+                countdownTimer.startCountdown(); // Start the countdown after the SignalR connection is established
+                connectionStarted = true;
             }
-        )
-
+        })
         .catch(err => console.log('Error while starting connection: ' + err));
-
-    intervalId = setInterval(countdownFunction, 1000);
-
 });

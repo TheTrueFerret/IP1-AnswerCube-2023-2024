@@ -1,6 +1,6 @@
-import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
-import {getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
+import {getCubeIconByCubeId, getCubeNameByCubeId, postAnswers, startSession, stopSession} from "../CircularFlow";
 
 let url = window.location.toString()
 const slideElement: HTMLElement | null = document.getElementById("slide");
@@ -13,7 +13,6 @@ let totalQuestions: number;
 let activeCubes: number[] = []; // get active cubes
 let sessionCube: boolean[] = [];
 let voteStatePerCubeId: string[] = [];
-
 
 
 document.addEventListener("DOMContentLoaded", function (){
@@ -36,26 +35,24 @@ document.addEventListener("DOMContentLoaded", function (){
             }
             console.log(data);
             generateAnswerColumns();
-            generateVoteTables(activeCubes, voteStatePerCubeId);
+            generateVoteTables();
             for (let i: number = 0; i < activeCubes.length; i++) {
-                voteStatePerCubeId[i] = "none";
+                voteStatePerCubeId[activeCubes[i]] = "none";
             }
         }
     }).catch(err => {
         console.log("Something went wrong: " + err);
         return err; // Return an empty array in case of error
     });
-    
 })
-
 
 function generateAnswerColumns() {
     activeCubes.sort((a, b) => a - b);
     activeCubes.forEach(CubeId => {
         addNewCubeAnswerColumn(CubeId);
+        moveCheckedRadioButton(CubeId, "down");
     });
 }
-
 
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
@@ -63,7 +60,9 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         voteStatePerCubeId[cubeId] = "removed";
         activeCubes.splice(index, 1);
         deleteAnswerCubeColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
+        updateVoteUi(cubeId, "SubmitTable", false);
+        updateVoteUi(cubeId, "SkipTable", false);
+        updateVoteUi(cubeId, "SubthemeTable", false);
         if (sessionCube[cubeId]) {
             sessionCube[cubeId] = false
             stopSession(cubeId);
@@ -73,12 +72,11 @@ function addNewOrDeleteCubeUser(cubeId: number) {
         activeCubes.push(cubeId); // Add cubeId to activeCubes if it doesn't already exist
         activeCubes.sort((a, b) => a - b);
         addNewCubeAnswerColumn(cubeId);
-        generateVoteTables(activeCubes, voteStatePerCubeId);
-        
         if (!sessionCube[cubeId]) {
             sessionCube[cubeId] = true
             startSession(cubeId);
         }
+        moveCheckedRadioButton(cubeId, "down");
     }
 }
 
@@ -126,31 +124,27 @@ function addNewCubeAnswerColumn(cubeId: number) {
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     let answer: string[] = getSelectedAnswerByCubeId(cubeId)
-
-    // idk make this some kind of method
     
-    // verander deze naar iets deftig
     if (action === 'submit' && answer.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
         return;
     }
     
     for (let i = 0; i <= activeCubes.length; i++) {
         if (activeCubes[i] == cubeId) {
-            if (voteStatePerCubeId[i] == "none") {
-                voteStatePerCubeId[i] = action;
+            if (voteStatePerCubeId[cubeId] == "none") {
+                voteStatePerCubeId[cubeId] = action;
             } else {
-                if (voteStatePerCubeId[i] != action) {
-                    voteStatePerCubeId[i] = action
+                if (voteStatePerCubeId[cubeId] != action) {
+                    voteStatePerCubeId[cubeId] = action
                 }
             }
         }
     }
     updateVoteUi(cubeId, "SubmitTable", false)
     updateVoteUi(cubeId, "SkipTable", false)
-    updateVoteUi(cubeId, "", false)
+    updateVoteUi(cubeId, "SubthemeTable", false)
 
     switch (action) {
         case "submit":
@@ -160,25 +154,30 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             updateVoteUi(cubeId, "SkipTable", true)
             break;
         case "changeSubTheme":
-            updateVoteUi(cubeId, "", true)
+            updateVoteUi(cubeId, "SubthemeTable", true)
             break;
     }
 
-    const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
-    if (allAnswered) {
-        let answers: any[] = [];
-        for (let i: number = 0; i < activeCubes.length; i++) {
-            answers.push({
-                Answer: answer,
-                CubeId: activeCubes[i]
-            })
-        }
-        postAnswers(answers)
-        console.log("Everyone voted!");
+    if (action == "changeSubTheme") {
+        window.location.href = getDomainFromUrl(window.location.toString()) + "/CircularFlow/Subthemes"
     } else {
-        console.log("Not Everyone Voted Yet");
+        const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
+        if (allAnswered) {
+            let answers: any[] = [];
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                answers.push({
+                    Answer: answer,
+                    CubeId: activeCubes[i]
+                })
+            }
+            postAnswers(answers)
+            console.log("Everyone voted!");
+        } else {
+            console.log("Not Everyone Voted Yet");
+        }
     }
 }
+
 
 function getSelectedAnswerByCubeId(cubeId: number): string[] {
     let selectedAnswers: string[] = [];
@@ -203,7 +202,8 @@ function moveCheckedRadioButton(cubeId: number, direction: 'up' | 'down') {
                 if (currentCheckedIndexPerUser[cubeId] === -1) {
                     element.setAttribute('data-checked', 'true');
                     currentCheckedIndexPerUser[cubeId] = 1;
-                    element.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    element.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                     return;
                 }
 
@@ -224,7 +224,8 @@ function moveCheckedRadioButton(cubeId: number, direction: 'up' | 'down') {
                 element.innerHTML = '';
                 if (newElement) {
                     newElement.setAttribute('data-checked', 'true');
-                    newElement.innerHTML = 'Selected';
+                    let cubeIcon: String = getCubeIconByCubeId(cubeId)
+                    newElement.innerHTML = `<img src="${cubeIcon}" width="50" height="50"/>`;
                 }
                 currentCheckedIndexPerUser[cubeId] = newIndex;
                 return;

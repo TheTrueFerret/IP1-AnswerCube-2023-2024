@@ -51,7 +51,10 @@ document.addEventListener('keydown', (event) => {
                 window.addNewOrDeleteCubeUser(cubeNumber);
             }
         }
-    } else if (keysPressed.size === 1) {
+        if (keysPressed.has('s') && keysPressed.has(cubeId)) {
+            window.vote(cubeNumber, 'changeSubTheme');
+        }
+    } /*else if (keysPressed.size === 1) {
         if (keysPressed.has('ArrowDown')) {
             move(0, 'down', slideType);
         }
@@ -80,7 +83,10 @@ document.addEventListener('keydown', (event) => {
         if (keysPressed.has('a')) {
             window.addNewOrDeleteCubeUser(0);
         }
-    }
+        if (keysPressed.has('s')) {
+            window.vote(cubeNumber, 'changeSubTheme');
+        }
+    }*/
 });
 
 function move(cubeId: number, direction: 'up' | 'down', slideType: string) {

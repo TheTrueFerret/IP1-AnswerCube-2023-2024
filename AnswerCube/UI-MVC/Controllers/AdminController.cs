@@ -161,8 +161,7 @@ public class AdminController : BaseController
             TempData["ErrorOwnAccountDelete"] = "Je kan jezelf niet verwijderen.";
             return RedirectToAction("Users", "Admin");
         }
-
-
+        
         var result = _userManager.DeleteAsync(user).Result;
         if (!result.Succeeded)
         {

@@ -1,20 +1,16 @@
 import {getCubeNameByCubeId} from "./CircularFlow";
 
-
-export function generateVoteTables(activeCubes: number[], voteStatePerCubeId: string[]) {
-    const tableIds = ['SubmitTable', 'SkipTable'];
+export function generateVoteTables() {
+    const tableIds = ['SubmitTable', 'SkipTable', 'SubthemeTable'];
     tableIds.forEach(tableId => {
         const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
-        table.innerHTML = ''; // Clear all content inside the table
+        if (table) {
+            table.innerHTML = ''; // Clear all content inside the table
+        }
     });
     createVoteTable(2, 'SubmitTable');
     createVoteTable(2, 'SkipTable');
-    
-    for (let i = 0; i < activeCubes.length; i++) {
-        if (voteStatePerCubeId[i] != "none") {
-            updateVoteUi(activeCubes[i], voteStatePerCubeId[i], true);
-        }
-    }
+    createVoteTable(2, 'SubthemeTable');
 }
 
 
@@ -44,8 +40,13 @@ export function updateVoteUi(cubeId: number, tableId: string, vote: boolean) {
     const cells = table.querySelectorAll(`td[data-cube='${cubeId}']`);
     if (vote) {
         cells.forEach(cell => {
-            cell.setAttribute('data-active', 'true');
-            cell.innerHTML = getCubeNameByCubeId(cubeId);
+            if (cell.getAttribute('data-active') == 'true') {
+                cell.setAttribute('data-active', 'false');
+                cell.innerHTML = "";
+            } else {
+                cell.setAttribute('data-active', 'true');
+                cell.innerHTML = getCubeNameByCubeId(cubeId);
+            }
         });
     } else {
         cells.forEach(cell => {

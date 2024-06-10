@@ -166,6 +166,12 @@ public class FlowManager : IFlowManager
     {
         return _repository.ReadFlowByInstallationId(installationId);
     }
+
+    public void DeactivateFlow(int installationId)
+    {
+        _repository.DeactivateFlow(installationId);
+    }
+
     #endregion
     
 }

@@ -24,10 +24,16 @@
             <div class="d-flex justify-content-center align-items-center p-3 mb-3 w-100">
                 <span class="font-weight-bold h3 mb-0">Subtheme - @Model.CircularFlowModel.SubTheme.Name</span>
                 <p id="timer"></p>
-            </div>
                 <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
                     Change Subtheme
                 </a>
+                <div>
+                    <table id="SubthemeTable">
+                        
+                    </table>
+                </div>
+            </div>
+                
                 @RenderBody()
 
                 <!-- TODO: zet de knoppen hier en aan de hand van het slidetype ander knoppen showen -->
