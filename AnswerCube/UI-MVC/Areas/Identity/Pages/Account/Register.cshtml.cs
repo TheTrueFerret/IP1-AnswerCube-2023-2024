@@ -222,7 +222,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
         private Boolean CheckName(string name, string lastName)
         {
-            var badwords = System.IO.File.ReadLines(@"Areas\Identity\Data\BadWords\en.txt")
+            var badwords = System.IO.File.ReadLines(@"Areas/Identity/Data/BadWords/en.txt")
                 .Select(word => word.Trim().ToLower())
                 .ToArray();
             if (name != null && (badwords.Contains(name.ToLower()) || name.Any(char.IsDigit) ||
