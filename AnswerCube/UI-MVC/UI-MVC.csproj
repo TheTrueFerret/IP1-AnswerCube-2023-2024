@@ -11,6 +11,7 @@
         <WWWRoot>wwwroot\</WWWRoot>
         <DefaultItemExcludes>$(DefaultItemExcludes);$(MpaRoot)node_modules\**</DefaultItemExcludes>
         <GenerateRuntimeConfigDevFiles>true</GenerateRuntimeConfigDevFiles>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
     
     <ItemGroup>
