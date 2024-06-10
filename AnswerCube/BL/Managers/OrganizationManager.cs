@@ -103,9 +103,9 @@ public class OrganizationManager : IOrganizationManager
         return _repository.CreateNewOrganization(email, name, logoUrl); 
     }
 
-    public bool AddUserToOrganization(AnswerCubeUser user)
+    public async Task AddUserToOrganization(AnswerCubeUser user)
     {
-        return _repository.CreateUserOrganization(user);
+        await _repository.CreateUserOrganization(user);
     }
 
     public void SaveBeheerderAndOrganization(string email, Organization organization)

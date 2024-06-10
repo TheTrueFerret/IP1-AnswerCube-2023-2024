@@ -12,13 +12,15 @@ public class OrganizationRepository : IOrganizationRepository
     private readonly AnswerCubeDbContext _context;
     private readonly UserManager<AnswerCubeUser> _userManager;
     private readonly IMailRepository _mailRepository;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
     public OrganizationRepository(AnswerCubeDbContext context, UserManager<AnswerCubeUser> userManager,
-        IMailRepository mailRepository)
+        IMailRepository mailRepository, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
         _mailRepository = mailRepository;
+        _roleManager = roleManager;
     }
 
     public List<IdentityRole> ReadAllAvailableRoles(IList<string> userRoles)
@@ -178,34 +180,31 @@ public class OrganizationRepository : IOrganizationRepository
         _mailRepository.SendNewEmail(email, organizationName);
     }
 
-    public bool CreateUserOrganization(AnswerCubeUser user)
+    public async Task CreateUserOrganization(AnswerCubeUser user)
     {
-        Organization? organization = _context.Organizations.FirstOrDefault(o => o.Name == _context
+        Organization? organization = _context.Organizations.FirstOrDefaultAsync(o => o.Name == _context
             .DeelplatformbeheerderEmails
-            .First(d => d.Email == user.Email).DeelplatformNaam);
+            .First(d => d.Email == user.Email).DeelplatformNaam).Result;
         if (_context.DeelplatformbeheerderEmails.First(d => d.Email == user.Email).IsDeelplatformBeheerder)
         {
-            _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
+            var role = await _roleManager.FindByNameAsync("DeelplatformBeheerder");
+            if (role is { Name: not null }) await _userManager.AddToRoleAsync(user, role.Name);
         }
         else
         {
-            _userManager.AddToRoleAsync(user, "Supervisor");
+           var role = await _roleManager.FindByNameAsync("Supervisor");
+            if (role is { Name: not null }) await _userManager.AddToRoleAsync(user, role.Name);
         }
 
         if (organization != null)
         {
-            _context.UserOrganizations.Add(new UserOrganization()
+            await _context.UserOrganizations.AddAsync(new UserOrganization()
             {
                 Organization = organization,
                 OrganizationId = organization.Id,
                 User = user,
                 UserId = user.Id
             });
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 

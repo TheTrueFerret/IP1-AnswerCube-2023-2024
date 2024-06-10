@@ -23,7 +23,7 @@ public interface IOrganizationRepository
     Project ReadProjectWithFlowsById(int projectId);
     Organization CreateNewOrganization(string email, string name, string? logoUrl);
     void SaveBeheerderAndOrganization(string email, string organizationName);
-    bool CreateUserOrganization(AnswerCubeUser user);
+    Task CreateUserOrganization(AnswerCubeUser user);
     List<UserOrganization> ReadAllDeelplatformBeheerders();
     void CreateNewUserOrganization(AnswerCubeUser user, Organization organization);
     Task<bool> RemoveDpbFromOrganization(string userId, int organisationid);

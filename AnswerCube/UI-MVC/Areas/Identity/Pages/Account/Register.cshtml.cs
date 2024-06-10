@@ -5,6 +5,7 @@ using System.Text;
 using AnswerCube.BL;
 using Microsoft.AspNetCore.Authentication;
 using AnswerCube.BL.Domain.User;
+using AnswerCube.DAL.EF;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IMailManager _mailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IOrganizationManager _organizationManager;
+        private readonly UnitOfWork Uow;
 
         public RegisterModel(
             UserManager<AnswerCubeUser> userManager,
@@ -30,7 +32,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             SignInManager<AnswerCubeUser> signInManager,
             ILogger<RegisterModel> logger,
             IMailManager mailManager,
-            RoleManager<IdentityRole> roleManager, IOrganizationManager manager)
+            RoleManager<IdentityRole> roleManager, IOrganizationManager manager, UnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -40,6 +42,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _mailManager = mailManager;
             _roleManager = roleManager;
             _organizationManager = manager;
+            Uow = unitOfWork;
         }
 
         /// <summary>
@@ -153,10 +156,9 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
 
                     if (IsDeelplatformBeheerder(user))
                     {
-                        role = await _roleManager.FindByNameAsync("DeelplatformBeheerder");
-                        if (role is { Name: not null }) await _userManager.AddToRoleAsync(user, role.Name);
-
-                        _organizationManager.AddUserToOrganization(user);
+                        Uow.BeginTransaction();
+                        await _organizationManager.AddUserToOrganization(user);
+                        await Uow.CommitAsync();
                     }
 
                     _logger.LogInformation("User created a new account with password.");
