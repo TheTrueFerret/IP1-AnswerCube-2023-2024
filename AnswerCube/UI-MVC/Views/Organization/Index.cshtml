@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row mb-3">
         <div class="col-6">
-            <h1>Organisatie</h1>
+            <h1>Organization</h1>
             <input type="text" id="searchInput" class="form-control mt-2" placeholder="Type a name to search">
         </div>
         <div class="col-6 d-flex align-items-end">
@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="col-9">
-                <h2>Projecten</h2>
+                <h2>Projects</h2>
                 <div id="infoDiv"></div>
                 <div class="row">
                     @foreach (var project in Model.Projects)
@@ -53,13 +53,13 @@
                                     <p class="card-text">@project.Description</p>
 
                                     <p>
-                                        <strong>Status:</strong> @(project.IsActive ? "Actief" : "Niet actief")
+                                        <strong>State:</strong> @(project.IsActive ? "Active" : "In-Active")
                                     </p>
                                     <p>
-                                        <strong>Totaal aantal flows:</strong> @project.Flows.Count
+                                        <strong>Total flows:</strong> @project.Flows.Count
                                     </p>
                                     <p>
-                                        <strong>Totaal actieve installaties:</strong> @project.TotalActiveInstallations
+                                        <strong>Total active installation:</strong> @project.TotalActiveInstallations
                                     </p>
                                 </div>
                                 <div class="card-footer">
@@ -81,7 +81,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h2 class="card-title">New Project</h2>
-                                <p class="card-text">Voeg een nieuw project toe</p>
+                                <p class="card-text">Add a new project</p>
                                 <button class="btn btn-primary"
                                         title="New Project"
                                         onclick="location.href='@Url.Action("NewProject", "Project", new { organizationId = Model.Id })'">
@@ -93,10 +93,10 @@
                 </div>
             </div>
             <div class="col-3">
-                <h2>Deelplatformbeheerders</h2>
+                <h2>Organization Manager</h2>
                 <div class="list-group scrollable-list">
                     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDeelplatformbeheerderModal">
-                        Add Deelplatformbeheerder
+                        Add Organization Manager
                     </button>
                     <div class="modal fade" id="addDeelplatformbeheerderModal" tabindex="-1" aria-labelledby="addDeelplatformbeheerderModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -120,7 +120,7 @@
                     </div>
                     @if (ViewBag.DeelplatformBeheeders == null || ViewBag.DeelplatformBeheeders.Count == 0)
                     {
-                        <p>Er zijn geen deelplatformbeheerders</p>
+                        <p>There are no Organization Manager</p>
                     }
                     else
                     {
@@ -174,7 +174,7 @@
                     </div>
                     @if (ViewBag.Supervisors == null || ViewBag.Supervisors.Count == 0)
                     {
-                        <p>Er zijn geen supervisors</p>
+                        <p>There are no supervisors</p>
                     }
                     else
                     {

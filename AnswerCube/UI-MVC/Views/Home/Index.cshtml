@@ -54,11 +54,11 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            Welkom bij AnswerCube!
+                            Welcome to AnswerCube!
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Inloggen vereist</h5>
-                            <p class="card-text">Om gebruik te maken van de AnswerCube tool, moet je inloggen.</p>
+                            <h5 class="card-title">Logging in required</h5>
+                            <p class="card-text">To use our tool you have to login.</p>
                             <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
                         </div>
                     </div>
@@ -73,27 +73,26 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            Welkom bij AnswerCube!
+                            Welcome to AnswerCube!
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Gebruik de navigatiebalk bovenaan of klik hier onder:</h5>
-                            <p class="card-text">Om gebruik te maken van de AnswerCube tool.</p>
+                            <h5 class="card-title">Use the navigation bar at the top or here:</h5>
+                            <p class="card-text">To use the Answercube tool.</p>
                             <a class="btn btn-primary m-1" asp-area="" asp-controller="Forum" asp-action="Forums">Forums</a>
                             @if (User.IsInRole("Admin"))
                             {
                                 <a class="btn btn-primary m-1" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">Organization Overview</a>
                             }
                             @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Analyse</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Activate Installation</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Organization</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Data Analyze</a>
                             }
                             @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Manage Installation</a>
                             }
                         </div>
                     </div>

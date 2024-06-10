@@ -3,6 +3,9 @@ import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../urlDecoder";
 import * as url from "node:url";
 
 let connectionStarted = false;
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/flowHub")
+    .build();
 
 class CountdownTimer {
     private countdown: number;
@@ -73,15 +76,27 @@ class CountdownTimer {
         }
     };
 
-    public resetCountdown = () => {
-        console.log('Resetting countdown');
-        this.pauseCountdown(); // Pause the countdown before resetting
-        this.countdown = 20;
-        this.startCountdown(); // Start the countdown again after resetting
-    };
-
     public setTimerElement(element: HTMLElement | null) {
         this.timerElement = element;
+    }
+    
+    public EstablishConnection = () => {
+        if (!connectionStarted) {
+            console.log('Connection started');
+            const connectionUrl = connection.connectionId;
+            console.log('ConnectionId: ' + connectionUrl);
+            fetch(`/Installation/SetInstallationUrl/${connectionUrl}`, {
+                method: 'POST',
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to start flow');
+                }
+                console.log('ConnectionId sent to server after starting connection');
+            });
+            console.log('Starting countdown after connection is established');
+            this.startCountdown(); // Start the countdown after the SignalR connection is established
+            connectionStarted = true;
+        }
     }
 }
 
@@ -90,10 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const timerElement = document.getElementById('timer');
     const countdownTimer = new CountdownTimer();
     countdownTimer.setTimerElement(timerElement);
-
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/flowHub")
-        .build();
 
     connection.on("StartFlow", function () {
         console.log('Flow resumed');
@@ -112,16 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     connection.onreconnected(connectionId => {
         console.log(`Connection reestablished. Connected with connectionId "${connectionId}".`);
-        const connectionUrl = connection.connectionId;
-        console.log('ConnectionId: ' + connectionUrl);
-        fetch(`/Installation/SetInstallationUrl/${connectionUrl}`, {
-            method: 'POST',
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Failed to start flow');
-            }
-            console.log('ConnectionId sent to server after reconnecting');
-        });
+        countdownTimer.EstablishConnection()
     });
 
     connection.onreconnecting(error => {
@@ -130,26 +132,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     connection.onclose(error => {
         console.log(`Connection closed due to error "${error}". Try refreshing this page to restart the connection.`);
+        connectionStarted = false; // Reset the connectionStarted variable
+        // Attempt to restart the connection
+        setTimeout(() => {
+            console.log('Attempting to restart connection...');
+            connection.start()
+                .then(() => {
+                    countdownTimer.EstablishConnection();
+                    console.log('Connection successfully restarted.');
+                })
+                .catch(err => console.log('Error while restarting connection: ' + err));
+        }, 5000); // Wait 5 seconds before attempting to restart the connection
     });
 
     connection.start()
         .then(() => {
-            if (!connectionStarted) {
-                console.log('Connection started');
-                const connectionUrl = connection.connectionId;
-                console.log('ConnectionId: ' + connectionUrl);
-                fetch(`/Installation/SetInstallationUrl/${connectionUrl}`, {
-                    method: 'POST',
-                }).then(response => {
-                    if (!response.ok) {
-                        console.error('Failed to start flow');
-                    }
-                    console.log('ConnectionId sent to server after starting connection');
-                });
-                console.log('Starting countdown after connection is established');
-                countdownTimer.startCountdown(); // Start the countdown after the SignalR connection is established
-                connectionStarted = true;
-            }
+            countdownTimer.EstablishConnection();
         })
         .catch(err => console.log('Error while starting connection: ' + err));
 });
+
+

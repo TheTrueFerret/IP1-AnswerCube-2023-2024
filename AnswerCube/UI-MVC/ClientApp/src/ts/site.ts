@@ -4,6 +4,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../scss/site.scss';
 
+import 'jquery';
+import 'jquery-validation';
+import 'jquery-validation-unobtrusive';
+
 import {getControllerNameFromUrl, getDomainFromUrl} from "./urlDecoder";
 
 // Custom JS imports

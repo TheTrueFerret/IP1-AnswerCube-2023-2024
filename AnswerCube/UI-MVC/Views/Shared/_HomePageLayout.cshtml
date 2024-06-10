@@ -32,35 +32,35 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Forum" asp-action="Forums">Forums</a>
+                    </li>
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">DeelplatformOverview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Forum" asp-action="Forums">Show Forums</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Users">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">Organization Overview</a>
+                    </li>
                     }
                     @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Initialize Installation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Deelplatform</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Analyse</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Activate Installation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Organization</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Data analysis</a>
+                    </li>
                     }
                     @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Beheer Installation</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Manage Installation</a>
+                    </li>
                     }
                 </ul>
             </div>
