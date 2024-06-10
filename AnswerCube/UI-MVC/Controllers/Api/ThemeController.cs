@@ -51,6 +51,10 @@ namespace AnswerCube.UI.MVC.Controllers.Api;
                     return BadRequest("Invalid OrganizationId cookie value");
                 }
             }
+            else if (controllerName == "Identity")
+            {
+                theme = Theme.Light;
+            }
             else
             {
                 Organization organization = _organizationManager.GetOrganizationByUserId(_userManager.GetUserId(User)).First();

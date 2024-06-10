@@ -6,7 +6,7 @@ export function RemoveLastDirectoryPartOf(the_url: string): string
     return( the_arr.join('/') );
 }
 
-export function getDomainFromUrl(the_url: string): string
+export function getDomainFromUrl(the_url: string): string | null
 {
     const url = new URL(the_url);
     const portString = url.port ? `:${url.port}` : '';
