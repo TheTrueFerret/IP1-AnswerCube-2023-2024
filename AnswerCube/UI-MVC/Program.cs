@@ -93,7 +93,6 @@ services.AddHttpContextAccessor();
 services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 
-
 services.AddSingleton<CloudStorageService>();
 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")=="Production")
 {
