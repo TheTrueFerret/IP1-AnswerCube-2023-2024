@@ -25,7 +25,8 @@ module.exports = {
         project :'./src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts',
         flowBeheer: './src/ts/flow/FlowBeheer.ts',
-        contactRedirect: './src/ts/ContactInfo/ContactInfoRedirect.ts'
+        contactRedirect: './src/ts/ContactInfo/ContactInfoRedirect.ts',
+        generateContactInfoUrl: './src/ts/ContactInfo/GenerateContactInfoUrl.ts',
     },
     output: {
         filename: '[name].entry.js',
