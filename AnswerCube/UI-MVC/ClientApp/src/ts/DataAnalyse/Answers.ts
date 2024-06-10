@@ -165,7 +165,7 @@ async function GetAllSlides(): Promise<Slide[]> {
             if (left) {
                 left.innerHTML = "<em>problem!!!</em>";
             }
-            return []; // Return an empty array or handle the error condition appropriately
+            return [];
         }
 
         const data: Slide[] = await response.json();
@@ -232,7 +232,6 @@ async function GetSlideById(slideId: number) {
         slideId = data.id;
         possAnswerText = data.answerList;
 
-        // Fetch and process answers for the selected slide
         const answers = await GetAllAnswers(slideId);
         processAnswers(slideId);
     } catch (error) {
@@ -433,32 +432,34 @@ function AnswersBySessionId(sessionId: number) {
             }
         }
     }).then((data) => {
-        console.log(data);
-        if (display) {
-            let infoKader: HTMLElement = document.createElement('div');
-            infoKader.classList.add('AnswerFromSession');
+        if (Array.isArray(data) && data.length > 0) {
             console.log(data);
-            const firstAnswer = data[0];
-            const firstSlideId = firstAnswer.slide.id;
-            for (let i = 0; i < data.length; i++) {
-                console.log("haha werkt lolhaha");
-                let itemDiv: HTMLElement = document.createElement('div');
-                let id = data[i].slide.id;
-                if (data[i].answerText.length > 0) {
-                    itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
-                        + "<h1>answer: " + data[i].answerText + "</h1>" +
-                        "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
-                    infoKader.appendChild(itemDiv);
+            if (display) {
+                let infoKader: HTMLElement = document.createElement('div');
+                infoKader.classList.add('AnswerFromSession');
+                const firstAnswer = data[0];
+                const firstSlideId = firstAnswer.slide.id;
+                for (let i = 0; i < data.length; i++) {
+                    console.log("haha werkt lolhaha");
+                    let itemDiv: HTMLElement = document.createElement('div');
+                    let id = data[i].slide.id;
+                    if (data[i].answerText.length > 0) {
+                        itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
+                            + "<h1>answer: " + data[i].answerText + "</h1>" +
+                            "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
+                        infoKader.appendChild(itemDiv);
+                    }
                 }
+                processAnswers(firstSlideId);
+                console.log("appending");
+                display.appendChild(infoKader);
+                attachSlideEventListeners();
+            } else {
+                console.log("No data received from the API AnswersBySessionId.");
             }
-            processAnswers(firstSlideId);
-            console.log("appending");
-            display.appendChild(infoKader);
-            attachSlideEventListeners();
         } else {
-            console.log("No data received from the API AnswersBySessionId.");
+            console.log("Invalid data received from API AnswersBySessionId.");
         }
-
     }).catch((error) => {
         console.error("Error fetching data:", error);
         if (sessions) {
@@ -466,7 +467,6 @@ function AnswersBySessionId(sessionId: number) {
         }
     });
 }
-
 function getSessionById(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
