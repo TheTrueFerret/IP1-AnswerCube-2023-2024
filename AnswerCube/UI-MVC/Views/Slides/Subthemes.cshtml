@@ -3,7 +3,9 @@
 @{
     ViewBag.Title = "Subtheme";
     Layout = "_GeneralLayout";
+    int counter = 1;
 }
+
 
 <div class="slide-container">
     
@@ -19,7 +21,7 @@
     <div id="AllSlideLists" class="row">
         @foreach (var slideList in Model.SlideLists)
         {
-            <div id="SlideList @slideList.Id" class="col-md-4" data-info="@slideList.Id">
+            <div id="SlideList @counter" class="col-md-4" data-info="@slideList.Id">
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">@slideList.Title</h5>
@@ -28,12 +30,13 @@
                         <a class="ChooseSlideList btn btn-primary" data-info="@slideList.Id">Select</a>
                     </div>
                     <div>
-                        <table id="SlideListUserAnswer @slideList.Id">
+                        <table id="SlideListUserAnswer @counter">
 
                         </table>
                     </div>
                 </div>
             </div>
+            counter++;
         }
     </div>
     <div id="SubmitBox">
