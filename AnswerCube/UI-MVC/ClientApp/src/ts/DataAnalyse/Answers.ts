@@ -201,6 +201,8 @@ async function generateCSV() {
     const allSlides = await GetAllSlides();
     csvContent += "\n\n\nAnswer ID;Slide ID;Answer Text\n";
     const allAnswers = await GetAllAnswers(0);
+    console.log("allAnswers");
+    console.log(JSON.stringify(allAnswers));
     allAnswers.forEach(answer => {
         csvContent += `${answer.id};${answer.slide.id};${answer.answerText.join('|')}\n`;
     });
@@ -316,16 +318,16 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         canvas.innerHTML = '';
 
         const backgroundColors = [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(199, 199, 199, 0.2)',
-            'rgba(83, 102, 255, 0.2)',
-            'rgba(255, 159, 255, 0.2)',
-            'rgba(132, 255, 132, 0.2)'
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 206, 86, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(153, 102, 255, 0.5)',
+            'rgba(255, 159, 64, 0.5)',
+            'rgba(199, 199, 199, 0.5)',
+            'rgba(83, 102, 255, 0.5)',
+            'rgba(255, 159, 255, 0.5)',
+            'rgba(132, 255, 132, 0.5)'
         ];
 
         const borderColors = [
@@ -360,7 +362,25 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        ticks: {
+                            font: {
+                                size: 16 // Increase the font size for y-axis labels
+                            },
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 16 // Increase the font size for x-axis labels
+                            },
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        font: {
+                            size: 20
+                        },
                     }
                 }
             }
@@ -369,7 +389,6 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         console.error('Failed to get 2d context for canvas element.');
     }
 }
-
 
 async function GetAllSessions() {
     const url = window.location.toString();
@@ -397,7 +416,7 @@ async function GetAllSessions() {
             data.sort((a: Session, b: Session) => b.id - a.id);
             data.forEach((session: Session) => {
                 let sessionTitle: HTMLElement = document.createElement('div');
-                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
+                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>Gebruiker: ${session.id}</button>`;
                 if (sessions) {
                     console.log("appending to sessions");
                     sessions.appendChild(sessionTitle);
@@ -415,6 +434,41 @@ async function GetAllSessions() {
         }
     }
 }
+function getSessionById(sessionId: number) {
+    const url = window.location.toString();
+    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (sessions) {
+                sessions.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).then((data) => {
+        console.log(data);
+        const formattedStartTime = formatTime(data.startTime);
+        const formattedEndTime = formatTime(data.endTime);
+        let session: HTMLElement = document.createElement('div');
+        session.innerHTML = "<p>cube: " + data.cubeId + "</p>" +
+            "<p>startTime: <p>" + formattedStartTime + "</p></p>" +
+            "<p>endTime: <p>" + formattedEndTime + "</p></p>";
+        if (left) {
+            left.innerHTML = "";
+            left.appendChild(session);
+        }
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+        if (sessions) {
+            sessions.innerHTML = "<em>Error fetching data!</em>";
+        }
+    });
+}
+
 
 function AnswersBySessionId(sessionId: number) {
     const url = window.location.toString();
@@ -467,41 +521,6 @@ function AnswersBySessionId(sessionId: number) {
         }
     });
 }
-function getSessionById(sessionId: number) {
-    const url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (sessions) {
-                sessions.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((data) => {
-        console.log(data);
-        const formattedStartTime = formatTime(data.startTime);
-        const formattedEndTime = formatTime(data.endTime);
-        let session: HTMLElement = document.createElement('div');
-        session.innerHTML = "<p>cube: " + data.cubeId + "</p>" +
-            "<p>startTime: <p>" + formattedStartTime + "</p></p>" +
-            "<p>endTime: <p>" + formattedEndTime + "</p></p>";
-        if (left) {
-            left.innerHTML = "";
-            left.appendChild(session);
-        }
-    }).catch((error) => {
-        console.error("Error fetching data:", error);
-        if (sessions) {
-            sessions.innerHTML = "<em>Error fetching data!</em>";
-        }
-    });
-}
-
 async function createSlideButtons() {
     const slides = await GetAllSlides();
     const slidesContainer: HTMLElement | null = document.getElementById("slides-container");
