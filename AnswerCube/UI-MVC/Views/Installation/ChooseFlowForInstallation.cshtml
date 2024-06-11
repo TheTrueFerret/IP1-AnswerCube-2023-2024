@@ -14,7 +14,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Project</th>
                 <th>Action</th>
@@ -24,7 +23,6 @@
             @foreach (var flow in Model)
             {
                 <tr>
-                    <td>@flow.Id</td>
                     <td>@flow.Name</td>
                     <td>@flow.Project.Title</td>
                     <td>
