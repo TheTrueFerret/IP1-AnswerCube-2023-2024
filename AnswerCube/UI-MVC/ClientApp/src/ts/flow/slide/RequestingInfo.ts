@@ -11,6 +11,36 @@ let sessionCube: boolean[] = [];
 let voteStatePerCubeId: string[] = [];
 
 
+document.addEventListener("DOMContentLoaded", function (){
+    fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        if (data.length > 0) {
+            for (let i: number = 0; i < data.length; i++) {
+                activeCubes[i] = data[i]
+                sessionCube[i] = true
+            }
+            console.log(data);
+            generateVoteTables();
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[activeCubes[i]] = "none";
+            }
+        }
+    }).catch(err => {
+        console.log("Something went wrong: " + err);
+        return err; // Return an empty array in case of error
+    });
+})
+
 function addNewOrDeleteCubeUser(cubeId: number) {
     const index = activeCubes.indexOf(cubeId);
     if (index !== -1) {
