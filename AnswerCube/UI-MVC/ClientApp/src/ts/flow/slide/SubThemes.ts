@@ -195,7 +195,7 @@ function moveBetweenSlideLists(cubeId: number, direction: 'up' | 'down') {
         let element = document.getElementById(elementId);
         if (element) {
             let cells = element.querySelectorAll(`td[data-cube="${cubeId}"]`);
-            if (currentChosenSlideListPerUser[cubeId- 1] == i) {
+            if (currentChosenSlideListPerUser[cubeId] == i) {
                 cells.forEach(cell => {
                     if (cell.getAttribute('data-active') === 'true') {
                         if (voteStatePerCubeId[cubeId] == "removed"){
