@@ -143,8 +143,10 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     return Page();
                 }
 
+                _uow.BeginTransaction();
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
+                await _uow.CommitAsync();
+                
                 if (result.Succeeded)
                 {
                     //Adding Roles to the user

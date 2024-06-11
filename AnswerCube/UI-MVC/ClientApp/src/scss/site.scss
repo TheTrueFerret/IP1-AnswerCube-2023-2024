@@ -149,7 +149,7 @@ html {
 
 #searchInput {
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
 }
 
 .card {
@@ -236,11 +236,11 @@ header {
     margin-top: 20px;
     color: white;
     font-weight: bold;
-    padding: 10px 20px; 
+    padding: 10px 20px;
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
   }
 
   #skipSlide {
@@ -254,7 +254,7 @@ header {
 
   #submitAnswer:hover {
     color: white;
-    background-color: green; 
+    background-color: green;
   }
 
   #skipSlide:hover {
@@ -268,11 +268,11 @@ header {
     font-weight: bold;
     padding: 10px;
     border: none;
-    border-radius: 10px; 
-    width: 100px; 
+    border-radius: 10px;
+    width: 100px;
     height: 80px;
-    top: 24px; 
-    right: 12px; 
+    top: 24px;
+    right: 12px;
     position: absolute;
   }
 
@@ -318,7 +318,7 @@ header {
     text-decoration: none;
 
     &:hover {
-      color: #0056b3; 
+      color: #0056b3;
     }
   }
 }
@@ -368,4 +368,18 @@ header {
 .flowType {
   font-weight: bold;
   font-style: italic;
+}
+
+.timer {
+  color: red;
+  border: 3px solid red;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 40px; 
+  text-align: center;
+  font-size: 20px;
 }
