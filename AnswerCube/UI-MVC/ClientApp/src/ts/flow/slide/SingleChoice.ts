@@ -84,7 +84,7 @@ function deleteAnswerCubeColumn(cubeId: number) {
     if (table && headerRow) {
         // Remove the header cell corresponding to cubeId
         const headerCells = headerRow.getElementsByTagName("th");
-        for (let i = 0; i < headerCells.length; i++) {
+        for (let i: number = 0; i < headerCells.length; i++) {
             if (headerCells[i].innerHTML === getCubeNameByCubeId(cubeId)) {
                 headerRow.deleteCell(i);
                 break;
@@ -92,9 +92,16 @@ function deleteAnswerCubeColumn(cubeId: number) {
         }
 
         // Remove the cell corresponding to cubeId from each row (excluding header row)
-        for (let rowIndex = 1; rowIndex < table.rows.length; rowIndex++) {
+        for (let rowIndex: number = 0; rowIndex < table.rows.length; rowIndex++) {
             const row = table.rows[rowIndex];
-            row.deleteCell(0);
+            const cells = row.getElementsByTagName("td");
+            for (let j: number = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell.innerHTML.includes(`Cube${cubeId}_Row${rowIndex}`)) {
+                    row.deleteCell(j);
+                    break;
+                }
+            }
         }
 
         // Update totalQuestions count

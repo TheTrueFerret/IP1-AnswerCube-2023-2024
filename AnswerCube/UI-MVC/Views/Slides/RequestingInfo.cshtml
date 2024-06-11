@@ -6,11 +6,33 @@
 }
 
 <h1 class="question">Requesting Info</h1>
-<div id="slide" class="card-body text-center">
+<div id="slide" class="card-body text-center d-flex flex-column justify-content-center align-items-center">
     <h2 class="card-title">@Model.SlideModel.Text</h2>
     <p class="card-text">If you want to leave your information, please scan the QR code below:</p>
     <div id="qrCode"></div>
     <div id="qrCodeData" data-url="@Url.Action("ContactInfo", "Contactinfo")"></div>
+    @if (Model.SlideModel.MediaUrl != null)
+    {
+        // Check if mediaUrl exists
+        // Extract the filename from the media URL
+        var filename = Model.SlideModel.MediaUrl.Split('/').Last();
+        // Extract the media type from the filename
+        var mediaType = filename.Split('_')[0];
+        // Default to "image" if the media type is not "video"
+        if (mediaType == "video")
+        {
+            <video width="320" height="240" controls><source src="@Model.SlideModel.MediaUrl" type="video/mp4"> Your browser does not support the video tag.</video>
+            <br>
+        }
+        else if (mediaType == "image")
+        {
+            <img class="slideImage" src="@Model.SlideModel.MediaUrl" alt="Slide Image">
+        }
+        else
+        {
+            <em>Unsupported media type</em>
+        }
+    }
 </div>
 <div id="SkipBox">
     <table id="SkipTable">
