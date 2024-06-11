@@ -11,24 +11,21 @@
 
 <div id="mainDiv" class="container">
     <h1 class="mt-5">Choose An InActive Installation</h1>
-    <form class="mt-3">
-        <div class="form-group row align-items-center">
-            <div class="col-md-8">
-                <label for="inactiveInstallations" class="mb-2">Select an Inactive Installation</label> <!-- Added margin-bottom -->
-            </div>
-            <div class="col-md-8">
-                <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
-                    @foreach (var installation in @Model.InstallationModels)
-                    {
+    <div class="form-group row align-items-center">
+        <form class="col-md-8 mt-3">
+            <label for="inactiveInstallations" class="mb-2">Select an Inactive Installation</label> <!-- Added margin-bottom -->
+            <select class="form-control form-select-lg" id="inactiveInstallations" name="inactiveInstallations">
+                @foreach (var installation in @Model.InstallationModels)
+                {
                     <option value="@installation.Id">@installation.Name @installation.Location</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-4 d-flex justify-content-start">
-                <button id="createInstallationButton" class="btn btn-secondary">Create new Installation</button>
-            </div>
+                }
+            </select>
+        </form>
+        <div class="col-md-4 d-flex justify-content-start align-self-end">
+            <button id="createInstallationButton" class="btn btn-secondary">Create new Installation</button>
         </div>
-    </form>
+    </div>
+    
     <button id="confirmButton" class="btn btn-primary mt-3">Activate Selected Installation</button>
 </div>
 
