@@ -165,7 +165,7 @@ async function GetAllSlides(): Promise<Slide[]> {
             if (left) {
                 left.innerHTML = "<em>problem!!!</em>";
             }
-            return []; // Return an empty array or handle the error condition appropriately
+            return [];
         }
 
         const data: Slide[] = await response.json();
@@ -201,6 +201,8 @@ async function generateCSV() {
     const allSlides = await GetAllSlides();
     csvContent += "\n\n\nAnswer ID;Slide ID;Answer Text\n";
     const allAnswers = await GetAllAnswers(0);
+    console.log("allAnswers");
+    console.log(JSON.stringify(allAnswers));
     allAnswers.forEach(answer => {
         csvContent += `${answer.id};${answer.slide.id};${answer.answerText.join('|')}\n`;
     });
@@ -232,7 +234,6 @@ async function GetSlideById(slideId: number) {
         slideId = data.id;
         possAnswerText = data.answerList;
 
-        // Fetch and process answers for the selected slide
         const answers = await GetAllAnswers(slideId);
         processAnswers(slideId);
     } catch (error) {
@@ -317,16 +318,16 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         canvas.innerHTML = '';
 
         const backgroundColors = [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(199, 199, 199, 0.2)',
-            'rgba(83, 102, 255, 0.2)',
-            'rgba(255, 159, 255, 0.2)',
-            'rgba(132, 255, 132, 0.2)'
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 206, 86, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(153, 102, 255, 0.5)',
+            'rgba(255, 159, 64, 0.5)',
+            'rgba(199, 199, 199, 0.5)',
+            'rgba(83, 102, 255, 0.5)',
+            'rgba(255, 159, 255, 0.5)',
+            'rgba(132, 255, 132, 0.5)'
         ];
 
         const borderColors = [
@@ -361,7 +362,25 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        ticks: {
+                            font: {
+                                size: 16 // Increase the font size for y-axis labels
+                            },
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 16 // Increase the font size for x-axis labels
+                            },
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        font: {
+                            size: 20
+                        },
                     }
                 }
             }
@@ -370,7 +389,6 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
         console.error('Failed to get 2d context for canvas element.');
     }
 }
-
 
 async function GetAllSessions() {
     const url = window.location.toString();
@@ -398,7 +416,7 @@ async function GetAllSessions() {
             data.sort((a: Session, b: Session) => b.id - a.id);
             data.forEach((session: Session) => {
                 let sessionTitle: HTMLElement = document.createElement('div');
-                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>session: ${session.id}</button>`;
+                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>Gebruiker: ${session.id}</button>`;
                 if (sessions) {
                     console.log("appending to sessions");
                     sessions.appendChild(sessionTitle);
@@ -416,57 +434,6 @@ async function GetAllSessions() {
         }
     }
 }
-
-function AnswersBySessionId(sessionId: number) {
-    const url = window.location.toString();
-    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-    }).then((response: Response) => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            if (sessions) {
-                sessions.innerHTML = "<em>problem!!!</em>";
-            }
-        }
-    }).then((data) => {
-        console.log(data);
-        if (display) {
-            let infoKader: HTMLElement = document.createElement('div');
-            infoKader.classList.add('AnswerFromSession');
-            console.log(data);
-            const firstAnswer = data[0];
-            const firstSlideId = firstAnswer.slide.id;
-            for (let i = 0; i < data.length; i++) {
-                console.log("haha werkt lolhaha");
-                let itemDiv: HTMLElement = document.createElement('div');
-                let id = data[i].slide.id;
-                if (data[i].answerText.length > 0) {
-                    itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
-                        + "<h1>answer: " + data[i].answerText + "</h1>" +
-                        "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
-                    infoKader.appendChild(itemDiv);
-                }
-            }
-            processAnswers(firstSlideId);
-            console.log("appending");
-            display.appendChild(infoKader);
-            attachSlideEventListeners();
-        } else {
-            console.log("No data received from the API AnswersBySessionId.");
-        }
-
-    }).catch((error) => {
-        console.error("Error fetching data:", error);
-        if (sessions) {
-            sessions.innerHTML = "<em>Error fetching data!</em>";
-        }
-    });
-}
-
 function getSessionById(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
@@ -502,6 +469,58 @@ function getSessionById(sessionId: number) {
     });
 }
 
+
+function AnswersBySessionId(sessionId: number) {
+    const url = window.location.toString();
+    fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/AnswersBySessionId/" + sessionId, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            if (sessions) {
+                sessions.innerHTML = "<em>problem!!!</em>";
+            }
+        }
+    }).then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+            console.log(data);
+            if (display) {
+                let infoKader: HTMLElement = document.createElement('div');
+                infoKader.classList.add('AnswerFromSession');
+                const firstAnswer = data[0];
+                const firstSlideId = firstAnswer.slide.id;
+                for (let i = 0; i < data.length; i++) {
+                    console.log("haha werkt lolhaha");
+                    let itemDiv: HTMLElement = document.createElement('div');
+                    let id = data[i].slide.id;
+                    if (data[i].answerText.length > 0) {
+                        itemDiv.innerHTML = "<h1>Question: " + data[i].slide.text + "</h1>"
+                            + "<h1>answer: " + data[i].answerText + "</h1>" +
+                            "<button class='slideButton' data-slide-id='" + id + "'>slide: " + data[i].slide.id + "</button>";
+                        infoKader.appendChild(itemDiv);
+                    }
+                }
+                processAnswers(firstSlideId);
+                console.log("appending");
+                display.appendChild(infoKader);
+                attachSlideEventListeners();
+            } else {
+                console.log("No data received from the API AnswersBySessionId.");
+            }
+        } else {
+            console.log("Invalid data received from API AnswersBySessionId.");
+        }
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+        if (sessions) {
+            sessions.innerHTML = "<em>Error fetching data!</em>";
+        }
+    });
+}
 async function createSlideButtons() {
     const slides = await GetAllSlides();
     const slidesContainer: HTMLElement | null = document.getElementById("slides-container");
