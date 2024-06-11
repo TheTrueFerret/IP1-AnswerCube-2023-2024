@@ -28,8 +28,9 @@ public class CircularFlowController : BaseController
     private readonly JwtService _jwtService;
     private readonly UnitOfWork _uow;
     private readonly int _counter = 0;
-    
-    public CircularFlowController(ILogger<HomeController> logger, IAnswerManager answerManager, IFlowManager flowManager, IInstallationManager installationManager, JwtService jwtService, UnitOfWork uow)
+
+    public CircularFlowController(ILogger<HomeController> logger, IAnswerManager answerManager,
+        IFlowManager flowManager, IInstallationManager installationManager, JwtService jwtService, UnitOfWork uow)
     {
         _logger = logger;
         _answerManager = answerManager;
@@ -38,7 +39,7 @@ public class CircularFlowController : BaseController
         _jwtService = jwtService;
         _uow = uow;
     }
-    
+
     public IActionResult CircularFlow(int? id)
     {
         bool installationUpdated = false;
@@ -55,45 +56,47 @@ public class CircularFlowController : BaseController
             installationUpdated = _installationManager.UpdateInstallation(installationId);
             _uow.Commit();
         }
+
         if (installationUpdated)
         {
             Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
             string actionName = slide.SlideType.ToString();
             return RedirectToAction(actionName);
         }
+
         return RedirectToAction("Subthemes");
     }
-    
+
     [HttpGet]
     public IActionResult MultipleChoice()
     {
         return View("/Views/Slides/MultipleChoice.cshtml", GetNextSlide());
     }
-    
+
     [HttpGet]
     public IActionResult OpenQuestion()
     {
         return View("/Views/Slides/OpenQuestion.cshtml", GetNextSlide());
     }
-    
+
     [HttpGet]
     public IActionResult SingleChoice()
     {
         return View("/Views/Slides/SingleChoice.cshtml", GetNextSlide());
     }
-    
+
     [HttpGet]
     public IActionResult InfoSlide()
     {
         return View("/Views/Slides/InfoSlide.cshtml", GetNextSlide());
     }
-    
+
     [HttpGet]
     public IActionResult RangeQuestion()
     {
         return View("/Views/Slides/RangeQuestion.cshtml", GetNextSlide());
     }
-    
+
     [HttpGet]
     public IActionResult RequestingInfo()
     {
@@ -106,7 +109,7 @@ public class CircularFlowController : BaseController
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-        
+
         Flow flow = _flowManager.GetFlowByInstallationId(installationId);
         FlowModel flowModel = new FlowModel
         {
@@ -118,14 +121,14 @@ public class CircularFlowController : BaseController
         };
         return View("/Views/Slides/Subthemes.cshtml", flowModel);
     }
-    
-    
+
+
     public SlideCompositeModel GetNextSlide()
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-        
+
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
         SlideList slideList = _flowManager.GetSlideListByInstallationId(installationId);
         SlideModel slideModel = new SlideModel
@@ -137,9 +140,9 @@ public class CircularFlowController : BaseController
             MediaUrl = slide.MediaUrl,
             SlideList = slideList
         };
-        
+
         Flow flow = _flowManager.GetFlowByInstallationId(installationId);
-        
+
         SlideCompositeModel slideCompositeModel = new SlideCompositeModel
         {
             SlideModel = slideModel
@@ -161,6 +164,7 @@ public class CircularFlowController : BaseController
             };
             slideCompositeModel.LinearFlowModel = linearFlowModel;
         }
+
         int forumId = _installationManager.GetForumIdByInstallationId(installationId);
         string baseUrl = Url.Action("ShowForum", "Forum", new { forumId }, Request.Scheme);
         if (forumId != 0)
@@ -171,20 +175,21 @@ public class CircularFlowController : BaseController
         {
             slideCompositeModel.forumUrl = null;
         }
+
         return slideCompositeModel;
     }
-    
+
     [HttpGet]
     public IActionResult UpdatePage()
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-        
+
         _uow.BeginTransaction();
         bool installationUpdated = _installationManager.UpdateInstallation(installationId);
         _uow.Commit();
-        
+
         string url;
         if (installationUpdated)
         {
@@ -196,38 +201,41 @@ public class CircularFlowController : BaseController
         url = Url.Action("SubThemes");
         return Json(new { url });
     }
-    
-    
+
+
     [HttpPost]
     public IActionResult ChooseSlideList([FromBody] SlideListDto slideListDto)
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-        
+
         bool isSlideListUpdated = _installationManager.AddSlideListToInstallation(slideListDto.Id, installationId);
         if (isSlideListUpdated)
         {
             return UpdatePage();
         }
+
         return Error();
     }
-    
-    
+
+
     [HttpPost]
     public IActionResult PostAnswer([FromBody] AnswersDto answers)
     {
         // Retrieve installation ID from token
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
-        
+
         bool[] allAnswersAdded = new bool[answers.Answers.Count];
-        
+
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
-        
+
         for (int i = 0; i < answers.Answers.Count; i++)
         {
-            Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
+            Session? session =
+                _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId,
+                    answers.Answers[i].CubeId);
             if (session != null)
             {
                 List<string> answerText = answers.Answers[i].Answer;
@@ -241,15 +249,15 @@ public class CircularFlowController : BaseController
                 }
             }
         }
-        
+
         if (allAnswersAdded.All(answer => answer))
         {
             return UpdatePage();
         }
-        
+
         return new JsonResult(new BadRequestResult());
     }
-    
+
     [HttpGet]
     public IActionResult GetActiveSessionsFromInstallation()
     {
@@ -264,6 +272,7 @@ public class CircularFlowController : BaseController
             {
                 CubeIds[i] = sessions[i].CubeId;
             }
+
             return new JsonResult(CubeIds);
         }
         else
@@ -271,8 +280,8 @@ public class CircularFlowController : BaseController
             return Empty;
         }
     }
-    
-    
+
+
     [HttpPost]
     public IActionResult EndSession([FromBody] int cubeId)
     {
@@ -287,10 +296,11 @@ public class CircularFlowController : BaseController
         {
             return Error();
         }
+
         return Ok();
     }
-    
-    
+
+
     [HttpPost]
     public IActionResult StartSession([FromBody] int cubeId)
     {
@@ -298,7 +308,7 @@ public class CircularFlowController : BaseController
         string token = Request.Cookies["jwtToken"];
         int installationId = _jwtService.GetInstallationIdFromToken(token);
         Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
-        
+
         if (session == null)
         {
             Session newSession = new Session()
@@ -310,9 +320,10 @@ public class CircularFlowController : BaseController
             _uow.Commit();
             _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, cubeId);
         }
+
         return Ok();
     }
-    
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

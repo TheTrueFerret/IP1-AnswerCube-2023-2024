@@ -17,6 +17,8 @@ interface Slide {
 }
 interface Session {
     id: number;
+    cubeId: number;
+    startTime: string;
 }
 
 const body: HTMLElement | null = document.querySelector("body");
@@ -105,6 +107,7 @@ async function startView() {
     /*
     * toon eerste slide
     * */
+    await GetSlideById(1);
     await processAnswers(1)
     await getSessionById(1);
 }
@@ -364,15 +367,24 @@ async function showGraph(dataSet: Array<number>, labelSet: Array<string>, slidei
                     y: {
                         ticks: {
                             font: {
-                                size: 16 // Increase the font size for y-axis labels
+                                size: 16
                             },
+                            stepSize: 1
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Responses' // Label for the y-axis
                         }
                     },
                     x: {
                         ticks: {
                             font: {
-                                size: 16 // Increase the font size for x-axis labels
+                                size: 16
                             },
+                        },
+                        title: {
+                            display: true,
+                            text: 'Possible Answers' // Label for the x-axis
                         }
                     }
                 },
@@ -415,8 +427,13 @@ async function GetAllSessions() {
 
             data.sort((a: Session, b: Session) => b.id - a.id);
             data.forEach((session: Session) => {
+                const startTime = new Date(session.startTime);
+                const formattedStartTime = startTime.toLocaleString();
+
                 let sessionTitle: HTMLElement = document.createElement('div');
-                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>Gebruiker: ${session.id}</button>`;
+                sessionTitle.innerHTML = `<button class='sessionButton' data-session-id='${session.id}'>User ${session.id}
+                                <br>Started the flow at <br>${formattedStartTime}
+                                <br>And used cube: ${session.cubeId}</button>`;
                 if (sessions) {
                     console.log("appending to sessions");
                     sessions.appendChild(sessionTitle);
@@ -434,6 +451,7 @@ async function GetAllSessions() {
         }
     }
 }
+
 function getSessionById(sessionId: number) {
     const url = window.location.toString();
     fetch(RemoveLastDirectoryPartOf(url) + "/DataAnalyse/SessionById/" + sessionId, {
@@ -450,13 +468,17 @@ function getSessionById(sessionId: number) {
             }
         }
     }).then((data) => {
+        console.log("SessionByIdData");
         console.log(data);
+        let installation = data.installation;
         const formattedStartTime = formatTime(data.startTime);
         const formattedEndTime = formatTime(data.endTime);
         let session: HTMLElement = document.createElement('div');
         session.innerHTML = "<p>cube: " + data.cubeId + "</p>" +
             "<p>startTime: <p>" + formattedStartTime + "</p></p>" +
-            "<p>endTime: <p>" + formattedEndTime + "</p></p>";
+            "<p>endTime: <p>" + formattedEndTime + "</p></p>" + 
+            "<p>Installation: <p>" + installation.name + "</p></p>" +
+            "<p>At location: <p>" + installation.location + "</p></p>";
         if (left) {
             left.innerHTML = "";
             left.appendChild(session);
@@ -526,16 +548,15 @@ async function createSlideButtons() {
     const slidesContainer: HTMLElement | null = document.getElementById("slides-container");
 
     if (slidesContainer) {
-        slidesContainer.innerHTML = ''; // Clear previous buttons if any
+        slidesContainer.innerHTML = ''; 
         slides.forEach(slide => {
             const slideButton: HTMLElement = document.createElement('button');
             slideButton.className = 'slideButton';
-            slideButton.innerText = `Slide ${slide.id}`;
+            slideButton.innerText = `Vraag ${slide.id}`;
             slideButton.setAttribute('data-slide-id', slide.id.toString());
             slidesContainer.appendChild(slideButton);
         });
 
-        // Attach event listeners after creating buttons
         attachSlideButtonEventListeners();
     } else {
         console.error("Slides container not found.");
@@ -551,8 +572,8 @@ function attachSlideButtonEventListeners() {
             if (slideIdString) {
                 const slideId = parseInt(slideIdString, 10);
                 console.log('Slide button clicked, slide ID:', slideId);
-                GetSlideById(slideId); // Fetch and display slide data
-                processAnswers(slideId); // Process answers for the selected slide
+                GetSlideById(slideId);
+                processAnswers(slideId); 
             } else {
                 console.error('Invalid slide ID');
             }
