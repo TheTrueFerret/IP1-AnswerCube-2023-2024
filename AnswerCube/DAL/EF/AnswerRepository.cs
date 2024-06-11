@@ -69,6 +69,7 @@ public class AnswerRepository : IAnswerRepository
     {
         var session = _context.Sessions
             .Include(s => s.Answers)
+            .Include(s => s.Installation)
             .First(s => s.Id == id);
         return session;
     }

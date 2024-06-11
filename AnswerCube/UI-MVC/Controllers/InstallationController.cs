@@ -142,6 +142,8 @@ public class InstallationController : BaseController
         {
             return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });
         }
-        return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
+        //Hier moet Linear flow normaal gezien geïmplementeerd worden
+        // return RedirectToAction("LinearFlow", "LinearFlow", new { id = installationId });
+        return RedirectToAction("CircularFlow", "CircularFlow", new { id = installationId });
     }
 }
