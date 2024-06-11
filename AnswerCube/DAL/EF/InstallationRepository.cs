@@ -99,7 +99,7 @@ public class InstallationRepository : IInstallationRepository
         return installation.Active;
     }
 
-    public bool CreateNewInstallation(string name, string location, int organizationId)
+    public Installation CreateNewInstallation(string name, string location, int organizationId)
     {
         Organization organization = _context.Organizations.Single(o => o.Id == organizationId);
         Installation installation = new Installation
@@ -114,7 +114,7 @@ public class InstallationRepository : IInstallationRepository
             Organization = organization
         };
         _context.Installations.Add(installation);
-        return false;
+        return installation;
     }
 
     public Session? ReadActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId)

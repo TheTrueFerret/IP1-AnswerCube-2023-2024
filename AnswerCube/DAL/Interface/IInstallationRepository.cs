@@ -11,7 +11,7 @@ public interface IInstallationRepository
     Slide ReadActiveSlideByInstallationId(int id);
     List<Installation> ReadInstallationsByUserId(string userId);
     bool UpdateInstallationToActive(int installationId);
-    bool CreateNewInstallation(string name, string location, int organizationId);
+    Installation CreateNewInstallation(string name, string location, int organizationId);
     Session? ReadActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     bool WriteNewSessionWithInstallationId(Session newSession, int installationId);
     bool WriteSlideListToInstallation(int slideListId, int installationId);

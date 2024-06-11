@@ -22,7 +22,7 @@ public class InstallationManager : IInstallationManager
         return _repository.UpdateInstallationToActive(installationId);
     }
     
-    public bool AddNewInstallation(string name, string location, int organizationId)
+    public Installation AddNewInstallation(string name, string location, int organizationId)
     {
         return _repository.CreateNewInstallation(name, location, organizationId);
     }

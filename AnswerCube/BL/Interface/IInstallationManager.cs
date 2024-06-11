@@ -11,7 +11,7 @@ public interface IInstallationManager
     Slide GetActiveSlideByInstallationId(int id);
     List<Installation> GetInstallationsByUserId(string userId);
     bool SetInstallationToActive(int installationId);
-    bool AddNewInstallation(string name, string location, int organizationId);
+    Installation AddNewInstallation(string name, string location, int organizationId);
     Session? GetActiveSessionByInstallationIdAndCubeId(int installationId, int cubeId);
     bool AddNewSessionWithInstallationId(Session newSession, int installationId);
     bool AddSlideListToInstallation(int slideListId, int installationId);
