@@ -119,15 +119,19 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
     if (allAnswered) {
         const voteCounts: { [key: number]: number } = {};
 
-        // Count the votes for each slidelist ID
-        currentChosenSlideListPerUser.forEach(slideListId => {
-            if (voteCounts[slideListId]) {
-                voteCounts[slideListId]++;
-            } else {
-                voteCounts[slideListId] = 1;
+
+        currentChosenSlideListPerUser.forEach((slideListCount: number) => {
+            const slideListElement = document.getElementById(`SlideList ${slideListCount}`);
+            if (slideListElement) {
+                const slideListId = parseInt(slideListElement.getAttribute("data-info")!, 10);
+                if (voteCounts[slideListId]) {
+                    voteCounts[slideListId]++;
+                } else {
+                    voteCounts[slideListId] = 1;
+                }
             }
         });
-
+        
         // Find the slidelist ID with the maximum votes
         let mostVotedSlideListId: number | null = null;
         let maxVotes = 0;
