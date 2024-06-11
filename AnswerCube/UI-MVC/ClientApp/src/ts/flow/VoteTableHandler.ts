@@ -2,7 +2,7 @@ import {getCubeNameByCubeId} from "./CircularFlow";
 
 export function generateVoteTables() {
     var tableIds: string[];
-    if (window.slideType == "InfoSlide") {
+    if (window.slideType == "InfoSlide" || window.slideType == "LeaveContactInfo") {
         tableIds = ['SkipTable', 'SubthemeTable'];
     } else {
         tableIds = ['SubmitTable', 'SkipTable', 'SubthemeTable'];
@@ -13,7 +13,7 @@ export function generateVoteTables() {
             table.innerHTML = ''; // Clear all content inside the table
         }
     });
-    if (window.slideType == "InfoSlide") {
+    if (window.slideType == "InfoSlide" || window.slideType == "LeaveContactInfo") {
         createVoteTable(2, 'SkipTable');
         createVoteTable(2, 'SubthemeTable');
     } else {

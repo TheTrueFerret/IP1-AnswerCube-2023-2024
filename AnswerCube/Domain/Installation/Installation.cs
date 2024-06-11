@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using AnswerCube.BL.Domain;
 using Domain;
 
@@ -20,5 +21,6 @@ public class Installation
     public Organization Organization { get; set; }
     public int? FlowId { get; set; }
     public Flow? Flow { get; set; }
+    [JsonIgnore]
     public ICollection<Session>? Sessions { get; set; }
 }

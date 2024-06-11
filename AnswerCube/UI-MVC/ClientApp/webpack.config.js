@@ -15,6 +15,7 @@ module.exports = {
         rangequestion: './src/ts/flow/slide/RangeQuestion.ts',
         infoslide: './src/ts/flow/slide/InfoSlide.ts',
         openquestion: './src/ts/flow/slide/OpenQuestion.ts',
+        requestingInfo: './src/ts/flow/slide/RequestingInfo.ts',
         subtheme: './src/ts/flow/slide/SubThemes.ts',
         inputhandler: './src/ts/flow/InputHandler.ts',
         votetablehandler: './src/ts/flow/VoteTableHandler.ts',
@@ -25,7 +26,6 @@ module.exports = {
         project :'./src/ts/Project/Project.ts',
         createSlide: './src/ts/Slide/CreateSlide.ts',
         flowBeheer: './src/ts/flow/FlowBeheer.ts',
-        contactRedirect: './src/ts/ContactInfo/ContactInfoRedirect.ts',
         generateContactInfoUrl: './src/ts/ContactInfo/GenerateContactInfoUrl.ts',
     },
     output: {
