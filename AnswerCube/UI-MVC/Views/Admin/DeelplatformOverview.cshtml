@@ -6,10 +6,9 @@
     Layout = "_Layout";
 }
 
-<h1>Deelplatform</h1>
+<h1>Organization</h1>
 <div class="form-control col-9 m-2">
-
-    <h2>Maak een nieuw deelplatform aan</h2>
+    <h2>Create a new organization</h2>
     @if (TempData["Error"] != null)
     {
         <div class="text-danger col-6">@TempData["Error"]</div>
@@ -20,11 +19,11 @@
     }
     <form asp-controller="Admin" asp-action="AddDeelplatform" method="post" enctype="multipart/form-data" class="@(TempData["Message"] != null ? "alert alert-danger" : "")">
         <div class="mb-3">
-            <label for="deelplatformName" class="form-label">Deelplatform Naam</label>
+            <label for="deelplatformName" class="form-label">Organization name</label>
             <input type="text" class="form-control" id="deelplatformName" name="deelplatformName" placeholder="Deelplatform naam" required>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Deelplatform Email</label>
+            <label for="email" class="form-label">Organization email</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="Beheerders email" required>
         </div>
         @if (ViewBag.HasCredential)
@@ -50,45 +49,49 @@
     </form>
 </div>
 
-@if (Model.Any())
-{
-    <table class="table m-2">
-        <input class="form-control p-2 m-2" type="text" id="searchQuery" placeholder="Search by email"/>
-        <thead>
-        <tr>
-            <th>Email</th>
-            <th> Deelplatform </th>
-            <th>Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var userOrganization in Model)
-        {
-            <tr class="user-row">
-                <td data-email="@userOrganization.User.Email">
-                    @userOrganization.User.Email
-                </td>
-                <td>
-                    @userOrganization.Organization.Name
-                </td>
-                <td>
-                    <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@userOrganization.User.Id"
-                          asp-route-deelplatformNaam="@userOrganization.Organization.Name" method="post"
-                          onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
+<hr class="my-4">
+
+<div class="form-control col-9 m-2">
+    @if (Model.Any())
+    {
+        <table class="table m-2">
+            <input class="form-control p-2 m-2" type="text" id="searchQuery" placeholder="Search by email"/>
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Organization </th>
+                <th>Delete</th>
             </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="text-danger col-6 fw-bold">No Deelplatform Beheerders found</div>
-}
+            </thead>
+            <tbody>
+            @foreach (var userOrganization in Model)
+            {
+                <tr class="user-row">
+                    <td data-email="@userOrganization.User.Email">
+                        @userOrganization.User.Email
+                    </td>
+                    <td>
+                        @userOrganization.Organization.Name
+                    </td>
+                    <td>
+                        <form asp-controller="Admin" asp-action="RemoveDeelplatformBeheederRole" asp-route-id="@userOrganization.User.Id"
+                              asp-route-deelplatformNaam="@userOrganization.Organization.Name" method="post"
+                              onsubmit="return confirm('Do you really want to remove this Deelplatform? Their whole platform will be deleted!');">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="text-danger col-6 fw-bold">No Organization Managers found</div>
+    }
+</div>
 
 @section Scripts
 {

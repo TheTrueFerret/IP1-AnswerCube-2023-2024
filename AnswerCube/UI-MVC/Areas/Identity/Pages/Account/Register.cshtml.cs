@@ -24,7 +24,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
         private readonly IMailManager _mailManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IOrganizationManager _organizationManager;
-        private readonly UnitOfWork Uow;
+        private readonly UnitOfWork _uow;
 
         public RegisterModel(
             UserManager<AnswerCubeUser> userManager,
@@ -42,7 +42,7 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             _mailManager = mailManager;
             _roleManager = roleManager;
             _organizationManager = manager;
-            Uow = unitOfWork;
+            _uow = unitOfWork;
         }
 
         /// <summary>
@@ -143,22 +143,21 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
                     return Page();
                 }
 
+                _uow.BeginTransaction();
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
+                await _uow.CommitAsync();
+                
                 if (result.Succeeded)
                 {
                     //Adding Roles to the user
-                    var role = await _roleManager.FindByNameAsync("User");
-                    if (role != null)
-                    {
-                        if (role.Name != null) await _userManager.AddToRoleAsync(user, role.Name);
-                    }
+                    var role = await _roleManager.FindByNameAsync("Gebruiker");
+                    if (role != null) await _userManager.AddToRoleAsync(user, role.Name);
 
                     if (IsDeelplatformBeheerder(user))
                     {
-                        Uow.BeginTransaction();
+                        _uow.BeginTransaction();
                         await _organizationManager.AddUserToOrganization(user);
-                        await Uow.CommitAsync();
+                        await _uow.CommitAsync();
                     }
 
                     _logger.LogInformation("User created a new account with password.");
@@ -225,13 +224,13 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             var badwords = System.IO.File.ReadLines(@"Areas/Identity/Data/BadWords/en.txt")
                 .Select(word => word.Trim().ToLower())
                 .ToArray();
-            if (name != null && (badwords.Contains(name.ToLower()) || name.Any(char.IsDigit) ||
+            if (name != null && (badwords.Equals(name.ToLower()) || name.Any(char.IsDigit) ||
                                  name.Any(ch => !char.IsLetter(ch))))
             {
                 return true;
             }
 
-            if (lastName != null && (badwords.Contains(lastName.ToLower()) || lastName.Any(char.IsDigit) ||
+            if (lastName != null && (badwords.Equals(lastName.ToLower()) || lastName.Any(char.IsDigit) ||
                                      lastName.Any(ch => !char.IsLetter(ch))))
             {
                 return true;

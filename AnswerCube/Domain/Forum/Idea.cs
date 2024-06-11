@@ -6,11 +6,11 @@ namespace Domain;
 public class Idea
 {
     [Key] public int Id { get; set; }
-    [Required] [StringLength(35)] public string Title { get; set; }
+    [Required]public string Title { get; set; }
 
     public AnswerCubeUser? User { get; set; }
 
-    [Required] [StringLength(100)] public String Content { get; set; }
+    [Required] public String Content { get; set; }
     public List<Reaction> Reactions { get; set; } = new List<Reaction>();
     public ICollection<Like> Likes { get; set; } = new List<Like>();
     public ICollection<Dislike> Dislikes { get; set; } = new List<Dislike>();

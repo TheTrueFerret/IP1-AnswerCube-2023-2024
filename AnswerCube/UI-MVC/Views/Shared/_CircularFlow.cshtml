@@ -20,23 +20,21 @@
 <div class="container">
     <main role="main" class="pb-3">
         <div class="container mt-5">
-        <div class="slide-container border p-4 rounded position-relative page-container">
-            <div class="d-flex justify-content-center align-items-center p-3 mb-3 w-100">
-                <span class="font-weight-bold h3 mb-0">Subtheme - @Model.CircularFlowModel.SubTheme.Name</span>
-                <p id="timer"></p>
-                <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
-                    Change Subtheme
-                </a>
-                <div>
-                    <table id="SubthemeTable">
-                        
-                    </table>
-                </div>
-            </div>
-                
-                @RenderBody()
+            <div class="slide-container border p-4 rounded position-relative page-container">
+                <div class="d-flex justify-content-between align-items-center p-3 mb-3 w-100">
+                    <span id="timer" class="timer"></span>
+                    <span class="font-weight-bold h3 mb-0">Subtheme - @Model.CircularFlowModel.SubTheme.Name</span>
 
-                <!-- TODO: zet de knoppen hier en aan de hand van het slidetype ander knoppen showen -->
+                    <a href="@Url.Action("Subthemes", "CircularFlow")" id="changeSubtheme" class="btn btn-primary font-weight-bold position-absolute">
+                        Change Subtheme
+                    </a>
+                    <div>
+                        <table id="SubthemeTable">
+
+                        </table>
+                    </div>
+                </div>
+                @RenderBody()
             </div>
         </div>
     </main>
@@ -48,4 +46,3 @@
 </footer>
 </body>
 </html>
-

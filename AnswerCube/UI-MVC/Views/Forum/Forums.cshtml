@@ -17,11 +17,11 @@ Layout = "_Layout";
                         <h5 class="card-title">@forum.Organization.Name Forum</h5>
                         @if(forum.Ideas != null)
                         {
-                            <p class="card-text">ideen: @forum.Ideas.Count</p>
+                            <p class="card-text">Ideas: @forum.Ideas.Count</p>
                         }
                         else
                         {
-                            <p class="card-text">ideen: 0</p>
+                            <p class="card-text">Ideas: 0</p>
                         }
                         <a href="@Url.Action("ShowForum", "Forum", new { forumId = forum.Id })" class="btn btn-primary">View Forum</a>
                     </div>

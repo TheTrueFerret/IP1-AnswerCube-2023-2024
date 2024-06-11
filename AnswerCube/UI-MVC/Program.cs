@@ -44,7 +44,6 @@ services.Configure<IdentityOptions>(options =>
 services.AddIdentity<AnswerCubeUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AnswerCubeDbContext>()
     .AddDefaultTokenProviders();
-//    .AddDefaultUI();
 //ADD ALL MANAGERS
 services.AddScoped<IFlowManager, FlowManager>();
 services.AddScoped<IOrganizationManager, OrganizationManager>();

@@ -5,7 +5,6 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
     var slideLists = ViewBag.SlideLists as List<SlideList>;
-    var flow = ViewBag.Flow as Flow;
 }
 
 <div class="container mt-5">
@@ -17,11 +16,11 @@
                     <p class="card-text">@Model.Description</p>
                     @if (Model.CircularFlow)
                     {
-                        <p class="card-text flowType">This is a circular flow</p>
+                        <p class="card-text flowType">This is a <b>circular flow</b></p>
                     }
                     else
                     {
-                        <p class="card-text flowType">This is a linear flow</p>
+                        <p class="card-text flowType">This is a <b>linear flow</b></p>
                     }
                     @if (Model.Project != null)
                     {
@@ -73,48 +72,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .card-flowdetails {
-        border: 3px solid #ccc;
-        border-radius: 8px;
-    }
-
-  
-    .subtheme-rectangle {
-        width: calc(100% - 20px);
-        height: 50px;
-        background-color: #1a5276; 
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px; 
-        font-size: 18px;
-        border-radius: 6px;
-        font-weight: bold;
-         text-decoration: none;
-    }
-
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-    }
-    
-    .flowType {
-        font-weight: bold;
-        font-style: italic;
-    }
-</style>
-
 
 @section Scripts {
     <script src="https://kit.fontawesome.com/9ecbe616c3.js" crossorigin="anonymous"></script>
