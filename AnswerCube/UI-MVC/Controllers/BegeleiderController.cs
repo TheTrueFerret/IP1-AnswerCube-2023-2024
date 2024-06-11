@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnswerCube.UI.MVC.Controllers;
 
-[Authorize(Roles = "Supervisor,Admin")]
+[Authorize(Roles = "Supervisor,Admin,DeelplatformBeheerder")]
 public class BegeleiderController : BaseController
 {
     private readonly IHubContext<FlowHub> _flowHub;
