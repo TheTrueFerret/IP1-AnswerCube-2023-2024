@@ -86,12 +86,12 @@
                             }
                             @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
                             {
-                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Activate Installation</a>
                                 <a class="btn btn-primary m-1" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Organization</a>
                                 <a class="btn btn-primary m-1" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Data Analyze</a>
                             }
-                            @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
+                            @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin") || User.IsInRole("Supervisor"))
                             {
+                                <a class="btn btn-primary m-1" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Activate Installation</a>
                                 <a class="btn btn-primary m-1" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Manage Installation</a>
                             }
                         </div>

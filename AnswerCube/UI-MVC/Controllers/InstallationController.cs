@@ -122,9 +122,9 @@ public class InstallationController : BaseController
     public IActionResult CreateInstallation([FromBody] InstallationModel installationModel)
     {
         _uow.BeginTransaction();
-        _installationManager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
+        Installation installation = _installationManager.AddNewInstallation(installationModel.Name, installationModel.Location, installationModel.Id);
         _uow.Commit();
-        return Ok(new { success = true, id = installationModel.Id, name = installationModel.Name, location = installationModel.Location });
+        return Ok(new { success = true, id = installation.Id, name = installationModel.Name, location = installationModel.Location });
     }
     
     

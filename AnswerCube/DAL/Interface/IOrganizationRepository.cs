@@ -39,4 +39,5 @@ public interface IOrganizationRepository
     Task<bool> RemoveSupervisorFromOrgByEmail(string email, int organizationid);
     List<AnswerCubeUser> ReadSupervisorsByOrgId(int organizationId);
     List<AnswerCubeUser> ReadDeelplatformBeheedersByOrgId(int organizationId);
+    void CreateBeheerderEmail(AnswerCubeUser user, Organization organization);
 }

@@ -29,10 +29,9 @@ public class FlowController : BaseController
     public IActionResult FlowDetails(int flowId)
     {
         Flow flow = _flowManager.GetFlowWithProjectById(flowId);
-        //SlideList sLideList = _manager.GetSlideListWithFlowById(flowId-1);
-        //var test = _manager.GetSlideListsByFlowId(flowId).ToList();
         ViewBag.SlideLists = _flowManager.GetSlideListsByFlowId(flowId).ToList();
         ViewBag.Flow = _flowManager.GetFlowWithProjectById(flowId);
+        ViewBag.Notes = _flowManager.GetNotesByFlowId(flowId).ToList();
         return View(flow);
     }
 

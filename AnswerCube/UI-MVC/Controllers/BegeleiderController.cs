@@ -89,7 +89,11 @@ public class BegeleiderController : BaseController
         _uow.BeginTransaction();
         _flowManager.DeactivateFlow(installationId);
         await _uow.CommitAsync();
-        await _flowHub.Clients.Client(connectionId).SendAsync("StopInstallation");
+        if (connectionId != null)
+        {
+            await _flowHub.Clients.Client(connectionId).SendAsync("StopInstallation");
+        }
         return RedirectToAction("SelectActiveInstallation");
     }
+    
 }

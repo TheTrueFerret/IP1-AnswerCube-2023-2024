@@ -60,7 +60,6 @@ public class MailRepository : IMailRepository
 
     public async Task SendConfirmationEmail(string email, string userId, string code, string returnUrl)
     {
-        
         var callbackUrl = _urlHelper.Page(
             "/Account/ConfirmEmail",
             pageHandler: null,

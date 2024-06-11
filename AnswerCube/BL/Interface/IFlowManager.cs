@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain.Installation;
 using AnswerCube.BL.Domain.Slide;
 using Domain;
 
@@ -19,6 +20,8 @@ public interface IFlowManager
     void UpdateSlide(string text, List<string>? answers, int slideId);
     IEnumerable<Slide> GetSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
+    
+    List<Note> GetNotesByFlowId(int flowId);
     #endregion
     
     #region SlideList
@@ -43,6 +46,5 @@ public interface IFlowManager
     Flow GetFlowByInstallationId(int installationId);
     void DeactivateFlow(int installationId);
     #endregion
-
     
 }

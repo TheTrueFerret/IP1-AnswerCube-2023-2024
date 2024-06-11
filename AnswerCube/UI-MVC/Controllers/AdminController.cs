@@ -22,13 +22,13 @@ public class AdminController : BaseController
     private readonly IMailManager _mailManager;
     private readonly IOrganizationManager _organizationManager;
     private readonly CloudStorageService _cloudStorageService;
-    private readonly UnitOfWork _uow; 
-    
+    private readonly UnitOfWork _uow;
+
     public AdminController(
-        ILogger<AdminController> logger, 
-        UserManager<AnswerCubeUser> userManager, 
-        SignInManager<AnswerCubeUser> signInManager, 
-        IMailManager mailManager, 
+        ILogger<AdminController> logger,
+        UserManager<AnswerCubeUser> userManager,
+        SignInManager<AnswerCubeUser> signInManager,
+        IMailManager mailManager,
         IOrganizationManager organizationManager,
         CloudStorageService cloudStorageService,
         UnitOfWork uow)
@@ -97,9 +97,11 @@ public class AdminController : BaseController
                         AllAvailableIdentityRoles = allAvailableRoles,
                     };
                 }
+
                 return View(newUser);
             }
         }
+
         return RedirectToPage("User");
     }
 
@@ -142,6 +144,7 @@ public class AdminController : BaseController
         {
             ModelState.AddModelError(string.Empty, "Unable to remove role.");
         }
+
         await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(User).Result);
         return RedirectToAction("Role", new { id = model.Id });
     }
@@ -161,7 +164,7 @@ public class AdminController : BaseController
             TempData["ErrorOwnAccountDelete"] = "Je kan jezelf niet verwijderen.";
             return RedirectToAction("Users", "Admin");
         }
-        
+
         var result = _userManager.DeleteAsync(user).Result;
         if (!result.Succeeded)
         {
@@ -173,39 +176,43 @@ public class AdminController : BaseController
 
     [Authorize(Roles = "Admin")]
     [HttpPost("AddDeelplatform")]
-    public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName,IFormFile? logo)
+    public async Task<IActionResult> AddDeelplatform(string email, string deelplatformName, IFormFile? logo)
     {
         string? logoUrl;
         if (logo != null)
         {
-            logoUrl= _cloudStorageService.UploadFileToBucket(logo);
+            logoUrl = _cloudStorageService.UploadFileToBucket(logo);
         }
         else
         {
             logoUrl = null;
         }
+
         _uow.BeginTransaction();
-        Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName,logoUrl);
-        _uow.Commit();
-        _uow.BeginTransaction();
-        _organizationManager.SaveBeheerderAndOrganization(email, organization);
-        _uow.Commit();
+        Organization organization = _organizationManager.CreateNewOrganization(email, deelplatformName, logoUrl);
+        await _uow.CommitAsync();
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            await _mailManager.SendNewEmail(email, organization.Name);
+            _uow.BeginTransaction();
+            _organizationManager.SaveBeheerderAndOrganization(email, organization);
+            await _uow.CommitAsync();
             TempData["Success"] = "An email has been sent to the provided email address.";
         }
         else
         {
+            _uow.BeginTransaction();
             await _userManager.AddToRoleAsync(user, "DeelplatformBeheerder");
-            await _mailManager.SendExistingEmail(email, organization.Name);
+            await _uow.CommitAsync();
+            _uow.BeginTransaction();
+            _organizationManager.CreateBeheerderEmail(user, organization);
+            await _uow.CommitAsync();
             TempData["Success"] =
                 $"The user now has the DeelplatformBeheerder role for the {organization.Name} organization.";
+            _uow.BeginTransaction();
             _organizationManager.CreateUserOrganization(user, organization);
+            await _uow.CommitAsync();
         }
-
-        _organizationManager.AddDeelplatformBeheerderByEmail(email);
         return RedirectToAction("DeelplatformOverview");
     }
 
@@ -216,13 +223,19 @@ public class AdminController : BaseController
         var user = await _userManager.FindByIdAsync(id);
         if (_organizationManager.IsUserInMultipleOrganizations(user.Id))
         {
-            _organizationManager.RemoveDpbFromOrganization(user.Id, _organizationManager.GetOrganizationByName(deelplatformNaam).Id);
+            _uow.BeginTransaction();
+            _organizationManager.RemoveDpbFromOrganization(user.Id,
+                _organizationManager.GetOrganizationByName(deelplatformNaam).Id);
+            await _uow.CommitAsync();
         }
         else
         {
+            _uow.BeginTransaction();
             await _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
             _organizationManager.RemoveDeelplatformBeheerderByEmail(user.Email, deelplatformNaam);
+            await _uow.CommitAsync();
         }
+
         return RedirectToAction("DeelplatformOverview");
     }
 }
