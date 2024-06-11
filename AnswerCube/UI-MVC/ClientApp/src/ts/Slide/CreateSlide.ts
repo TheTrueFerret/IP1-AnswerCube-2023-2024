@@ -50,6 +50,11 @@ function showAnswerOptions(slideType: string) {
         label.innerText = "Info title:";
         input.placeholder = "info title";
         CreateInfoField(answerOptionsDiv);
+    } else if (slideType === 'RequestingInfo') {
+        questionDiv.hidden = false;
+        label.innerText = "RequestingInfo Upper Text:";
+        input.placeholder = "RequestingInfo Upper Text:";
+        CreateInfoField(answerOptionsDiv);
     } else if (slideType === 'OpenQuestion') {
         questionDiv.hidden = false;
         label.innerText = "Question:";

@@ -1,0 +1,29 @@
+@model SlideCompositeModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_CircularFlow";
+}
+
+<h1>LeaveContactInfo</h1>
+<div id="slide" class="card-body text-center">
+    <h2 class="card-title">@Model.SlideModel.Text</h2>
+    <p class="card-text">If you want to leave your information, please scan the QR code below:</p>
+    <div id="qrCode"></div>
+    <div id="qrCodeData" data-url="@Url.Action("ContactInfo", "Contactinfo")"></div>
+</div>
+<div id="SkipBox">
+    <table id="SkipTable">
+
+    </table>
+    <button id="skipSlide" type="button">Next</button>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/dist/requestinginfo.entry.js" defer></script>
+    <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+    <script type="text/javascript" src="~/dist/qr.entry.js"></script>
+    <script src="~/dist/generateContactInfoUrl.entry.js"></script>
+}
