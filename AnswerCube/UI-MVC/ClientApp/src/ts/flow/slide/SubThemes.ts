@@ -12,23 +12,6 @@ let voteStatePerCubeId: string[] = [];
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    getActiveSessions();
-    
-    for (let i = 0; i < activeCubes.length; i++) {
-        currentChosenSlideListPerUser[i] = -1;
-    }
-    for (let i = 0; i < activeCubes.length; i++) {
-        voteStatePerCubeId[activeCubes[i]] = "none";
-    }
-
-    const allSlideLists = document.querySelectorAll("#AllSlideLists .card");
-    totalSlideLists = allSlideLists.length;
-
-    generateSlideListVoteTables();
-    generateVoteTables();
-});
-
-function getActiveSessions() {
     fetch(RemoveLastDirectoryPartOf(url) + "/GetActiveSessionsFromInstallation/", {
         method: "GET",
         headers: {
@@ -47,13 +30,30 @@ function getActiveSessions() {
                 sessionCube[i] = true
             }
             console.log(data);
-
+            for (let i = 1; i <= activeCubes.length; i++) {
+                currentChosenSlideListPerUser[i] = -1;
+            }
+            for (let i: number = 0; i < activeCubes.length; i++) {
+                voteStatePerCubeId[activeCubes[i]] = "none";
+            }
         }
+        const allSlideLists = document.querySelectorAll("#AllSlideLists .card");
+        totalSlideLists = allSlideLists.length;
+
+        generateSlideListVoteTables();
+        generateVoteTables();
     }).catch(err => {
+        if (activeCubes.length == 0) {
+            const allSlideLists = document.querySelectorAll("#AllSlideLists .card");
+            totalSlideLists = allSlideLists.length;
+
+            generateSlideListVoteTables();
+            generateVoteTables();
+        }
         console.log("Something went wrong: " + err);
         return err; // Return an empty array in case of error
     });
-}
+});
 
 
 document.querySelectorAll('.ChooseSlideList').forEach((btnSubmit: Element) => {
@@ -92,6 +92,9 @@ function generateSlideListVoteTables() {
     for (let i = 1; i <= totalSlideLists; i++) {
         let tableId: string = `SlideListUserAnswer ${i}`;
         createVoteTable(2, tableId);
+    }
+    for (let i = 0; i < activeCubes.length; i++) {
+        moveBetweenSlideLists(activeCubes[i], 'down');
     }
 }
 
@@ -192,7 +195,7 @@ function moveBetweenSlideLists(cubeId: number, direction: 'up' | 'down') {
         let element = document.getElementById(elementId);
         if (element) {
             let cells = element.querySelectorAll(`td[data-cube="${cubeId}"]`);
-            if (currentChosenSlideListPerUser[cubeId] == i) {
+            if (currentChosenSlideListPerUser[cubeId- 1] == i) {
                 cells.forEach(cell => {
                     if (cell.getAttribute('data-active') === 'true') {
                         if (voteStatePerCubeId[cubeId] == "removed"){

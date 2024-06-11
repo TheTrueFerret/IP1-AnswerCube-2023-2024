@@ -101,15 +101,14 @@ function addNewAnswerCubeRange(cubeId: number) {
 
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
-    let answer: string[] = getRangeAnswer(cubeId);
+    let answerCheck: string[] = getRangeAnswer(cubeId);
 
-    /*// verander deze naar iets deftig
-    if (action === 'submit' && answer.length === 0) {
+    // verander deze naar iets deftig
+    if (action === 'submit' && answerCheck.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
-        alert('Please select at least one answer before submitting <3');
         return;
-    }*/
+    }
     
 
     for (let i = 0; i <= activeCubes.length; i++) {
@@ -144,7 +143,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         let answers: any[] = [];
         for (let i: number = 0; i < activeCubes.length; i++) {
             answers.push({
-                Answer: answer,
+                Answer: getRangeAnswer(activeCubes[i]),
                 CubeId: activeCubes[i]
             })
         }

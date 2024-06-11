@@ -220,29 +220,20 @@ public class CircularFlowController : BaseController
         
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
         
-
         for (int i = 0; i < answers.Answers.Count; i++)
         {
             Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
-            if (session == null)
+            if (session != null)
             {
-                Session newSession = new Session()
+                List<string> answerText = answers.Answers[i].Answer;
+                if (_answerManager.AddAnswer(answerText, slide.Id, session))
                 {
-                    CubeId = answers.Answers[i].CubeId
-                };
-                _uow.BeginTransaction();
-                _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
-                _uow.Commit();
-                session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
-            }
-            List<string> answerText = answers.Answers[i].Answer;
-            if (_answerManager.AddAnswer(answerText, slide.Id, session))
-            {
-                allAnswersAdded[i] = true;
-            }
-            else
-            {
-                allAnswersAdded[i] = false;
+                    allAnswersAdded[i] = true;
+                }
+                else
+                {
+                    allAnswersAdded[i] = false;
+                }
             }
         }
         

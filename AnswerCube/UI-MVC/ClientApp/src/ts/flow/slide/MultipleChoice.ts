@@ -126,9 +126,9 @@ function addNewCubeAnswerColumn(cubeId: number) {
 
 
 function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
-    let answer: string[] = getSelectedAnswers(cubeId)
+    let answerCheck: string[] = getSelectedAnswers(cubeId)
 
-    if (action === 'submit' && answer.length === 0) {
+    if (action === 'submit' && answerCheck.length === 0) {
         console.log('No answers selected');
         // Show error to the user, e.g., alert or some UI indication
         return;
@@ -166,7 +166,7 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
         let answers: any[] = [];
         for (let i = 0; i < activeCubes.length; i++) {
             answers.push({
-                Answer: answer,
+                Answer: getSelectedAnswers(activeCubes[i]),
                 CubeId: activeCubes[i]
             })
         }
