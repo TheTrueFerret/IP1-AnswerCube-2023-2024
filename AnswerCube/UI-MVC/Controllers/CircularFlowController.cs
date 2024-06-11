@@ -98,6 +98,12 @@ public class CircularFlowController : BaseController
     }
 
     [HttpGet]
+    public IActionResult RequestingInfo()
+    {
+        return View("/Views/Slides/RequestingInfo.cshtml", GetNextSlide());
+    }
+    
+    [HttpGet]
     public IActionResult Subthemes()
     {
         // Retrieve installation ID from token
@@ -192,8 +198,7 @@ public class CircularFlowController : BaseController
             url = Url.Action(actionName);
             return Json(new { url });
         }
-
-        url = Url.Action("LeaveContactInfoQrCode");
+        url = Url.Action("SubThemes");
         return Json(new { url });
     }
 
@@ -324,10 +329,5 @@ public class CircularFlowController : BaseController
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-
-    public IActionResult LeaveContactInfoQrCode()
-    {
-        return View("/Views/Contactinfo/LeaveContactInfoQrCode.cshtml");
     }
 }
