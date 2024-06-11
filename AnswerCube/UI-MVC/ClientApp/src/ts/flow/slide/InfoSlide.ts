@@ -1,4 +1,4 @@
-import {RemoveLastDirectoryPartOf} from "../../urlDecoder";
+import {getDomainFromUrl, RemoveLastDirectoryPartOf} from "../../urlDecoder";
 import {generateVoteTables, updateVoteUi} from "../VoteTableHandler";
 import {postAnswers, startSession, stopSession} from "../CircularFlow";
 
@@ -93,12 +93,16 @@ function vote(cubeId: number, action: 'submit' | 'skip' | 'changeSubTheme') {
             break;
     }
 
-    const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
-    if (allAnswered) {
-        skipQuestion();
-        console.log("Everyone voted!");
+    if (action == "changeSubTheme") {
+        window.location.href = getDomainFromUrl(window.location.toString()) + "/CircularFlow/Subthemes"
     } else {
-        console.log("Not Everyone Voted Yet");
+        const allAnswered: boolean = voteStatePerCubeId.every(vote => vote !== "none");
+        if (allAnswered) {
+            skipQuestion();
+            console.log("Everyone voted!");
+        } else {
+            console.log("Not Everyone Voted Yet");
+        }
     }
 }
 

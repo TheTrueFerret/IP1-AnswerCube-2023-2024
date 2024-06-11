@@ -156,13 +156,14 @@ public class CircularFlowController : BaseController
             slideCompositeModel.LinearFlowModel = linearFlowModel;
         }
         int forumId = _installationManager.GetForumIdByInstallationId(installationId);
+        string baseUrl = Url.Action("ShowForum", "Forum", new { forumId }, Request.Scheme);
         if (forumId != 0)
         {
-            slideCompositeModel.forumId = forumId;
+            slideCompositeModel.forumUrl = baseUrl;
         }
         else
         {
-            slideCompositeModel.forumId = 0;
+            slideCompositeModel.forumUrl = null;
         }
         return slideCompositeModel;
     }
@@ -186,6 +187,7 @@ public class CircularFlowController : BaseController
             url = Url.Action(actionName);
             return Json(new { url });
         }
+        
         url = Url.Action("LeaveContactInfoQrCode");
         return Json(new { url });
     }
@@ -218,29 +220,20 @@ public class CircularFlowController : BaseController
         
         Slide slide = _installationManager.GetActiveSlideByInstallationId(installationId);
         
-
         for (int i = 0; i < answers.Answers.Count; i++)
         {
             Session? session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
-            if (session == null)
+            if (session != null)
             {
-                Session newSession = new Session()
+                List<string> answerText = answers.Answers[i].Answer;
+                if (_answerManager.AddAnswer(answerText, slide.Id, session))
                 {
-                    CubeId = answers.Answers[i].CubeId
-                };
-                _uow.BeginTransaction();
-                _installationManager.AddNewSessionWithInstallationId(newSession, installationId);
-                _uow.Commit();
-                session = _installationManager.GetActiveSessionByInstallationIdAndCubeId(installationId, answers.Answers[i].CubeId);
-            }
-            List<string> answerText = answers.Answers[i].Answer;
-            if (_answerManager.AddAnswer(answerText, slide.Id, session))
-            {
-                allAnswersAdded[i] = true;
-            }
-            else
-            {
-                allAnswersAdded[i] = false;
+                    allAnswersAdded[i] = true;
+                }
+                else
+                {
+                    allAnswersAdded[i] = false;
+                }
             }
         }
         

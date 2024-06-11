@@ -1,16 +1,26 @@
 import {getCubeNameByCubeId} from "./CircularFlow";
 
 export function generateVoteTables() {
-    const tableIds = ['SubmitTable', 'SkipTable', 'SubthemeTable'];
+    var tableIds: string[];
+    if (window.slideType == "InfoSlide") {
+        tableIds = ['SkipTable', 'SubthemeTable'];
+    } else {
+        tableIds = ['SubmitTable', 'SkipTable', 'SubthemeTable'];
+    }
     tableIds.forEach(tableId => {
         const table: HTMLTableElement = document.getElementById(tableId) as HTMLTableElement;
         if (table) {
             table.innerHTML = ''; // Clear all content inside the table
         }
     });
-    createVoteTable(2, 'SubmitTable');
-    createVoteTable(2, 'SkipTable');
-    createVoteTable(2, 'SubthemeTable');
+    if (window.slideType == "InfoSlide") {
+        createVoteTable(2, 'SkipTable');
+        createVoteTable(2, 'SubthemeTable');
+    } else {
+        createVoteTable(2, 'SubmitTable');
+        createVoteTable(2, 'SkipTable');
+        createVoteTable(2, 'SubthemeTable');
+    }
 }
 
 

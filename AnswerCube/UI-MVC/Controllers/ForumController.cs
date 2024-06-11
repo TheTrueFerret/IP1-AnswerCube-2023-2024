@@ -15,7 +15,8 @@ public class ForumController : BaseController
     private UserManager<AnswerCubeUser> _UserManager;
     private UnitOfWork _uow;
 
-    public ForumController(IForumManager manager, ILogger<ForumController> logger, UserManager<AnswerCubeUser> userManager, UnitOfWork uow)
+    public ForumController(IForumManager manager, ILogger<ForumController> logger,
+        UserManager<AnswerCubeUser> userManager, UnitOfWork uow)
     {
         _forumManager = manager;
         _logger = logger;
@@ -32,8 +33,6 @@ public class ForumController : BaseController
     [Route("[action]/{forumId:int}")]
     public IActionResult ShowForum(int forumId)
     {
-        //TODO cookie instellen zodat een thema van de organization op het forum word geladen (kijk naar organization Controller voor cookie in the stellen)
-        
         //This will show the forum with the given id
         return View(_forumManager.GetForum(forumId));
     }
@@ -89,7 +88,7 @@ public class ForumController : BaseController
 
         //This will like the reaction with the given id
         _uow.BeginTransaction();
-        _forumManager.LikeReaction(reactionId,user);
+        _forumManager.LikeReaction(reactionId, user);
         _uow.Commit();
         return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByReactionId(reactionId) });
     }
@@ -102,9 +101,10 @@ public class ForumController : BaseController
         {
             return RedirectToAction("Forums");
         }
+
         //This will dislike the reaction with the given id
         _uow.BeginTransaction();
-        _forumManager.DislikeReaction(reactionId,user);
+        _forumManager.DislikeReaction(reactionId, user);
         _uow.Commit();
         return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByReactionId(reactionId) });
     }
@@ -117,9 +117,10 @@ public class ForumController : BaseController
         {
             return RedirectToAction("Forums");
         }
+
         //This will like the idea with the given id
         _uow.BeginTransaction();
-        _forumManager.LikeIdea(ideaId,user);
+        _forumManager.LikeIdea(ideaId, user);
         _uow.Commit();
         return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
     }
@@ -132,9 +133,10 @@ public class ForumController : BaseController
         {
             return RedirectToAction("Forums");
         }
+
         //This will dislike the idea with the given id
         _uow.BeginTransaction();
-        _forumManager.DislikeIdea(ideaId,user);
+        _forumManager.DislikeIdea(ideaId, user);
         _uow.Commit();
         return RedirectToAction("ShowForum", new { forumId = _forumManager.GetForumByIdeaId(ideaId) });
     }

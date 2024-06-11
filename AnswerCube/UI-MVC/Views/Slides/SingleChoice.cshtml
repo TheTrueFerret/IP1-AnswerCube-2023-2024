@@ -68,7 +68,7 @@
     </div>
 </div>
 
-@if (Model.forumId == 0)
+@if (Model.forumUrl == null)
 {
     <p>Error loading the forum.</p>
 }
@@ -77,7 +77,7 @@ else
     <div>
         <p>Scan the QR Code to interact with the forum</p>
         <div id="qrCode"></div>
-        <div id="qrCodeData" data-url="@Url.Action("ShowForum", "Forum", new { forumId = Model.forumId })"></div>
+        <div id="qrCodeData" data-url="@Model.forumUrl"></div>
     </div>
 }
 
@@ -87,3 +87,4 @@ else
     <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
     <script type="text/javascript" src="~/dist/qr.entry.js"></script>
 }
+
