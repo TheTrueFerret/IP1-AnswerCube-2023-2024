@@ -224,16 +224,30 @@ namespace AnswerCube.UI.MVC.Areas.Identity.Pages.Account
             var badwords = System.IO.File.ReadLines(@"Areas/Identity/Data/BadWords/en.txt")
                 .Select(word => word.Trim().ToLower())
                 .ToArray();
-            if (name != null && (badwords.Equals(name.ToLower()) || name.Any(char.IsDigit) ||
-                                 name.Any(ch => !char.IsLetter(ch))))
+            
+            var nameWords = name?.Split(' ');
+            var lastNameWords = lastName?.Split(' ');
+
+            if (nameWords != null)
             {
-                return true;
+                foreach (var word in nameWords)
+                {
+                    if (badwords.Contains(word.ToLower()) || word.Any(char.IsDigit) || word.Any(ch => !char.IsLetter(ch)))
+                    {
+                        return true;
+                    }
+                }
             }
 
-            if (lastName != null && (badwords.Equals(lastName.ToLower()) || lastName.Any(char.IsDigit) ||
-                                     lastName.Any(ch => !char.IsLetter(ch))))
+            if (lastNameWords != null)
             {
-                return true;
+                foreach (var word in lastNameWords)
+                {
+                    if (badwords.Contains(word.ToLower()) || word.Any(char.IsDigit) || word.Any(ch => !char.IsLetter(ch)))
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;

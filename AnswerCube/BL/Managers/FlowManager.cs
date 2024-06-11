@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain.Installation;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.DAL;
 using Domain;
@@ -78,6 +79,11 @@ public class FlowManager : IFlowManager
     public bool RemoveSlideFromSlideList(int slideId, int slidelistid)
     {
         return _repository.RemoveSlideFromSlideList(slideId, slidelistid);
+    }
+
+    public List<Note> GetNotesByFlowId(int flowId)
+    {
+        return _repository.ReadNotesByFlowId(flowId);
     }
 
     public void UpdateSlide( string text, List<string>? answersList, int slideId)

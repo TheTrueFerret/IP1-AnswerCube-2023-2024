@@ -40,7 +40,6 @@ public class MailService : IEmailSender
             HtmlContent = htmlMessage
         };
         msg.AddTo(new EmailAddress(toEmail));
-        msg.SetClickTracking(false, false);
         await client.SendEmailAsync(msg);
     }
 }

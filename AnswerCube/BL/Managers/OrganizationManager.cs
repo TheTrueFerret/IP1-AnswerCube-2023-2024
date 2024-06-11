@@ -172,4 +172,9 @@ public class OrganizationManager : IOrganizationManager
     {
         return _repository.ReadSupervisorsByOrgId(organizationId);
     }
+
+    public void CreateBeheerderEmail(AnswerCubeUser user, Organization organization)
+    {
+        _repository.CreateBeheerderEmail(user, organization);
+    }
 }

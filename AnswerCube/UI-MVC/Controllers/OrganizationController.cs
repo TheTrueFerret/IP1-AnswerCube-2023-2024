@@ -80,7 +80,7 @@ public class OrganizationController : BaseController
         // Set a cookie for the organization ID
         CookieOptions option = new CookieOptions();
         Response.Cookies.Append("OrganizationId", organizationid.ToString(), option);
-        
+
         var organization = _organizationManager.GetOrganizationById(organizationid);
         //Check if user is admin, to not check if user is in organization
         if (User.IsInRole("Admin"))
@@ -108,81 +108,84 @@ public class OrganizationController : BaseController
 
     public async Task<IActionResult> AddDeelplatformbeheerderToOrganization(string email, int organizationid)
     {
+        //Get the id of the user adding the deelplatformbeheerder
         var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
         //If user isnt admin or not in the organizatie, kan die niet toevoegen
-            if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
-                User.IsInRole("DeelplatformBeheerder"))
+        if (_organizationManager.IsUserInOrganization(user.Id, organizationid)|| User.IsInRole("Admin"))
+        {
+            if (_organizationManager.IsUserInOrganization(email, organizationid))
             {
-                if (_organizationManager.IsUserInOrganization(email, organizationid))
-                {
-                    // The user is already part of the organization, return an appropriate response
-                    TempData["Error"] = $"User {email} is already part of the organization";
-                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
-                }
-                _uow.BeginTransaction();
-                if (_organizationManager.AddDpbToOrgByEmail(email, organizationid).Result)
-                {
-                    _uow.Commit();
-                    TempData["Succes"] = $"User {email} is added to the organization";
-                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
-                }
+                // The user is already part of the organization, return an appropriate response
+                TempData["Error"] = $"User {email} is already part of the organization";
+                return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
-            else
+
+            _uow.BeginTransaction();
+            if (_organizationManager.AddDpbToOrgByEmail(email, organizationid).Result)
             {
-                return Forbid(); // or return to an error page
+                await _uow.CommitAsync();
+                TempData["Succes"] = $"User {email} is added to the organization";
+                return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
+        }
+        else
+        {
+            return Forbid(); // or return to an error page
+        }
 
         return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
     }
-    
+
     public async Task<IActionResult> RemoveDeelplatformbeheeder(string userId, int organizationid)
     {
         var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         // If user isnt in the organizatie, kan die niet toevoegen
-            if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
-                User.IsInRole("DeelplatformBeheerder"))
+        if (_organizationManager.IsUserInOrganization(user.Id, organizationid) &&
+            User.IsInRole("DeelplatformBeheerder"))
+        {
+            _uow.BeginTransaction();
+            if (_organizationManager.RemoveDpbFromOrganization(userId, organizationid).Result)
             {
-                _uow.BeginTransaction();
-                if (_organizationManager.RemoveDpbFromOrganization(userId, organizationid).Result)
-                {
-                    _uow.Commit();
-                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
-                }
-
-                return View("Error");
+                _uow.Commit();
+                return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
 
-            return Forbid(); // or return to an error page
+            return View("Error");
+        }
+
+        return Forbid(); // or return to an error page
     }
 
 
     public async Task<IActionResult> AddSupervisor(string email, int organizationid)
     {
         var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            if (_organizationManager.IsUserInOrganization(user.Id, organizationid))
+        if (_organizationManager.IsUserInOrganization(user.Id, organizationid))
+        {
+            if (_organizationManager.IsUserInOrganization(email, organizationid))
             {
-                if (_organizationManager.IsUserInOrganization(email, organizationid))
-                {
-                    // The user is already part of the organization, return an appropriate response
-                    TempData["SupervisorError"] = $"User {email} is already part of the organization";
-                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
-                }
-                _uow.BeginTransaction();
-                if (_organizationManager.AddSupervisorToOrgByEmail(email, organizationid).Result)
-                {
-                    _uow.Commit();
-                    TempData["SupervisorSuccess"] = $"User {email} is added to the organization";
-                    return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
-                }
+                // The user is already part of the organization, return an appropriate response
+                TempData["SupervisorError"] = $"User {email} is already part of the organization";
+                return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
-            else
+
+            _uow.BeginTransaction();
+            if (_organizationManager.AddSupervisorToOrgByEmail(email, organizationid).Result)
             {
-                return Forbid(); // or return to an error page
+                _uow.Commit();
+                TempData["SupervisorSuccess"] = $"User {email} is added to the organization";
+                return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
+        }
+        else
+        {
+            return Forbid(); // or return to an error page
+        }
 
         return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
     }
-    
+
     public async Task<IActionResult> RemoveSupervisor(string email, int organizationid)
     {
         var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -194,6 +197,7 @@ public class OrganizationController : BaseController
                 ViewBag.Error = $"User {email} is already part of the organization";
                 return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
             }
+
             _uow.BeginTransaction();
             if (_organizationManager.RemoveSupervisorFromOrgByEmail(email, organizationid).Result)
             {
@@ -209,17 +213,18 @@ public class OrganizationController : BaseController
 
         return RedirectToAction("Index", "Organization", new { organizationId = organizationid });
     }
-    
+
     public IActionResult UpdateTheme(int organizationId, Theme theme)
     {
         _uow.BeginTransaction();
         bool result = _organizationManager.UpdateOrganization(organizationId, theme);
         _uow.Commit();
         if (result)
-        { 
+        {
             var organization = _organizationManager.GetOrganizationById(organizationId);
             return View("Index", organization);
-        } 
+        }
+
         var organizationWithError = _organizationManager.GetOrganizationById(organizationId);
         ViewBag.ErrorMessage = "Failed to update theme";
         return View("Index", organizationWithError);

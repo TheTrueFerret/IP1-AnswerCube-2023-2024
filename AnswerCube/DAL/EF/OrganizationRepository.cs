@@ -40,7 +40,7 @@ public class OrganizationRepository : IOrganizationRepository
 
     public bool ReadDeelplatformBeheerderByEmail(string userEmail)
     {
-        return _context.DeelplatformbeheerderEmails.Any(d => d.Email == userEmail);
+        return _context.DeelplatformbeheerderEmails.Any(d => d.Email.ToLower() == userEmail.ToLower());
     }
 
     public bool CreateDeelplatformBeheerderByEmail(string userEmail)
@@ -79,6 +79,7 @@ public class OrganizationRepository : IOrganizationRepository
             _context.Organizations.Remove(organization);
             _context.Forums.Remove(_context.Forums.First(f => f.OrganizationId == organization.Id));
         }
+
         return true;
     }
 
@@ -111,6 +112,7 @@ public class OrganizationRepository : IOrganizationRepository
                 _context.Flows.Remove(flow);
             }
         }
+
         _context.Projects.Remove(_context.Projects.First(p => p.Id == id));
         return true;
     }
@@ -164,7 +166,7 @@ public class OrganizationRepository : IOrganizationRepository
             .Include(p => p.Organization)
             .FirstOrDefault(p => p.Id == projectId);
     }
-    
+
 
     public Organization CreateNewOrganization(string email, string name, string? logoUrl)
     {
@@ -192,7 +194,7 @@ public class OrganizationRepository : IOrganizationRepository
         }
         else
         {
-           var role = await _roleManager.FindByNameAsync("Supervisor");
+            var role = await _roleManager.FindByNameAsync("Supervisor");
             if (role is { Name: not null }) await _userManager.AddToRoleAsync(user, role.Name);
         }
 
@@ -239,8 +241,12 @@ public class OrganizationRepository : IOrganizationRepository
         if (user != null)
         {
             _userManager.RemoveFromRoleAsync(user, "DeelplatformBeheerder");
+            if(getOrganisationsByUserId(user.Id).Count == 0)
+            {
+                _context.DeelplatformbeheerderEmails.Remove(_context.DeelplatformbeheerderEmails.First(d => d.Email == user.Email));
+            }
         }
-        
+
         //Check if any other deelplatformbeheerders are assigned to the organization, if not delete the organization.
         var org = _context.Organizations.Include(o => o.UserOrganizations).Include(o => o.Projects)
             .ThenInclude(p => p.Flows).Single(organization => organization.Id == organizationid);
@@ -250,6 +256,11 @@ public class OrganizationRepository : IOrganizationRepository
         }
 
         return true;
+    }
+
+    private List<UserOrganization> getOrganisationsByUserId(string userId)
+    {
+        return _context.UserOrganizations.Where(uo => uo.UserId == userId).ToList();
     }
 
     public void RemoveEmptyOrganization(Organization organization)
@@ -310,6 +321,7 @@ public class OrganizationRepository : IOrganizationRepository
                 await _mailRepository.SendExistingEmail(email,
                     _context.Organizations.Single(o => o.Id == organizationid).Name);
             }
+
             return true;
         }
 
@@ -327,20 +339,20 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return _context.Organizations.First(o => o.Id == organisationId).Theme;
     }
-    
+
     public Theme ReadThemeByInstallationId(int installationId)
     {
         Installation installation = _context.Installations
             .Where(i => i.Id == installationId)
-            .Include(i => i.Organization) // Laad de organisatie in
-            .First(); // Voeg deze toe om de installatie op te halen
+            .Include(i => i.Organization)
+            .First();
 
         if (installation != null)
         {
             return installation.Organization.Theme;
         }
-        
-        return Theme.Light; 
+
+        return Theme.Light;
     }
 
     public bool UpdateOrganization(int organizationId, Theme theme)
@@ -374,6 +386,7 @@ public class OrganizationRepository : IOrganizationRepository
                 await _mailRepository.SendExistingSupervisorEmail(email,
                     _context.Organizations.Single(o => o.Id == organizationid).Name);
             }
+
             return true;
         }
 
@@ -418,6 +431,12 @@ public class OrganizationRepository : IOrganizationRepository
             .ToList();
 
         return usersInOrg.FindAll(u => _userManager.IsInRoleAsync(u, "DeelplatformBeheerder").Result);
+    }
+
+    public void CreateBeheerderEmail(AnswerCubeUser user, Organization organization)
+    {
+        _context.DeelplatformbeheerderEmails.Add(new DeelplatformbeheerderEmail
+            { Email = user.Email, DeelplatformNaam = organization.Name, IsDeelplatformBeheerder = true });
     }
 
     private void SaveSupervisorAndOrganization(string email, string name)

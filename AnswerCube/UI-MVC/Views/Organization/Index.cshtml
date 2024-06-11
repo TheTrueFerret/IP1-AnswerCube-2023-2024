@@ -120,15 +120,15 @@
                     </div>
                     @if (ViewBag.DeelplatformBeheeders == null || ViewBag.DeelplatformBeheeders.Count == 0)
                     {
-                        <p>There are no Organization Manager</p>
+                        <p>There are no Organization Managers</p>
                     }
                     else
                     {
                         @foreach (AnswerCubeUser user in ViewBag.DeelplatformBeheeders)
                         {
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-capitalize">@user.UserName</p>
-                                @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                                <p>@user.UserName</p>
+                                @if (User.IsInRole("Admin") || User.IsInRole("DeelplatformBeheerder"))
                                 {
                                     <button class="btn btn-danger"
                                             title="Remove Deelplatformbeheerder"
@@ -145,7 +145,7 @@
                     <!-- Button trigger modal -->
                     <h2>@ViewBag.SupervisorError</h2>
                     <h2>@ViewBag.SupervisorSuccess</h2>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                    @if (User.IsInRole("Admin") || User.IsInRole("DeelplatformBeheerder"))
                     {
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSupervisorModal">
                             Add Supervisor
@@ -181,8 +181,8 @@
                         @foreach (AnswerCubeUser user in ViewBag.Supervisors)
                         {
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-capitalize">@user.UserName</p>
-                                @if (User.IsInRole("Admin") || User.IsInRole("Deelplatformbeheerder"))
+                                <p>@user.UserName</p>
+                                @if (User.IsInRole("Admin") || User.IsInRole("DeelplatformBeheerder"))
                                 {
                                     <button class="btn btn-danger"
                                             title="Remove Supervisor"

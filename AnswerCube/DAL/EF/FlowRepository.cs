@@ -1,4 +1,5 @@
 using AnswerCube.BL.Domain;
+using AnswerCube.BL.Domain.Installation;
 using AnswerCube.BL.Domain.Project;
 using AnswerCube.BL.Domain.Slide;
 using AnswerCube.BL.Domain.User;
@@ -170,6 +171,11 @@ public class FlowRepository : IFlowRepository
 
         _context.SlideConnections.Remove(slideConnection);
         return true;
+    }
+
+    public List<Note> ReadNotesByFlowId(int flowId)
+    {
+        return _context.Notes.Where(n => n.FlowId == flowId).ToList();
     }
 
     #endregion

@@ -1,3 +1,4 @@
+using AnswerCube.BL.Domain.Installation;
 using AnswerCube.BL.Domain.Slide;
 using Domain;
 
@@ -20,6 +21,7 @@ public interface IFlowRepository
     IEnumerable<Slide> ReadSlidesBySlideListId(int slideListId);
     bool RemoveSlideFromSlideList(int slideId, int slidelistid);
 
+    List<Note> ReadNotesByFlowId(int flowId);
     #endregion
 
     #region SlideList

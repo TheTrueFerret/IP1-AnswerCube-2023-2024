@@ -44,22 +44,22 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="DeelplatformOverview">Organization Overview</a>
                         </li>
                     }
-                    @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
+                    @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin") || (User.IsInRole("Supervisor")))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Installation" asp-action="ChooseInstallation">Activate Installation</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Manage Installation</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("DeelplatformBeheerder") || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Organization" asp-action="Index" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Organization</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="DataAnalyse" asp-action="Answers">Data analysis</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Supervisor") || User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Begeleider" asp-action="SelectActiveInstallation">Manage Installation</a>
                         </li>
                     }
                 </ul>
